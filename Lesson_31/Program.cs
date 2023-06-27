@@ -6,6 +6,9 @@
     {
         static void Main()
         {
+            Console.WriteLine($"Для урока с задачей №31");
+
+            Console.ReadLine();
         }
     }
 }
