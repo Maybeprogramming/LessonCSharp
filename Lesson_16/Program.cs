@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             int number;
             int startRandomNumber = 1;
