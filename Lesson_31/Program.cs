@@ -14,48 +14,65 @@
         static void Main()
         {
             Console.CursorVisible = false;
+            StartGame();
+            Console.ReadLine();
+        }
 
-            char[,] map = ReadMap("map.txt");
-            int pacmanX = 0;
-            int pacmanY = 0;
-            int pacmanDX = 0;
-            int pacmanDY = 1;
-
+        private static void StartGame()
+        {
+            string[] mapLevelOne = {"#######################################" ,
+                                    "#     #         #          #          #" ,
+                                    "#     ######    #  #########   ########" ,
+                                    "#     #         #  #       #   #      #" ,
+                                    "####  #  ########  #  ######   ## #####" ,
+                                    "#     x            @       #   #      #" ,
+                                    "#     x    x               #   #      #" ,
+                                    "#     ######### #  ######  #   #  #####" ,
+                                    "#     #         #       #  #   #      #" ,
+                                    "#     #         #  #    #  #   #   #  #" ,
+                                    "#     #         #  #    #  #   #   #  #" ,
+                                    "#     ###########  #    #  #   #   #  #" ,
+                                    "#               #  #       #   #   #  #" ,
+                                    "#     #         #  #       #   #####  #" ,
+                                    "#     #            #                  #" ,
+                                    "#######################################" };
+            char[,] map;
+            int playerX = 0;
+            int playerY = 0;
+            int moveDirectionX = 0;
+            int moveDirectionY = 1;
             bool isPlaying = true;
-            bool isAlive = true;
-
             char player = '@';
-            char ghost = '$';
-
-            int ghostX = 0;
-            int ghostY = 0;
-
+            char cherry = '.';
+            char empty = ' ';
+            char cherrySpawnPoint = 'x';
+            char wall = '#';
             int allCherry = 0;
             int collectCherry = 0;
+            int positionScoreTop = 20;
+            int potitionScoreLeft = 0;
+            int positionWinTextTop = 25;
+            int positionWinTextLeft = 0;
+            string winnerMessage = "Вы победили!!!";
 
-            FindSpawnPoint(map, ref pacmanX, ref pacmanY, player);
-            FindSpawnPoint(map, ref ghostX, ref ghostY, ghost);
-            AddCherryToMap(map);
-            allCherry = CalculateAllCherryInMap(map);
+            map = ReadMap(mapLevelOne, ref playerX, ref playerY, player, ref allCherry, cherry, cherrySpawnPoint);
+
             DrowMap(map);
 
             while (isPlaying == true)
             {
-                Console.SetCursorPosition(0, 20);
-                Console.WriteLine($"Собрано: {collectCherry}/{allCherry}");
-
                 if (Console.KeyAvailable == true)
                 {
                     ConsoleKeyInfo key = Console.ReadKey(true);
 
-                    ChangeDirection(key, ref pacmanDX, ref pacmanDY);
+                    ChangeDirection(key, ref moveDirectionX, ref moveDirectionY);
                 }
 
-                if (map[pacmanX + pacmanDX, pacmanY + pacmanDY] != '#')
+                if (map[playerX + moveDirectionX, playerY + moveDirectionY] != wall)
                 {
-                    Move(ref pacmanX, ref pacmanY, pacmanDX, pacmanDY);
+                    Move(ref playerX, ref playerY, moveDirectionX, moveDirectionY, player, empty);
 
-                    CollectDots(map, pacmanX, pacmanY, ref collectCherry);
+                    CollectCherry(map, playerX, playerY, ref collectCherry, cherry, empty);
                 }
 
                 Task.Delay(100).Wait();
@@ -64,125 +81,91 @@
                 {
                     isPlaying = false;
                 }
+
+                Console.SetCursorPosition(potitionScoreLeft, positionScoreTop);
+                Console.WriteLine($"Собрано: {collectCherry}/{allCherry}");
             }
 
             if (collectCherry == allCherry)
             {
-                Console.SetCursorPosition(0, 25);
-                Console.WriteLine("Вы победили");
+                Console.SetCursorPosition(positionWinTextLeft, positionWinTextTop);
+                Console.WriteLine(winnerMessage);
             }
-
-            Console.ReadLine();
         }
 
-        static void CollectDots(char[,] map, int pacmanX, int pacmanY, ref int collectCherry)
+        static void CollectCherry(char[,] map, int playerX, int playerY, ref int collectCherry, char cherry, char empty)
         {
-            if (map[pacmanX, pacmanY] == '.')
+            if (map[playerX, playerY] == cherry)
             {
                 collectCherry++;
-                map[pacmanX, pacmanY] = ' ';
+                map[playerX, playerY] = empty;
             }
         }
 
-        static void Move(ref int X, ref int Y, int DX, int DY)
+        static void Move(ref int playerX, ref int playerY, int moveDirectionX, int moveDirectionY, char player, char empty)
         {
-            Console.SetCursorPosition(Y, X);
-            Console.Write(" ");
+            Console.SetCursorPosition(playerY, playerX);
+            Console.Write(empty);
 
-            X += DX;
-            Y += DY;
+            playerX += moveDirectionX;
+            playerY += moveDirectionY;
 
-            Console.SetCursorPosition(Y, X);
-            Console.Write('@');
+            Console.SetCursorPosition(playerY, playerX);
+            Console.Write(player);
         }
 
-        static void ChangeDirection(ConsoleKeyInfo key, ref int DX, ref int DY)
+        static void ChangeDirection(ConsoleKeyInfo key, ref int directionX, ref int directionY)
         {
             switch (key.Key)
             {
                 case ConsoleKey.UpArrow:
-                    DX = -1;
-                    DY = 0;
+                    directionX = -1;
+                    directionY = 0;
                     break;
 
                 case ConsoleKey.DownArrow:
-                    DX = 1;
-                    DY = 0;
+                    directionX = 1;
+                    directionY = 0;
                     break;
 
                 case ConsoleKey.LeftArrow:
-                    DX = 0;
-                    DY = -1;
+                    directionX = 0;
+                    directionY = -1;
                     break;
 
                 case ConsoleKey.RightArrow:
-                    DX = 0;
-                    DY = 1;
+                    directionX = 0;
+                    directionY = 1;
                     break;
             }
         }
 
-        static char[,] ReadMap(string mapName)
+        static char[,] ReadMap(string [] mapTemplate, ref int playerX, ref int playerY, char characterSymbol, ref int allCherry, char cherry, char cherrySpawnPoint)
         {
-            string[] newFile = File.ReadAllLines($"Map\\{mapName}");
-            char[,] map = new char[newFile.Length, newFile[0].Length];
+            char[,] map = new char[mapTemplate.GetLength(0), mapTemplate[0].Length];
 
-            for (int i = 0; i < map.GetLength(0); i++)
+            for (int i = 0; i < mapTemplate.GetLength(0); i++)
             {
-                for (int j = 0; j < map.GetLength(1); j++)
+                for (int j = 0; j < mapTemplate[0].Length; j++)
                 {
-                    map[i, j] = newFile[i][j];
+                    map[i, j] = mapTemplate[i][j];
+
+                    if (map[i, j] == characterSymbol)
+                    {
+                        playerX = i;
+                        playerY = j;
+                        break;
+                    }
+
+                    if (map[i, j] == cherrySpawnPoint)
+                    {
+                        map[i, j] = cherry;
+                        allCherry++;
+                    }
                 }
             }
 
             return map;
-        }
-
-        static void AddCherryToMap(char[,] map)
-        {
-            for (int i = 0; i < map.GetLength(0); i++)
-            {
-                for (int j = 0; j < map.GetLength(1); j++)
-                {
-                    if (map[i, j] == ' ')
-                    {
-                        map[i, j] = '.';
-                    }
-                }
-            }
-        }
-
-        static int CalculateAllCherryInMap(char[,] map)
-        {
-            int cherryInMap = 0;
-            for (int i = 0; i < map.GetLength(0); i++)
-            {
-                for (int j = 0; j < map.GetLength(1); j++)
-                {
-                    if (map[i, j] == '.')
-                    {
-                        cherryInMap++;
-                    }
-                }
-            }
-
-            return cherryInMap;
-        }
-
-        static void FindSpawnPoint(char[,] map, ref int posX, ref int posY, char characterSymbol)
-        {
-            for (int i = 0; i < map.GetLength(0); i++)
-            {
-                for (int j = 0; j < map.GetLength(1); j++)
-                {
-                    if (map[i, j] == characterSymbol)
-                    {
-                        posX = i;
-                        posY = j;
-                        break;
-                    }
-                }
-            }
         }
 
         static void DrowMap(char[,] map)
