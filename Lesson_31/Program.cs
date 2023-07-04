@@ -20,7 +20,7 @@
 
         private static void StartGame()
         {
-            string[] mapLevelOne = {"#######################################" ,
+            string[] mapFile = {"#######################################" ,
                                     "#x    #x        #         x#         x#" ,
                                     "#     ######    #  #########   ########" ,
                                     "#x    #   xx    #  #      x#   #     x#" ,
@@ -55,7 +55,7 @@
             int positionWinTextLeft = 0;
             string winnerMessage = "Вы победили!!!";
 
-            map = ReadMap(mapLevelOne, ref playerX, ref playerY, player, ref allCherry, cherry, cherrySpawnPoint);
+            map = ReadMap(mapFile, ref playerX, ref playerY, player, ref allCherry, cherry, cherrySpawnPoint);
 
             DrawMap(map);
 
