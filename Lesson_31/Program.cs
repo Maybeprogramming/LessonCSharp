@@ -14,6 +14,7 @@
         static void Main()
         {
             Console.CursorVisible = false;
+            Console.Title = "Brave New World";
             StartGame();
             Console.ReadLine();
         }
