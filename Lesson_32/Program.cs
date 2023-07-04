@@ -8,6 +8,16 @@
         static void Main()
         {
             Console.ReadKey();
+            
+        }
+
+        static T[] Shuffle<T> (ref T[] array)
+        {
+            return array;
+        }
+        static T[,] Shuffle<T>(ref T[,] array)
+        {
+            return array;
         }
     }
 }
