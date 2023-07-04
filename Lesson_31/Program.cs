@@ -21,20 +21,20 @@
         private static void StartGame()
         {
             string[] mapLevelOne = {"#######################################" ,
-                                    "#     #         #          #          #" ,
+                                    "#x    #x        #         x#         x#" ,
                                     "#     ######    #  #########   ########" ,
-                                    "#     #         #  #       #   #      #" ,
+                                    "#x    #   xx    #  #      x#   #     x#" ,
                                     "####  #  ########  #  ######   ## #####" ,
-                                    "#     x            @       #   #      #" ,
-                                    "#     x    x               #   #      #" ,
+                                    "#                          #   #     x#" ,
+                                    "#     x    x       @  x    #   #      #" ,
                                     "#     ######### #  ######  #   #  #####" ,
-                                    "#     #         #       #  #   #      #" ,
-                                    "#     #         #  #    #  #   #   #  #" ,
-                                    "#     #         #  #    #  #   #   #  #" ,
+                                    "#x    #   x x   #       #  #   #     x#" ,
+                                    "#     # x x x x #  #    #  #   #   #  #" ,
+                                    "#     #   x x   #  # x  #  #   #   #  #" ,
                                     "#     ###########  #    #  #   #   #  #" ,
-                                    "#               #  #       #   #   #  #" ,
+                                    "#x             x#  # x     #   #  x#  #" ,
                                     "#     #         #  #       #   #####  #" ,
-                                    "#     #            #                  #" ,
+                                    "#     #            #x             x   #" ,
                                     "#######################################" };
             char[,] map;
             int playerX = 0;
@@ -57,7 +57,7 @@
 
             map = ReadMap(mapLevelOne, ref playerX, ref playerY, player, ref allCherry, cherry, cherrySpawnPoint);
 
-            DrowMap(map);
+            DrawMap(map);
 
             while (isPlaying == true)
             {
@@ -154,7 +154,6 @@
                     {
                         playerX = i;
                         playerY = j;
-                        break;
                     }
 
                     if (map[i, j] == cherrySpawnPoint)
@@ -168,7 +167,7 @@
             return map;
         }
 
-        static void DrowMap(char[,] map)
+        static void DrawMap(char[,] map)
         {
             for (int i = 0; i < map.GetLength(0); i++)
             {
