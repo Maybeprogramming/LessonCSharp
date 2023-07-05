@@ -24,7 +24,6 @@ namespace Lesson_32
             bool[] arrarBool = { true, true, true, false, false, false };
             float[] arrayFloat = { 1.1f, 2.2f, 3.3f, 4.4f, 5.5f, 6.6f, 7.7f, 8.8f, 9.9f, 0.01f };
 
-
             arrayNumbers = StartShuffle(random, arrayNumbers, "Применение функции Shuffle на массиве чисел типа int\n");
             arraySymbols = StartShuffle(random, arraySymbols, "\n\nПрименение функции Shuffle на массиве символов типа char\n");
             arrayText = StartShuffle(random, arrayText, "\n\nПрименение функции Shuffle на массиве строк типа string\n");
