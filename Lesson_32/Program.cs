@@ -83,6 +83,7 @@ namespace Lesson_32
                 Console.Write($" {element}");
             }
         }
+
         static void Print(string text, ConsoleColor color = ConsoleColor.White)
         {
             ConsoleColor defaultColor = Console.ForegroundColor;
