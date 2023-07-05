@@ -13,12 +13,14 @@
     {
         static void Main()
         {
+            ConsoleSetup();
+            StartGame();
+        }
 
-
+        private static void ConsoleSetup()
+        {
             Console.CursorVisible = false;
             Console.Title = "Brave New World";
-            StartGame();
-            Console.ReadLine();
         }
 
         private static void StartGame()
@@ -96,7 +98,7 @@
 
             Console.SetCursorPosition(positionWinTextLeft, positionWinTextTop);
             Console.WriteLine(winnerMessage);
-
+            Console.ReadLine();
         }
 
         static void TryCollectCherry(char[,] map, int playerPositionX, int playerPositionY, ref int collectCherry, char characterSymbol, char emptySymbol)
