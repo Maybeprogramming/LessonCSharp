@@ -12,6 +12,11 @@
     {
         static void Main()
         {
+
+        }
+
+        static void TryFindInDictionary(string word)
+        {
         }
     }
 }
