@@ -15,7 +15,6 @@
             Console.Title = "Толковый словарь";
             Dictionary<string, string> dictionaryWords;
             dictionaryWords = InitialDictionary();
-
             StartWorkDictionary(dictionaryWords);
         }
 
