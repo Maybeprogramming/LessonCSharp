@@ -1,4 +1,6 @@
-﻿namespace Lesson_32
+﻿using System.Diagnostics;
+
+namespace Lesson_32
 {
     //Реализуйте функцию Shuffle, которая перемешивает элементы массива в случайном порядке.
     //Kansas city shuffle
@@ -16,17 +18,50 @@
         {
             Random random = new();
 
+            long intArray;
+            long charArray;
+            long stringArray;
+            long boolArray;
+            long floatArray;
+            Stopwatch timer = new ();
+
             int[] arrayNumbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
             char[] arraySymbols = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')' };
             string[] arrayText = { "Один", "Два", "Три", "Четыре", "Пять" };
             bool[] arrarBool = { true, true, true, false, false, false };
             float[] arrayFloat = { 1.1f, 2.2f, 3.3f, 4.4f, 5.5f, 6.6f, 7.7f, 8.8f, 9.9f, 0.01f };
 
+            timer.Start();
             arrayNumbers = StartShuffle(random, arrayNumbers, "Применение функции Shuffle на массиве чисел типа int\n");
+            intArray = timer.ElapsedMilliseconds;
+            timer.Reset();
+
+            timer.Start();
             arraySymbols = StartShuffle(random, arraySymbols, "\n\nПрименение функции Shuffle на массиве символов типа char\n");
+            charArray = timer.ElapsedMilliseconds;
+            timer.Reset();
+
+            timer.Start();
             arrayText = StartShuffle(random, arrayText, "\n\nПрименение функции Shuffle на массиве строк типа string\n");
+            stringArray = timer.ElapsedMilliseconds;
+            timer.Reset();
+
+            timer.Start();
             arrarBool = StartShuffle(random, arrarBool, "\n\nПрименение функции Shuffle на массиве типа bool\n");
+            boolArray = timer.ElapsedMilliseconds;
+            timer.Reset();
+
+            timer.Start();
             arrayFloat = StartShuffle(random, arrayFloat, "\n\nПрименение функции Shuffle на массиве чисел типа float\n");
+            floatArray = timer.ElapsedMilliseconds;
+            timer.Stop();
+
+            Console.WriteLine("\n\nБенчмарк: ");
+            Console.WriteLine("Int32: "+ intArray + " мс");
+            Console.WriteLine("Char: " + charArray + " мс");
+            Console.WriteLine("String: " + stringArray + " мс");
+            Console.WriteLine("Bool: " + boolArray + " мс");
+            Console.WriteLine("Float: " + floatArray + " мс");
         }
 
         private static void ConsoleSetup()
