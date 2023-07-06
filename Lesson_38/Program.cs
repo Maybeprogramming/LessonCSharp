@@ -49,7 +49,7 @@ namespace Lesson_38
         private int _health = 100;
         private int _damage = 20;
         private int _armor = 5;
-
+         
         public Player(string name, string rank)
         {
             Name = name;
