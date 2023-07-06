@@ -121,7 +121,7 @@
 
             if (userInput == PrintWorldsCommand)
             {
-                Print("Перечень слов в словаре: ");
+                Print("Перечень слов: ");
 
                 foreach (var word in dictionaryWords.Keys)
                 {
@@ -131,7 +131,7 @@
             }
             else if (userInput == PrintDictionaryCommand)
             {
-                Print("Перечень слов в словаре: ");
+                Print("Выдержка из словаря: ");
 
                 foreach (var word in dictionaryWords)
                 {
