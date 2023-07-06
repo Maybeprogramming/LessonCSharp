@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace Lesson_32
+﻿namespace Lesson_32
 {
     //Реализуйте функцию Shuffle, которая перемешивает элементы массива в случайном порядке.
     //Kansas city shuffle
