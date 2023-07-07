@@ -22,22 +22,53 @@
 //2 - public bool IsAlive => _health > 0; - так запись более лаконичная.
 //3 - немного странно, что игрок бьет сам себя. Сделайте тогда двух игроков.
 
+using System.Runtime.CompilerServices;
+
 namespace Lesson_38
 {
     internal class Program
     {
         static void Main()
         {
-            int damage = 35;
-            int attackCount = 4;
-            Player player = new Player("Котопёс", "Солдат");
+            Console.SetBufferSize(70, 300);
+            Console.SetWindowSize(70, 30);
 
-            player.ShowInfo();
-            player.Attack();
+            int catDamage = 20;
+            int catHealth = 50;
+            int catArmor = 5;
+            int dogDamage = 15;
+            int dogHealth = 65;
+            int dogArmor = 10;
+            int attackCount = 5;
+            Player playerCat = new("Кот", "Ассасин", catHealth, catDamage, catArmor);
+            Player playerDog = new Player("Пёс", "Воин", dogHealth, dogDamage, dogArmor);
+
+            playerCat.ShowInfo();
+            Console.WriteLine();
+            playerDog.ShowInfo();
 
             for (int i = 0; i < attackCount; i++)
             {
-                player.TryTakeDamage(damage);
+                Console.WriteLine($"\n{i + 1} - ход:");
+
+                playerCat.Attack(playerDog);
+                playerDog.Attack(playerCat);
+
+                Console.WriteLine();
+                Task.Delay(100).Wait();
+            }
+
+            if (playerCat.IsAlive == false & playerDog.IsAlive == false)
+            {
+                Console.WriteLine($"В этой битве нет победителй...");
+            }
+            else if (playerCat.IsAlive == true & playerDog.IsAlive == false)
+            {
+                Console.WriteLine($"{playerCat.Name} победил в этой битве");
+            }
+            else if (playerCat.IsAlive == false & playerDog.IsAlive == true)
+            {
+                Console.WriteLine($"{playerDog.Name} победил в этой битве");              
             }
 
             Console.ReadLine();
@@ -45,23 +76,37 @@ namespace Lesson_38
     }
 
     class Player
-    {        
-        private int _health = 100;
-        private int _damage = 20;
-        private int _armor = 5;
-         
-        public Player(string name, string rank)
+    {
+        private int _health;
+        private int _damage;
+        private int _armor;
+
+        public Player(string name, string rank, int health = 50, int damage = 10, int armor = 0)
         {
             Name = name;
             Rank = rank;
+            _health = health;
+            _damage = damage;
+            _armor = armor;
         }
 
-        public string Name { get; set; }
-        public string Rank { get; set; }
-        public bool IsAlive
-        {  
-            get { return _health > 0; }
+        public string Name { get; private set; }
+        public string Rank { get; private set; }
+        public int Health 
+        { 
+            get 
+            { 
+                return _health;
+            } 
+            private set 
+            { 
+                if (value < 0) 
+                    _health = 0;
+                else 
+                    _health = value;
+            } 
         }
+        public bool IsAlive => _health > 0;
 
         public void ShowInfo()
         {
@@ -69,26 +114,27 @@ namespace Lesson_38
                               $"\nЗвание: {Rank}" +
                               $"\nHP: {_health}" +
                               $"\nУрон: {_damage}" +
-                              $"\nБроня: {_armor}";
-            
+                              $"\nБроня: {_armor}\n";
+
             Console.Write(infoText);
         }
 
-        public void Attack()
+        public void Attack(Player target)
         {
-            Console.WriteLine($"\n\nИгрок ({Name}) производит атаку!");
+            Console.WriteLine($"Игрок ({Name}) атакует игрока {target.Name}!");
+            target.TryTakeDamage(_damage);
         }
 
-        public void TryTakeDamage (int damage)
+        private void TryTakeDamage(int damage)
         {
-            if(IsAlive == true && _health >= damage)
+            if (IsAlive == true)
             {
-                _health -= damage - _armor;
-                Console.WriteLine($"\nИгрок ({Name}) получает урон: {damage}, осталось здоровья: {_health}!");
+                Health -= damage - _armor;
+                Console.WriteLine($"Игрок ({Name}) получает урон: {damage}, осталось здоровья: {_health}!");
             }
             else
             {
-                Console.WriteLine($"\nУрон: {damage} по игроку {Name} не был нанесён!");
+                Console.WriteLine($"Урон: {damage} по игроку {Name} не был нанесён!");
             }
         }
     }
