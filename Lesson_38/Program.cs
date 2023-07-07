@@ -22,8 +22,6 @@
 //2 - public bool IsAlive => _health > 0; - так запись более лаконичная.
 //3 - немного странно, что игрок бьет сам себя. Сделайте тогда двух игроков.
 
-using System.Runtime.CompilerServices;
-
 namespace Lesson_38
 {
     internal class Program
