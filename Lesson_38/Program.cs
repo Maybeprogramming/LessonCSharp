@@ -33,15 +33,19 @@ namespace Lesson_38
             Console.SetBufferSize(70, 300);
             Console.SetWindowSize(70, 30);
 
+            string catName = "Кот";
+            string catRank = "Ассасин";
             int catDamage = 20;
             int catHealth = 50;
             int catArmor = 5;
+            string dogName = "Пёс";
+            string dogRank = "Воин";
             int dogDamage = 15;
             int dogHealth = 65;
             int dogArmor = 10;
             int attackCount = 5;
-            Player playerCat = new("Кот", "Ассасин", catHealth, catDamage, catArmor);
-            Player playerDog = new Player("Пёс", "Воин", dogHealth, dogDamage, dogArmor);
+            Player playerCat = new(catName, catRank, catHealth, catDamage, catArmor);
+            Player playerDog = new Player(dogName, dogRank, dogHealth, dogDamage, dogArmor);
 
             playerCat.ShowInfo();
             Console.WriteLine();
@@ -55,9 +59,16 @@ namespace Lesson_38
                 playerDog.Attack(playerCat);
 
                 Console.WriteLine();
-                Task.Delay(100).Wait();
+                Task.Delay(200).Wait();
             }
 
+            CheckingBattleConditions(playerCat, playerDog);
+
+            Console.ReadLine();
+        }
+
+        private static void CheckingBattleConditions(Player playerCat, Player playerDog)
+        {
             if (playerCat.IsAlive == false & playerDog.IsAlive == false)
             {
                 Console.WriteLine($"В этой битве нет победителй...");
@@ -68,10 +79,8 @@ namespace Lesson_38
             }
             else if (playerCat.IsAlive == false & playerDog.IsAlive == true)
             {
-                Console.WriteLine($"{playerDog.Name} победил в этой битве");              
+                Console.WriteLine($"{playerDog.Name} победил в этой битве");
             }
-
-            Console.ReadLine();
         }
     }
 
@@ -92,19 +101,19 @@ namespace Lesson_38
 
         public string Name { get; private set; }
         public string Rank { get; private set; }
-        public int Health 
-        { 
-            get 
-            { 
+        public int Health
+        {
+            get
+            {
                 return _health;
-            } 
-            private set 
-            { 
-                if (value < 0) 
+            }
+            private set
+            {
+                if (value < 0)
                     _health = 0;
-                else 
+                else
                     _health = value;
-            } 
+            }
         }
         public bool IsAlive => _health > 0;
 
