@@ -24,7 +24,7 @@
             const string exitProgramm = "exit";
 
             Console.Title = "Динамический массив продвинутый";
-            List<int> numberList = new List<int>();
+            List<int> numbersList = new List<int>();
             int sumNumbers = 0;
             string userInput;
             bool isRunProgramm = true;
@@ -42,7 +42,7 @@
                 Console.WriteLine(commandMenu);
                 Console.Write("Введенные числа: ");
 
-                foreach (int number in numberList)
+                foreach (int number in numbersList)
                 {
                     Console.Write($"{number} ");
                 }
@@ -54,7 +54,7 @@
                 switch (userInput)
                 {
                     case sumCommand:
-                        sumNumbers = SumNumbers(numberList, sumNumbers, noElementsInArraymessage);
+                        sumNumbers = SumNumbers(numbersList, sumNumbers, noElementsInArraymessage);
                         break;
 
                     case exitProgramm:
@@ -62,7 +62,7 @@
                         break;
 
                     default:
-                        TryAddNumberToList(numberList, errorCommandMessage, isTryParseToInt, result);
+                        TryAddNumberToList(numbersList, errorCommandMessage, isTryParseToInt, result);
                         break;
                 }
 
