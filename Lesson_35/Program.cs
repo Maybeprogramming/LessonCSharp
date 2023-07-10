@@ -15,6 +15,11 @@
     {
         static void Main()
         {
+            WorkProgramm();
+        }
+
+        private static void WorkProgramm()
+        {
             const string sumCommand = "sum";
             const string exitProgramm = "exit";
 
@@ -22,7 +27,6 @@
             List<int> numberList = new List<int>();
             int sumNumbers = 0;
             string userInput;
-            string requestEnterNumber = "Пожалуйста, введите число";
             bool isRunProgramm = true;
             string requestCommandOrNumber = $"\n\nВведите команду или число: ";
             string continueMessage = $"\nНажмите любую клавишу чтобы продолжить";
@@ -50,20 +54,7 @@
                 switch (userInput)
                 {
                     case sumCommand:
-                        if (numberList.Count > 0)
-                        {
-                            foreach (int number in numberList)
-                            {
-                                sumNumbers += number;
-                            }
-
-                            Console.WriteLine($"Cумма всех введенных чисел равна: {sumNumbers}");
-                            sumNumbers = 0;
-                        }
-                        else
-                        {
-                            Console.WriteLine(noElementsInArraymessage);
-                        }
+                        sumNumbers = SumNumbers(numberList, sumNumbers, noElementsInArraymessage);
                         break;
 
                     case exitProgramm:
@@ -71,21 +62,42 @@
                         break;
 
                     default:
-                        if (isTryParseToInt == true)
-                        {
-                            numberList.Add(result);
-                        }
-                        else
-                        {
-                            Console.WriteLine(errorCommandMessage);
-                        }
+                        TryAddNumberToList(numberList, errorCommandMessage, isTryParseToInt, result);
                         break;
                 }
+
+                Console.WriteLine(continueMessage);
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+
+        private static void TryAddNumberToList(List<int> numberList, string errorCommandMessage, bool isTryParseToInt, int result)
+        {
+            if (isTryParseToInt == true)
+            {
+                numberList.Add(result);
+            }
+            else
+            {
+                Console.WriteLine(errorCommandMessage);
+            }
+        }
+
+        private static int SumNumbers(List<int> numberList, int sumNumbers, string noElementsInArraymessage)
+        {
+            if (numberList.Count > 0)
+            {
+                sumNumbers = numberList.Sum(number => number);
+                Console.WriteLine($"Cумма всех введенных чисел равна: {sumNumbers}");
+                sumNumbers = 0;
+            }
+            else
+            {
+                Console.WriteLine(noElementsInArraymessage);
             }
 
-            Console.WriteLine(continueMessage);
-            Console.ReadKey();
-            Console.Clear();
+            return sumNumbers;
         }
     }
 }
