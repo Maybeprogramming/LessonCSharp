@@ -93,7 +93,7 @@ namespace Lesson_34
             }
             else
             {
-                Console.WriteLine("У клиента не хватило денег =( и он уходит...");
+                Console.WriteLine($"У клиента не хватило денег на покупку: {product.Name} =( и он уходит...");
                 return ZeroMoney;
             }
         }
