@@ -28,7 +28,7 @@ namespace Lesson_34
             int queueCustomerCount = 15;
             int minMoneyCustomer = 40;
             int maxMoneyCustomer = 200;
-            int numberCustomer = 0;
+            int currentCustomer = 0;
             Queue<Customer> customers = new Queue<Customer>(queueCustomerCount);
             Customer customer;
 
@@ -53,10 +53,10 @@ namespace Lesson_34
                 Console.Clear();
 
                 customer = customers.Dequeue();
-                numberCustomer++;
+                currentCustomer++;
                 product = new Product(productsNames[random.Next(firstIndexProduct, lastIndexProduct)], random.Next(lowPriceProduct, highPriceProduct + 1));
                 seller.ShowCurrentBalance();
-                Console.WriteLine($"Обслуживается клиент №{numberCustomer}:");
+                Console.WriteLine($"Обслуживается клиент №{currentCustomer}:");
                 seller.TrySellProduct(customer.TryToBuyProduct(product));
                 isWorkShop = customers.Count > 0;
                 Task.Delay(delayOperationMiliseconds).Wait();
