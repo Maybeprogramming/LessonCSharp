@@ -125,22 +125,6 @@ namespace Lesson_36
             }
         }
 
-        private static void PrintText(string text, ConsoleColor color = ConsoleColor.White)
-        {
-            ConsoleColor defaultColor = Console.ForegroundColor;
-            Console.ForegroundColor = color;
-            Console.Write(text);
-            Console.ForegroundColor = defaultColor;
-        }
-
-        private static bool IsEmptyCard(Dictionary<string, string> cardsEmployeess)
-        {
-            if (cardsEmployeess.Count <= 0)
-                return true;
-            else
-                return false;
-        }
-
         static void DeleteCard(Dictionary<string, string> cardsEmployeess)
         {
             string userInput;
@@ -172,6 +156,21 @@ namespace Lesson_36
             {
                 PrintText($"\n\"{userInput}\" - вы ввели не число\n", ConsoleColor.Red);
             }
+        }
+        private static void PrintText(string text, ConsoleColor color = ConsoleColor.White)
+        {
+            ConsoleColor defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.Write(text);
+            Console.ForegroundColor = defaultColor;
+        }
+
+        private static bool IsEmptyCard(Dictionary<string, string> cardsEmployeess)
+        {
+            if (cardsEmployeess.Count <= 0)
+                return true;
+            else
+                return false;
         }
     }
 }
