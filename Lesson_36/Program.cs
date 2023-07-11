@@ -157,6 +157,7 @@ namespace Lesson_36
                 PrintText($"\n\"{userInput}\" - вы ввели не число\n", ConsoleColor.Red);
             }
         }
+
         private static void PrintText(string text, ConsoleColor color = ConsoleColor.White)
         {
             ConsoleColor defaultColor = Console.ForegroundColor;
