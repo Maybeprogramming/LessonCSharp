@@ -135,7 +135,7 @@ namespace Lesson_36
 
         private static bool IsEmptyCard(Dictionary<string, string> cardsEmployeess)
         {
-            if (cardsEmployeess.Count > 0)
+            if (cardsEmployeess.Count <= 0)
                 return true;
             else
                 return false;
@@ -152,6 +152,26 @@ namespace Lesson_36
 
             Console.Write($"\nДля удаления досье введите порядковый номер сотрудника из списка: ");
             userInput = Console.ReadLine();
+
+            if (Int32.TryParse(userInput, out int indexToRemove) == true)
+            {
+                --indexToRemove;
+
+                if (indexToRemove >= 0 && indexToRemove < cardsEmployeess.Count)
+                {
+                    PrintText($"\nДосье успешно удалено: {cardsEmployeess.ElementAt(indexToRemove).Value} - {cardsEmployeess.ElementAt(indexToRemove).Key}\n", ConsoleColor.Green);
+
+                    cardsEmployeess.Remove(cardsEmployeess.ElementAt(indexToRemove).Key);
+                }
+                else
+                {
+                    PrintText($"\n\"{indexToRemove + 1}\" - такого индекса нет\n", ConsoleColor.Red);
+                }
+            }
+            else
+            {
+                PrintText($"\n\"{userInput}\" - вы ввели не число\n", ConsoleColor.Red);
+            }
         }
     }
 }
