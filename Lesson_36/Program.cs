@@ -29,11 +29,11 @@ namespace Lesson_36
             const string ExitMenu = "4";
 
             Dictionary<string, string> cardsEmployees = new() {
-                {"Главный инженер", "Василий Петрович Пупкин"},
-                {"Специалист по кадрам", "Геннадий Сергеевич Иванов"},
-                {"Диспетчер", "Александр Викторович Махов"},
-                {"Механик", "Александр Петрович Пупкин"},
-                {"Техник по учёту", "Воробьев Анатолий Сергеевич"}};
+                {"Василий Петрович Пупкин","Главный инженер"},
+                {"Геннадий Сергеевич Иванов","Специалист по кадрам"},
+                {"Александр Викторович Махов", "Диспетчер" },
+                {"Александр Петрович Пупкин", "Механик"},
+                {"Воробьев Анатолий Сергеевич", "Техник по учёту"}};
 
             Console.Title = "Продвинутая программа по учёту кадров организации";
             bool isRunProgramm = true;
@@ -58,7 +58,7 @@ namespace Lesson_36
                 switch (userInput)
                 {
                     case AddCardMenu:
-                        CreateCard(cardsEmployees);
+                        CreateCard(cardsEmployees, continueMessage);
                         break;
 
                     case ShowCardMenu:
@@ -85,21 +85,28 @@ namespace Lesson_36
             PrintText(exitMessage, ConsoleColor.Green);
         }
 
-        static void CreateCard(Dictionary<string, string> cardsEmployees)
+        static void CreateCard(Dictionary<string, string> cardsEmployees, string continueMessage)
         {
-            string userInputName;
-            string userInputRank;
+            string inputNameKey;
+            string inputRankValue;
+
             Console.Clear();
             Console.WriteLine("Добавление нового досье на сотрудника");
 
-            Console.Write("Введите ФИО сотрудника: ");
-            userInputName = Console.ReadLine();
+            Console.Write("Введите ФИО: ");
+            inputNameKey = Console.ReadLine();
 
-            Console.Write($"Введите должность сотрудника {userInputName}: ");
-            userInputRank = Console.ReadLine();
+            if (cardsEmployees.ContainsKey(inputNameKey) == true)
+            {
+                PrintText($"{inputNameKey} - не допустимое значение, в базе уже есть такое досье");
+                return;
+            }
 
-            cardsEmployees.Add(userInputRank, userInputName);
-            PrintText($"\nДосье успешно добавлено: {userInputName} - {userInputRank}\n", ConsoleColor.Green);
+            Console.Write($"Введите должность {inputNameKey}: ");
+            inputRankValue = Console.ReadLine();
+
+            cardsEmployees.Add(inputNameKey,  inputRankValue);
+            PrintText($"\nДосье успешно добавлено: {inputNameKey} - {inputRankValue}\n", ConsoleColor.Green);
         }
 
         static void ShowAllCards(Dictionary<string, string> cardsEmployeess)
@@ -114,7 +121,7 @@ namespace Lesson_36
                 foreach (var card in cardsEmployeess)
                 {
                     indexPosition++;
-                    Console.Write($"\n{indexPosition}. {card.Value} - {card.Key}");
+                    Console.Write($"\n{indexPosition}. {card.Key} - {card.Value}");
                 }
 
                 Console.WriteLine();
@@ -134,27 +141,17 @@ namespace Lesson_36
             if (IsEmptyCard(cardsEmployeess) == true)
                 return;
 
-            Console.Write($"\nДля удаления досье введите порядковый номер сотрудника из списка: ");
+            Console.Write($"\nДля удаления введите ФИО сотрудника: ");
             userInput = Console.ReadLine();
 
-            if (Int32.TryParse(userInput, out int indexToRemove) == true)
+            if (cardsEmployeess.ContainsKey(userInput) == true)
             {
-                --indexToRemove;
-
-                if (indexToRemove >= 0 && indexToRemove < cardsEmployeess.Count)
-                {
-                    PrintText($"\nДосье успешно удалено: {cardsEmployeess.ElementAt(indexToRemove).Value} - {cardsEmployeess.ElementAt(indexToRemove).Key}\n", ConsoleColor.Green);
-
-                    cardsEmployeess.Remove(cardsEmployeess.ElementAt(indexToRemove).Key);
-                }
-                else
-                {
-                    PrintText($"\n\"{indexToRemove + 1}\" - такого индекса нет\n", ConsoleColor.Red);
-                }
+                cardsEmployeess.Remove(userInput);
+                PrintText($"\nДосье успешно удалено: {userInput}\n", ConsoleColor.Green);
             }
             else
             {
-                PrintText($"\n\"{userInput}\" - вы ввели не число\n", ConsoleColor.Red);
+                PrintText($"\n\"{userInput}\" - такого досье нет\n", ConsoleColor.Red);
             }
         }
 
