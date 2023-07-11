@@ -28,6 +28,20 @@ namespace Lesson_36
             const string DeleteCardMenu = "3";
             const string ExitMenu = "4";
 
+            //Dictionary<int, List<string>> cards = new Dictionary<int, List<string>>()
+            //{
+            //    {1, new List<string>() {"ФИО", "Должность"} },
+            //    {2, new List<string>() {"ФИО", "Должность"} },
+            //    {3, new List<string>() {"ФИО", "Должность"} }
+            //};
+
+            //foreach (var card in cards)
+            //{
+            //    Console.WriteLine($"{card.Key}. {card.Value[0]} - {card.Value[1]}");
+            //}
+
+            Console.ReadLine();
+
             Dictionary<string, string> cardsEmployees = new() {
                 {"Василий Петрович Пупкин","Главный инженер"},
                 {"Геннадий Сергеевич Иванов","Специалист по кадрам"},
@@ -105,7 +119,7 @@ namespace Lesson_36
             Console.Write($"Введите должность {inputNameKey}: ");
             inputRankValue = Console.ReadLine();
 
-            cardsEmployees.Add(inputNameKey,  inputRankValue);
+            cardsEmployees.Add(inputNameKey, inputRankValue);
             PrintText($"\nДосье успешно добавлено: {inputNameKey} - {inputRankValue}\n", ConsoleColor.Green);
         }
 
