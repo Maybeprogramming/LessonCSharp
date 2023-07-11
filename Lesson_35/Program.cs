@@ -54,7 +54,7 @@ namespace Lesson_35
                 switch (userInput)
                 {
                     case sumCommand:
-                        sumNumbers = SumNumbers(numbersList, sumNumbers, noElementsInArraymessage);
+                        SumNumbers(numbersList, sumNumbers, noElementsInArraymessage);
                         break;
 
                     case exitProgramm:
@@ -84,20 +84,19 @@ namespace Lesson_35
             }
         }
 
-        private static int SumNumbers(List<int> numberList, int sumNumbers, string noElementsInArraymessage)
+        private static void SumNumbers(List<int> numberList, int sumNumbers, string noElementsInArraymessage)
         {
             if (numberList.Count > 0)
             {
                 sumNumbers = numberList.Sum(number => number);
                 Console.WriteLine($"Cумма всех введенных чисел равна: {sumNumbers}");
-                sumNumbers = 0;
             }
             else
             {
                 Console.WriteLine(noElementsInArraymessage);
             }
 
-            return sumNumbers;
+            sumNumbers = 0;
         }
     }
 }
