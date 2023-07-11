@@ -9,10 +9,13 @@
     //не используя Linq.
     //Пример: { "1", "2", "1"} + {"3", "2"} => { "1", "2", "3"}
 
-    internal class Program
+    class Program
     {
         static void Main()
         {
+            Console.SetWindowSize(80, 30);
+            Console.SetBufferSize(80, 30);
+
         }
     }
 }
