@@ -1,77 +1,100 @@
-﻿namespace Lesson_37
+﻿// Объединение в одну коллекцию
+// Merging into one collection
+
+//Есть два массива строк.
+//Надо их объединить в одну коллекцию,
+//исключив повторения,
+//не используя Linq.
+//Пример: { "1", "2", "1"} + {"3", "2"} => { "1", "2", "3"}
+
+#region Объединение коллекций с помощью Linq
+//namespace Lesson_37
+//{
+//    class Program
+//    {
+//        static void Main()
+//        {
+//            Console.SetWindowSize(80, 30);
+//            Console.SetBufferSize(80, 30);
+//            Console.Title = "Объединение в одну коллекцию";
+
+//            List<string> collectionA = new List<string>() { "1", "2", "1" };
+//            List<string> collectionB = new List<string>() { "3", "2" };
+
+//            var unionCollections = collectionA.Concat(collectionB).Distinct();
+
+//            Console.Write("Исходная коллекция 1: ");
+//            PrintCollection(collectionA);
+//            Console.Write("\nИсходная коллекция 2: ");
+//            PrintCollection(collectionB);
+//            Console.Write("\nРезультат объединения, ислючая повторения: ");
+//            PrintCollection(unionCollections);
+
+//            Console.ReadLine();
+//        }
+
+//        private static void PrintCollection(IEnumerable<string> collection)
+//        {
+//            foreach (string element in collection)
+//            {
+//                Console.Write($"\"{element}\" ");
+//            }
+//        }
+//    }
+//}
+#endregion
+
+namespace Lesson_37
 {
-    // Объединение в одну коллекцию
-    // Merging into one collection
-
-    //Есть два массива строк.
-    //Надо их объединить в одну коллекцию,
-    //исключив повторения,
-    //не используя Linq.
-    //Пример: { "1", "2", "1"} + {"3", "2"} => { "1", "2", "3"}
-
     class Program
     {
         static void Main()
         {
             Console.SetWindowSize(80, 30);
             Console.SetBufferSize(80, 30);
+            Console.Title = "Объединение в одну коллекцию";
 
-            List<int> collectionA = new List<int>() { 1, 2, 1 };
-            List<int> collectionB = new List<int>() { 3, 2 };        
+            List<string> collectionA = new List<string>() { "1", "2", "1" };
+            List<string> collectionB = new List<string>() { "3", "2" };
 
-            duplicateElementsInArray(collectionA);
-            duplicateElementsInArray(collectionB);
-            duplicateElementsInArray(collectionA, collectionB);
+            var unionCollection = Union(collectionA, collectionB);
 
-            collectionA.Union(collectionB);
-
-            foreach (var element in collectionA)
-            {
-                Console.Write($"{element} ");
-            }
-
-            Console.WriteLine();
-            foreach (var element in collectionB)
-            {
-                Console.Write($"{element} ");
-            }
+            Console.Write("Исходная коллекция A: ");
+            PrintCollection(collectionA);
+            Console.Write("\nИсходная коллекция B: ");
+            PrintCollection(collectionB);
+            Console.Write("\nРезультат объединения, ислючая повторения: ");
+            PrintCollection(unionCollection);
 
             Console.ReadLine();
         }
 
-        private static void duplicateElementsInArray(List<int> collectionA, List<int> collectionB)
+        private static List<string> Union(List<string> collection1, List<string> collection2)
         {
-            int duplicateElement;
+            List<string> result = new List<string>();
 
-            for (int i = 0; i < collectionA.Count; i++)
+            Comparer(collection1, result);
+            Comparer(collection2, result);
+
+            return result;
+        }
+
+        private static void Comparer(List<string> collection, List<string> result)
+        {
+            foreach (var item in collection)
             {
-                duplicateElement = collectionA[i];
-
-                for (int j = i + 1; j < collectionB.Count; j++)
+                if (result.Contains(item) == false)
                 {
-                    if (collectionA[i] == collectionB[j])
-                    {
-                        collectionB.RemoveAt(j);
-                    }
+                    result.Add(item);
                 }
             }
         }
 
-        private static void duplicateElementsInArray(List<int> collection)
+        private static void PrintCollection(IEnumerable<string> collection)
         {
-            int duplicateElement;
-
-            for (int i = 0; i < collection.Count; i++)
+            foreach (string element in collection)
             {
-                duplicateElement = collection[i];
-
-                for (int j = i + 1; j < collection.Count; j++)
-                {
-                    if (collection[i].Equals(collection[j]))
-                    {
-                        collection.RemoveAt(j);
-                    }
-                }
+                Console.Write($"\"{element}\" ");
             }
         }
     }
