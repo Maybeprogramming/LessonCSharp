@@ -28,20 +28,6 @@ namespace Lesson_36
             const string DeleteCardMenu = "3";
             const string ExitMenu = "4";
 
-            //Dictionary<int, List<string>> cards = new Dictionary<int, List<string>>()
-            //{
-            //    {1, new List<string>() {"ФИО", "Должность"} },
-            //    {2, new List<string>() {"ФИО", "Должность"} },
-            //    {3, new List<string>() {"ФИО", "Должность"} }
-            //};
-
-            //foreach (var card in cards)
-            //{
-            //    Console.WriteLine($"{card.Key}. {card.Value[0]} - {card.Value[1]}");
-            //}
-
-            Console.ReadLine();
-
             Dictionary<string, string> cardsEmployees = new() {
                 {"Василий Петрович Пупкин","Главный инженер"},
                 {"Геннадий Сергеевич Иванов","Специалист по кадрам"},
@@ -72,15 +58,15 @@ namespace Lesson_36
                 switch (userInput)
                 {
                     case AddCardMenu:
-                        CreateCard(cardsEmployees, continueMessage);
+                        TryCreateCard(cardsEmployees, continueMessage);
                         break;
 
                     case ShowCardMenu:
-                        ShowAllCards(cardsEmployees);
+                        ShowCards(cardsEmployees);
                         break;
 
                     case DeleteCardMenu:
-                        DeleteCard(cardsEmployees);
+                        TryDeleteCard(cardsEmployees);
                         break;
 
                     case ExitMenu:
@@ -88,18 +74,18 @@ namespace Lesson_36
                         break;
 
                     default:
-                        PrintText($"\n\"{userInput}\" - {errorMessageMenu}\n", ConsoleColor.Red);
+                        Print($"\n\"{userInput}\" - {errorMessageMenu}\n", ConsoleColor.Red);
                         break;
                 }
 
-                PrintText(continueMessage);
+                Print(continueMessage);
                 Console.ReadLine();
             }
 
-            PrintText(exitMessage, ConsoleColor.Green);
+            Print(exitMessage, ConsoleColor.Green);
         }
 
-        static void CreateCard(Dictionary<string, string> cardsEmployees, string continueMessage)
+        static void TryCreateCard(Dictionary<string, string> cardsEmployees, string continueMessage)
         {
             string inputNameKey;
             string inputRankValue;
@@ -112,7 +98,7 @@ namespace Lesson_36
 
             if (cardsEmployees.ContainsKey(inputNameKey) == true)
             {
-                PrintText($"{inputNameKey} - не допустимое значение, в базе уже есть такое досье");
+                Print($"{inputNameKey} - не допустимое значение, в базе уже есть такое досье");
                 return;
             }
 
@@ -120,17 +106,17 @@ namespace Lesson_36
             inputRankValue = Console.ReadLine();
 
             cardsEmployees.Add(inputNameKey, inputRankValue);
-            PrintText($"\nДосье успешно добавлено: {inputNameKey} - {inputRankValue}\n", ConsoleColor.Green);
+            Print($"\nДосье успешно добавлено: {inputNameKey} - {inputRankValue}\n", ConsoleColor.Green);
         }
 
-        static void ShowAllCards(Dictionary<string, string> cardsEmployeess)
+        static void ShowCards(Dictionary<string, string> cardsEmployeess)
         {
             Console.Clear();
             int indexPosition = 0;
 
             if (IsEmptyCard(cardsEmployeess) == false)
             {
-                PrintText("Архив всех досье:\n", ConsoleColor.Green);
+                Print("Архив всех досье:\n", ConsoleColor.Green);
 
                 foreach (var card in cardsEmployeess)
                 {
@@ -142,15 +128,15 @@ namespace Lesson_36
             }
             else
             {
-                PrintText($"Архив с досье пуст", ConsoleColor.Yellow);
+                Print($"Архив с досье пуст", ConsoleColor.Yellow);
             }
         }
 
-        static void DeleteCard(Dictionary<string, string> cardsEmployeess)
+        static void TryDeleteCard(Dictionary<string, string> cardsEmployeess)
         {
             string userInput;
             Console.Clear();
-            ShowAllCards(cardsEmployeess);
+            ShowCards(cardsEmployeess);
 
             if (IsEmptyCard(cardsEmployeess) == true)
                 return;
@@ -161,15 +147,15 @@ namespace Lesson_36
             if (cardsEmployeess.ContainsKey(userInput) == true)
             {
                 cardsEmployeess.Remove(userInput);
-                PrintText($"\nДосье успешно удалено: {userInput}\n", ConsoleColor.Green);
+                Print($"\nДосье успешно удалено: {userInput}\n", ConsoleColor.Green);
             }
             else
             {
-                PrintText($"\n\"{userInput}\" - такого досье нет\n", ConsoleColor.Red);
+                Print($"\n\"{userInput}\" - такого досье нет\n", ConsoleColor.Red);
             }
         }
 
-        private static void PrintText(string text, ConsoleColor color = ConsoleColor.White)
+        private static void Print(string text, ConsoleColor color = ConsoleColor.White)
         {
             ConsoleColor defaultColor = Console.ForegroundColor;
             Console.ForegroundColor = color;
