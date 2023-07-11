@@ -125,10 +125,26 @@ namespace Lesson_36
             }
         }
 
+        private static void PrintText(string text, ConsoleColor color = ConsoleColor.White)
+        {
+            ConsoleColor defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.Write(text);
+            Console.ForegroundColor = defaultColor;
+        }
+
+        private static bool IsEmptyCard(Dictionary<string, string> cardsEmployeess)
+        {
+            if (cardsEmployeess.Count > 0)
+                return true;
+            else
+                return false;
+        }
+
         static void DeleteCard(Dictionary<string, string> cardsEmployeess)
         {
             string userInput;
-            Console.Clear(); 
+            Console.Clear();
             ShowAllCards(cardsEmployeess);
 
             if (IsEmptyCard(cardsEmployeess) == true)
@@ -136,11 +152,6 @@ namespace Lesson_36
 
             Console.Write($"\nДля удаления досье введите порядковый номер сотрудника из списка: ");
             userInput = Console.ReadLine();
-
-    internal class Program
-    {
-        static void Main()
-        {
         }
     }
 }
