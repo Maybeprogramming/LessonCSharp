@@ -54,32 +54,32 @@ namespace Lesson_37
             Console.SetBufferSize(80, 30);
             Console.Title = "Объединение в одну коллекцию";
 
-            List<string> collectionA = new List<string>() { "1", "2", "1" };
-            List<string> collectionB = new List<string>() { "3", "2" };
+            List<string> collectionNumbers1 = new List<string>() { "1", "2", "1" };
+            List<string> collectionNumbers2 = new List<string>() { "3", "2" };
 
-            var unionCollection = Union(collectionA, collectionB);
+            var mergedCollection = MergeCollections(collectionNumbers1, collectionNumbers2);
 
-            Console.Write("Исходная коллекция A: ");
-            PrintCollection(collectionA);
-            Console.Write("\nИсходная коллекция B: ");
-            PrintCollection(collectionB);
-            Console.Write("\nРезультат объединения, ислючая повторения: ");
-            PrintCollection(unionCollection);
+            Console.Write("Исходная коллекция №1: ");
+            PrintCollection(collectionNumbers1);
+            Console.Write("\nИсходная коллекция №2: ");
+            PrintCollection(collectionNumbers2);
+            Console.Write("\nРезультат объединения двух коллекций, ислючая повторения: ");
+            PrintCollection(mergedCollection);
 
             Console.ReadLine();
         }
 
-        private static List<string> Union(List<string> collection1, List<string> collection2)
+        private static List<string> MergeCollections(List<string> collection1, List<string> collection2)
         {
             List<string> result = new List<string>();
 
-            Comparer(collection1, result);
-            Comparer(collection2, result);
+            ExcludeIdentialNumbers(collection1, result);
+            ExcludeIdentialNumbers(collection2, result);
 
             return result;
         }
 
-        private static void Comparer(List<string> collection, List<string> result)
+        private static void ExcludeIdentialNumbers(List<string> collection, List<string> result)
         {
             foreach (var item in collection)
             {
