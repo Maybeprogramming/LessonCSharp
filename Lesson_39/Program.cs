@@ -17,7 +17,7 @@ namespace Lesson_39
 
     class Player
     {
-        public Player(int positionX, int positionY, char symbol)
+        public Player(int positionX, int positionY, char symbol = '@')
         {
             PositionX = positionX;
             PositionY = positionY;
@@ -31,7 +31,7 @@ namespace Lesson_39
 
     class Renderer
     {
-        public void Draw()
+        public void Draw(int positionX, int positionY)
         {
 
         }
