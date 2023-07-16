@@ -8,6 +8,9 @@
 
 //База данных игроков
 
+using System;
+using System.Numerics;
+
 namespace Lesson_40
 {
     class Program
@@ -37,7 +40,7 @@ namespace Lesson_40
                           $"\n{CommandExitProgramm} - Выход из программы";
             string userInput;
             bool isRun = true;
-            PlayersDataSheets playersDataSheets = new PlayersDataSheets();
+            DataSheets playersDataSheets = new();
 
             while (isRun)
             {
@@ -55,19 +58,19 @@ namespace Lesson_40
                         break;
 
                     case CommandAddPlayerToDataSheets:
-                        playersDataSheets.AddPlayer();
+                        playersDataSheets.Add(1, "BluBerry", 20, false);
                         break;
 
                     case CommandRemovePlayerInDataSheets:
-                        playersDataSheets.RemovePlayer();
+                        playersDataSheets.Remove(0);
                         break;
 
                     case CommandBanPlayerById:
-                        playersDataSheets.BanPlayerById();
+                        playersDataSheets.BanById(0);
                         break;
 
                     case CommandUnBanPlayerById:
-                        playersDataSheets.UnbanPlayeById();
+                        playersDataSheets.UnbanById(0);
                         break;
 
                     case CommandExitProgramm:
@@ -84,9 +87,9 @@ namespace Lesson_40
         }
     }
 
-    class PlayersDataSheets
+    class DataSheets
     {
-        private List<Player> _players = new List<Player>()
+        private List<Player> _players = new()
         {
             new Player (1, "BluBerry", 20, false),
             new Player (2, "Wiking", 30, false),
@@ -94,27 +97,43 @@ namespace Lesson_40
             new Player (4, "Zirael", 45, false),
             new Player (5, "AprilOnil", 80, false)
         };
+        private bool isBanPlayer;
 
-        public void AddPlayer()
+        public void Add(int id, string nickname, int level, bool isBanned)
         {
-            Player newPlayer = new Player(0, "DarkWarrior", 10, true);
-
-            _players.Add(newPlayer);
+            _players.Add(new Player(id, nickname, level, isBanned));
         }
 
-        public void RemovePlayer()
+        public void Remove(int id)
         {
-            _players.RemoveAt(0);
+            Player player = FindPlayerById(id, out int index);
+
+            if (player != null)
+            {
+                _players?.Remove(player);
+            }
         }
 
-        public void BanPlayerById()
+        public void BanById(int id)
         {
-            _players[0] = new Player(_players[0].Id, _players[0].NickName, _players[0].Level, true);
+            isBanPlayer = true;
+            TryPlayerChangeBanStatus(id, isBanPlayer);
         }
 
-        public void UnbanPlayeById()
+        public void UnbanById(int id)
         {
-            _players[0] = new Player(_players[0].Id, _players[0].NickName, _players[0].Level, false);
+            isBanPlayer = false;
+            TryPlayerChangeBanStatus(id, isBanPlayer);
+        }
+
+        private void TryPlayerChangeBanStatus(int id, bool isBan)
+        {
+            Player player = FindPlayerById(id, out int index);
+
+            if (index >= 0)
+            {
+                _players[index] = new Player(_players[index].Id, _players[index].NickName, _players[index].Level, isBan);
+            }
         }
 
         public void ShowDataSheets()
@@ -123,6 +142,29 @@ namespace Lesson_40
             {
                 Console.Write($"#ID: {player.Id}. NickName: {player.NickName}. Level: {player.Level}. Статус игрока: {player.StatusBan()}\n");
             }
+        }
+
+        public List<Player> GetAllPlayers()
+        {
+            List<Player> players = new List<Player>(_players);
+            return players;
+        }
+
+        private Player FindPlayerById(int id, out int index)
+        {
+            Player? PlayerById = null;
+            index = -1;
+
+            foreach (var player in _players)
+            {
+                if (player.Id == id)
+                {
+                    PlayerById = player;
+                    index = _players.IndexOf(player);
+                }
+            }
+
+            return PlayerById;
         }
     }
 
