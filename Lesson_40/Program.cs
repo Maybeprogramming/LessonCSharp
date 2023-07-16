@@ -58,7 +58,7 @@ namespace Lesson_40
                         break;
 
                     case CommandAddPlayerToDataSheets:
-                        playersDataSheets.Add(1, "BluBerry", 20, false);
+                        playersDataSheets.Add("BluBerry", 20, false);
                         break;
 
                     case CommandRemovePlayerInDataSheets:
@@ -99,9 +99,15 @@ namespace Lesson_40
         };
         private bool isBanPlayer;
 
-        public void Add(int id, string nickname, int level, bool isBanned)
+        public DataSheets()
         {
-            _players.Add(new Player(id, nickname, level, isBanned));
+
+        }
+
+        public void Add(string nickname, int level, bool isBanned)
+        {
+            int playerId = _players.Count + 1;
+            _players.Add(new Player(playerId, nickname, level, isBanned));
         }
 
         public void Remove(int id)
@@ -174,10 +180,12 @@ namespace Lesson_40
         private string _nickName;
         private int _level;
         private bool _isBanned;
+        private  static int IdIndex = 0;
 
         public Player(int id, string nickName, int level, bool isBanned)
         {
-            _id = id;
+            ++IdIndex;
+            _id = IdIndex;
             _level = level;
             _isBanned = isBanned;
             _nickName = nickName;
