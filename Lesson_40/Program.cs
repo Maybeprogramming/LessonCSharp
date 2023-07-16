@@ -62,15 +62,15 @@ namespace Lesson_40
                         break;
 
                     case CommandRemovePlayerInDataSheets:
-                        playersDataSheets.Remove(0);
+                        playersDataSheets.Remove(3);
                         break;
 
                     case CommandBanPlayerById:
-                        playersDataSheets.BanById(0);
+                        playersDataSheets.BanById(1);
                         break;
 
                     case CommandUnBanPlayerById:
-                        playersDataSheets.UnbanById(0);
+                        playersDataSheets.UnbanById(1);
                         break;
 
                     case CommandExitProgramm:
