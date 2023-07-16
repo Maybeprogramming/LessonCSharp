@@ -14,17 +14,28 @@ namespace Lesson_40
     {
         static void Main()
         {
+            PlayersDataSheets playersDataSheets = new PlayersDataSheets();
 
+            playersDataSheets.ShowDataSheets();
+
+            Console.ReadLine();
         }
     }
 
-    class PlayerData
+    class PlayersDataSheets
     {
-        private List<Player> players = new List<Player>();
+        private List<Player> players = new List<Player>()
+        {
+            new Player (1, "BluBerry", 20, false),
+            new Player (2, "Wiking", 30, false),
+            new Player (3, "BunnyHope", 25, false),
+            new Player (4, "Zirael", 45, false),
+            new Player (5, "AprilOnil", 80, false)
+        };
 
         public void AddPlayer()
         {
-            players.Add(new Player(0,"DarkWarrior", 10, false));
+            players.Add(new Player(0, "DarkWarrior", 10, false));
         }
 
         public void RemovePlayer()
@@ -32,14 +43,22 @@ namespace Lesson_40
             players.RemoveAt(0);
         }
 
-        public void banPlayerById()
+        public void BanPlayerById()
         {
             players[0] = new Player(players[0].Id, players[0].NickName, players[0].Level, true);
         }
 
-        public void unbanPlayeById()
+        public void UnbanPlayeById()
         {
             players[0] = new Player(players[0].Id, players[0].NickName, players[0].Level, false);
+        }
+
+        public void ShowDataSheets()
+        {
+            foreach (Player player in players)
+            {
+                Console.Write($"#ID: {player.Id}. NickName: {player.NickName}. Level: {player.Level}. Статус игрока: {player.StatusBan()}\n");
+            }
         }
     }
 
@@ -62,5 +81,10 @@ namespace Lesson_40
         public string NickName => _nickName;
         public int Level => _level;
         public bool IsBanned => _isBanned;
+
+        public string StatusBan()
+        {
+            return _isBanned == true ? "забанен" : "не забанен";
+        }
     }
 }
