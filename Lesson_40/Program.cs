@@ -18,8 +18,22 @@ namespace Lesson_40
         }
     }
 
-    class DataBase
+    class PlayerData
     {
+        private List<Player> players = new List<Player>();
+    }
 
+    class Player
+    {
+        private int _id;
+        private int _level;
+        private bool _isBanned;
+
+        public Player(int id, int level, bool isBanned)
+        {
+            _id = id;
+            _level = level;
+            _isBanned = isBanned;
+        }
     }
 }
