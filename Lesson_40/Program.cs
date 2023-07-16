@@ -29,12 +29,12 @@ namespace Lesson_40
             const string CommandExitProgramm = "6";
 
             string titleMenu = $"Доступные команды:";
-            string menu = $"{CommandShowPlayersData} - Вывести информацию обо всех игроках" +
-                          $"{CommandAddPlayerToDataSheets} - Добавить нового игрока в базу" +
-                          $"{CommandRemovePlayerInDataSheets} - Удалить игрока из базы" +
-                          $"{CommandBanPlayerById} - Забанить игрока по уникальному ID" +
-                          $"{CommandUnBanPlayerById} - Разбанить игкрока по уникальному ID" +
-                          $"{CommandExitProgramm} - Выход из программы";
+            string menu = $"\n{CommandShowPlayersData} - Вывести информацию обо всех игроках" +
+                          $"\n{CommandAddPlayerToDataSheets} - Добавить нового игрока в базу" +
+                          $"\n{CommandRemovePlayerInDataSheets} - Удалить игрока из базы" +
+                          $"\n{CommandBanPlayerById} - Забанить игрока по уникальному ID" +
+                          $"\n{CommandUnBanPlayerById} - Разбанить игкрока по уникальному ID" +
+                          $"\n{CommandExitProgramm} - Выход из программы";
             string userInput;
             bool isRun = true;
             PlayersDataSheets playersDataSheets = new PlayersDataSheets();
@@ -45,6 +45,7 @@ namespace Lesson_40
                 Console.Write(titleMenu);
                 Console.Write(menu);
 
+                Console.WriteLine();
                 userInput = Console.ReadLine();
 
                 switch (userInput)
@@ -73,13 +74,10 @@ namespace Lesson_40
                         isRun = false;
                         break;
                 }
+
+                Console.ReadLine();
             }
         }
-    }
-
-    class DatabaseViewer
-    {
-
     }
 
     class PlayersDataSheets
