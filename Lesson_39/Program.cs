@@ -11,7 +11,14 @@ namespace Lesson_39
     {
         static void Main()
         {
+            Console.CursorVisible = false;
+            int playerPositionX = 5;
+            int playerPositionY = 5;
+            Player player = new Player(playerPositionX, playerPositionY);
+            Renderer renderer = new Renderer();
+            renderer.Draw(player);
 
+            Console.ReadLine();
         }
     }
 
@@ -31,9 +38,10 @@ namespace Lesson_39
 
     class Renderer
     {
-        public void Draw(int positionX, int positionY)
+        public void Draw(Player player)
         {
-
+            Console.SetCursorPosition(player.PositionX, player.PositionY);
+            Console.Write(player.Symbol);
         }
     }
 }
