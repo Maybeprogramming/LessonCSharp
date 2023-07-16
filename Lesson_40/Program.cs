@@ -21,19 +21,46 @@ namespace Lesson_40
     class PlayerData
     {
         private List<Player> players = new List<Player>();
+
+        public void AddPlayer()
+        {
+            players.Add(new Player(0,"DarkWarrior", 10, false));
+        }
+
+        public void RemovePlayer()
+        {
+            players.RemoveAt(0);
+        }
+
+        public void banPlayerById()
+        {
+            players[0] = new Player(players[0].Id, players[0].NickName, players[0].Level, true);
+        }
+
+        public void unbanPlayeById()
+        {
+            players[0] = new Player(players[0].Id, players[0].NickName, players[0].Level, false);
+        }
     }
 
     class Player
     {
         private int _id;
+        private string _nickName;
         private int _level;
         private bool _isBanned;
 
-        public Player(int id, int level, bool isBanned)
+        public Player(int id, string nickName, int level, bool isBanned)
         {
             _id = id;
             _level = level;
             _isBanned = isBanned;
+            _nickName = nickName;
         }
+
+        public int Id => _id;
+        public string NickName => _nickName;
+        public int Level => _level;
+        public bool IsBanned => _isBanned;
     }
 }
