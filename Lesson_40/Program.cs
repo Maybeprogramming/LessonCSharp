@@ -14,12 +14,12 @@ namespace Lesson_40
     {
         static void Main()
         {
-            WorkDataBasePlayersProgramm();
+            WorkDataBasePlayers();
 
             Console.ReadLine();
         }
 
-        private static void WorkDataBasePlayersProgramm()
+        private static void WorkDataBasePlayers()
         {
             const string CommandShowPlayersData = "1";
             const string CommandAddPlayerToDataSheets = "2";
@@ -72,6 +72,10 @@ namespace Lesson_40
 
                     case CommandExitProgramm:
                         isRun = false;
+                        break;
+
+                    default:
+                        Console.WriteLine($"{userInput} - такой команды нет! Повторите ещё раз.");
                         break;
                 }
 
