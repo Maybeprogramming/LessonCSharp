@@ -14,17 +14,77 @@ namespace Lesson_40
     {
         static void Main()
         {
-            PlayersDataSheets playersDataSheets = new PlayersDataSheets();
-
-            playersDataSheets.ShowDataSheets();
+            WorkDataBasePlayersProgramm();
 
             Console.ReadLine();
         }
+
+        private static void WorkDataBasePlayersProgramm()
+        {
+            const string CommandShowPlayersData = "1";
+            const string CommandAddPlayerToDataSheets = "2";
+            const string CommandRemovePlayerInDataSheets = "3";
+            const string CommandBanPlayerById = "4";
+            const string CommandUnBanPlayerById = "5";
+            const string CommandExitProgramm = "6";
+
+            string titleMenu = $"Доступные команды:";
+            string menu = $"{CommandShowPlayersData} - Вывести информацию обо всех игроках" +
+                          $"{CommandAddPlayerToDataSheets} - Добавить нового игрока в базу" +
+                          $"{CommandRemovePlayerInDataSheets} - Удалить игрока из базы" +
+                          $"{CommandBanPlayerById} - Забанить игрока по уникальному ID" +
+                          $"{CommandUnBanPlayerById} - Разбанить игкрока по уникальному ID" +
+                          $"{CommandExitProgramm} - Выход из программы";
+            string userInput;
+            bool isRun = true;
+            PlayersDataSheets playersDataSheets = new PlayersDataSheets();
+
+            while (isRun)
+            {
+                Console.Clear();
+                Console.Write(titleMenu);
+                Console.Write(menu);
+
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case CommandShowPlayersData:
+                        playersDataSheets.ShowDataSheets();
+                        break;
+
+                    case CommandAddPlayerToDataSheets:
+                        playersDataSheets.AddPlayer();
+                        break;
+
+                    case CommandRemovePlayerInDataSheets:
+                        playersDataSheets.RemovePlayer();
+                        break;
+
+                    case CommandBanPlayerById:
+                        playersDataSheets.BanPlayerById();
+                        break;
+
+                    case CommandUnBanPlayerById:
+                        playersDataSheets.UnbanPlayeById();
+                        break;
+
+                    case CommandExitProgramm:
+                        isRun = false;
+                        break;
+                }
+            }
+        }
+    }
+
+    class DatabaseViewer
+    {
+
     }
 
     class PlayersDataSheets
     {
-        private List<Player> players = new List<Player>()
+        private List<Player> _players = new List<Player>()
         {
             new Player (1, "BluBerry", 20, false),
             new Player (2, "Wiking", 30, false),
@@ -35,27 +95,29 @@ namespace Lesson_40
 
         public void AddPlayer()
         {
-            players.Add(new Player(0, "DarkWarrior", 10, false));
+            Player newPlayer = new Player(0, "DarkWarrior", 10, true);
+
+            _players.Add(newPlayer);
         }
 
         public void RemovePlayer()
         {
-            players.RemoveAt(0);
+            _players.RemoveAt(0);
         }
 
         public void BanPlayerById()
         {
-            players[0] = new Player(players[0].Id, players[0].NickName, players[0].Level, true);
+            _players[0] = new Player(_players[0].Id, _players[0].NickName, _players[0].Level, true);
         }
 
         public void UnbanPlayeById()
         {
-            players[0] = new Player(players[0].Id, players[0].NickName, players[0].Level, false);
+            _players[0] = new Player(_players[0].Id, _players[0].NickName, _players[0].Level, false);
         }
 
         public void ShowDataSheets()
         {
-            foreach (Player player in players)
+            foreach (Player player in _players)
             {
                 Console.Write($"#ID: {player.Id}. NickName: {player.NickName}. Level: {player.Level}. Статус игрока: {player.StatusBan()}\n");
             }
