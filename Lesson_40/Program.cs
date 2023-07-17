@@ -182,11 +182,6 @@ namespace Lesson_40
         };
         private bool isBanPlayer;
 
-        public DataSheets()
-        {
-
-        }
-
         public void Add(string nickname, int level)
         {
             _players.Add(new Player(nickname, level));
