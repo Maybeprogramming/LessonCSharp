@@ -196,7 +196,7 @@ namespace Lesson_40
         {
             Player player = FindPlayerById(id, out int index);
 
-            if (player != null)
+            if (player != null && id >= 0 && id < _players.Count)
             {
                 _players?.Remove(player);
             }
@@ -218,7 +218,7 @@ namespace Lesson_40
         {
             Player player = FindPlayerById(id, out int index);
 
-            if (index >= 0)
+            if (index >= 0 && index < _players.Count)
             {
                 _players[index] = new Player(_players[index].Id, _players[index].NickName, _players[index].Level, isBan);
             }
@@ -274,7 +274,7 @@ namespace Lesson_40
             _nickName = nickName;
         }
 
-        public Player(int id, string nickName, int level, bool isBanned = false)
+        public Player(int id, string nickName, int level, bool isBanned)
         {
             _id = id;
             _level = level;
