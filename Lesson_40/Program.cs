@@ -179,11 +179,11 @@ namespace Lesson_40
     {
         private List<Player> _players = new()
         {
-            new Player (0,"BluBerry", 20),
-            new Player (1,"Wiking", 30),
-            new Player (2,"BunnyHope", 25),
-            new Player (3,"Zirael", 45),
-            new Player (4,"AprilOnil", 80)
+            new Player ("BluBerry", 20),
+            new Player ("Wiking", 30),
+            new Player ("BunnyHope", 25),
+            new Player ("Zirael", 45),
+            new Player ("AprilOnil", 80)
         };
         private bool isBanPlayer;
 
@@ -194,8 +194,7 @@ namespace Lesson_40
 
         public void Add(string nickname, int level)
         {
-            int playerId = _players.Count + 1;
-            _players.Add(new Player(playerId, nickname, level));
+            _players.Add(new Player(nickname, level));
         }
 
         public void Remove(int id)
@@ -271,10 +270,18 @@ namespace Lesson_40
         private int _level;
         private bool _isBanned;
 
-        public Player(int id, string nickName, int level, bool isBanned = false)
+        public Player(string nickName, int level, bool isBanned = false)
         {
             ++_idCount;
             _id = _idCount;
+            _level = level;
+            _isBanned = isBanned;
+            _nickName = nickName;
+        }
+
+        public Player(int id, string nickName, int level, bool isBanned = false)
+        {
+            _id = id;
             _level = level;
             _isBanned = isBanned;
             _nickName = nickName;
