@@ -8,11 +8,6 @@
 
 //База данных игроков
 
-using System;
-using System.Net.Http.Headers;
-using System.Numerics;
-using System.Reflection.Emit;
-
 namespace Lesson_40
 {
     class Program
