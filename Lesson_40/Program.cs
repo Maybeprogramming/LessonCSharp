@@ -196,7 +196,7 @@ namespace Lesson_40
         {
             Player player = FindPlayerById(id, out int index);
 
-            if (player != null && id >= 0 && id < _players.Count)
+            if (player != null)
             {
                 _players?.Remove(player);
             }
