@@ -11,6 +11,7 @@
 using System;
 using System.Net.Http.Headers;
 using System.Numerics;
+using System.Reflection.Emit;
 
 namespace Lesson_40
 {
@@ -41,7 +42,6 @@ namespace Lesson_40
                           $"\n{CommandExitProgramm} - Выход из программы";
             string userInput;
             string requestMessage = $"\nВведите команду: ";
-            string continueMessage = "Нажмите любую клавишу чтобы продолжить...";
             bool isRun = true;
             DataSheets playersDataSheets = new();
 
@@ -61,35 +61,11 @@ namespace Lesson_40
                         break;
 
                     case CommandAddPlayerToDataSheets:
-                        string nickname;
-                        int level = -1;
-                        bool isConvertToInt = false;
-                        string userInputLevel;
-                        Console.WriteLine("Добавление нового игрока в базу:");
-                        Console.WriteLine("Введите никнейм: ");
-                        nickname = Console.ReadLine();
-                        Console.WriteLine("Введите уровень: ");
-                        userInputLevel = Console.ReadLine();
-
-                        do
-                        {
-                            if (Int32.TryParse(userInputLevel, out int result) == true)
-                            {
-                                level = result;
-                                isConvertToInt = true;
-                            }
-                            else
-                            {
-                                Console.WriteLine($"{userInputLevel} - Ошибка! Вы ввели не число! Попробуйте ещё раз...");
-                            }
-                        }
-                        while (isConvertToInt == false);
-
-                        playersDataSheets.Add(nickname, level);
+                        TryAddPlayerToDataSheet(playersDataSheets);
                         break;
 
                     case CommandRemovePlayerInDataSheets:
-                        playersDataSheets.Remove(3);
+                        TryRemovePlayerInDataSheet(playersDataSheets);
                         break;
 
                     case CommandBanPlayerById:
@@ -105,12 +81,96 @@ namespace Lesson_40
                         break;
 
                     default:
-                        Console.WriteLine($"{userInputLevel} - такой команды нет! Повторите ещё раз.");
+                        Console.WriteLine($"{userInput} - такой команды нет! Повторите ещё раз.");
                         break;
                 }
 
-                Console.Write(continueMessage);
-                Console.ReadLine();
+                PrintContinueMessage();
+            }
+        }
+
+        private static void PrintContinueMessage()
+        {
+            string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
+
+            Console.Write(continueMessage);
+            Console.ReadLine();
+        }
+
+        private static void TryRemovePlayerInDataSheet(DataSheets playersDataSheets)
+        {
+            string userInputId;
+            int playerId = -1;
+            bool isConvertToInt = false;
+
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Удаление игрока по ID из базы:");
+                Console.Write("Введите ID игрока для удаления: ");
+                userInputId = Console.ReadLine();
+
+                if (Int32.TryParse(userInputId, out int result) == true)
+                {
+                    playerId = result;
+                    isConvertToInt = true;
+                }
+                else
+                {
+                    Console.Write($"{userInputId} - Ошибка! Вы ввели не число! Попробуйте ещё раз...");
+                    PrintContinueMessage();
+                }
+            }
+            while (isConvertToInt == false);
+
+            if (playerId >= 0)
+            {
+                playersDataSheets.Remove(playerId);
+                Console.WriteLine($"Игрок с ID: {playerId} - успешно удалён");
+            }
+            else
+            {
+                Console.WriteLine("Ошибка! Попытка удаления завершилась ошибкой, попробуйте снова...");
+            }
+        }
+
+        private static void TryAddPlayerToDataSheet(DataSheets playersDataSheets)
+        {
+            string nickname;
+            int level = -1;
+            bool isConvertToInt = false;
+            string userInputLevel;
+
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Добавление нового игрока в базу:");
+                Console.Write("Введите никнейм: ");
+                nickname = Console.ReadLine();
+                Console.Write("Введите уровень: ");
+                userInputLevel = Console.ReadLine();
+
+                if (Int32.TryParse(userInputLevel, out int result) == true)
+                {
+                    level = result;
+                    isConvertToInt = true;
+                }
+                else
+                {
+                    Console.Write($"{userInputLevel} - Ошибка! Вы ввели не число! Попробуйте ещё раз...");
+                    PrintContinueMessage();
+                }
+            }
+            while (isConvertToInt == false);
+
+            if (level >= 0)
+            {
+                playersDataSheets.Add(nickname, level);
+                Console.WriteLine($"Игрок: {nickname} - успешно добавлен в базу!");
+            }
+            else
+            {
+                Console.WriteLine("Ошибка! Попытка добавления завершилась ошибкой, попробуйте снова...");
             }
         }
     }
