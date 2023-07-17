@@ -9,6 +9,7 @@
 //База данных игроков
 
 using System;
+using System.Net.Http.Headers;
 using System.Numerics;
 
 namespace Lesson_40
@@ -35,10 +36,12 @@ namespace Lesson_40
             string menu = $"\n{CommandShowPlayersData} - Вывести информацию обо всех игроках" +
                           $"\n{CommandAddPlayerToDataSheets} - Добавить нового игрока в базу" +
                           $"\n{CommandRemovePlayerInDataSheets} - Удалить игрока из базы" +
-                          $"\n{CommandBanPlayerById} - Забанить игрока по уникальному ID" +
-                          $"\n{CommandUnBanPlayerById} - Разбанить игкрока по уникальному ID" +
+                          $"\n{CommandBanPlayerById} - Забанить игрока по ID" +
+                          $"\n{CommandUnBanPlayerById} - Разбанить игкрока по ID" +
                           $"\n{CommandExitProgramm} - Выход из программы";
             string userInput;
+            string requestMessage = $"\nВведите команду: ";
+            string continueMessage = "Нажмите любую клавишу чтобы продолжить...";
             bool isRun = true;
             DataSheets playersDataSheets = new();
 
@@ -47,8 +50,8 @@ namespace Lesson_40
                 Console.Clear();
                 Console.Write(titleMenu);
                 Console.Write(menu);
+                Console.Write(requestMessage);
 
-                Console.WriteLine();
                 userInput = Console.ReadLine();
 
                 switch (userInput)
@@ -58,7 +61,31 @@ namespace Lesson_40
                         break;
 
                     case CommandAddPlayerToDataSheets:
-                        playersDataSheets.Add("BluBerry", 20, false);
+                        string nickname;
+                        int level = -1;
+                        bool isConvertToInt = false;
+                        string userInputLevel;
+                        Console.WriteLine("Добавление нового игрока в базу:");
+                        Console.WriteLine("Введите никнейм: ");
+                        nickname = Console.ReadLine();
+                        Console.WriteLine("Введите уровень: ");
+                        userInputLevel = Console.ReadLine();
+
+                        do
+                        {
+                            if (Int32.TryParse(userInputLevel, out int result) == true)
+                            {
+                                level = result;
+                                isConvertToInt = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"{userInputLevel} - Ошибка! Вы ввели не число! Попробуйте ещё раз...");
+                            }
+                        }
+                        while (isConvertToInt == false);
+
+                        playersDataSheets.Add(nickname, level);
                         break;
 
                     case CommandRemovePlayerInDataSheets:
@@ -78,10 +105,11 @@ namespace Lesson_40
                         break;
 
                     default:
-                        Console.WriteLine($"{userInput} - такой команды нет! Повторите ещё раз.");
+                        Console.WriteLine($"{userInputLevel} - такой команды нет! Повторите ещё раз.");
                         break;
                 }
 
+                Console.Write(continueMessage);
                 Console.ReadLine();
             }
         }
@@ -91,11 +119,11 @@ namespace Lesson_40
     {
         private List<Player> _players = new()
         {
-            new Player (1, "BluBerry", 20, false),
-            new Player (2, "Wiking", 30, false),
-            new Player (3, "BunnyHope", 25, false),
-            new Player (4, "Zirael", 45, false),
-            new Player (5, "AprilOnil", 80, false)
+            new Player (0,"BluBerry", 20),
+            new Player (1,"Wiking", 30),
+            new Player (2,"BunnyHope", 25),
+            new Player (3,"Zirael", 45),
+            new Player (4,"AprilOnil", 80)
         };
         private bool isBanPlayer;
 
@@ -104,10 +132,10 @@ namespace Lesson_40
 
         }
 
-        public void Add(string nickname, int level, bool isBanned)
+        public void Add(string nickname, int level)
         {
             int playerId = _players.Count + 1;
-            _players.Add(new Player(playerId, nickname, level, isBanned));
+            _players.Add(new Player(playerId, nickname, level));
         }
 
         public void Remove(int id)
@@ -176,16 +204,17 @@ namespace Lesson_40
 
     class Player
     {
+        private static int _idCount = 0;
+
         private int _id;
         private string _nickName;
         private int _level;
         private bool _isBanned;
-        private  static int IdIndex = 0;
 
-        public Player(int id, string nickName, int level, bool isBanned)
+        public Player(int id, string nickName, int level, bool isBanned = false)
         {
-            ++IdIndex;
-            _id = IdIndex;
+            ++_idCount;
+            _id = _idCount;
             _level = level;
             _isBanned = isBanned;
             _nickName = nickName;
