@@ -180,7 +180,6 @@ namespace Lesson_40
             new Player ("Zirael", 45),
             new Player ("AprilOnil", 80)
         };
-        private bool isBanPlayer;
 
 
 
@@ -191,35 +190,24 @@ namespace Lesson_40
 
         public void Remove(int id)
         {
-            Player player = FindPlayerById(id, out int index);
+            Player player = FindPlayerById(id);
 
             if (player != null)
             {
-                _players?.Remove(player);
+                _players.Remove(player);
             }
         }
 
         public void BanById(int id)
         {
-            isBanPlayer = true;
-            TryPlayerChangeBanStatus(id, isBanPlayer);
+
         }
 
         public void UnbanById(int id)
         {
-            isBanPlayer = false;
-            TryPlayerChangeBanStatus(id, isBanPlayer);
+
         }
 
-        private void TryPlayerChangeBanStatus(int id, bool isBan)
-        {
-            Player player = FindPlayerById(id, out int index);
-
-            if (index >= 0 && index < _players.Count)
-            {
-                _players[index] = new Player(_players[index].Id, _players[index].NickName, _players[index].Level, isBan);
-            }
-        }
 
         public void ShowDataSheets()
         {
@@ -229,17 +217,15 @@ namespace Lesson_40
             }
         }
 
-        private Player FindPlayerById(int id, out int index)
+        private Player FindPlayerById(int id)
         {
             Player? PlayerById = null;
-            index = -1;
 
             foreach (var player in _players)
             {
                 if (player.Id.Equals(id))
                 {
                     PlayerById = player;
-                    index = _players.IndexOf(player);
                 }
             }
 
