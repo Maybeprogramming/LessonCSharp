@@ -229,12 +229,6 @@ namespace Lesson_40
             }
         }
 
-        public List<Player> GetAllPlayers()
-        {
-            List<Player> players = new List<Player>(_players);
-            return players;
-        }
-
         private Player FindPlayerById(int id, out int index)
         {
             Player? PlayerById = null;
