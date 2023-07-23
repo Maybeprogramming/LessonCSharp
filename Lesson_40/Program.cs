@@ -182,6 +182,8 @@ namespace Lesson_40
         };
         private bool isBanPlayer;
 
+
+
         public void Add(string nickname, int level)
         {
             _players.Add(new Player(nickname, level));
@@ -223,7 +225,7 @@ namespace Lesson_40
         {
             foreach (Player player in _players)
             {
-                Console.Write($"#ID: {player.Id}. NickName: {player.NickName}. Level: {player.Level}. Статус игрока: {player.StatusBan()}\n");
+                Console.Write($"#ID: {player.Id}. NickName: {player.NickName}. Level: {player.Level}. Статус игрока: {player.IsBanned}\n");
             }
         }
 
@@ -280,11 +282,6 @@ namespace Lesson_40
         public int Id => _id;
         public string NickName => _nickName;
         public int Level => _level;
-        public bool IsBanned => _isBanned;
-
-        public string StatusBan()
-        {
-            return _isBanned == true ? "забанен" : "не забанен";
-        }
+        public string IsBanned => _isBanned == true ? "забанен" : "не забанен";
     }
 }
