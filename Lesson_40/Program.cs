@@ -256,32 +256,28 @@ namespace Lesson_40
     class Player
     {
         private static int _idCount = 0;
-
-        private int _id;
-        private string _nickName;
-        private int _level;
         private bool _isBanned;
 
         public Player(string nickName, int level, bool isBanned = false)
         {
             ++_idCount;
-            _id = _idCount;
-            _level = level;
+            Id = _idCount;
+            Level = level;
+            NickName = nickName;
             _isBanned = isBanned;
-            _nickName = nickName;
         }
 
         public Player(int id, string nickName, int level, bool isBanned)
         {
-            _id = id;
-            _level = level;
+            Id = id;
+            Level = level;
+            NickName = nickName;
             _isBanned = isBanned;
-            _nickName = nickName;
         }
 
-        public int Id => _id;
-        public string NickName => _nickName;
-        public int Level => _level;
+        public int Id { get; }
+        public string NickName { get; }
+        public int Level { get; }
         public string IsBanned => _isBanned == true ? "забанен" : "не забанен";
     }
 }
