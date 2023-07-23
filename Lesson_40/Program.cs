@@ -52,7 +52,7 @@ namespace Lesson_40
                 switch (userInput)
                 {
                     case CommandShowPlayersData:
-                        playersDataSheets.ShowDataSheets();
+                        playersDataSheets.ShowAllData();
                         break;
 
                     case CommandAddPlayerToDataSheets:
@@ -64,7 +64,7 @@ namespace Lesson_40
                         break;
 
                     case CommandBanPlayerById:
-                        playersDataSheets.BanById(1);
+                        playersDataSheets.TryChangeBanById(1);
                         break;
 
                     case CommandUnBanPlayerById:
@@ -181,8 +181,6 @@ namespace Lesson_40
             new Player ("AprilOnil", 80)
         };
 
-
-
         public void Add(string nickname, int level)
         {
             _players.Add(new Player(nickname, level));
@@ -198,18 +196,13 @@ namespace Lesson_40
             }
         }
 
-        public void BanById(int id)
+        public bool TryChangeBanById(int id)
         {
 
+            return true;
         }
 
-        public void UnbanById(int id)
-        {
-
-        }
-
-
-        public void ShowDataSheets()
+        public void ShowAllData()
         {
             foreach (Player player in _players)
             {
