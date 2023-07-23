@@ -242,7 +242,7 @@ namespace Lesson_40
 
             foreach (var player in _players)
             {
-                if (player.Id == id)
+                if (player.Id.Equals(id))
                 {
                     PlayerById = player;
                     index = _players.IndexOf(player);
