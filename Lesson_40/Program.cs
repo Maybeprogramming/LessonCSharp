@@ -128,7 +128,6 @@ namespace Lesson_40
             else
             {
                 Print($"{userInputLevel} - Вы ввели не число!");
-                return;
             }
         }
 
@@ -146,7 +145,6 @@ namespace Lesson_40
                 if (players.TryRemove(resultId))
                 {
                     Print($"Игрок с {resultId} - успешно удалён из базы", ConsoleColor.Yellow);
-
                 }
                 else
                 {
@@ -180,18 +178,43 @@ class DataSheets
 
     public bool TryRemove(int id)
     {
+        Player player = GetPlayerById(id);
+
+        if (_players.Contains(player))
+        {
+            _players.Remove(player);
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool TrySetBanStatus(int id)
+    {
+        Player playerToBan = GetPlayerById(id);
+
+        foreach (Player player in _players)
+        {
+            if (player.Equals(playerToBan) && )
+            {
+                player = new Player(playerToBan.Id, playerToBan.NickName, playerToBan.Level, true);
+            }
+        }
+
+        return false;
+    }
+
+    private Player GetPlayerById(int id)
+    {
         foreach (Player player in _players)
         {
             if (player.Id == id)
             {
-                _players.Remove(player);
-                return true;
+                return player;
             }
-
-            return false;
         }
 
-        return false;
+        return null;
     }
 
     public List<Player> GetAllPlayers()
@@ -203,7 +226,6 @@ class DataSheets
 class Player
 {
     private static int _idCount = 0;
-    private bool _isBanned;
 
     public Player(string nickName, int level, bool isBanned = false)
     {
@@ -211,7 +233,7 @@ class Player
         Id = _idCount;
         Level = level;
         NickName = nickName;
-        _isBanned = isBanned;
+        Ban = isBanned;
     }
 
     public Player(int id, string nickName, int level, bool isBanned)
@@ -219,11 +241,12 @@ class Player
         Id = id;
         Level = level;
         NickName = nickName;
-        _isBanned = isBanned;
+        Ban = isBanned;
     }
 
     public int Id { get; }
     public string NickName { get; }
     public int Level { get; }
-    public string IsBanned => _isBanned == true ? "забанен" : "не забанен";
+    public bool Ban { get;}
+    public string IsBanned => Ban == true ? "забанен" : "не забанен";
 }
