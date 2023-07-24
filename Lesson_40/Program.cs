@@ -17,191 +17,200 @@ namespace Lesson_40
     {
         static void Main()
         {
-            WorkDataBase();
+            DataSheets playerDataSheets = new();
+            ViewData view = new();
+            view.Work(playerDataSheets);
 
             Console.ReadLine();
         }
 
-        private static void WorkDataBase()
-        {
-            const string CommandShowPlayersData = "1";
-            const string CommandAddPlayerToDataSheets = "2";
-            const string CommandRemovePlayerInDataSheets = "3";
-            const string CommandBanPlayerById = "4";
-            const string CommandUnBanPlayerById = "5";
-            const string CommandExitProgramm = "6";
 
-            string titleMenu = $"Доступные команды:";
-            string menu = $"\n{CommandShowPlayersData} - Вывести информацию обо всех игроках" +
-                          $"\n{CommandAddPlayerToDataSheets} - Добавить нового игрока в базу" +
-                          $"\n{CommandRemovePlayerInDataSheets} - Удалить игрока из базы" +
-                          $"\n{CommandBanPlayerById} - Забанить игрока по ID" +
-                          $"\n{CommandUnBanPlayerById} - Разбанить игкрока по ID" +
-                          $"\n{CommandExitProgramm} - Выход из программы";
-            string userInput;
-            string requestMessage = $"\nВведите команду: ";
-            bool isRun = true;
-            bool isBan;
-            DataSheets playersDataSheets = new();
 
-            while (isRun)
-            {
-                Console.Clear();
-                Console.Write(titleMenu);
-                Console.Write(menu);
-                Console.Write(requestMessage);
+    }
+}
 
-                userInput = Console.ReadLine();
 
-                switch (userInput)
-                {
-                    case CommandShowPlayersData:
-                        ShowAllPlayers(playersDataSheets.GetAllPlayers());
-                        break;
+class ViewData
+{
+    private const string CommandShowPlayersData = "1";
+    private const string CommandAddPlayerToDataSheets = "2";
+    private const string CommandRemovePlayerInDataSheets = "3";
+    private const string CommandBanPlayerById = "4";
+    private const string CommandUnBanPlayerById = "5";
+    private const string CommandExitProgramm = "6";
 
-                    case CommandAddPlayerToDataSheets:
-                        AddPlayerInData(playersDataSheets);
-                        break;
+    private string _titleMenu = $"Доступные команды:";
+    private string _menu = $"\n{CommandShowPlayersData} - Вывести информацию обо всех игроках" +
+                         $"\n{CommandAddPlayerToDataSheets} - Добавить нового игрока в базу" +
+                         $"\n{CommandRemovePlayerInDataSheets} - Удалить игрока из базы" +
+                         $"\n{CommandBanPlayerById} - Забанить игрока по ID" +
+                         $"\n{CommandUnBanPlayerById} - Разбанить игкрока по ID" +
+                         $"\n{CommandExitProgramm} - Выход из программы";
+    private string _userInput;
+    private string _requestMessage = $"\nВведите команду: ";
+    private bool _isRun = true;
+    private bool _isBan;
 
-                    case CommandRemovePlayerInDataSheets:
-                        RemovePlayerFromData(playersDataSheets);
-                        break;
+    public void Work(DataSheets players)
+    {
+        DataSheets playersDataSheets = players;
 
-                    case CommandBanPlayerById:
-                        SetBanStatusToPlayer(playersDataSheets, isBan = true);
-                        break;
-
-                    case CommandUnBanPlayerById:
-                        SetBanStatusToPlayer(playersDataSheets, isBan = false);
-                        break;
-
-                    case CommandExitProgramm:
-                        isRun = false;
-                        break;
-
-                    default:
-                        Console.WriteLine($"{userInput} - такой команды нет! Повторите ещё раз.");
-                        break;
-                }
-
-                PrintContinueMessage();
-            }
-        }
-
-        private static void PrintContinueMessage()
-        {
-            string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
-
-            Console.Write(continueMessage);
-            Console.ReadLine();
-        }
-
-        private static void Print(string message, ConsoleColor consoleColor = ConsoleColor.White)
-        {
-            ConsoleColor defaultColor = Console.ForegroundColor;
-            Console.ForegroundColor = consoleColor;
-            Console.Write(message);
-            Console.ForegroundColor = defaultColor;
-        }
-
-        private static void ShowAllPlayers(List<Player> players)
-        {
-            Print("Список игроков:\n");
-
-            foreach (var player in players)
-            {
-                Print($"#{player.Id} | ник: {player.NickName} \t | уровень: {player.Level} \t | статус:");
-
-                if (player.Ban == true)
-                {
-                    Print($" {player.IsBanned}\n", ConsoleColor.DarkRed);
-                }
-                else
-                {
-                    Print($" {player.IsBanned}\n", ConsoleColor.DarkGreen);
-                }
-            }
-        }
-
-        private static void AddPlayerInData(DataSheets players)
+        while (_isRun)
         {
             Console.Clear();
-            string userInputNickName;
-            string userInputLevel;
+            Console.Write(_titleMenu);
+            Console.Write(_menu);
+            Console.Write(_requestMessage);
 
-            Print("Добавление нового игрока в базу\n");
-            Print("Введите ник: ");
-            userInputNickName = Console.ReadLine();
-            Print("Введите уровень: ");
-            userInputLevel = Console.ReadLine();
+            _userInput = Console.ReadLine();
 
-            if (Int32.TryParse(userInputLevel, out int result))
+            switch (_userInput)
             {
-                players.Add(userInputNickName, result);
-                Print($"В базу успешно добавлен игрок: {userInputNickName} с уровнем: {result}", ConsoleColor.Green);
+                case CommandShowPlayersData:
+                    ShowAllPlayers(playersDataSheets.GetAllPlayers());
+                    break;
+
+                case CommandAddPlayerToDataSheets:
+                    AddPlayerInData(playersDataSheets);
+                    break;
+
+                case CommandRemovePlayerInDataSheets:
+                    RemovePlayerFromData(playersDataSheets);
+                    break;
+
+                case CommandBanPlayerById:
+                    SetBanStatusToPlayer(playersDataSheets, _isBan = true);
+                    break;
+
+                case CommandUnBanPlayerById:
+                    SetBanStatusToPlayer(playersDataSheets, _isBan = false);
+                    break;
+
+                case CommandExitProgramm:
+                    _isRun = false;
+                    break;
+
+                default:
+                    Console.WriteLine($"{_userInput} - такой команды нет! Повторите ещё раз.");
+                    break;
+            }
+
+            PrintContinueMessage();
+        }
+    }
+
+    private void PrintContinueMessage()
+    {
+        string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
+
+        Console.Write(continueMessage);
+        Console.ReadLine();
+    }
+
+    private void Print(string message, ConsoleColor consoleColor = ConsoleColor.White)
+    {
+        ConsoleColor defaultColor = Console.ForegroundColor;
+        Console.ForegroundColor = consoleColor;
+        Console.Write(message);
+        Console.ForegroundColor = defaultColor;
+    }
+
+    private void ShowAllPlayers(List<Player> players)
+    {
+        Print("Список игроков:\n");
+
+        foreach (var player in players)
+        {
+            Print($"#{player.Id} | ник: {player.NickName} \t | уровень: {player.Level} \t | статус:");
+
+            if (player.Ban == true)
+            {
+                Print($" {player.IsBanned}\n", ConsoleColor.DarkRed);
             }
             else
             {
-                Print($"{userInputLevel} - Вы ввели не число!");
+                Print($" {player.IsBanned}\n", ConsoleColor.DarkGreen);
             }
         }
+    }
 
-        private static void RemovePlayerFromData(DataSheets players)
+    private void AddPlayerInData(DataSheets players)
+    {
+        Console.Clear();
+        string userInputNickName;
+        string userInputLevel;
+
+        Print("Добавление нового игрока в базу\n");
+        Print("Введите ник: ");
+        userInputNickName = Console.ReadLine();
+        Print("Введите уровень: ");
+        userInputLevel = Console.ReadLine();
+
+        if (Int32.TryParse(userInputLevel, out int result))
         {
-            Console.Clear();
-            ShowAllPlayers(players.GetAllPlayers());
+            players.Add(userInputNickName, result);
+            Print($"В базу успешно добавлен игрок: {userInputNickName} с уровнем: {result}", ConsoleColor.Green);
+        }
+        else
+        {
+            Print($"{userInputLevel} - Вы ввели не число!");
+        }
+    }
 
-            string userInputId;
-            Print("Введите Id игрока для удаления с базы: ");
-            userInputId = Console.ReadLine();
+    private void RemovePlayerFromData(DataSheets players)
+    {
+        Console.Clear();
+        ShowAllPlayers(players.GetAllPlayers());
 
-            if (Int32.TryParse(userInputId, out int resultId))
+        string userInputId;
+        Print("Введите Id игрока для удаления с базы: ");
+        userInputId = Console.ReadLine();
+
+        if (Int32.TryParse(userInputId, out int resultId))
+        {
+            if (players.TryRemove(resultId) == true)
             {
-                if (players.TryRemove(resultId) == true)
-                {
-                    Print($"Игрок с ID: {resultId} - успешно удалён из базы", ConsoleColor.Yellow);
-                }
-                else
-                {
-                    Print($"{resultId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
-                }
+                Print($"Игрок с ID: {resultId} - успешно удалён из базы", ConsoleColor.Yellow);
             }
             else
             {
-                Print($"{userInputId} - Вы ввели не число!");
+                Print($"{resultId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
             }
         }
-
-        private static void SetBanStatusToPlayer(DataSheets players, bool isBan = true)
+        else
         {
-            Console.Clear();
-            ShowAllPlayers(players.GetAllPlayers());
+            Print($"{userInputId} - Вы ввели не число!");
+        }
+    }
 
-            string userInputId;
-            Print("Введите Id для бана игрока: ");
-            userInputId = Console.ReadLine();
+    private void SetBanStatusToPlayer(DataSheets players, bool isBan = true)
+    {
+        Console.Clear();
+        ShowAllPlayers(players.GetAllPlayers());
 
-            if (Int32.TryParse(userInputId, out int resultId))
+        string userInputId;
+        Print("Введите Id для бана игрока: ");
+        userInputId = Console.ReadLine();
+
+        if (Int32.TryParse(userInputId, out int resultId))
+        {
+            if (isBan == true && players.TrySetBanStatus(resultId, isBan) == true)
             {
-                if (isBan == true && players.TrySetBanStatus(resultId, isBan) == true)
-                {
-                    Print($"Игрок с ID: {resultId} - успешно забанен", ConsoleColor.Yellow);
-                }
-                else if (isBan == false && players.TrySetBanStatus(resultId, isBan) == true)
-                {
-                    Print($"Игрок с ID: {resultId} - успешно разбанен", ConsoleColor.Yellow);
-                }
-                else
-                {
-                    Print($"{resultId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
-                }
+                Print($"Игрок с ID: {resultId} - успешно забанен", ConsoleColor.Yellow);
+            }
+            else if (isBan == false && players.TrySetBanStatus(resultId, isBan) == true)
+            {
+                Print($"Игрок с ID: {resultId} - успешно разбанен", ConsoleColor.Yellow);
             }
             else
             {
-                Print($"{userInputId} - Вы ввели не число!");
+                Print($"{resultId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
             }
         }
-
+        else
+        {
+            Print($"{userInputId} - Вы ввели не число!");
+        }
     }
 }
 
@@ -293,6 +302,6 @@ class Player
     public int Id { get; }
     public string NickName { get; }
     public int Level { get; }
-    public bool Ban { get;}
+    public bool Ban { get; }
     public string IsBanned => Ban == true ? "забанен" : "не забанен";
 }
