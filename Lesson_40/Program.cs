@@ -8,6 +8,7 @@
 
 //База данных игроков
 
+using System;
 using System.Numerics;
 
 namespace Lesson_40
@@ -40,6 +41,7 @@ namespace Lesson_40
             string userInput;
             string requestMessage = $"\nВведите команду: ";
             bool isRun = true;
+            bool isBan;
             DataSheets playersDataSheets = new();
 
             while (isRun)
@@ -66,9 +68,11 @@ namespace Lesson_40
                         break;
 
                     case CommandBanPlayerById:
+                        SetBanStatusToPlayer(playersDataSheets, isBan = true);
                         break;
 
                     case CommandUnBanPlayerById:
+                        SetBanStatusToPlayer(playersDataSheets, isBan = false);
                         break;
 
                     case CommandExitProgramm:
@@ -106,7 +110,16 @@ namespace Lesson_40
 
             foreach (var player in players)
             {
-                Print($"#{player.Id} _ ник: {player.NickName} _ уровень: {player.Level} | статус: {player.IsBanned}\n");
+                Print($"#{player.Id} | ник: {player.NickName} \t | уровень: {player.Level} \t | статус:");
+
+                if (player.Ban == true)
+                {
+                    Print($" {player.IsBanned}\n", ConsoleColor.DarkRed);
+                }
+                else
+                {
+                    Print($" {player.IsBanned}\n", ConsoleColor.DarkGreen);
+                }
             }
         }
 
@@ -139,14 +152,14 @@ namespace Lesson_40
             ShowAllPlayers(players.GetAllPlayers());
 
             string userInputId;
-            Print("Введите Id игрокв для удаления с базы: ");
+            Print("Введите Id игрока для удаления с базы: ");
             userInputId = Console.ReadLine();
 
             if (Int32.TryParse(userInputId, out int resultId))
             {
                 if (players.TryRemove(resultId) == true)
                 {
-                    Print($"Игрок с {resultId} - успешно удалён из базы", ConsoleColor.Yellow);
+                    Print($"Игрок с ID: {resultId} - успешно удалён из базы", ConsoleColor.Yellow);
                 }
                 else
                 {
@@ -159,20 +172,24 @@ namespace Lesson_40
             }
         }
 
-        private static void SetBanStatusToPlayer(DataSheets players)
+        private static void SetBanStatusToPlayer(DataSheets players, bool isBan = true)
         {
             Console.Clear();
             ShowAllPlayers(players.GetAllPlayers());
 
             string userInputId;
-            Print("Введите Id игрокв для удаления с базы: ");
+            Print("Введите Id для бана игрока: ");
             userInputId = Console.ReadLine();
 
             if (Int32.TryParse(userInputId, out int resultId))
             {
-                if (players.TrySetBanStatus(resultId) == true)
+                if (isBan == true && players.TrySetBanStatus(resultId, isBan) == true)
                 {
                     Print($"Игрок с ID: {resultId} - успешно забанен", ConsoleColor.Yellow);
+                }
+                else if (isBan == false && players.TrySetBanStatus(resultId, isBan) == true)
+                {
+                    Print($"Игрок с ID: {resultId} - успешно разбанен", ConsoleColor.Yellow);
                 }
                 else
                 {
@@ -217,20 +234,15 @@ class DataSheets
         return false;
     }
 
-    public bool TrySetBanStatus(int id)
+    public bool TrySetBanStatus(int id, bool isBan)
     {
         Player playerToBan = GetPlayerById(id);
 
         for (int i = 0; i < _players.Count; i++)
         {
-            if (_players[i].Equals(playerToBan) && _players[i].Ban == false)
+            if (_players[i].Equals(playerToBan))
             {
-                _players[i] = new Player(playerToBan.Id, playerToBan.NickName, playerToBan.Level, true);
-                return true;
-            }
-            else if (_players[i].Equals(playerToBan) && _players[i].Ban == true)
-            {
-                _players[i] = new Player(playerToBan.Id, playerToBan.NickName, playerToBan.Level, false);
+                _players[i] = new Player(playerToBan.Id, playerToBan.NickName, playerToBan.Level, isBan);
                 return true;
             }
         }
