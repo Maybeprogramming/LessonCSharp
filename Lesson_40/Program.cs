@@ -23,9 +23,6 @@ namespace Lesson_40
 
             Console.ReadLine();
         }
-
-
-
     }
 }
 
@@ -91,19 +88,19 @@ class ViewData
                     break;
 
                 default:
-                    Console.WriteLine($"{_userInput} - такой команды нет! Повторите ещё раз.");
+                    Print($"{_userInput} - такой команды нет! Повторите ещё раз.", ConsoleColor.DarkRed);
                     break;
             }
 
             PrintContinueMessage();
         }
+
+        Print("Работа программы завершена!", ConsoleColor.DarkGreen);
     }
 
     private void PrintContinueMessage()
     {
-        string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
-
-        Console.Write(continueMessage);
+        Print("\nНажмите любую клавишу чтобы продолжить...", ConsoleColor.DarkGreen);
         Console.ReadLine();
     }
 
@@ -161,8 +158,8 @@ class ViewData
     {
         Console.Clear();
         ShowAllPlayers(players.GetAllPlayers());
-
         string userInputId;
+
         Print("Введите Id игрока для удаления с базы: ");
         userInputId = Console.ReadLine();
 
@@ -187,8 +184,8 @@ class ViewData
     {
         Console.Clear();
         ShowAllPlayers(players.GetAllPlayers());
-
         string userInputId;
+
         Print("Введите Id для бана игрока: ");
         userInputId = Console.ReadLine();
 
