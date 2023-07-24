@@ -4,6 +4,8 @@
     {
         static void Main()
         {
+            Console.Title = "База данных игроков";
+
             DataSheets playerDataSheets = new();
             ViewData view = new();
             view.Work(playerDataSheets);
@@ -171,7 +173,7 @@
             ShowAllPlayers(players.GetAllPlayers());
             string userInputId;
 
-            Print("Введите Id для бана игрока: ");
+            Print("Введите Id для изменения статуса бана игрока: ");
             userInputId = Console.ReadLine();
 
             if (Int32.TryParse(userInputId, out int resultId))
