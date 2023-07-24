@@ -8,6 +8,8 @@
 
 //База данных игроков
 
+using System.Numerics;
+
 namespace Lesson_40
 {
     class Program
@@ -142,9 +144,35 @@ namespace Lesson_40
 
             if (Int32.TryParse(userInputId, out int resultId))
             {
-                if (players.TryRemove(resultId))
+                if (players.TryRemove(resultId) == true)
                 {
                     Print($"Игрок с {resultId} - успешно удалён из базы", ConsoleColor.Yellow);
+                }
+                else
+                {
+                    Print($"{resultId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
+                }
+            }
+            else
+            {
+                Print($"{userInputId} - Вы ввели не число!");
+            }
+        }
+
+        private static void SetBanStatusToPlayer(DataSheets players)
+        {
+            Console.Clear();
+            ShowAllPlayers(players.GetAllPlayers());
+
+            string userInputId;
+            Print("Введите Id игрокв для удаления с базы: ");
+            userInputId = Console.ReadLine();
+
+            if (Int32.TryParse(userInputId, out int resultId))
+            {
+                if (players.TrySetBanStatus(resultId) == true)
+                {
+                    Print($"Игрок с ID: {resultId} - успешно забанен", ConsoleColor.Yellow);
                 }
                 else
                 {
@@ -193,11 +221,17 @@ class DataSheets
     {
         Player playerToBan = GetPlayerById(id);
 
-        foreach (Player player in _players)
+        for (int i = 0; i < _players.Count; i++)
         {
-            if (player.Equals(playerToBan) && )
+            if (_players[i].Equals(playerToBan) && _players[i].Ban == false)
             {
-                player = new Player(playerToBan.Id, playerToBan.NickName, playerToBan.Level, true);
+                _players[i] = new Player(playerToBan.Id, playerToBan.NickName, playerToBan.Level, true);
+                return true;
+            }
+            else if (_players[i].Equals(playerToBan) && _players[i].Ban == true)
+            {
+                _players[i] = new Player(playerToBan.Id, playerToBan.NickName, playerToBan.Level, false);
+                return true;
             }
         }
 
@@ -227,21 +261,21 @@ class Player
 {
     private static int _idCount = 0;
 
-    public Player(string nickName, int level, bool isBanned = false)
+    public Player(string nickName, int level, bool isBan = false)
     {
         ++_idCount;
         Id = _idCount;
         Level = level;
         NickName = nickName;
-        Ban = isBanned;
+        Ban = isBan;
     }
 
-    public Player(int id, string nickName, int level, bool isBanned)
+    public Player(int id, string nickName, int level, bool isBan)
     {
         Id = id;
         Level = level;
         NickName = nickName;
-        Ban = isBanned;
+        Ban = isBan;
     }
 
     public int Id { get; }
