@@ -113,11 +113,8 @@ namespace Lesson_40
             int userInputLevel = ReadInt();
 
             if (userInputLevel <= 0)
-            {
-                Print($"{userInputLevel} - Ошибка! Вы ввели некорректный уровень! Он должен быть больше 0", ConsoleColor.DarkRed);
                 return;
-            }
-            
+
             string SuccessAddPlayerMessage = players.Add(userInputNickName, userInputLevel);
 
             Print(SuccessAddPlayerMessage, ConsoleColor.Green);
@@ -132,11 +129,8 @@ namespace Lesson_40
             int playerId = ReadInt();
 
             if (playerId <= 0)
-            {
-                Print($"{playerId} - Ошибка! Вы ввели неверный ID", ConsoleColor.DarkRed);
                 return;
-            }
-                
+
             if (dataSheets.TryRemove(playerId))
             {
                 Print($"Игрок с ID: {playerId} - успешно удалён из базы", ConsoleColor.Yellow);
@@ -179,7 +173,13 @@ namespace Lesson_40
                 return result;
             }
 
-            Print($"{userInput} - Вы ввели не число!");
+            if (result <= 0)
+            {
+                Print($"{userInput} - Ошибка! Введенные данные должны быть в положительном диапазоне и больше 0");
+                return result;
+            }
+
+            Print($"{userInput} - Ошибка! Вы совершили неверный ввод данных!");
             return result;
         }
     }
