@@ -1,4 +1,6 @@
-﻿namespace Lesson_40
+﻿using System.Numerics;
+
+namespace Lesson_40
 {
     class Program
     {
@@ -51,7 +53,7 @@
                 switch (_userInput)
                 {
                     case CommandShowPlayersData:
-                        ShowAllPlayers(playersDataSheets.GetAllPlayers());
+                        ShowAllPlayers(playersDataSheets);
                         break;
 
                     case CommandAddPlayerToDataSheets:
@@ -99,22 +101,15 @@
             Console.ForegroundColor = defaultColor;
         }
 
-        private void ShowAllPlayers(List<Player> players)
+        private void ShowAllPlayers(DataSheets playersData)
         {
+            List<Player> players = playersData.GetAllPlayers();
+
             Print("Список игроков:\n");
 
-            foreach (var player in players)
+            foreach (Player player in players)
             {
-                Print($"#{player.Id} | ник: {player.NickName} \t | уровень: {player.Level} \t | статус:");
-
-                if (player.Ban == true)
-                {
-                    Print($" {player.IsBanned}\n", ConsoleColor.DarkRed);
-                }
-                else
-                {
-                    Print($" {player.IsBanned}\n", ConsoleColor.DarkGreen);
-                }
+                Print(player.ShowInfo() + "\n");
             }
         }
 
@@ -144,7 +139,7 @@
         private void RemovePlayerFromData(DataSheets players)
         {
             Console.Clear();
-            ShowAllPlayers(players.GetAllPlayers());
+            ShowAllPlayers(players);
             string userInputId;
 
             Print("Введите Id игрока для удаления с базы: ");
@@ -170,7 +165,7 @@
         private void SetBanStatusToPlayer(DataSheets players, bool isBan = true)
         {
             Console.Clear();
-            ShowAllPlayers(players.GetAllPlayers());
+            ShowAllPlayers(players);
             string userInputId;
 
             Print("Введите Id для изменения статуса бана игрока: ");
@@ -288,6 +283,11 @@
         public int Level { get; }
         public bool Ban { get; }
         public string IsBanned => Ban == true ? "забанен" : "не забанен";
+
+        public string ShowInfo()
+        {
+            return $"#{Id} | ник: {NickName} \t | уровень: {Level} \t | статус: {IsBanned}";
+        }
     }
 }
 
