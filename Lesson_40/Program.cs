@@ -25,7 +25,7 @@ namespace Lesson_40
         private const string CommandUnBanPlayerById = "5";
         private const string CommandExitProgramm = "6";
 
-        private string _titleMenu = $"Доступные команды:";
+        private string _titleMenu = "Доступные команды:";
         private string _menu = $"\n{CommandShowPlayersData} - Вывести информацию обо всех игроках" +
                              $"\n{CommandAddPlayerToDataSheets} - Добавить нового игрока в базу" +
                              $"\n{CommandRemovePlayerInDataSheets} - Удалить игрока из базы" +
@@ -33,7 +33,7 @@ namespace Lesson_40
                              $"\n{CommandUnBanPlayerById} - Разбанить игкрока по ID" +
                              $"\n{CommandExitProgramm} - Выход из программы";
         private string _userInput;
-        private string _requestMessage = $"\nВведите команду: ";
+        private string _requestMessage = "\nВведите команду: ";
         private bool _isRun = true;
         private bool _isBan;
 
@@ -57,19 +57,19 @@ namespace Lesson_40
                         break;
 
                     case CommandAddPlayerToDataSheets:
-                        AddPlayerInData(dataSheets);
+                        TryAddPlayerInData(dataSheets);
                         break;
 
                     case CommandRemovePlayerInDataSheets:
-                        RemovePlayerFromData(dataSheets);
+                        TryRemovePlayerFromData(dataSheets);
                         break;
 
                     case CommandBanPlayerById:
-                        SetBanStatusToPlayer(dataSheets, _isBan = true);
+                        TrySetBanToPlayer(dataSheets, _isBan = true);
                         break;
 
                     case CommandUnBanPlayerById:
-                        SetBanStatusToPlayer(dataSheets, _isBan = false);
+                        TrySetBanToPlayer(dataSheets, _isBan = false);
                         break;
 
                     case CommandExitProgramm:
@@ -101,95 +101,86 @@ namespace Lesson_40
             Console.ForegroundColor = defaultColor;
         }
 
-        private void ShowAllPlayers(DataSheets playersData)
-        {
-            List<Player> players = playersData.GetAllPlayers();
-
-            Print("Список игроков:\n");
-
-            foreach (Player player in players)
-            {
-                Print(player.ShowInfo() + "\n");
-            }
-        }
-
-        private void AddPlayerInData(DataSheets players)
+        private void TryAddPlayerInData(DataSheets players)
         {
             Console.Clear();
-            string userInputNickName;
-            string userInputLevel;
-
             Print("Добавление нового игрока в базу\n");
-            Print("Введите ник: ");
-            userInputNickName = Console.ReadLine();
-            Print("Введите уровень: ");
-            userInputLevel = Console.ReadLine();
 
-            if (Int32.TryParse(userInputLevel, out int result))
+            Print("Введите ник: ");
+            string userInputNickName = Console.ReadLine();
+
+            Print("Введите уровень: ");
+            int userInputLevel = ReadInt();
+
+            if (userInputLevel <= 0)
             {
-                players.Add(userInputNickName, result);
-                Print($"В базу успешно добавлен игрок: {userInputNickName} с уровнем: {result}", ConsoleColor.Green);
+                Print($"{userInputLevel} - Ошибка! Вы ввели некорректный уровень! Он должен быть больше 0", ConsoleColor.DarkRed);
+                return;
             }
-            else
-            {
-                Print($"{userInputLevel} - Вы ввели не число!");
-            }
+            
+            string SuccessAddPlayerMessage = players.Add(userInputNickName, userInputLevel);
+
+            Print(SuccessAddPlayerMessage, ConsoleColor.Green);
         }
 
-        private void RemovePlayerFromData(DataSheets dataSheets)
+        private void TryRemovePlayerFromData(DataSheets dataSheets)
         {
             Console.Clear();
             Print(dataSheets.ShowAllPlayers());
-            string userInputId;
 
             Print("Введите Id игрока для удаления с базы: ");
-            userInputId = Console.ReadLine();
+            int playerId = ReadInt();
 
-            if (Int32.TryParse(userInputId, out int resultId))
+            if (playerId <= 0)
             {
-                if (dataSheets.TryRemove(resultId) == true)
-                {
-                    Print($"Игрок с ID: {resultId} - успешно удалён из базы", ConsoleColor.Yellow);
-                }
-                else
-                {
-                    Print($"{resultId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
-                }
+                Print($"{playerId} - Ошибка! Вы ввели неверный ID", ConsoleColor.DarkRed);
+                return;
+            }
+                
+            if (dataSheets.TryRemove(playerId))
+            {
+                Print($"Игрок с ID: {playerId} - успешно удалён из базы", ConsoleColor.Yellow);
             }
             else
             {
-                Print($"{userInputId} - Вы ввели не число!");
+                Print($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
             }
         }
 
-        private void SetBanStatusToPlayer(DataSheets dataSheets, bool isBan = true)
+        private void TrySetBanToPlayer(DataSheets dataSheets, bool isBan = true)
         {
             Console.Clear();
             Print(dataSheets.ShowAllPlayers());
-            string userInputId;
 
             Print("Введите Id для изменения статуса бана игрока: ");
-            userInputId = Console.ReadLine();
+            int playerId = ReadInt();
 
-            if (Int32.TryParse(userInputId, out int resultId))
+            if (isBan && dataSheets.TrySetBanStatus(playerId, isBan))
             {
-                if (isBan == true && dataSheets.TrySetBanStatus(resultId, isBan) == true)
-                {
-                    Print($"Игрок с ID: {resultId} - успешно забанен", ConsoleColor.Yellow);
-                }
-                else if (isBan == false && dataSheets.TrySetBanStatus(resultId, isBan) == true)
-                {
-                    Print($"Игрок с ID: {resultId} - успешно разбанен", ConsoleColor.Yellow);
-                }
-                else
-                {
-                    Print($"{resultId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
-                }
+                Print($"Игрок с ID: {playerId} - успешно забанен", ConsoleColor.Yellow);
             }
-            else
+            else if (isBan == false && dataSheets.TrySetBanStatus(playerId, isBan))
             {
-                Print($"{userInputId} - Вы ввели не число!");
+                Print($"Игрок с ID: {playerId} - успешно разбанен", ConsoleColor.Yellow);
             }
+            else if (playerId != 0)
+            {
+                Print($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
+            }
+
+        }
+
+        private int ReadInt()
+        {
+            string userInput = Console.ReadLine();
+
+            if (Int32.TryParse(userInput, out int result))
+            {
+                return result;
+            }
+
+            Print($"{userInput} - Вы ввели не число!");
+            return result;
         }
     }
 
@@ -217,9 +208,10 @@ namespace Lesson_40
         }
 
 
-        public void Add(string nickname, int level)
+        public string Add(string nickname, int level)
         {
             _players.Add(new Player(nickname, level));
+            return $"В базу успешно добавлен игрок: {nickname} с уровнем: {level}";
         }
 
         public bool TryRemove(int id)
@@ -263,16 +255,12 @@ namespace Lesson_40
 
             return null;
         }
-
-        public List<Player> GetAllPlayers()
-        {
-            return new List<Player>(_players);
-        }
     }
 
     class Player
     {
         private static int _idCount = 0;
+        private int _level;
 
         public Player(string nickName, int level, bool isBan = false)
         {
@@ -293,7 +281,22 @@ namespace Lesson_40
 
         public int Id { get; }
         public string NickName { get; }
-        public int Level { get; }
+
+        public int Level
+        {
+            get
+            {
+                return _level;
+            }
+            private set
+            {
+                if (value > 0)
+                    _level = value;
+                else
+                    _level = 0;
+            }
+        }
+
         public bool Ban { get; }
         public string IsBanned => Ban == true ? "забанен" : "не забанен";
 
