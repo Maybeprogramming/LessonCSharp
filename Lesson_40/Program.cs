@@ -39,7 +39,7 @@ namespace Lesson_40
 
         public void Work(DataSheets players)
         {
-            DataSheets playersDataSheets = players;
+            DataSheets dataSheets = players;
 
             while (_isRun)
             {
@@ -53,23 +53,23 @@ namespace Lesson_40
                 switch (_userInput)
                 {
                     case CommandShowPlayersData:
-                        ShowAllPlayers(playersDataSheets);
+                        Print(dataSheets.ShowAllPlayers());
                         break;
 
                     case CommandAddPlayerToDataSheets:
-                        AddPlayerInData(playersDataSheets);
+                        AddPlayerInData(dataSheets);
                         break;
 
                     case CommandRemovePlayerInDataSheets:
-                        RemovePlayerFromData(playersDataSheets);
+                        RemovePlayerFromData(dataSheets);
                         break;
 
                     case CommandBanPlayerById:
-                        SetBanStatusToPlayer(playersDataSheets, _isBan = true);
+                        SetBanStatusToPlayer(dataSheets, _isBan = true);
                         break;
 
                     case CommandUnBanPlayerById:
-                        SetBanStatusToPlayer(playersDataSheets, _isBan = false);
+                        SetBanStatusToPlayer(dataSheets, _isBan = false);
                         break;
 
                     case CommandExitProgramm:
@@ -136,10 +136,10 @@ namespace Lesson_40
             }
         }
 
-        private void RemovePlayerFromData(DataSheets players)
+        private void RemovePlayerFromData(DataSheets dataSheets)
         {
             Console.Clear();
-            ShowAllPlayers(players);
+            Print(dataSheets.ShowAllPlayers());
             string userInputId;
 
             Print("Введите Id игрока для удаления с базы: ");
@@ -147,7 +147,7 @@ namespace Lesson_40
 
             if (Int32.TryParse(userInputId, out int resultId))
             {
-                if (players.TryRemove(resultId) == true)
+                if (dataSheets.TryRemove(resultId) == true)
                 {
                     Print($"Игрок с ID: {resultId} - успешно удалён из базы", ConsoleColor.Yellow);
                 }
@@ -162,10 +162,10 @@ namespace Lesson_40
             }
         }
 
-        private void SetBanStatusToPlayer(DataSheets players, bool isBan = true)
+        private void SetBanStatusToPlayer(DataSheets dataSheets, bool isBan = true)
         {
             Console.Clear();
-            ShowAllPlayers(players);
+            Print(dataSheets.ShowAllPlayers());
             string userInputId;
 
             Print("Введите Id для изменения статуса бана игрока: ");
@@ -173,11 +173,11 @@ namespace Lesson_40
 
             if (Int32.TryParse(userInputId, out int resultId))
             {
-                if (isBan == true && players.TrySetBanStatus(resultId, isBan) == true)
+                if (isBan == true && dataSheets.TrySetBanStatus(resultId, isBan) == true)
                 {
                     Print($"Игрок с ID: {resultId} - успешно забанен", ConsoleColor.Yellow);
                 }
-                else if (isBan == false && players.TrySetBanStatus(resultId, isBan) == true)
+                else if (isBan == false && dataSheets.TrySetBanStatus(resultId, isBan) == true)
                 {
                     Print($"Игрок с ID: {resultId} - успешно разбанен", ConsoleColor.Yellow);
                 }
@@ -203,6 +203,19 @@ namespace Lesson_40
             new Player ("Zirael", 45),
             new Player ("AprilOnil", 80)
         };
+
+        public string ShowAllPlayers()
+        {
+            string playersInfo = "";
+
+            foreach (Player player in _players)
+            {
+                playersInfo += player.ShowInfo() + "\n";
+            }
+
+            return playersInfo;
+        }
+
 
         public void Add(string nickname, int level)
         {
