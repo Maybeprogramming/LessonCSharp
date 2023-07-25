@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace Lesson_40
+﻿namespace Lesson_40
 {
     class Program
     {
@@ -65,11 +63,11 @@ namespace Lesson_40
                         break;
 
                     case CommandBanPlayerById:
-                        TrySetBanToPlayer(dataSheets, _isBan = true);
+                        TrySetBanPlayer(dataSheets, _isBan = true);
                         break;
 
                     case CommandUnBanPlayerById:
-                        TrySetBanToPlayer(dataSheets, _isBan = false);
+                        TrySetBanPlayer(dataSheets, _isBan = false);
                         break;
 
                     case CommandExitProgramm:
@@ -141,13 +139,16 @@ namespace Lesson_40
             }
         }
 
-        private void TrySetBanToPlayer(DataSheets dataSheets, bool isBan = true)
+        private void TrySetBanPlayer(DataSheets dataSheets, bool isBan = true)
         {
             Console.Clear();
             Print(dataSheets.ShowAllPlayers());
 
             Print("Введите Id для изменения статуса бана игрока: ");
             int playerId = ReadInt();
+
+            if (playerId <= 0)
+                return;
 
             if (isBan && dataSheets.TrySetBanStatus(playerId, isBan))
             {
@@ -161,7 +162,6 @@ namespace Lesson_40
             {
                 Print($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
             }
-
         }
 
         private int ReadInt()
@@ -170,12 +170,11 @@ namespace Lesson_40
 
             if (Int32.TryParse(userInput, out int result))
             {
-                return result;
-            }
+                if (result <= 0)
+                {
+                    Print($"{userInput} - Ошибка! Введенные данные должны быть в положительном диапазоне и больше 0");
+                }
 
-            if (result <= 0)
-            {
-                Print($"{userInput} - Ошибка! Введенные данные должны быть в положительном диапазоне и больше 0");
                 return result;
             }
 
@@ -206,7 +205,6 @@ namespace Lesson_40
 
             return playersInfo;
         }
-
 
         public string Add(string nickname, int level)
         {
