@@ -10,17 +10,43 @@
 
     class Player
     {
-
+        private List<Card> _cards;
     }
 
     class Card
     {
+        private string _name;
+        private string _suit;
 
+        public Card(string name, string suit)
+        {
+            _name = name;
+            _suit = suit;
+        }
+
+        public string ShowInfo()
+        {
+            string cardInfo = $"{_name}, масть: {_suit}";
+            return cardInfo;
+        }
     }
 
     class Deck
     {
+        private Queue<Card> cards;
+    }
 
+    class CardGenerator
+    {
+        Random random = new Random();
+        List<string> namesCards = new ();
+        {
+            
+        }
+        public Card CreateRandomCard()
+        {
+            return new Card();
+        }
     }
 }
 
