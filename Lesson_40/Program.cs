@@ -52,23 +52,23 @@ namespace Lesson_40
                 switch (_userInput)
                 {
                     case CommandShowPlayersData:
-                        Print(dataSheets.ShowAllPlayers());
+                        dataSheets.ShowAllPlayers();
                         break;
 
                     case CommandAddPlayerToDataSheets:
-                        TryAddPlayerInData(dataSheets);
+                        dataSheets.TryAddPlayer();
                         break;
 
                     case CommandRemovePlayerInDataSheets:
-                        TryRemovePlayerFromData(dataSheets);
+                        dataSheets.TryRemovePlayer();
                         break;
 
                     case CommandBanPlayerById:
-                        TryBanPlayer(dataSheets);
+                        dataSheets.TryBanPlayer();
                         break;
 
                     case CommandUnBanPlayerById:
-                        TryUnBanPlayer(dataSheets);
+                        dataSheets.TryUnbanPlayer();
                         break;
 
                     case CommandExitProgramm:
@@ -99,107 +99,6 @@ namespace Lesson_40
             Console.Write(message);
             Console.ForegroundColor = defaultColor;
         }
-
-        private void TryAddPlayerInData(DataSheets players)
-        {
-            Console.Clear();
-            Print("Добавление нового игрока в базу\n");
-
-            Print("Введите ник: ");
-            string userInputNickName = Console.ReadLine();
-
-            Print("Введите уровень: ");
-            int userInputLevel = ReadInt();
-
-            if (userInputLevel <= 0)
-                return;
-
-            string successAddPlayerMessage = players.AddPlayer(userInputNickName, userInputLevel);
-
-            Print(successAddPlayerMessage, ConsoleColor.Green);
-        }
-
-        private void TryRemovePlayerFromData(DataSheets dataSheets)
-        {
-            Console.Clear();
-            Print(dataSheets.ShowAllPlayers());
-
-            Print("Введите Id игрока для удаления с базы: ");
-            int playerId = ReadInt();
-
-            if (playerId <= 0)
-                return;
-
-            if (dataSheets.TryRemovePlayer(playerId))
-            {
-                Print($"Игрок с ID: {playerId} - успешно удалён из базы", ConsoleColor.Yellow);
-            }
-            else
-            {
-                Print($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
-            }
-        }
-
-
-        private void TryBanPlayer(DataSheets dataSheets)
-        {
-            Console.Clear();
-            Print(dataSheets.ShowAllPlayers());
-
-            Print("Введите Id для бана игрока: ");
-            int playerId = ReadInt();
-
-            if (playerId <= 0)
-                return;
-
-            if (dataSheets.TryBanPlayer(playerId) == true)
-            {
-                Print($"Игрок с ID: {playerId} - успешно забанен", ConsoleColor.Yellow);
-            }
-            else if (playerId != 0)
-            {
-                Print($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
-            }
-        }
-
-        private void TryUnBanPlayer(DataSheets dataSheets)
-        {
-            Console.Clear();
-            Print(dataSheets.ShowAllPlayers());
-
-            Print("Введите Id для разбана бана игрока: ");
-            int playerId = ReadInt();
-
-            if (playerId <= 0)
-                return;
-
-            if (dataSheets.TryUnbanPlayer(playerId) == true)
-            {
-                Print($"Игрок с ID: {playerId} - успешно разбанен", ConsoleColor.Yellow);
-            }
-            else if (playerId != 0)
-            {
-                Print($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
-            }
-        }
-
-        private int ReadInt()
-        {
-            string userInput = Console.ReadLine();
-
-            if (Int32.TryParse(userInput, out int result))
-            {
-                if (result <= 0)
-                {
-                    Print($"{userInput} - Ошибка! Введенные данные должны быть в положительном диапазоне и больше 0");
-                }
-
-                return result;
-            }
-
-            Print($"{userInput} - Ошибка! Вы совершили неверный ввод данных!");
-            return result;
-        }
     }
 
     class DataSheets
@@ -213,78 +112,131 @@ namespace Lesson_40
             new Player ("AprilOnil", 80)
         };
 
-        public string ShowAllPlayers()
+        public void ShowAllPlayers()
         {
-            string playersInfo = "";
-
             foreach (Player player in _players)
             {
-                playersInfo += player.GetInfo() + "\n";
+                Console.WriteLine(player.GetInfo());
+            }
+        }
+
+        public void TryAddPlayer()
+        {
+            Console.Clear();
+            Console.WriteLine("Добавление нового игрока в базу\n");
+
+            Console.WriteLine("Введите ник: ");
+            string userInputNickName = Console.ReadLine();
+
+            Console.WriteLine("Введите уровень: ");
+            int userInputLevel = ReadInt();
+
+            if (userInputLevel <= 0)
+                return;
+
+            _players.Add(new Player(userInputNickName, userInputLevel));
+
+            string infoMessage = $"В базу успешно добавлен игрок: {userInputNickName} с уровнем: {userInputLevel}";
+            Console.WriteLine(infoMessage, ConsoleColor.DarkGreen);
+        }
+
+        public void TryRemovePlayer()
+        {
+            Console.Clear();
+            ShowAllPlayers();
+
+            Console.WriteLine("Введите Id игрока для удаления с базы: ");
+            int playerId = ReadInt();
+
+            if (playerId <= 0 || playerId >= _players.Count)
+            {
+                Console.WriteLine($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
+                return;
             }
 
-            return playersInfo;
-        }
-
-        public string AddPlayer(string nickname, int level)
-        {
-            _players.Add(new Player(nickname, level));
-            string infoMessage = $"В базу успешно добавлен игрок: {nickname} с уровнем: {level}";
-            return infoMessage;
-        }
-
-        public bool TryRemovePlayer(int id)
-        {
             for (int i = 0; i < _players.Count; i++)
             {
-                if (_players[i].Id.Equals(id))
+                if (_players[i].Id.Equals(playerId))
                 {
                     _players.Remove(_players[i]);
-                    return true;
+                    Console.WriteLine($"Игрок с ID: {playerId} - успешно удалён из базы", ConsoleColor.Yellow);
+                    return;
                 }
             }
-
-            return false;
         }
 
-        public bool TryBanPlayer(int id)
+        public void TryBanPlayer()
         {
+            Console.Clear();
+            ShowAllPlayers();
+
+            Console.WriteLine("Введите Id для бана игрока: ");
+            int playerId = ReadInt();
+
+            if (playerId <= 0)
+                return;
+
+            if (playerId != 0 || playerId >= _players.Count)
+            {
+                Console.WriteLine($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
+                return;
+            }
+
             for (int i = 0; i < _players.Count; i++)
             {
-                if (_players[i].Id.Equals(id))
+                if (_players[i].Id.Equals(playerId))
                 {
                     _players[i].Ban();
-                    return true;
+                    Console.WriteLine($"Игрок с ID: {playerId} - успешно забанен", ConsoleColor.Yellow);
+                    return;
                 }
             }
-
-            return false;
         }
 
-        public bool TryUnbanPlayer(int id)
+        public void TryUnbanPlayer()
         {
+            Console.Clear();
+            ShowAllPlayers();
+
+            Console.WriteLine("Введите Id для разбана игрока: ");
+            int playerId = ReadInt();
+
+            if (playerId <= 0)
+                return;
+
+            if (playerId != 0 || playerId >= _players.Count)
+            {
+                Console.WriteLine($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
+                return;
+            }
+
             for (int i = 0; i < _players.Count; i++)
             {
-                if (_players[i].Id.Equals(id))
+                if (_players[i].Id.Equals(playerId))
                 {
                     _players[i].Unban();
-                    return true;
+                    Console.WriteLine($"Игрок с ID: {playerId} - успешно разбанен", ConsoleColor.Yellow);
+                    return;
                 }
             }
-
-            return false;
         }
 
-        private Player GetPlayerById(int id)
+        private int ReadInt()
         {
-            foreach (Player player in _players)
+            string userInput = Console.ReadLine();
+
+            if (Int32.TryParse(userInput, out int result))
             {
-                if (player.Id == id)
+                if (result <= 0)
                 {
-                    return player;
+                    Console.Write($"{userInput} - Ошибка! Введенные данные должны быть в положительном диапазоне и больше 0");
                 }
+
+                return result;
             }
 
-            return null;
+            Console.Write($"{userInput} - Ошибка! Вы совершили неверный ввод данных!");
+            return result;
         }
     }
 
