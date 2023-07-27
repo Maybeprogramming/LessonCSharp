@@ -144,7 +144,7 @@
             Console.Clear();
             Print(dataSheets.ShowAllPlayers());
 
-            Print("Введите Id для изменения статуса бана игрока: ");
+            Print("Введите Id для бана игрока: ");
             int playerId = ReadInt();
 
             if (playerId <= 0)
@@ -165,7 +165,7 @@
             Console.Clear();
             Print(dataSheets.ShowAllPlayers());
 
-            Print("Введите Id для изменения статуса бана игрока: ");
+            Print("Введите Id для разбана бана игрока: ");
             int playerId = ReadInt();
 
             if (playerId <= 0)
