@@ -10,7 +10,20 @@
 
     class Player
     {
-        private List<Card> _cards;
+        private List<Card> _cards = new();
+
+        public void TakeCard(Card card)
+        {
+            _cards.Add(card);
+        }
+
+        public void ShowCards()
+        {
+            foreach (Card card in _cards)
+            {
+                Console.WriteLine(card.ShowInfo());
+            }
+        }
     }
 
     class Card
@@ -26,21 +39,20 @@
 
         public string ShowInfo()
         {
-            string cardInfo = $"{_name}, масть: {_suit}";
-            return cardInfo;
+            return $"{_name}, масть: {_suit}";
         }
     }
 
     class Deck
     {
-        private Queue<Card> cards;
+        private Queue<Card> _cards = new();
     }
 
     class CardGenerator
     {
         Random random = new Random();
-        List<string> namesCards = new ();
- 
+        List<string> namesCards = new();
+
         public Card CreateRandomCard()
         {
             return new Card("");

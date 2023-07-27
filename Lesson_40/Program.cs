@@ -147,7 +147,7 @@
 
             Console.Write("Введите Id игрока для удаления с базы: ");
 
-            if (VerificationEnterId(out var playerId)) return;
+            if (VerificationEnterPlayerId(out var playerId)) return;
 
             for (int i = 0; i < _players.Count; i++)
             {
@@ -167,7 +167,7 @@
 
             Console.Write("Введите Id для бана игрока: ");
 
-            if (VerificationEnterId(out var playerId)) return;
+            if (VerificationEnterPlayerId(out var playerId)) return;
 
             for (int i = 0; i < _players.Count; i++)
             {
@@ -187,7 +187,7 @@
 
             Console.Write("Введите Id для разбана игрока: ");
 
-            if (VerificationEnterId(out var playerId)) return;
+            if (VerificationEnterPlayerId(out var playerId)) return;
 
             for (int i = 0; i < _players.Count; i++)
             {
@@ -200,7 +200,7 @@
             }
         }
 
-        private bool VerificationEnterId(out int playerId)
+        private bool VerificationEnterPlayerId(out int playerId)
         {
             playerId = ReadInt();
 
