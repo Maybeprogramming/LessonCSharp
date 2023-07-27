@@ -33,7 +33,6 @@
         private string _userInput;
         private string _requestMessage = "\nВведите команду: ";
         private bool _isRun = true;
-        private bool _isBan;
 
         public void Work(DataSheets players)
         {
@@ -63,11 +62,11 @@
                         break;
 
                     case CommandBanPlayerById:
-                        TrySetBanPlayer(dataSheets, _isBan = true);
+                        TryBanPlayer(dataSheets);
                         break;
 
                     case CommandUnBanPlayerById:
-                        TrySetBanPlayer(dataSheets, _isBan = false);
+                        TryUnBanPlayer(dataSheets);
                         break;
 
                     case CommandExitProgramm:
@@ -113,9 +112,9 @@
             if (userInputLevel <= 0)
                 return;
 
-            string SuccessAddPlayerMessage = players.Add(userInputNickName, userInputLevel);
+            string successAddPlayerMessage = players.Add(userInputNickName, userInputLevel);
 
-            Print(SuccessAddPlayerMessage, ConsoleColor.Green);
+            Print(successAddPlayerMessage, ConsoleColor.Green);
         }
 
         private void TryRemovePlayerFromData(DataSheets dataSheets)
@@ -139,7 +138,8 @@
             }
         }
 
-        private void TrySetBanPlayer(DataSheets dataSheets, bool isBan = true)
+
+        private void TryBanPlayer(DataSheets dataSheets)
         {
             Console.Clear();
             Print(dataSheets.ShowAllPlayers());
@@ -150,11 +150,28 @@
             if (playerId <= 0)
                 return;
 
-            if (isBan && dataSheets.TrySetBanStatus(playerId, isBan))
+            if (dataSheets.TryBan(playerId) == true)
             {
                 Print($"Игрок с ID: {playerId} - успешно забанен", ConsoleColor.Yellow);
             }
-            else if (isBan == false && dataSheets.TrySetBanStatus(playerId, isBan))
+            else if (playerId != 0)
+            {
+                Print($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
+            }
+        }
+
+        private void TryUnBanPlayer(DataSheets dataSheets)
+        {
+            Console.Clear();
+            Print(dataSheets.ShowAllPlayers());
+
+            Print("Введите Id для изменения статуса бана игрока: ");
+            int playerId = ReadInt();
+
+            if (playerId <= 0)
+                return;
+
+            if (dataSheets.TryUnBan(playerId) == true)
             {
                 Print($"Игрок с ID: {playerId} - успешно разбанен", ConsoleColor.Yellow);
             }
@@ -209,7 +226,8 @@
         public string Add(string nickname, int level)
         {
             _players.Add(new Player(nickname, level));
-            return $"В базу успешно добавлен игрок: {nickname} с уровнем: {level}";
+            string infoMessage = $"В базу успешно добавлен игрок: {nickname} с уровнем: {level}";
+            return infoMessage;
         }
 
         public bool TryRemove(int id)
@@ -225,7 +243,7 @@
             return false;
         }
 
-        public bool TrySetBanStatus(int id, bool isBan)
+        public bool TryBan(int id)
         {
             Player playerToBan = GetPlayerById(id);
 
@@ -233,7 +251,23 @@
             {
                 if (_players[i].Equals(playerToBan))
                 {
-                    _players[i] = new Player(playerToBan.Id, playerToBan.NickName, playerToBan.Level, isBan);
+                    _players[i].Ban();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool TryUnBan(int id)
+        {
+            Player playerToUnBan = GetPlayerById(id);
+
+            for (int i = 0; i < _players.Count; i++)
+            {
+                if (_players[i].Equals(playerToUnBan))
+                {
+                    _players[i].UnBan();
                     return true;
                 }
             }
@@ -266,15 +300,7 @@
             Id = _idCount;
             Level = level;
             NickName = nickName;
-            Ban = isBan;
-        }
-
-        public Player(int id, string nickName, int level, bool isBan)
-        {
-            Id = id;
-            Level = level;
-            NickName = nickName;
-            Ban = isBan;
+            IsBan = isBan;
         }
 
         public int Id { get; }
@@ -295,12 +321,23 @@
             }
         }
 
-        public bool Ban { get; }
-        public string IsBanned => Ban == true ? "забанен" : "не забанен";
+        public bool IsBan { get; private set; }
+        public string IsBanned => IsBan == true ? "забанен" : "не забанен";
 
         public string ShowInfo()
         {
-            return $"#{Id} | ник: {NickName} \t | уровень: {Level} \t | статус: {IsBanned}";
+            string playerInfo = $"#{Id} | ник: {NickName} \t | уровень: {Level} \t | статус: {IsBanned}"; ;
+            return playerInfo;
+        }
+
+        public void Ban()
+        {
+            IsBan = true;
+        }
+
+        public void UnBan()
+        {
+            IsBan = false;
         }
     }
 }
@@ -314,3 +351,14 @@
 //Но нужен класс, который содержит игроков и её можно назвать "База данных".
 
 //База данных игроков
+
+//Поля для вывода это про
+//return $"В базу успешно добавлен игрок: {nickname} с уровнем: {level}"; и return $"#{Id} | ник: {NickName} \t | уровень: {Level} \t | статус: {IsBanned}";
+
+//Найдены недочёты:
+//1) Не пересоздавайте игрока при выдаче бана и разбана.
+//Просто создайте 2 метода, отвечающие за это в классе игрока.
+//2) Метод TrySetBanStatus с булевым флагом тоже желательно разбить на 2 метода.
+//3) Аналогично TrySetBanPlayer в ViewData.
+//4) string SuccessAddPlayerMessage - локальные переменные с маленькой буквы именуются.
+//5) private bool _isBan; -нигде не используется, но зачем-то есть
