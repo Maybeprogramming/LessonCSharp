@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Lesson_40
+﻿namespace Lesson_40
 {
     class Program
     {
@@ -114,6 +112,8 @@ namespace Lesson_40
 
         public void ShowAllPlayers()
         {
+            Console.WriteLine($"Список игроков:");
+
             foreach (Player player in _players)
             {
                 Console.WriteLine(player.GetInfo());
@@ -123,12 +123,12 @@ namespace Lesson_40
         public void TryAddPlayer()
         {
             Console.Clear();
-            Console.WriteLine("Добавление нового игрока в базу\n");
+            Console.WriteLine("Добавление нового игрока в базу");
 
-            Console.WriteLine("Введите ник: ");
+            Console.Write("Введите ник: ");
             string userInputNickName = Console.ReadLine();
 
-            Console.WriteLine("Введите уровень: ");
+            Console.Write("Введите уровень: ");
             int userInputLevel = ReadInt();
 
             if (userInputLevel <= 0)
@@ -137,7 +137,7 @@ namespace Lesson_40
             _players.Add(new Player(userInputNickName, userInputLevel));
 
             string infoMessage = $"В базу успешно добавлен игрок: {userInputNickName} с уровнем: {userInputLevel}";
-            Console.WriteLine(infoMessage, ConsoleColor.DarkGreen);
+            Console.WriteLine(infoMessage);
         }
 
         public void TryRemovePlayer()
@@ -145,21 +145,16 @@ namespace Lesson_40
             Console.Clear();
             ShowAllPlayers();
 
-            Console.WriteLine("Введите Id игрока для удаления с базы: ");
-            int playerId = ReadInt();
+            Console.Write("Введите Id игрока для удаления с базы: ");
 
-            if (playerId <= 0 || playerId >= _players.Count)
-            {
-                Console.WriteLine($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
-                return;
-            }
+            if (VerificationEnterId(out var playerId)) return;
 
             for (int i = 0; i < _players.Count; i++)
             {
                 if (_players[i].Id.Equals(playerId))
                 {
                     _players.Remove(_players[i]);
-                    Console.WriteLine($"Игрок с ID: {playerId} - успешно удалён из базы", ConsoleColor.Yellow);
+                    Console.WriteLine($"Игрок {_players[i].NickName} с ID: {playerId} - успешно удалён из базы");
                     return;
                 }
             }
@@ -170,24 +165,16 @@ namespace Lesson_40
             Console.Clear();
             ShowAllPlayers();
 
-            Console.WriteLine("Введите Id для бана игрока: ");
-            int playerId = ReadInt();
+            Console.Write("Введите Id для бана игрока: ");
 
-            if (playerId <= 0)
-                return;
-
-            if (playerId != 0 || playerId >= _players.Count)
-            {
-                Console.WriteLine($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
-                return;
-            }
+            if (VerificationEnterId(out var playerId)) return;
 
             for (int i = 0; i < _players.Count; i++)
             {
                 if (_players[i].Id.Equals(playerId))
                 {
                     _players[i].Ban();
-                    Console.WriteLine($"Игрок с ID: {playerId} - успешно забанен", ConsoleColor.Yellow);
+                    Console.WriteLine($"Игрок {_players[i].NickName} с ID: {playerId} - успешно забанен");
                     return;
                 }
             }
@@ -198,27 +185,32 @@ namespace Lesson_40
             Console.Clear();
             ShowAllPlayers();
 
-            Console.WriteLine("Введите Id для разбана игрока: ");
-            int playerId = ReadInt();
+            Console.Write("Введите Id для разбана игрока: ");
 
-            if (playerId <= 0)
-                return;
-
-            if (playerId != 0 || playerId >= _players.Count)
-            {
-                Console.WriteLine($"{playerId} - игрока с таким ID нет в базе", ConsoleColor.DarkRed);
-                return;
-            }
+            if (VerificationEnterId(out var playerId)) return;
 
             for (int i = 0; i < _players.Count; i++)
             {
                 if (_players[i].Id.Equals(playerId))
                 {
                     _players[i].Unban();
-                    Console.WriteLine($"Игрок с ID: {playerId} - успешно разбанен", ConsoleColor.Yellow);
+                    Console.WriteLine($"Игрок {_players[i].NickName} с ID: {playerId} - успешно разбанен");
                     return;
                 }
             }
+        }
+
+        private bool VerificationEnterId(out int playerId)
+        {
+            playerId = ReadInt();
+
+            if (playerId <= 0 || playerId >= _players.Count + 1)
+            {
+                Console.WriteLine($"{playerId} - Ошибка! Введены некорректные данные");
+                return true;
+            }
+
+            return false;
         }
 
         private int ReadInt()
@@ -227,15 +219,9 @@ namespace Lesson_40
 
             if (Int32.TryParse(userInput, out int result))
             {
-                if (result <= 0)
-                {
-                    Console.Write($"{userInput} - Ошибка! Введенные данные должны быть в положительном диапазоне и больше 0");
-                }
-
                 return result;
             }
 
-            Console.Write($"{userInput} - Ошибка! Вы совершили неверный ввод данных!");
             return result;
         }
     }
@@ -312,7 +298,7 @@ namespace Lesson_40
 //+8 - TryRemove- вы сначала просите метод GetPlayerById вернуть вам игрока,
 //+а потом снова перебираете всю коллекцию, и сравниваете. Зачем?
 //+Так же и в остальных случаях.
-//9 - ViewData - по названию, класс должен только знакомиться с данными,
+//+9 - ViewData - по названию, класс должен только знакомиться с данными,
 //но не что-то добавлять/удалять и т.д. в БД.
 //Логичнее будет дополнить функционал методов DataSheets.
 //Например, метод по добавлению игрока будет сразу запрашивать необходимые данные и сразу его добавлять.
