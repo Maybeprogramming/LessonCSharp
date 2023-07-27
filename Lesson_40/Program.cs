@@ -1,4 +1,6 @@
-﻿namespace Lesson_40
+﻿using System;
+
+namespace Lesson_40
 {
     class Program
     {
@@ -112,7 +114,7 @@
             if (userInputLevel <= 0)
                 return;
 
-            string successAddPlayerMessage = players.Add(userInputNickName, userInputLevel);
+            string successAddPlayerMessage = players.AddPlayer(userInputNickName, userInputLevel);
 
             Print(successAddPlayerMessage, ConsoleColor.Green);
         }
@@ -128,7 +130,7 @@
             if (playerId <= 0)
                 return;
 
-            if (dataSheets.TryRemove(playerId))
+            if (dataSheets.TryRemovePlayer(playerId))
             {
                 Print($"Игрок с ID: {playerId} - успешно удалён из базы", ConsoleColor.Yellow);
             }
@@ -150,7 +152,7 @@
             if (playerId <= 0)
                 return;
 
-            if (dataSheets.TryBan(playerId) == true)
+            if (dataSheets.TryBanPlayer(playerId) == true)
             {
                 Print($"Игрок с ID: {playerId} - успешно забанен", ConsoleColor.Yellow);
             }
@@ -171,7 +173,7 @@
             if (playerId <= 0)
                 return;
 
-            if (dataSheets.TryUnBan(playerId) == true)
+            if (dataSheets.TryUnbanPlayer(playerId) == true)
             {
                 Print($"Игрок с ID: {playerId} - успешно разбанен", ConsoleColor.Yellow);
             }
@@ -217,39 +219,38 @@
 
             foreach (Player player in _players)
             {
-                playersInfo += player.ShowInfo() + "\n";
+                playersInfo += player.GetInfo() + "\n";
             }
 
             return playersInfo;
         }
 
-        public string Add(string nickname, int level)
+        public string AddPlayer(string nickname, int level)
         {
             _players.Add(new Player(nickname, level));
             string infoMessage = $"В базу успешно добавлен игрок: {nickname} с уровнем: {level}";
             return infoMessage;
         }
 
-        public bool TryRemove(int id)
+        public bool TryRemovePlayer(int id)
         {
-            Player player = GetPlayerById(id);
-
-            if (_players.Contains(player))
+            for (int i = 0; i < _players.Count; i++)
             {
-                _players.Remove(player);
-                return true;
+                if (_players[i].Id.Equals(id))
+                {
+                    _players.Remove(_players[i]);
+                    return true;
+                }
             }
 
             return false;
         }
 
-        public bool TryBan(int id)
+        public bool TryBanPlayer(int id)
         {
-            Player playerToBan = GetPlayerById(id);
-
             for (int i = 0; i < _players.Count; i++)
             {
-                if (_players[i].Equals(playerToBan))
+                if (_players[i].Id.Equals(id))
                 {
                     _players[i].Ban();
                     return true;
@@ -259,15 +260,13 @@
             return false;
         }
 
-        public bool TryUnBan(int id)
+        public bool TryUnbanPlayer(int id)
         {
-            Player playerToUnBan = GetPlayerById(id);
-
             for (int i = 0; i < _players.Count; i++)
             {
-                if (_players[i].Equals(playerToUnBan))
+                if (_players[i].Id.Equals(id))
                 {
-                    _players[i].UnBan();
+                    _players[i].Unban();
                     return true;
                 }
             }
@@ -300,7 +299,7 @@
             Id = _idCount;
             Level = level;
             NickName = nickName;
-            IsBan = isBan;
+            IsBanned = isBan;
         }
 
         public int Id { get; }
@@ -308,36 +307,34 @@
 
         public int Level
         {
-            get
-            {
-                return _level;
-            }
-            private set
-            {
-                if (value > 0)
-                    _level = value;
-                else
-                    _level = 0;
-            }
+            get => _level;
+            private set => SetLevel(value);
         }
 
-        public bool IsBan { get; private set; }
-        public string IsBanned => IsBan == true ? "забанен" : "не забанен";
-
-        public string ShowInfo()
+        private void SetLevel(int value)
         {
-            string playerInfo = $"#{Id} | ник: {NickName} \t | уровень: {Level} \t | статус: {IsBanned}"; ;
-            return playerInfo;
+            if (value > 0)
+                _level = value;
+            else
+                _level = 0;
+        }
+
+        public bool IsBanned { get; private set; }
+        public string BanStatus => IsBanned == true ? "забанен" : "не забанен";
+
+        public string GetInfo()
+        {
+            return $"#{Id} | ник: {NickName} \t | уровень: {Level} \t | статус: {BanStatus}";
         }
 
         public void Ban()
         {
-            IsBan = true;
+            IsBanned = true;
         }
 
-        public void UnBan()
+        public void Unban()
         {
-            IsBan = false;
+            IsBanned = false;
         }
     }
 }
@@ -352,13 +349,19 @@
 
 //База данных игроков
 
-//Поля для вывода это про
-//return $"В базу успешно добавлен игрок: {nickname} с уровнем: {level}"; и return $"#{Id} | ник: {NickName} \t | уровень: {Level} \t | статус: {IsBanned}";
-
-//Найдены недочёты:
-//1) Не пересоздавайте игрока при выдаче бана и разбана.
-//Просто создайте 2 метода, отвечающие за это в классе игрока.
-//2) Метод TrySetBanStatus с булевым флагом тоже желательно разбить на 2 метода.
-//3) Аналогично TrySetBanPlayer в ViewData.
-//4) string SuccessAddPlayerMessage - локальные переменные с маленькой буквы именуются.
-//5) private bool _isBan; -нигде не используется, но зачем-то есть
+//Доработать.
+//+1 - public string IsBanned => IsBan - именуется у вас как булевая переменная, но таковой не является.
+//+2 - Unban - одно слово.
+//+3 - public bool IsBan -точнее как раз назвать isBanned.
+//+4 - public int Level и в нем сильное разветвление get/set - лучше вынесите в метод, условно, SetLevel и в нем проверяйте.
+//+5 - в ShowInfo можно обойтись без переменной.
+//+6 - DataSheets - точнее назвать Database - база данных.
+//+7 - Add/TryRemove и т.д. - не хватает конкретики в названиях методов. С кем работаете?
+//+8 - TryRemove- вы сначала просите метод GetPlayerById вернуть вам игрока,
+//+а потом снова перебираете всю коллекцию, и сравниваете. Зачем?
+//+Так же и в остальных случаях.
+//9 - ViewData - по названию, класс должен только знакомиться с данными,
+//но не что-то добавлять/удалять и т.д. в БД.
+//Логичнее будет дополнить функционал методов DataSheets.
+//Например, метод по добавлению игрока будет сразу запрашивать необходимые данные и сразу его добавлять.
+//Так же и с удаление/забаниванием

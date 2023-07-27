@@ -18,7 +18,7 @@
         private string _name;
         private string _suit;
 
-        public Card(string name, string suit)
+        public Card(string name = "defaultName", string suit = "defaultSuit")
         {
             _name = name;
             _suit = suit;
@@ -40,12 +40,10 @@
     {
         Random random = new Random();
         List<string> namesCards = new ();
-        {
-            
-        }
+ 
         public Card CreateRandomCard()
         {
-            return new Card();
+            return new Card("");
         }
     }
 }
