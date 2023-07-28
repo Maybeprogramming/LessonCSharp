@@ -34,9 +34,9 @@
         private string _requestMessage = "\nВведите команду: ";
         private bool _isRun = true;
 
-        public void Work(DataSheets players)
+        public void Work(DataSheets dataSheet)
         {
-            DataSheets dataSheets = players;
+            DataSheets playersDataSheet = dataSheet;
 
             while (_isRun)
             {
@@ -50,23 +50,23 @@
                 switch (_userInput)
                 {
                     case CommandShowPlayersData:
-                        dataSheets.ShowAllPlayers();
+                        playersDataSheet.ShowAllPlayers();
                         break;
 
                     case CommandAddPlayerToDataSheets:
-                        dataSheets.TryAddPlayer();
+                        playersDataSheet.AddPlayer();
                         break;
 
                     case CommandRemovePlayerInDataSheets:
-                        dataSheets.TryRemovePlayer();
+                        playersDataSheet.RemovePlayer();
                         break;
 
                     case CommandBanPlayerById:
-                        dataSheets.TryBanPlayer();
+                        playersDataSheet.BanPlayer();
                         break;
 
                     case CommandUnBanPlayerById:
-                        dataSheets.TryUnbanPlayer();
+                        playersDataSheet.UnbanPlayer();
                         break;
 
                     case CommandExitProgramm:
@@ -112,6 +112,7 @@
 
         public void ShowAllPlayers()
         {
+            Console.Clear();
             Console.WriteLine($"Список игроков:");
 
             foreach (Player player in _players)
@@ -120,7 +121,7 @@
             }
         }
 
-        public void TryAddPlayer()
+        public void AddPlayer()
         {
             Console.Clear();
             Console.WriteLine("Добавление нового игрока в базу");
@@ -143,9 +144,8 @@
             Console.WriteLine(infoMessage);
         }
 
-        public void TryRemovePlayer()
+        public void RemovePlayer()
         {
-            Console.Clear();
             ShowAllPlayers();
 
             Console.Write("Введите Id игрока для удаления с базы: ");
@@ -157,9 +157,8 @@
             }
         }
 
-        public void TryBanPlayer()
+        public void BanPlayer()
         {
-            Console.Clear();
             ShowAllPlayers();
 
             Console.Write("Введите Id для бана игрока: ");
@@ -171,9 +170,8 @@
             }
         }
 
-        public void TryUnbanPlayer()
+        public void UnbanPlayer()
         {
-            Console.Clear();
             ShowAllPlayers();
 
             Console.Write("Введите Id для разбана игрока: ");
@@ -202,12 +200,6 @@
             return false;
         }
 
-        private int ParseStringToInt(string userInput, out bool isParseToInt)
-        {
-            isParseToInt = Int32.TryParse(userInput, out int result);
-            return result;
-        }
-
         private int ReadInt()
         {
             bool isTryParse = false;
@@ -217,13 +209,13 @@
             while (isTryParse == false)
             {
                 userInput = Console.ReadLine();
-                number = ParseStringToInt(userInput, out bool isParseToInt);
 
-                if (isParseToInt == true)
+                if (Int32.TryParse(userInput, out int result) == true)
                 {
-                    if (number > 0)
+                    if (result > 0)
                     {
-                        isTryParse = isParseToInt;
+                        number = result;
+                        isTryParse = true;
                     }
                     else
                     {
@@ -242,27 +234,20 @@
 
     class Player
     {
-        private static int _idCount = 0;
-
-        private int _level;
+        private static int _id = 0;
 
         public Player(string nickName, int level, bool isBan = false)
         {
-            ++_idCount;
-            Id = _idCount;
-            Level = level;
+            ++_id;
+            Id = _id;
+            Level = SetLevel(level);
             NickName = nickName;
             IsBanned = isBan;
         }
 
         public int Id { get; private set; }
         public string NickName { get; private set; }
-        public int Level
-        {
-            get => _level;
-            private set => SetLevel(value);
-        }
-
+        public int Level { get; private set; }
         public bool IsBanned { get; private set; }
         public string BanStatus => IsBanned == true ? "забанен" : "не забанен";
 
@@ -281,12 +266,14 @@
             IsBanned = false;
         }
 
-        private void SetLevel(int value)
+        private int SetLevel(int value)
         {
             if (value > 0)
-                _level = value;
+                Level = value;
             else
-                _level = 0;
+                Level = 0;
+
+            return Level;
         }
     }
 }
@@ -330,3 +317,13 @@
 //Должен быть следующий: поля, конструктор, свойства, методы.
 //Дальше сортировка в каждом блоке в следующем порядке - публичные, protected (защищенный) и приватные.
 //А также сначала статика, readonly, затем остальные. Подробнее: https://clck.ru/at8vs
+
+//Доработать.
+//1+ - вместо поля и свойства реализуйте одно свойство - public int Level { get; private set; }. Запись будет лаконичнее.
+//2+ - private static int _idCount = 0; -просто _id.
+//3+ - TryAddPlayer / TryRemovePlayer и т.д. - Try в названии говорит, что метод должен вернуть bool.
+//Просто сделайте AddPlayer/RemovePlayer и т.п.
+//4+ - Дубляж кода в методах TryRemovePlayer/TryBanPlayer/TryUnbanPlayer.
+//5+ - ParseStringToInt - зачем этот метод, если можно просто вызывать Int32.TryParse(userInput, out int result).
+//6+ - ReadInt - попробуйте упростить метод. В нем много лишнего.
+//7+ - DataSheets dataSheets = players; -имя переменной не отображает сути.
