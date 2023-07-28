@@ -16,26 +16,25 @@
 
     class ViewData
     {
-        private const string CommandShowPlayersData = "1";
-        private const string CommandAddPlayerToDataSheets = "2";
-        private const string CommandRemovePlayerInDataSheets = "3";
-        private const string CommandBanPlayerById = "4";
-        private const string CommandUnBanPlayerById = "5";
-        private const string CommandExitProgramm = "6";
-
-        private string _titleMenu = "Доступные команды:";
-        private string _menu = $"\n{CommandShowPlayersData} - Вывести информацию обо всех игроках" +
-                             $"\n{CommandAddPlayerToDataSheets} - Добавить нового игрока в базу" +
-                             $"\n{CommandRemovePlayerInDataSheets} - Удалить игрока из базы" +
-                             $"\n{CommandBanPlayerById} - Забанить игрока по ID" +
-                             $"\n{CommandUnBanPlayerById} - Разбанить игкрока по ID" +
-                             $"\n{CommandExitProgramm} - Выход из программы";
-        private string _userInput;
-        private string _requestMessage = "\nВведите команду: ";
-        private bool _isRun = true;
-
         public void Work(DataSheets dataSheet)
         {
+            const string CommandShowPlayersData = "1";
+            const string CommandAddPlayerToDataSheets = "2";
+            const string CommandRemovePlayerInDataSheets = "3";
+            const string CommandBanPlayerById = "4";
+            const string CommandUnBanPlayerById = "5";
+            const string CommandExitProgramm = "6";
+
+            string _titleMenu = "Доступные команды:";
+            string _menu = $"\n{CommandShowPlayersData} - Вывести информацию обо всех игроках" +
+                           $"\n{CommandAddPlayerToDataSheets} - Добавить нового игрока в базу" +
+                           $"\n{CommandRemovePlayerInDataSheets} - Удалить игрока из базы" +
+                           $"\n{CommandBanPlayerById} - Забанить игрока по ID" +
+                           $"\n{CommandUnBanPlayerById} - Разбанить игкрока по ID" +
+                           $"\n{CommandExitProgramm} - Выход из программы";
+            string _userInput;
+            string _requestMessage = "\nВведите команду: ";
+            bool _isRun = true;
             DataSheets playersDataSheet = dataSheet;
 
             while (_isRun)
