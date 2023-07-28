@@ -8,6 +8,11 @@
         }
     }
 
+    class GameSpaces
+    {
+
+    }
+
     class Player
     {
         private List<Card> _cards = new();
@@ -28,18 +33,18 @@
 
     class Card
     {
-        private string _name;
-        private string _suit;
-
-        public Card(string name = "defaultName", string suit = "defaultSuit")
+        public Card(string value = "NoName", string suit = "NoSuit")
         {
-            _name = name;
-            _suit = suit;
+            Value = value;
+            Suit = suit;
         }
 
+        public string Value { get; private set; }
+        public string Suit { get;  private set; }
+        
         public string ShowInfo()
         {
-            return $"{_name}, масть: {_suit}";
+            return $"Значение: {Value}, масть: {Suit}";
         }
     }
 
