@@ -128,11 +128,14 @@
             Console.Write("Введите ник: ");
             string userInputNickName = Console.ReadLine();
 
+            if (userInputNickName == string.Empty)
+            {
+                Console.Write("Никнейм не может быть пыстым");
+                return;
+            }
+
             Console.Write("Введите уровень: ");
             int userInputLevel = ReadInt();
-
-            if (userInputLevel <= 0)
-                return;
 
             _players.Add(new Player(userInputNickName, userInputLevel));
 
@@ -147,16 +150,10 @@
 
             Console.Write("Введите Id игрока для удаления с базы: ");
 
-            if (VerificationEnterPlayerId(out var playerId)) return;
-
-            for (int i = 0; i < _players.Count; i++)
+            if (TryGetPlayer(out Player player) == true)
             {
-                if (_players[i].Id.Equals(playerId))
-                {
-                    _players.Remove(_players[i]);
-                    Console.WriteLine($"Игрок {_players[i].NickName} с ID: {playerId} - успешно удалён из базы");
-                    return;
-                }
+                _players.Remove(player);
+                Console.WriteLine($"Игрок {player.NickName} с ID: {player.Id} - успешно удалён из базы");
             }
         }
 
@@ -167,16 +164,10 @@
 
             Console.Write("Введите Id для бана игрока: ");
 
-            if (VerificationEnterPlayerId(out var playerId)) return;
-
-            for (int i = 0; i < _players.Count; i++)
+            if (TryGetPlayer(out Player player) == true)
             {
-                if (_players[i].Id.Equals(playerId))
-                {
-                    _players[i].Ban();
-                    Console.WriteLine($"Игрок {_players[i].NickName} с ID: {playerId} - успешно забанен");
-                    return;
-                }
+                player.Ban();
+                Console.WriteLine($"Игрок {player.NickName} с ID: {player.Id} - успешно забанен");
             }
         }
 
@@ -187,48 +178,72 @@
 
             Console.Write("Введите Id для разбана игрока: ");
 
-            if (VerificationEnterPlayerId(out var playerId)) return;
-
-            for (int i = 0; i < _players.Count; i++)
+            if (TryGetPlayer(out Player player) == true)
             {
-                if (_players[i].Id.Equals(playerId))
-                {
-                    _players[i].Unban();
-                    Console.WriteLine($"Игрок {_players[i].NickName} с ID: {playerId} - успешно разбанен");
-                    return;
-                }
+                player.Unban();
+                Console.WriteLine($"Игрок {player.NickName} с ID: {player.Id} - успешно разбанен");
             }
         }
 
-        private bool VerificationEnterPlayerId(out int playerId)
+        private bool TryGetPlayer(out Player desiredPlayer)
         {
-            playerId = ReadInt();
+            int playerId = ReadInt();
 
-            if (playerId <= 0 || playerId >= _players.Count + 1)
+            foreach (Player player in _players)
             {
-                Console.WriteLine($"{playerId} - Ошибка! Введены некорректные данные");
-                return true;
+                if (player.Id.Equals(playerId))
+                {
+                    desiredPlayer = player;
+                    return true;
+                }
             }
 
+            desiredPlayer = null;
             return false;
+        }
+
+        private int ParseStringToInt(string userInput, out bool isParseToInt)
+        {
+            isParseToInt = Int32.TryParse(userInput, out int result);
+            return result;
         }
 
         private int ReadInt()
         {
-            string userInput = Console.ReadLine();
+            bool isTryParse = false;
+            string userInput;
+            int number = 0;
 
-            if (Int32.TryParse(userInput, out int result))
+            while (isTryParse == false)
             {
-                return result;
+                userInput = Console.ReadLine();
+                number = ParseStringToInt(userInput, out bool isParseToInt);
+
+                if (isParseToInt == true)
+                {
+                    if (number > 0)
+                    {
+                        isTryParse = isParseToInt;
+                    }
+                    else
+                    {
+                        Console.Write($"Ошибка! Введеное число должно быть больше 0!\nПопробуйте снова: ");
+                    }
+                }
+                else
+                {
+                    Console.Write($"Ошибка! Вы ввели не число: {userInput}!\nПопробуйте снова: ");
+                }
             }
 
-            return result;
+            return number;
         }
     }
 
     class Player
     {
         private static int _idCount = 0;
+
         private int _level;
 
         public Player(string nickName, int level, bool isBan = false)
@@ -240,21 +255,12 @@
             IsBanned = isBan;
         }
 
-        public int Id { get; }
-        public string NickName { get; }
-
+        public int Id { get; private set; }
+        public string NickName { get; private set; }
         public int Level
         {
             get => _level;
             private set => SetLevel(value);
-        }
-
-        private void SetLevel(int value)
-        {
-            if (value > 0)
-                _level = value;
-            else
-                _level = 0;
         }
 
         public bool IsBanned { get; private set; }
@@ -273,6 +279,14 @@
         public void Unban()
         {
             IsBanned = false;
+        }
+
+        private void SetLevel(int value)
+        {
+            if (value > 0)
+                _level = value;
+            else
+                _level = 0;
         }
     }
 }
@@ -303,3 +317,16 @@
 //Логичнее будет дополнить функционал методов DataSheets.
 //Например, метод по добавлению игрока будет сразу запрашивать необходимые данные и сразу его добавлять.
 //Так же и с удаление/забаниванием
+
+//1) if (playerId <= 0 || playerId >= _players.Count + 1)
+//-если добавить игроков, удалить несколько и добавить снова, то условие не сработает.
+//В какой-то момент нельзя будет совершать действия с новыми игроками.
+//2) Не хватает приватного метода для поиска игрока, сделать метод private bool TryGetPlayer(out Player player)
+//-по аналогии с int.TryParse. Если получили игрока, тогда что-то с ним и делать.
+//3) private int ReadInt() -бессмысленный.Лучше как в задаче ReadInt запрашивать ввод, пока не получится конвертировать в число.
+//4) public int Id { get; }
+//-допишите private set.
+//5) Нарушен порядок в классе.
+//Должен быть следующий: поля, конструктор, свойства, методы.
+//Дальше сортировка в каждом блоке в следующем порядке - публичные, protected (защищенный) и приватные.
+//А также сначала статика, readonly, затем остальные. Подробнее: https://clck.ru/at8vs
