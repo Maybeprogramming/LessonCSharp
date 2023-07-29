@@ -4,6 +4,8 @@
     {
         static void Main()
         {
+            Console.Title = "Колода карт";
+
             GameTable gameTable = new();
             gameTable.RunGame();
 
@@ -13,9 +15,6 @@
 
     class GameTable
     {
-        Player player = new("Василий");
-        Deck deck = new();
-
         public void RunGame()
         {
             const string PlayerTakeOneCardCommand = "1";
@@ -28,8 +27,15 @@
                           $"\n{StopTakingСardsCommand} - завершить партию";
             string requestMessge = "\nВведите комадну: ";
             string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
-
+            string partyEndMesage = "Партия завершена, до новых встреч!!!";
+            string ExitProgrammMessage = "\nРабота программы завершена.";
+            string namePlayer = "Василий";
+            string userInput = "";
             bool isRun = true;
+
+            Player player = new(namePlayer);
+            Console.Title += $", партию разыгрывает игрок: {namePlayer}";
+            Deck deck = new();
 
             while (isRun == true)
             {
@@ -37,8 +43,9 @@
                 Console.Write(titleMenu);
                 Console.Write(menu);
                 Console.Write(requestMessge);
+                userInput = Console.ReadLine();
 
-                switch (Console.ReadLine())
+                switch (userInput)
                 {
                     case PlayerTakeOneCardCommand:
                         player.TakeOneCard(deck.GiveOneCard());
@@ -49,10 +56,11 @@
                         break;
 
                     case StopTakingСardsCommand:
-                        isRun = false;
+                        isRun = IsPartyEnd(partyEndMesage);
                         break;
 
                     default:
+                        Console.WriteLine("Такой команды нет!");
                         break;
                 }
 
@@ -61,9 +69,13 @@
             }
 
             player.ShowCards();
+            Console.WriteLine(ExitProgrammMessage);
+        }
 
-            Console.WriteLine("Партия завершена, до новых встреч!!!");
-            Console.ReadLine();
+        private bool IsPartyEnd(string message)
+        {
+            Console.WriteLine(message);
+            return false;
         }
     }
 
@@ -93,10 +105,11 @@
 
         public void TakeSomeCards(List<Card> cards)
         {
-            if (cards.Count != 0 && cards != null)
+            if (cards != null && cards.Count != 0)
             {
                 _cards.AddRange(cards);
-                Console.WriteLine($"Игрок {Name} взял {cards.Count} карт");
+                Console.WriteLine($"Игрок {Name} взял {cards.Count} карты:");
+                ShowTakingCards(cards);
             }
             else
             {
@@ -117,6 +130,14 @@
             Console.WriteLine($"{Name} имеет на руках следующие карты:");
 
             foreach (Card card in _cards)
+            {
+                Console.WriteLine(card.ShowInfo());
+            }
+        }
+
+        private void ShowTakingCards(List<Card> cards)
+        {
+            foreach (Card card in cards)
             {
                 Console.WriteLine(card.ShowInfo());
             }
@@ -171,9 +192,9 @@
 
             if (Int32.TryParse(Console.ReadLine(), out int amount) == true)
             {
-                List<Card> givenCards = new(amount);
+                List<Card> givenCards = new();
 
-                if (_cards.Count > 0 && _cards.Count >= amount)
+                if (_cards.Count >= amount)
                 {
                     for (int i = 0; i < amount; i++)
                     {
