@@ -1,33 +1,24 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace Lesson_41
+﻿namespace Lesson_41
 {
     class Program
     {
         static void Main()
         {
-            GameSpaces gameSpace = new();
+            GameSpace gameSpace = new();
             gameSpace.StartNewGame();
 
             Console.ReadLine();
         }
     }
 
-    class GameSpaces
+    class GameSpace
     {
         Player player = new("Василий");
         Deck deck = new();
 
         public void StartNewGame()
         {
-            if (deck.TryGiveCard(out Card card) == true)
-            {
-                player.TakeCard(card);
-            }
-            else
-            {
-                Console.WriteLine("Колода пуста");
-            }
+            player.TakeCard(deck.GiveCard());
 
             player.ShowCards();
         }
@@ -93,16 +84,14 @@ namespace Lesson_41
             ShuffleCards();
         }
 
-        public bool TryGiveCard(out Card card)
+        public Card GiveCard()
         {
             if (_cards.Count > 0)
             {
-                card = _cards.Dequeue();
-                return true;
+                return _cards.Dequeue();
             }
 
-            card = null;
-            return false;
+            return null;
         }
 
         public void ShowAllCardFromDeck()
