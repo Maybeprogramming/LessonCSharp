@@ -4,23 +4,66 @@
     {
         static void Main()
         {
-            GameSpace gameSpace = new();
-            gameSpace.StartNewGame();
+            GameTable gameTable = new();
+            gameTable.RunGame();
 
             Console.ReadLine();
         }
     }
 
-    class GameSpace
+    class GameTable
     {
         Player player = new("Василий");
         Deck deck = new();
 
-        public void StartNewGame()
+        public void RunGame()
         {
-            player.TakeCard(deck.GiveCard());
+            const string PlayerTakeOneCardCommand = "1";
+            const string PlayerTakeSomeCardCommand = "2";
+            const string StopTakingСardsCommand = "3";
+
+            string titleMenu = "Доступные команды: ";
+            string menu = $"\n{PlayerTakeOneCardCommand} - взять одну карту" +
+                          $"\n{PlayerTakeSomeCardCommand} - взять несколько карт" +
+                          $"\n{StopTakingСardsCommand} - завершить партию";
+            string requestMessge = "\nВведите комадну: ";
+            string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
+
+            bool isRun = true;
+
+            while (isRun == true)
+            {
+                Console.Clear();
+                Console.Write(titleMenu);
+                Console.Write(menu);
+                Console.Write(requestMessge);
+
+                switch (Console.ReadLine())
+                {
+                    case PlayerTakeOneCardCommand:
+                        player.TakeOneCard(deck.GiveOneCard());
+                        break;
+
+                    case PlayerTakeSomeCardCommand:
+                        player.TakeSomeCards(deck.GiveSomeCards());
+                        break;
+
+                    case StopTakingСardsCommand:
+                        isRun = false;
+                        break;
+
+                    default:
+                        break;
+                }
+
+                Console.Write(continueMessage);
+                Console.ReadLine();
+            }
 
             player.ShowCards();
+
+            Console.WriteLine("Партия завершена, до новых встреч!!!");
+            Console.ReadLine();
         }
     }
 
@@ -35,14 +78,42 @@
 
         public string Name { get; private set; }
 
-        public void TakeCard(Card card)
+        public void TakeOneCard(Card card)
         {
-            _cards.Add(card);
-            Console.WriteLine($"Игрок {Name} взял из колоды карту: {card.ShowInfo()}");
+            if (card != null)
+            {
+                _cards.Add(card);
+                Console.WriteLine($"Игрок {Name} взял из колоды карту: {card?.ShowInfo()}");
+            }
+            else
+            {
+                Console.WriteLine($"Игрок {Name} не смог взять карту. Колода пуста");
+            }
+        }
+
+        public void TakeSomeCards(List<Card> cards)
+        {
+            if (cards.Count != 0 && cards != null)
+            {
+                _cards.AddRange(cards);
+                Console.WriteLine($"Игрок {Name} взял {cards.Count} карт");
+            }
+            else
+            {
+                Console.WriteLine($"Игрок {Name} не смог взять несколько карт.\nКолода пуста или там меньше желаемого количества карт");
+            }
         }
 
         public void ShowCards()
         {
+            Console.Clear();
+
+            if (_cards.Count == 0)
+            {
+                Console.WriteLine($"У игрока {Name} нет карт на руках");
+                return;
+            }
+
             Console.WriteLine($"{Name} имеет на руках следующие карты:");
 
             foreach (Card card in _cards)
@@ -84,11 +155,33 @@
             ShuffleCards();
         }
 
-        public Card GiveCard()
+        public Card GiveOneCard()
         {
             if (_cards.Count > 0)
             {
                 return _cards.Dequeue();
+            }
+
+            return null;
+        }
+
+        public List<Card> GiveSomeCards()
+        {
+            Console.Write("Сколько хотите взять карт? Введите количество: ");
+
+            if (Int32.TryParse(Console.ReadLine(), out int amount) == true)
+            {
+                List<Card> givenCards = new(amount);
+
+                if (_cards.Count > 0 && _cards.Count >= amount)
+                {
+                    for (int i = 0; i < amount; i++)
+                    {
+                        givenCards.Add(_cards.Dequeue());
+                    }
+
+                    return givenCards;
+                }
             }
 
             return null;
@@ -101,6 +194,7 @@
                 Console.WriteLine(card.ShowInfo());
             }
         }
+
         private void CreateCards()
         {
             _cards = new(_values.Count * _suits.Count);
