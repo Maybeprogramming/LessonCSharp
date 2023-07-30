@@ -28,9 +28,9 @@
             string requestMessge = "\nВведите комадну: ";
             string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
             string partyEndMesage = "Партия завершена, до новых встреч!!!";
-            string ExitProgrammMessage = "\nРабота программы завершена.";
+            string exitProgrammMessage = "\nРабота программы завершена.";
             string namePlayer = "Василий";
-            string userInput = "";
+            string userInput;
             bool isRun = true;
 
             Player player = new(namePlayer);
@@ -69,7 +69,7 @@
             }
 
             player.ShowCards();
-            Console.WriteLine(ExitProgrammMessage);
+            Console.WriteLine(exitProgrammMessage);
         }
 
         private bool IsPartyEnd(string message)
@@ -95,7 +95,7 @@
             if (card != null)
             {
                 _cards.Add(card);
-                Console.WriteLine($"Игрок {Name} взял из колоды карту: {card?.ShowInfo()}");
+                Console.WriteLine($"Игрок {Name} взял из колоды карту: {card.ShowInfo()}");
             }
             else
             {
@@ -162,11 +162,6 @@
     {
         private Queue<Card> _cards;
 
-        private List<string> _values = new()
-            { "Два", "Три", "Четыре", "Пять", "Шесть", "Семь", "Восемь", "Девять", "Десять", "Валет", "Дама", "Король", "Туз" };
-        private List<string> _suits = new()
-            { "Червы", "Пики", "Бубны", "Трефы" };
-
         public Deck()
         {
             CreateCards();
@@ -205,16 +200,13 @@
             return null;
         }
 
-        public void ShowAllCardFromDeck()
-        {
-            foreach (Card card in _cards)
-            {
-                Console.WriteLine(card.ShowInfo());
-            }
-        }
-
         private void CreateCards()
         {
+            List<string> _values = new()
+                { "Два", "Три", "Четыре", "Пять", "Шесть", "Семь", "Восемь", "Девять", "Десять", "Валет", "Дама", "Король", "Туз" };
+            List<string> _suits = new()
+                { "Червы", "Пики", "Бубны", "Трефы" };
+
             _cards = new(_values.Count * _suits.Count);
 
             for (int suitIndex = 0; suitIndex < _suits.Count; suitIndex++)
