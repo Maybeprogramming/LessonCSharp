@@ -1,4 +1,7 @@
-﻿namespace Lesson_41
+﻿using Lesson_41;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace Lesson_41
 {
     class Program
     {
@@ -52,7 +55,7 @@
                         break;
 
                     case PlayerTakeSomeCardCommand:
-                        player.TakeSomeCards(deck.GiveSomeCards());
+                        PlayerTakeSomeCardsFromDeck(player, deck);
                         break;
 
                     case StopTakingСardsCommand:
@@ -70,6 +73,12 @@
 
             player.ShowCards();
             Console.WriteLine(exitProgrammMessage);
+        }
+
+        private static void PlayerTakeSomeCardsFromDeck(Player player, Deck deck)
+        {
+            int amountCards = player.DesiredNumberCards();
+            player.TakeSomeCards(deck.GiveSomeCards(amountCards));
         }
 
         private bool IsPartyEnd(string message)
@@ -131,6 +140,12 @@
 
             ShowTakingCards(_cards);
         }
+        public int DesiredNumberCards()
+        {
+            Console.Write("Сколько хотите взять карт? Введите количество: ");
+            int disireNumberCards = ReadInt();
+            return disireNumberCards;
+        }
 
         private void ShowTakingCards(List<Card> cards)
         {
@@ -138,6 +153,36 @@
             {
                 Console.WriteLine(card.ShowInfo());
             }
+        }
+        private int ReadInt()
+        {
+            bool isTryParse = false;
+            string userInput;
+            int number = 0;
+
+            while (isTryParse == false)
+            {
+                userInput = Console.ReadLine();
+
+                if (Int32.TryParse(userInput, out int result) == true)
+                {
+                    if (result > 0)
+                    {
+                        number = result;
+                        isTryParse = true;
+                    }
+                    else
+                    {
+                        Console.Write($"Ошибка! Введеное число должно быть больше 0!\nПопробуйте снова: ");
+                    }
+                }
+                else
+                {
+                    Console.Write($"Ошибка! Вы ввели не число: {userInput}!\nПопробуйте снова: ");
+                }
+            }
+
+            return number;
         }
     }
 
@@ -178,23 +223,18 @@
             return null;
         }
 
-        public List<Card> GiveSomeCards()
+        public List<Card> GiveSomeCards(int cardsAmount)
         {
-            Console.Write("Сколько хотите взять карт? Введите количество: ");
+            List<Card> givenCards = new();
 
-            if (Int32.TryParse(Console.ReadLine(), out int amount) == true)
+            if (_cards.Count >= cardsAmount)
             {
-                List<Card> givenCards = new();
-
-                if (_cards.Count >= amount)
+                for (int i = 0; i < cardsAmount; i++)
                 {
-                    for (int i = 0; i < amount; i++)
-                    {
-                        givenCards.Add(_cards.Dequeue());
-                    }
-
-                    return givenCards;
+                    givenCards.Add(_cards.Dequeue());
                 }
+
+                return givenCards;
             }
 
             return null;
@@ -202,18 +242,18 @@
 
         private void CreateCards()
         {
-            List<string> _values = new()
+            List<string> values = new()
                 { "Два", "Три", "Четыре", "Пять", "Шесть", "Семь", "Восемь", "Девять", "Десять", "Валет", "Дама", "Король", "Туз" };
-            List<string> _suits = new()
+            List<string> suits = new()
                 { "Червы", "Пики", "Бубны", "Трефы" };
 
-            _cards = new(_values.Count * _suits.Count);
+            _cards = new(values.Count * suits.Count);
 
-            for (int suitIndex = 0; suitIndex < _suits.Count; suitIndex++)
+            for (int suitIndex = 0; suitIndex < suits.Count; suitIndex++)
             {
-                for (int valueIndex = 0; valueIndex < _values.Count; valueIndex++)
+                for (int valueIndex = 0; valueIndex < values.Count; valueIndex++)
                 {
-                    _cards.Enqueue(new Card(_values[valueIndex], _suits[suitIndex]));
+                    _cards.Enqueue(new Card(values[valueIndex], suits[suitIndex]));
                 }
             }
 
@@ -247,3 +287,13 @@
 //Возможные классы: Карта, Колода, Игрок.
 
 //Колода карт
+
+//Доработать.
+//1 - List<string> _values / List<string> _suits - переменные названы не по нотации.
+//2 - public List<Card> GiveSomeCards() -не заметил в прошлый раз. Нарушена логика в методе.
+//Колода спрашивает у пользователя, сколько карт ей передать.
+//Не совсем верно.
+//Лучше сделать следующее - передавать в метод число
+//- public List<Card> GiveSomeCards(int cardsCount).
+//А спрашивать у пользователя в другом месте.
+//Так вы логически развязываете код
