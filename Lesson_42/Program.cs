@@ -4,13 +4,23 @@
     {
         static void Main()
         {
+            ViewLibrary viewLibrary = new();
+            viewLibrary.View();
 
+            Console.ReadLine();
         }
     }
 
     class ViewLibrary
     {
-          
+        LibraryBooks libraryBooks = new();
+
+        public void View()
+        {
+            libraryBooks.FindBook(PropertyBookToFind.ByAuthor);
+            libraryBooks.FindBook(PropertyBookToFind.ByYear);
+            libraryBooks.FindBook(PropertyBookToFind.ByTitleName);
+        }
     }
 
     class Book
@@ -57,17 +67,17 @@
 
         private void FindBookByTitleName()
         {
-
+            Console.WriteLine("Поиск по названию");
         }
 
         private void FindBookByAuthor()
         {
-
+            Console.WriteLine("Поиск по автору");
         }
 
         private void FindBookByYear()
         {
-
+            Console.WriteLine("Поиск по году издания");
         }
 
     }
