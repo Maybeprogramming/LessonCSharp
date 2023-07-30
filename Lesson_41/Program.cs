@@ -129,10 +129,7 @@
 
             Console.WriteLine($"{Name} имеет на руках следующие карты:");
 
-            foreach (Card card in _cards)
-            {
-                Console.WriteLine(card.ShowInfo());
-            }
+            ShowTakingCards(_cards);
         }
 
         private void ShowTakingCards(List<Card> cards)
