@@ -1,7 +1,4 @@
-﻿using Lesson_41;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Lesson_41
+﻿namespace Lesson_41
 {
     class Program
     {
@@ -289,11 +286,19 @@ namespace Lesson_41
 //Колода карт
 
 //Доработать.
-//1 - List<string> _values / List<string> _suits - переменные названы не по нотации.
-//2 - public List<Card> GiveSomeCards() -не заметил в прошлый раз. Нарушена логика в методе.
+//+1 - List<string> _values / List<string> _suits - переменные названы не по нотации.
+//+2 - public List<Card> GiveSomeCards() -не заметил в прошлый раз. Нарушена логика в методе.
 //Колода спрашивает у пользователя, сколько карт ей передать.
 //Не совсем верно.
 //Лучше сделать следующее - передавать в метод число
 //- public List<Card> GiveSomeCards(int cardsCount).
 //А спрашивать у пользователя в другом месте.
 //Так вы логически развязываете код
+
+//Доработать.
+//+1 - _values / _suits - поля не нужны всему классу,
+//только в конкретном методе. Перенесите в него.
+//+2 - public void ShowAllCardFromDeck() -метод не используется.
+//+3 - взял из колоды карту: { card?.ShowInfo()}
+//-зачем дополнительная проверка? При получении уже проверяете.
+//+4 - string ExitProgrammMessage - переменная названа не по нотации.
