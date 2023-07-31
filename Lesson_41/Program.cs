@@ -5,7 +5,6 @@
         static void Main()
         {
             Console.Title = "Колода карт";
-
             GameTable gameTable = new();
             gameTable.RunGame();
 
@@ -25,14 +24,13 @@
             string menu = $"\n{PlayerTakeOneCardCommand} - взять одну карту" +
                           $"\n{PlayerTakeSomeCardCommand} - взять несколько карт" +
                           $"\n{StopTakingСardsCommand} - завершить партию";
-            string requestMessge = "\nВведите комадну: ";
+            string requestMessage = "\nВведите комадну: ";
             string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
             string partyEndMesage = "Партия завершена, до новых встреч!!!";
             string exitProgrammMessage = "\nРабота программы завершена.";
             string namePlayer = "Василий";
             string userInput;
             bool isRun = true;
-
             Player player = new(namePlayer);
             Console.Title += $", партию разыгрывает игрок: {namePlayer}";
             Deck deck = new();
@@ -42,7 +40,7 @@
                 Console.Clear();
                 Console.Write(titleMenu);
                 Console.Write(menu);
-                Console.Write(requestMessge);
+                Console.Write(requestMessage);
                 userInput = Console.ReadLine();
 
                 switch (userInput)
@@ -134,9 +132,9 @@
             }
 
             Console.WriteLine($"{Name} имеет на руках следующие карты:");
-
             ShowTakingCards(_cards);
         }
+
         public int DesiredNumberCards()
         {
             Console.Write("Сколько хотите взять карт? Введите количество: ");
@@ -151,6 +149,7 @@
                 Console.WriteLine(card.ShowInfo());
             }
         }
+
         private int ReadInt()
         {
             bool isTryParse = false;
