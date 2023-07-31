@@ -4,6 +4,7 @@
     {
         static void Main()
         {
+            Console.Title = "Хранилище книг";
             ViewLibrary viewLibrary = new();
             viewLibrary.View();
 
@@ -33,9 +34,12 @@
 
         public void View()
         {
-            libraryBooks.FindBook(PropertyBookToFind.ByAuthor);
-            libraryBooks.FindBook(PropertyBookToFind.ByYear);
-            libraryBooks.FindBook(PropertyBookToFind.ByTitleName);
+            libraryBooks.ShowAllBook();
+
+            libraryBooks.FindBook(PropertyBook.Author);
+            libraryBooks.FindBook(PropertyBook.Year);
+            libraryBooks.FindBook(PropertyBook.TitleName);
+            libraryBooks.FindBook(PropertyBook.Genre);
         }
     }
 
@@ -56,7 +60,7 @@
 
         public string ShowInfo()
         {
-            return $"Название: {TiteleName}, Автор {Author}, Дата выхода: {FirstPublicationYear}";
+            return $"Название: \"{TiteleName}\", Автор: \"{Author}\", Дата выхода: {FirstPublicationYear}, Жанр: \"{Genre}\"";
         }
     }
 
@@ -66,7 +70,7 @@
         {
             new Book("Дубровский","Александр Пушкин", 1841, "Любовный роман"),
             new Book("Анна Коренина", "Лев Толстой",1875,"Любовный роман"),
-            new Book("По ком звонит колокол", "Эрнест Хемингуэй", 1940, "Любовные романы"),
+            new Book("По ком звонит колокол", "Эрнест Хемингуэй", 1940, "Любовный роман"),
             new Book("Алмазная колесница","Борис Акунин",2002,"Детектив"),
             new Book("Убийство на улице Морг","Эдгар По",1841,"Детектив"),
             new Book("Девушка с татуировкой дракона","Стиг Ларссон",2004,"Детектив"),
@@ -81,6 +85,25 @@
             new Book("Красная Шапочка" , "Шарль Перро",1697,"Сказки"),
         };
 
+        //Для теста, потом удалить!!!!
+        public void TestDispay()
+        {
+            Display.Print("\n");
+            Display.Print("\n");
+            ShowAllBook();
+        }
+
+        public void ShowAllBook ()
+        {
+
+            Display.Print("\nСписок всех книг:", ConsoleColor.Blue);
+
+            foreach (Book item in _books)
+            {
+                Display.Print("\n" + item.ShowInfo());
+            }
+        }
+
         public void AddBook(string titleName, string author, int firstPublicationYear, string genre)
         {
             _books.Add(new Book(titleName, author, firstPublicationYear, genre));
@@ -88,49 +111,107 @@
 
         public void RemoveBook()
         {
-
+            string option = string.Empty;
+            Book book = TryGetBook(option);
+            _books.Remove(book);
         }
 
-        public void FindBook(PropertyBookToFind findBookParametr)
+        private Book TryGetBook(string findOption)
+        {
+            return new Book("Красная Шапочка", "Шарль Перро", 1697, "Сказки");
+        }
+
+        public void FindBook(PropertyBook findBookParametr)
         {
             switch (findBookParametr)
             {
-                case PropertyBookToFind.ByTitleName:
+                case PropertyBook.TitleName:
                     FindBookByTitleName();
                     break;
 
-                case PropertyBookToFind.ByAuthor:
+                case PropertyBook.Author:
                     FindBookByAuthor();
                     break;
 
-                case PropertyBookToFind.ByYear:
+                case PropertyBook.Year:
                     FindBookByYear();
                     break;
+
+                case PropertyBook.Genre:
+                    FindBookByGenre();
+                    break;
+            }
+        }
+
+        private void FindBookByGenre()
+        {
+            Display.Print("\nПоиск по жанру: ", ConsoleColor.Green);
+            string userInput = "Любовный роман";
+            Display.Print(userInput);
+
+            foreach (Book item in _books)
+            {
+                if(item.Genre.Contains(userInput) == true)
+                {
+                    Display.Print("\n" + item.ShowInfo());
+                }
             }
         }
 
         private void FindBookByTitleName()
         {
-            Display.Print("Поиск по названию");
+            Display.Print("\nПоиск по названию: ", ConsoleColor.Red);
+            string userInput = "Кот в сапогах";
+            Display.Print(userInput);
+
+            foreach (Book item in _books)
+            {
+                if (item.TiteleName.Contains(userInput) == true)
+                {
+                    Display.Print("\n" + item.ShowInfo());
+                }
+            }
         }
 
         private void FindBookByAuthor()
         {
-            Display.Print("Поиск по автору");
+            Display.Print("\nПоиск по автору: ", ConsoleColor.Yellow);
+            string userInput = "Александр Пушкин";
+            Display.Print(userInput);
+
+
+            foreach (Book item in _books)
+            {
+                if (item.Author.Contains(userInput) == true)
+                {
+                    Display.Print("\n" + item.ShowInfo());
+                }
+            }
         }
 
         private void FindBookByYear()
         {
-            Display.Print("Поиск по году издания");
+            Display.Print("\nПоиск по году издания: ", ConsoleColor.DarkMagenta);
+            int userInput = 1841;
+            Display.Print(userInput);
+
+            foreach (Book item in _books)
+            {
+                if (item.FirstPublicationYear == userInput )
+                {
+                    Display.Print("\n" + item.ShowInfo());
+                }
+            }
         }
 
     }
 
-    enum PropertyBookToFind
+    enum PropertyBook
     {
-        ByTitleName,
-        ByAuthor,
-        ByYear
+        TitleName,
+        Author,
+        Year,
+        Genre
     }
 }
 
