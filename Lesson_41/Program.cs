@@ -45,7 +45,7 @@
             string requestMessage = "\nВведите комадну: ";
             string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
             string partyEndMesage = "Партия завершена, до новых встреч!!!";
-            string noCommandMessage = "\nТакой команды нет!";
+            string noCommandMessage = "Такой команды нет!";
             string exitProgrammMessage = "\nРабота программы завершена.";
             string namePlayer = "Василий";
             string userInput;
@@ -78,7 +78,7 @@
                         break;
 
                     default:
-                        Display.Print(noCommandMessage, ConsoleColor.DarkRed);
+                        Display.Print($"\n\"{userInput}\" - {noCommandMessage}", ConsoleColor.Red);
                         break;
                 }
 
@@ -258,6 +258,21 @@
             return null;
         }
 
+        private void FillDeck()
+        {
+            Random random = new();
+            List<Card> tempCards = CreateCards();
+            tempCards = Shuffle(tempCards, random);
+            _cards = new();
+
+            for (int i = 0; i < tempCards.Count; i++)
+            {
+                _cards.Push(tempCards[i]);
+            }
+
+            Display.PrintWithExpectation("\n-> Колода готова к началу новой партии.", ConsoleColor.DarkGreen);
+        }
+
         private List<Card> CreateCards()
         {
             List<string> values = new()
@@ -278,25 +293,7 @@
             return cards;
         }
 
-        private void FillDeck()
-        {
-            Random random = new();
-
-            List<Card> tempCards = CreateCards();
-            tempCards = Shuffle(tempCards, random);
-
-            _cards = new();
-
-            for(int i = 0; i < tempCards.Count; i++)
-            {
-                _cards.Push(tempCards[i]);
-            }
-
-            Display.PrintWithExpectation("\n-> Колода готова к началу новой партии.", ConsoleColor.DarkGreen);
-        }
-
-        private List<Card> Shuffle(List<Card> collection, Random random)
-        
+        private List<Card> Shuffle(List<Card> collection, Random random)        
         {
             List<Card> tempCollection = new (collection);
             int elementIndex;
