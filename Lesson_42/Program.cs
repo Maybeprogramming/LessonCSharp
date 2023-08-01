@@ -116,9 +116,26 @@
             _books.Remove(book);
         }
 
-        private Book TryGetBook(string findOption)
+        private Book TryGetBook(string searchOption)
         {
-            return new Book("Красная Шапочка", "Шарль Перро", 1697, "Сказки");
+            Book searchedBook;
+
+            foreach (Book book in _books)
+            {
+                if (book.TiteleName == searchOption)
+                    return searchedBook = book;
+
+                if (book.Author == searchOption)
+                    return searchedBook = book;
+
+                if (book.FirstPublicationYear.ToString() == searchOption)
+                    return searchedBook = book;
+
+                if (book.Genre == searchOption)
+                    return searchedBook = book;
+            }
+
+            return null;
         }
 
         public void FindBook(PropertyBook findBookParametr)
