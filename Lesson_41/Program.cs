@@ -43,7 +43,6 @@
                           $"\n{PlayerTakeSomeCardCommand} - взять несколько карт" +
                           $"\n{StopTakingСardsCommand} - завершить партию";
             string requestMessage = "\nВведите комадну: ";
-            string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
             string partyEndMesage = "Партия завершена, до новых встреч!!!";
             string noCommandMessage = "Такой команды нет!";
             string exitProgrammMessage = "\nРабота программы завершена.";
