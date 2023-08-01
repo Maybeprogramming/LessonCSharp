@@ -220,7 +220,6 @@
                 }
             }
         }
-
     }
 
     enum PropertyBook
