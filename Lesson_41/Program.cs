@@ -12,6 +12,24 @@
         }
     }
 
+    static class Display
+    {
+        static public void Print <T> (T message, ConsoleColor consoleColor = ConsoleColor.White)
+        {
+            ConsoleColor defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = consoleColor;
+            Console.Write(message.ToString());
+            Console.ForegroundColor = defaultColor;
+        }
+
+        static public void PrintWithExpectation <T>(T message, ConsoleColor consoleColor = ConsoleColor.White)
+        {
+            Print(message, consoleColor);
+            Print("\n\nНажмите любую клавишу чтобы продолжить...");
+            Console.ReadLine();
+        }
+    }
+
     class GameTable
     {
         public void RunGame()
@@ -27,6 +45,7 @@
             string requestMessage = "\nВведите комадну: ";
             string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
             string partyEndMesage = "Партия завершена, до новых встреч!!!";
+            string noCommandMessage = "\nТакой команды нет!";
             string exitProgrammMessage = "\nРабота программы завершена.";
             string namePlayer = "Василий";
             string userInput;
@@ -38,9 +57,10 @@
             while (isRun == true)
             {
                 Console.Clear();
-                Console.Write(titleMenu);
-                Console.Write(menu);
-                Console.Write(requestMessage);
+                Display.Print(titleMenu);
+                Display.Print(menu);
+                Display.Print(requestMessage, ConsoleColor.DarkYellow);
+
                 userInput = Console.ReadLine();
 
                 switch (userInput)
@@ -58,16 +78,15 @@
                         break;
 
                     default:
-                        Console.WriteLine("Такой команды нет!");
+                        Display.Print(noCommandMessage, ConsoleColor.DarkRed);
                         break;
                 }
 
-                Console.Write(continueMessage);
-                Console.ReadLine();
+                Display.PrintWithExpectation("", ConsoleColor.DarkGreen);
             }
 
             player.ShowCards();
-            Console.WriteLine(exitProgrammMessage);
+            Display.Print("\n" + exitProgrammMessage, ConsoleColor.DarkYellow);
         }
 
         private static void PlayerTakeSomeCardsFromDeck(Player player, Deck deck)
@@ -78,7 +97,7 @@
 
         private bool IsPartyEnd(string message)
         {
-            Console.WriteLine(message);
+            Display.Print(message, ConsoleColor.DarkGreen);
             return false;
         }
     }
@@ -99,11 +118,11 @@
             if (card != null)
             {
                 _cards.Add(card);
-                Console.WriteLine($"Игрок {Name} взял из колоды карту: {card.ShowInfo()}");
+                Display.Print($"\nИгрок {Name} взял из колоды карту: {card}");
             }
             else
             {
-                Console.WriteLine($"Игрок {Name} не смог взять карту. Колода пуста");
+                Display.Print($"\nИгрок {Name} не смог взять карту. Колода пуста");
             }
         }
 
@@ -112,12 +131,12 @@
             if (cards != null && cards.Count != 0)
             {
                 _cards.AddRange(cards);
-                Console.WriteLine($"Игрок {Name} взял {cards.Count} карты:");
+                Display.Print($"\nИгрок {Name} взял {cards.Count} карты:");
                 ShowTakingCards(cards);
             }
             else
             {
-                Console.WriteLine($"Игрок {Name} не смог взять несколько карт.\nКолода пуста или там меньше желаемого количества карт");
+                Display.Print($"\nИгрок {Name} не смог взять несколько карт.\nКолода пуста или там меньше желаемого количества карт");
             }
         }
 
@@ -127,17 +146,21 @@
 
             if (_cards.Count == 0)
             {
-                Console.WriteLine($"У игрока {Name} нет карт на руках");
+                Display.Print("У игрока ");
+                Display.Print($"{Name}", ConsoleColor.Green);
+                Display.Print(" нет карт на руках");
                 return;
             }
 
-            Console.WriteLine($"{Name} имеет на руках следующие карты:");
+            Display.Print("Игрок ");
+            Display.Print($"{Name}", ConsoleColor.Green);
+            Display.Print(" имеет на руках следующие карты:");
             ShowTakingCards(_cards);
         }
 
         public int DesiredNumberCards()
         {
-            Console.Write("Сколько хотите взять карт? Введите количество: ");
+            Display.Print("\nСколько хотите взять карт? Введите количество: ");
             int disireNumberCards = ReadInt();
             return disireNumberCards;
         }
@@ -146,7 +169,7 @@
         {
             foreach (Card card in cards)
             {
-                Console.WriteLine(card.ShowInfo());
+                Display.Print("\n" + card);
             }
         }
 
@@ -169,12 +192,12 @@
                     }
                     else
                     {
-                        Console.Write($"Ошибка! Введеное число должно быть больше 0!\nПопробуйте снова: ");
+                        Display.Print($"\nОшибка! Введеное число должно быть больше 0!\nПопробуйте снова: ");
                     }
                 }
                 else
                 {
-                    Console.Write($"Ошибка! Вы ввели не число: {userInput}!\nПопробуйте снова: ");
+                    Display.Print($"\nОшибка! Вы ввели не число: {userInput}!\nПопробуйте снова: ");
                 }
             }
 
@@ -193,7 +216,7 @@
         public string Value { get; private set; }
         public string Suit { get; private set; }
 
-        public string ShowInfo()
+        public override string ToString()
         {
             return $"{Value} : {Suit}";
         }
@@ -201,19 +224,18 @@
 
     class Deck
     {
-        private Queue<Card> _cards;
+        private Stack<Card> _cards;
 
         public Deck()
         {
-            CreateCards();
-            ShuffleCards();
+            FillDeck();
         }
 
         public Card GiveOneCard()
         {
             if (_cards.Count > 0)
             {
-                return _cards.Dequeue();
+                return _cards.Pop();
             }
 
             return null;
@@ -227,7 +249,7 @@
             {
                 for (int i = 0; i < cardsAmount; i++)
                 {
-                    givenCards.Add(_cards.Dequeue());
+                    givenCards.Add(_cards.Pop());
                 }
 
                 return givenCards;
@@ -236,42 +258,58 @@
             return null;
         }
 
-        private void CreateCards()
+        private List<Card> CreateCards()
         {
             List<string> values = new()
                 { "Два", "Три", "Четыре", "Пять", "Шесть", "Семь", "Восемь", "Девять", "Десять", "Валет", "Дама", "Король", "Туз" };
             List<string> suits = new()
                 { "Червы", "Пики", "Бубны", "Трефы" };
-
-            _cards = new(values.Count * suits.Count);
+            List<Card> cards = new();
 
             for (int suitIndex = 0; suitIndex < suits.Count; suitIndex++)
             {
                 for (int valueIndex = 0; valueIndex < values.Count; valueIndex++)
                 {
-                    _cards.Enqueue(new Card(values[valueIndex], suits[suitIndex]));
+                    cards.Add(new Card(values[valueIndex], suits[suitIndex]));
                 }
             }
 
-            Console.WriteLine("-> Распаковка новой колоды с картами!");
+            Display.Print("-> Распаковка новой колоды с картами!");
+            return cards;
         }
 
-        private void ShuffleCards()
+        private void FillDeck()
         {
             Random random = new();
-            Queue<Card> tempCards = new();
-            List<Card> currentCards = new(_cards.ToList());
-            int elementIndex;
 
-            for (int i = 0; i < _cards.Count; i++)
+            List<Card> tempCards = CreateCards();
+            tempCards = Shuffle(tempCards, random);
+
+            _cards = new();
+
+            for(int i = 0; i < tempCards.Count; i++)
             {
-                elementIndex = random.Next(currentCards.Count);
-                tempCards.Enqueue(currentCards[elementIndex]);
-                currentCards.RemoveAt(elementIndex);
+                _cards.Push(tempCards[i]);
             }
 
-            Console.WriteLine($"-> Колода с картами перемешана!");
-            _cards = tempCards;
+            Display.PrintWithExpectation("\n-> Колода готова к началу новой партии.", ConsoleColor.DarkGreen);
+        }
+
+        private List<Card> Shuffle(List<Card> collection, Random random)
+        
+        {
+            List<Card> tempCollection = new (collection);
+            int elementIndex;
+
+            for (int i = 0; i < tempCollection.Count; i++)
+            {
+                elementIndex = random.Next(collection.Count);
+                tempCollection[i] = collection[elementIndex];
+                collection.RemoveAt(elementIndex);
+            }
+
+            Display.Print("\n-> Колода с картами перемешана!");
+            return tempCollection;
         }
     }
 }
@@ -301,3 +339,11 @@
 //+3 - взял из колоды карту: { card?.ShowInfo()}
 //-зачем дополнительная проверка? При получении уже проверяете.
 //+4 - string ExitProgrammMessage - переменная названа не по нотации.
+
+//1) для колоды карт больше подходит Stack, чем Queue .
+//С очередью, например при игре в дурака,
+//первой картой возьмется козырь,
+//а потом будут браться карты снизу колоды .
+//2) Сложный путь тасования, куда вовлечены 3 коллекции.
+//В идеале один список, но в Вашей реализации - хотя бы 2 коллекции.
+//Очередь превратите в список, в списке меняйте карты местами, перемешенный список превратите в очередь .
