@@ -40,6 +40,8 @@
             libraryBooks.FindBook(PropertyBook.Year);
             libraryBooks.FindBook(PropertyBook.TitleName);
             libraryBooks.FindBook(PropertyBook.Genre);
+
+            //libraryBooks.TestDispay();
         }
     }
 
@@ -88,6 +90,7 @@
         //Для теста, потом удалить!!!!
         public void TestDispay()
         {
+            RemoveBook();
             Display.Print("\n");
             Display.Print("\n");
             ShowAllBook();
@@ -111,12 +114,16 @@
 
         public void RemoveBook()
         {
-            string option = string.Empty;
-            Book book = TryGetBook(option);
+            string option = "Александр Пушкин";
+            Book book = GetBook(option);
+
+            Console.WriteLine(book.ShowInfo());
+            Console.ReadLine();
+
             _books.Remove(book);
         }
 
-        private Book TryGetBook(string searchOption)
+        private Book GetBook(string searchOption)
         {
             Book searchedBook;
 

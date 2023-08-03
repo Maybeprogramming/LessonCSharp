@@ -14,7 +14,7 @@
 
     static class Display
     {
-        static public void Print <T> (T message, ConsoleColor consoleColor = ConsoleColor.White)
+        static public void Print<T>(T message, ConsoleColor consoleColor = ConsoleColor.White)
         {
             ConsoleColor defaultColor = Console.ForegroundColor;
             Console.ForegroundColor = consoleColor;
@@ -22,7 +22,7 @@
             Console.ForegroundColor = defaultColor;
         }
 
-        static public void PrintWithExpectation <T>(T message, ConsoleColor consoleColor = ConsoleColor.White)
+        static public void PrintWait<T>(T message, ConsoleColor consoleColor = ConsoleColor.White)
         {
             Print(message, consoleColor);
             Print("\n\nНажмите любую клавишу чтобы продолжить...");
@@ -81,7 +81,7 @@
                         break;
                 }
 
-                Display.PrintWithExpectation("", ConsoleColor.DarkGreen);
+                Display.PrintWait("", ConsoleColor.DarkGreen);
             }
 
             player.ShowCards();
@@ -269,7 +269,7 @@
                 _cards.Push(tempCards[i]);
             }
 
-            Display.PrintWithExpectation("\n-> Колода готова к началу новой партии.", ConsoleColor.DarkGreen);
+            Display.PrintWait("\n-> Колода готова к началу новой партии.", ConsoleColor.DarkGreen);
         }
 
         private List<Card> CreateCards()
@@ -292,9 +292,9 @@
             return cards;
         }
 
-        private List<Card> Shuffle(List<Card> collection, Random random)        
+        private List<Card> Shuffle(List<Card> collection, Random random)
         {
-            List<Card> tempCollection = new (collection);
+            List<Card> tempCollection = new(collection);
             int elementIndex;
 
             for (int i = 0; i < tempCollection.Count; i++)
