@@ -174,6 +174,25 @@
 
         public void FindBooksByParametr()
         {
+            int startIndexMenu = 0;
+            int endIndexMenu = 4;
+            int inputPropertyLibrary;
+            string inputUserParametr;
+            PropertyBook propertyBook;
+
+            ShowLibraryMenu();
+
+            Display.Print("\nВведите команду: ");
+            propertyBook = (PropertyBook)ReadInt(startIndexMenu, endIndexMenu) - 1;
+
+            Display.Print($"Конкретизируйте параметр для показа: ");
+            inputUserParametr = Console.ReadLine();
+
+            ShowBooksByParametr(propertyBook, inputUserParametr);
+        }
+
+        private static void ShowLibraryMenu()
+        {
             const string TitleMenu = "1";
             const string AuthorMenu = "2";
             const string YearMenu = "3";
@@ -183,23 +202,10 @@
                           $"\n{AuthorMenu} - по автору" +
                           $"\n{YearMenu} - по году публикации" +
                           $"\n{GenreMenu} - по жанру";
-            int startIndexMenu = 0;
-            int endIndexMenu = 4;
-            int inputPropertyLibrary;
-            string inputUserParametr;
-            PropertyBook propertyBook;
 
             Console.Clear();
             Display.Print("По какому параметру хотите показать книги в хранилище?");
             Display.Print(menu);
-
-            Display.Print("\nВведите команду: ");
-            propertyBook = (PropertyBook)ReadInt(startIndexMenu, endIndexMenu) - 1;
-
-            Display.Print($"Конкретизируйте параметр для показа: ");
-            inputUserParametr = Console.ReadLine();
-
-            ShowBooksByParametr(propertyBook, inputUserParametr);
         }
 
         private void ShowBooksByParametr(PropertyBook propertyBook, string inputUserParametr)
