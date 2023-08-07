@@ -1,4 +1,6 @@
-﻿namespace Lesson_42
+﻿using System.Text;
+
+namespace Lesson_42
 {
     class Program
     {
@@ -30,18 +32,62 @@
 
     class ViewLibrary
     {
-        LibraryBooks libraryBooks = new();
 
         public void View()
         {
-            libraryBooks.ShowAllBook();
+            const string ShowAllBooksCommand = "1";
+            const string AddBookCommand = "2";
+            const string RemoveBookCommand = "3";
+            const string ShowByParameter = "4";
+            const string ExitProgramm = "5";
 
-            libraryBooks.FindBook(PropertyBook.Author);
-            libraryBooks.FindBook(PropertyBook.Year);
-            libraryBooks.FindBook(PropertyBook.TitleName);
-            libraryBooks.FindBook(PropertyBook.Genre);
+            string menuTitle = "Меню книжного хранилища:";
+            string menu = $"\n{ShowAllBooksCommand} - показать все книги в хранилище" +
+                          $"\n{AddBookCommand} - добавить книгу в хранилище" +
+                          $"\n{RemoveBookCommand} - убрать книгу из хранилища" +
+                          $"\n{ShowByParameter} - показать книги по заданному параметру" +
+                          $"\n{ExitProgramm} - закрыть хранилище книг";
+            bool isRun = true;
+            string inputUser;
+            string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
+            string requestMessage = "\nВведите команду: ";
+            LibraryBooks libraryBooks = new();
 
-            //libraryBooks.TestDispay();
+            while (isRun)
+            {
+                Console.Clear();
+                Display.Print(menuTitle, ConsoleColor.DarkYellow);
+                Display.Print(menu);
+                Display.Print(requestMessage, ConsoleColor.DarkGreen);
+
+                inputUser = Console.ReadLine();
+
+                switch (inputUser)
+                {
+                    case ShowAllBooksCommand:
+                        libraryBooks.ShowAllBook();
+                        break;
+
+                    case AddBookCommand:
+                        libraryBooks.AddBook();
+                        break;
+
+                    case RemoveBookCommand:
+                        libraryBooks.RemoveBook();
+                        break;
+
+                    case ShowByParameter:
+                        libraryBooks.FindBooksByParametr();
+                        break;
+
+                    case ExitProgramm:
+                        isRun = false;
+                        break;
+                }
+
+                Display.Print($"\n{continueMessage}", ConsoleColor.Green);
+                Console.ReadLine();
+            }
         }
     }
 
@@ -87,145 +133,174 @@
             new Book("Красная Шапочка" , "Шарль Перро",1697,"Сказки"),
         };
 
-        //Для теста, потом удалить!!!!
-        public void TestDispay()
+        public void ShowAllBook()
         {
-            RemoveBook();
-            Display.Print("\n");
-            Display.Print("\n");
-            ShowAllBook();
-        }
-
-        public void ShowAllBook ()
-        {
-
-            Display.Print("\nСписок всех книг:", ConsoleColor.Blue);
+            int indexNumber = 0;
+            Display.Print("Список всех книг:", ConsoleColor.Blue);
 
             foreach (Book item in _books)
             {
-                Display.Print("\n" + item.ShowInfo());
+                Display.Print($"\n{++indexNumber}. {item.ShowInfo()}");
             }
         }
 
-        public void AddBook(string titleName, string author, int firstPublicationYear, string genre)
+        public void AddBook()
         {
-            _books.Add(new Book(titleName, author, firstPublicationYear, genre));
+            Console.Clear();
+            Display.Print("Введите название книги:");
+            string inputTitleName = Console.ReadLine();
+            Display.Print("Введите автора книги:");
+            string inputAuthor = Console.ReadLine();
+            Display.Print("Введите год первой публикации книги:");
+            int inputPublicationYear = ReadInt();
+            Display.Print("Введите жанр книги:");
+            string inputGenre = Console.ReadLine();
+
+            _books.Add(new Book(inputTitleName, inputAuthor, inputPublicationYear, inputGenre));
         }
 
         public void RemoveBook()
         {
-            string option = "Александр Пушкин";
-            Book book = GetBook(option);
+            int startIndex = 0;
+            int endIndex = _books.Count;
+            Console.Clear();
+            ShowAllBook();
 
-            Console.WriteLine(book.ShowInfo());
+            Display.Print("\nВведите номер книги для удаления из хранилища: ");
+            int inputIndexNumber = ReadInt(startIndex, endIndex) - 1;
+
+            Display.Print($"\nКнига убрана с полки: {_books[inputIndexNumber].ShowInfo()}");
             Console.ReadLine();
 
-            _books.Remove(book);
+            _books.Remove(_books[inputIndexNumber]);
         }
 
-        private Book GetBook(string searchOption)
+        public void FindBooksByParametr()
         {
-            Book searchedBook;
+            const string TitleMenu = "1";
+            const string AuthorMenu = "2";
+            const string YearMenu = "3";
+            const string GenreMenu = "4";
 
-            foreach (Book book in _books)
-            {
-                if (book.TiteleName == searchOption)
-                    return searchedBook = book;
+            string menu = $"\n{TitleMenu} - по названию" +
+                          $"\n{AuthorMenu} - по автору" +
+                          $"\n{YearMenu} - по году публикации" +
+                          $"\n{GenreMenu} - по жанру";
+            int startIndexMenu = 0;
+            int endIndexMenu = 4;
+            int inputPropertyLibrary;
+            string inputUserParametr;
+            PropertyBook propertyBook;
+            List<Book> booksByParametr;
 
-                if (book.Author == searchOption)
-                    return searchedBook = book;
+            Console.Clear();
+            Display.Print("По какому параметру хотите показать книги в хранилище?");
+            Display.Print(menu);
 
-                if (book.FirstPublicationYear.ToString() == searchOption)
-                    return searchedBook = book;
+            Display.Print("\nВведите команду: ");
+            propertyBook = (PropertyBook)ReadInt(startIndexMenu, endIndexMenu) - 1;
 
-                if (book.Genre == searchOption)
-                    return searchedBook = book;
-            }
+            Display.Print($"Конкретизируйте параметр для показа: ");
+            inputUserParametr = Console.ReadLine();
 
-            return null;
-        }
-
-        public void FindBook(PropertyBook findBookParametr)
-        {
-            switch (findBookParametr)
+            switch (propertyBook)
             {
                 case PropertyBook.TitleName:
-                    FindBookByTitleName();
+                    ShowBooksByParametr(propertyBook, inputUserParametr);
                     break;
 
                 case PropertyBook.Author:
-                    FindBookByAuthor();
+                    ShowBooksByParametr(propertyBook, inputUserParametr);
                     break;
 
                 case PropertyBook.Year:
-                    FindBookByYear();
+                    ShowBooksByParametr(propertyBook, inputUserParametr);
                     break;
 
                 case PropertyBook.Genre:
-                    FindBookByGenre();
+                    ShowBooksByParametr(propertyBook, inputUserParametr);
                     break;
             }
         }
 
-        private void FindBookByGenre()
+        private void ShowBooksByParametr(PropertyBook propertyBook, string inputUserParametr)
         {
-            Display.Print("\nПоиск по жанру: ", ConsoleColor.Green);
-            string userInput = "Любовный роман";
-            Display.Print(userInput);
+            int indexNumber = 0;
 
-            foreach (Book item in _books)
+            if (propertyBook == PropertyBook.TitleName)
             {
-                if(item.Genre.Contains(userInput) == true)
+                foreach (var book in _books)
                 {
-                    Display.Print("\n" + item.ShowInfo());
+                    if (book.TiteleName.Equals(inputUserParametr))
+                    {
+                        Display.Print($"\n{++indexNumber}. " + book.ShowInfo());
+                    }
+                }
+            }
+
+            if (propertyBook == PropertyBook.Author)
+            {
+                foreach (var book in _books)
+                {
+                    if (book.Author.Equals(inputUserParametr))
+                    {
+                        Display.Print($"\n{++indexNumber}. " + book.ShowInfo());
+                    }
+                }
+            }
+
+            if (propertyBook == PropertyBook.Year)
+            {
+                foreach (var book in _books)
+                {
+                    if (book.FirstPublicationYear.ToString().Equals(inputUserParametr))
+                    {
+                        Display.Print($"\n{++indexNumber}. " + book.ShowInfo());
+                    }
+                }
+            }
+
+            if (propertyBook == PropertyBook.Genre)
+            {
+                foreach (var book in _books)
+                {
+                    if (book.Genre.Equals(inputUserParametr))
+                    {
+                        Display.Print($"\n{++indexNumber}. " + book.ShowInfo());
+                    }
                 }
             }
         }
 
-        private void FindBookByTitleName()
+        private int ReadInt(int firstNumber = 0, int lastNumber = int.MaxValue)
         {
-            Display.Print("\nПоиск по названию: ", ConsoleColor.Red);
-            string userInput = "Кот в сапогах";
-            Display.Print(userInput);
+            bool isTryParse = false;
+            string userInput;
+            int number = 0;
 
-            foreach (Book item in _books)
+            while (isTryParse == false)
             {
-                if (item.TiteleName.Contains(userInput) == true)
+                userInput = Console.ReadLine();
+
+                if (Int32.TryParse(userInput, out int result) == true)
                 {
-                    Display.Print("\n" + item.ShowInfo());
+                    if (result > firstNumber && result <= lastNumber)
+                    {
+                        number = result;
+                        isTryParse = true;
+                    }
+                    else
+                    {
+                        Display.Print($"\nОшибка! Введеное число [{userInput}] должно быть больше: [{firstNumber}] и меньше, либо равным: [{lastNumber}]!\nПопробуйте снова: ");
+                    }
+                }
+                else
+                {
+                    Display.Print($"\nОшибка! Вы ввели не число: {userInput}!\nПопробуйте снова: ");
                 }
             }
-        }
 
-        private void FindBookByAuthor()
-        {
-            Display.Print("\nПоиск по автору: ", ConsoleColor.Yellow);
-            string userInput = "Александр Пушкин";
-            Display.Print(userInput);
-
-
-            foreach (Book item in _books)
-            {
-                if (item.Author.Contains(userInput) == true)
-                {
-                    Display.Print("\n" + item.ShowInfo());
-                }
-            }
-        }
-
-        private void FindBookByYear()
-        {
-            Display.Print("\nПоиск по году издания: ", ConsoleColor.DarkMagenta);
-            int userInput = 1841;
-            Display.Print(userInput);
-
-            foreach (Book item in _books)
-            {
-                if (item.FirstPublicationYear == userInput )
-                {
-                    Display.Print("\n" + item.ShowInfo());
-                }
-            }
+            return number;
         }
     }
 
@@ -237,6 +312,7 @@
         Genre
     }
 }
+
 
 //Создать хранилище книг.
 //Каждая книга имеет название, автора и год выпуска (можно добавить еще параметры).
