@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Lesson_42
+﻿namespace Lesson_42
 {
     class Program
     {
@@ -8,7 +6,7 @@ namespace Lesson_42
         {
             Console.Title = "Хранилище книг";
             ViewLibrary viewLibrary = new();
-            viewLibrary.View();
+            viewLibrary.Work();
 
             Console.ReadLine();
         }
@@ -32,8 +30,7 @@ namespace Lesson_42
 
     class ViewLibrary
     {
-
-        public void View()
+        public void Work()
         {
             const string ShowAllBooksCommand = "1";
             const string AddBookCommand = "2";
@@ -191,7 +188,6 @@ namespace Lesson_42
             int inputPropertyLibrary;
             string inputUserParametr;
             PropertyBook propertyBook;
-            List<Book> booksByParametr;
 
             Console.Clear();
             Display.Print("По какому параметру хотите показать книги в хранилище?");
@@ -203,24 +199,7 @@ namespace Lesson_42
             Display.Print($"Конкретизируйте параметр для показа: ");
             inputUserParametr = Console.ReadLine();
 
-            switch (propertyBook)
-            {
-                case PropertyBook.TitleName:
-                    ShowBooksByParametr(propertyBook, inputUserParametr);
-                    break;
-
-                case PropertyBook.Author:
-                    ShowBooksByParametr(propertyBook, inputUserParametr);
-                    break;
-
-                case PropertyBook.Year:
-                    ShowBooksByParametr(propertyBook, inputUserParametr);
-                    break;
-
-                case PropertyBook.Genre:
-                    ShowBooksByParametr(propertyBook, inputUserParametr);
-                    break;
-            }
+            ShowBooksByParametr(propertyBook, inputUserParametr);
         }
 
         private void ShowBooksByParametr(PropertyBook propertyBook, string inputUserParametr)
@@ -237,8 +216,7 @@ namespace Lesson_42
                     }
                 }
             }
-
-            if (propertyBook == PropertyBook.Author)
+            else if (propertyBook == PropertyBook.Author)
             {
                 foreach (var book in _books)
                 {
@@ -248,8 +226,7 @@ namespace Lesson_42
                     }
                 }
             }
-
-            if (propertyBook == PropertyBook.Year)
+            else if (propertyBook == PropertyBook.Year)
             {
                 foreach (var book in _books)
                 {
@@ -259,8 +236,7 @@ namespace Lesson_42
                     }
                 }
             }
-
-            if (propertyBook == PropertyBook.Genre)
+            else if (propertyBook == PropertyBook.Genre)
             {
                 foreach (var book in _books)
                 {
