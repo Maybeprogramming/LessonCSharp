@@ -48,6 +48,7 @@
             string inputUser;
             string continueMessage = "\nНажмите любую клавишу чтобы продолжить...";
             string requestMessage = "\nВведите команду: ";
+            string exitMessage = "\nРабота программы завершена.";
             LibraryBooks libraryBooks = new();
 
             while (isRun)
@@ -85,6 +86,8 @@
                 Display.Print($"\n{continueMessage}", ConsoleColor.Green);
                 Console.ReadLine();
             }
+
+            Display.Print($"\n{exitMessage}", ConsoleColor.DarkYellow);
         }
     }
 
