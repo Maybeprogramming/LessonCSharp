@@ -405,7 +405,7 @@ Console.WriteLine(someString.Length); //5
 </details>
 
 <details>
-<summary>## Lesson_29 UIELEMENT </summary>
+<summary>Lesson_29 UIELEMENT </summary>
   Разработайте функцию, которая рисует некий бар (Healthbar, Manabar) в определённой позиции. 
 Она также принимает некий закрашенный процент.
 При 40% бар выглядит так:
