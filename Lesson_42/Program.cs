@@ -176,7 +176,6 @@
         {
             int startIndexMenu = 0;
             int endIndexMenu = 4;
-            int inputPropertyLibrary;
             string inputUserParametr;
             PropertyBook propertyBook;
 
