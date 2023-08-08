@@ -103,7 +103,7 @@
         public int FirstPublicationYear { get; private set; }
         public string Genre { get; private set; }
 
-        public string ShowInfo()
+        public override string ToString()
         {
             return $"Название: \"{TiteleName}\", Автор: \"{Author}\", Дата выхода: {FirstPublicationYear}, Жанр: \"{Genre}\"";
         }
@@ -135,9 +135,9 @@
             int indexNumber = 0;
             Display.Print("Список всех книг:", ConsoleColor.Blue);
 
-            foreach (Book item in _books)
+            foreach (Book book in _books)
             {
-                Display.Print($"\n{++indexNumber}. {item.ShowInfo()}");
+                Display.Print($"\n{++indexNumber}. {book}");
             }
         }
 
@@ -166,7 +166,7 @@
             Display.Print("\nВведите номер книги для удаления из хранилища: ");
             int inputIndexNumber = ReadInt(startIndex, endIndex) - 1;
 
-            Display.Print($"\nКнига убрана с полки: {_books[inputIndexNumber].ShowInfo()}");
+            Display.Print($"\nКнига убрана с полки: {_books[inputIndexNumber]}");
             Console.ReadLine();
 
             _books.Remove(_books[inputIndexNumber]);
@@ -217,7 +217,7 @@
                 {
                     if (book.TiteleName.Equals(inputUserParametr))
                     {
-                        Display.Print($"\n{++indexNumber}. " + book.ShowInfo());
+                        Display.Print($"\n{++indexNumber}. " + book);
                     }
                 }
             }
@@ -227,7 +227,7 @@
                 {
                     if (book.Author.Equals(inputUserParametr))
                     {
-                        Display.Print($"\n{++indexNumber}. " + book.ShowInfo());
+                        Display.Print($"\n{++indexNumber}. " + book);
                     }
                 }
             }
@@ -237,7 +237,7 @@
                 {
                     if (book.FirstPublicationYear.ToString().Equals(inputUserParametr))
                     {
-                        Display.Print($"\n{++indexNumber}. " + book.ShowInfo());
+                        Display.Print($"\n{++indexNumber}. " + book);
                     }
                 }
             }
@@ -247,7 +247,7 @@
                 {
                     if (book.Genre.Equals(inputUserParametr))
                     {
-                        Display.Print($"\n{++indexNumber}. " + book.ShowInfo());
+                        Display.Print($"\n{++indexNumber}. " + book);
                     }
                 }
             }
