@@ -144,13 +144,13 @@
         public void AddBook()
         {
             Console.Clear();
-            Display.Print("Введите название книги:");
+            Display.Print("Введите название книги: ");
             string inputTitleName = Console.ReadLine();
-            Display.Print("Введите автора книги:");
+            Display.Print("Введите автора книги: ");
             string inputAuthor = Console.ReadLine();
-            Display.Print("Введите год первой публикации книги:");
+            Display.Print("Введите год первой публикации книги: ");
             int inputPublicationYear = ReadInt();
-            Display.Print("Введите жанр книги:");
+            Display.Print("Введите жанр книги: ");
             string inputGenre = Console.ReadLine();
 
             _books.Add(new Book(inputTitleName, inputAuthor, inputPublicationYear, inputGenre));
