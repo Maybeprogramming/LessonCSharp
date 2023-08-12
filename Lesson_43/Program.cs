@@ -1,11 +1,44 @@
 ﻿namespace Lesson_43
 {
-    internal class Program
+    class Program
     {
         static void Main()
         {
         }
     }
+
+    static class Display
+    {
+        public static void Print<T>(T message)
+        {
+            Console.Write(message.ToString());
+        }
+
+        public static void Print<T>(T message, ConsoleColor consoleColor = ConsoleColor.White)
+        {
+            ConsoleColor defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = consoleColor;
+            Print(message);
+            Console.ForegroundColor = defaultColor;
+        }
+    }
+
+    class Shop
+    {
+
+    }
+
+    class Seller
+    {
+
+    }
+
+    class Buyer
+    {
+
+    }
+
+
 }
 
 //Магазин
