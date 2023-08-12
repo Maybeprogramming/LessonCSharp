@@ -59,7 +59,7 @@
             new Product("Вода", 50)
         };
 
-        public void ShowAllProduct()
+        public void ShowAllProducts()
         {
             int index = 0;
 
@@ -83,7 +83,7 @@
         public string Name { get; private set; }
         public int Money { get; private set; }
 
-        public void ShowPurchasedProduct()
+        public void ShowPurchasedProducts()
         {
             int index = 0;
 
