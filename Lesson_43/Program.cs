@@ -25,20 +25,87 @@
 
     class Shop
     {
+        public void Work()
+        {
 
+        }
+    }
+
+    class Product
+    {
+        public Product(string name, int price)
+        {
+            Name = name;
+            Price = price;
+        }
+
+        public string Name { get; private set; }
+        public int Price { get; private set; }
+
+        public override string ToString()
+        {
+            return $"Товар: {Name}, цена: {Price}";
+        }
     }
 
     class Seller
     {
+        private List<Product> _products = new() 
+        { 
+            new Product("Апельсин", 100),
+            new Product("Манго", 150),
+            new Product("Хлеб", 120),
+            new Product("Масло", 200),
+            new Product("Вода", 50)
+        };
 
+        public void ShowAllProduct()
+        {
+            int index = 0;
+
+            foreach (Product product in _products)
+            {
+                Display.Print($"{++index}. {product}");
+            }
+        }
     }
 
     class Buyer
     {
+        private List<Product> _products = new();
 
+        public Buyer(string name, int money)
+        {
+            Name = name;
+            Money = money;
+        }
+
+        public string Name { get; private set; }
+        public int Money { get; private set; }
+
+        public void ShowPurchasedProduct()
+        {
+            int index = 0;
+
+            if (_products.Count <= 0)
+            {
+                Display.Print($"Список покупок пуст");
+                return;
+            }
+
+            Display.Print($"Ваш список купленных продуктов:");
+
+            foreach (Product product in _products)
+            {
+                Display.Print($"{++index}. {product}");
+            }
+        }
+
+        public void BuyProducts (Product product)
+        {
+            _products.Add(product);
+        }
     }
-
-
 }
 
 //Магазин
