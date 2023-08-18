@@ -1,9 +1,16 @@
-﻿namespace Lesson_43
+﻿using System.Xml.Linq;
+
+namespace Lesson_43
 {
     class Program
     {
         static void Main()
         {
+            Console.Title = "Магазин";
+            Shop shop = new Shop();
+            shop.Work();
+
+            Console.ReadLine();
         }
     }
 
@@ -38,23 +45,39 @@
             Buyer buyer = new Buyer("Григорий", random.Next(maxBuyerMoney));
             bool isWork = true;
 
+            string titleMenu = "Добро пожаловать в магазин \"Продуктовый\"!!!";
+            string menu = $"{ShowSellerProductsCommand} - Показать товары продавца." +
+                          $"{ShowBuyerProductsCommand} - Показать купленные товары покупателя." +
+                          $"{BuyProductCommand} - Купить товар." +
+                          $"{ExitCommand} - Закончить покупки и выйти из магазина.";
+            string requestMessage = "Введите команду: ";
+            string continueMesaage = "\nНажмите любую клавишу чтобы продолжить...";
+            string errorCommandMessage = "Такой команды нет! Попробуйте снова.";
+
             string userInput;
 
             while (isWork == true)
             {
                 Console.Clear();
 
+                Display.Print(titleMenu);
+                Display.Print(menu);
+
+                Display.Print(requestMessage);
                 userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
                     case ShowSellerProductsCommand:
+                        seller.ShowAllProducts();
                         break;
 
                     case ShowBuyerProductsCommand:
+                        buyer.ShowPurchasedProducts();
                         break;
 
                     case BuyProductCommand:
+                        seller.SellProduct(buyer);
                         break;
 
                     case ExitCommand:
@@ -62,8 +85,12 @@
                         break;
 
                     default:
+                        Display.Print($"{userInput} - {errorCommandMessage}");
                         break;
                 }
+
+                Display.Print(continueMesaage);
+                Console.ReadLine();
             }
         }
     }
@@ -106,13 +133,15 @@
             }
         }
 
-        public Product SellProduct()
+        public void SellProduct(Buyer buyer)
         {
             int index = 0;
             Product product = _products[index];
             _products.Remove(product);
 
-            return product;
+            Display.Print($"{buyer.Name} купил {product.Name} по цене {product.Price}");
+
+            Display.Print($"У {buyer.Name} не хватает денег чтобы купить товар {product.Name}");
         }
     }
 
@@ -152,13 +181,10 @@
             if (Money >= product.Price)
             {
                 Money -= product.Price;
-                _products.Add(product);
-
-                Display.Print($"Покупатель {Name} купил {product.Name} по цене {product.Price}");
+                _products.Add(product);                
                 return true;
             }
 
-            Display.Print($"У покупателя {Name} не хватает денег чтобы купить товар {product.Name}");
             return false;            
         }
     }
