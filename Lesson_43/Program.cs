@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace Lesson_43
+﻿namespace Lesson_43
 {
     class Program
     {
