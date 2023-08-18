@@ -27,7 +27,44 @@
     {
         public void Work()
         {
+            const string ShowSellerProductsCommand = "1";
+            const string ShowBuyerProductsCommand = "2";
+            const string BuyProductCommand = "3";
+            const string ExitCommand = "4";
 
+            Random random = new Random();
+            int maxBuyerMoney = 1000;
+            Seller seller = new Seller();
+            Buyer buyer = new Buyer("Григорий", random.Next(maxBuyerMoney));
+            bool isWork = true;
+
+            string userInput;
+
+            while (isWork == true)
+            {
+                Console.Clear();
+
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case ShowSellerProductsCommand:
+                        break;
+
+                    case ShowBuyerProductsCommand:
+                        break;
+
+                    case BuyProductCommand:
+                        break;
+
+                    case ExitCommand:
+                        isWork = false;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
         }
     }
 
@@ -68,6 +105,15 @@
                 Display.Print($"{++index}. {product}");
             }
         }
+
+        public Product SellProduct()
+        {
+            int index = 0;
+            Product product = _products[index];
+            _products.Remove(product);
+
+            return product;
+        }
     }
 
     class Buyer
@@ -101,9 +147,19 @@
             }
         }
 
-        public void BuyProducts (Product product)
+        public bool BuyProduct (Product product)
         {
-            _products.Add(product);
+            if (Money >= product.Price)
+            {
+                Money -= product.Price;
+                _products.Add(product);
+
+                Display.Print($"Покупатель {Name} купил {product.Name} по цене {product.Price}");
+                return true;
+            }
+
+            Display.Print($"У покупателя {Name} не хватает денег чтобы купить товар {product.Name}");
+            return false;            
         }
     }
 }
