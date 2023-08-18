@@ -10,7 +10,7 @@ namespace Lesson_43
             Shop shop = new Shop();
             shop.Work();
 
-            Console.ReadLine();
+            Console.ReadKey(true);
         }
     }
 
@@ -28,6 +28,8 @@ namespace Lesson_43
             Print(message);
             Console.ForegroundColor = defaultColor;
         }
+
+
     }
 
     class Shop
@@ -45,12 +47,13 @@ namespace Lesson_43
             Buyer buyer = new Buyer("Григорий", random.Next(maxBuyerMoney));
             bool isWork = true;
 
-            string titleMenu = "Добро пожаловать в магазин \"Продуктовый\"!!!";
-            string menu = $"{ShowSellerProductsCommand} - Показать товары продавца." +
-                          $"{ShowBuyerProductsCommand} - Показать купленные товары покупателя." +
-                          $"{BuyProductCommand} - Купить товар." +
-                          $"{ExitCommand} - Закончить покупки и выйти из магазина.";
-            string requestMessage = "Введите команду: ";
+            string welcomeMessage = "Добро пожаловать в магазин \"Продуктовый\"!!!";
+            string titleMenu = "\n\nМеню:";
+            string menu = $"\n{ShowSellerProductsCommand} - Показать товары продавца." +
+                          $"\n{ShowBuyerProductsCommand} - Показать купленные товары покупателя." +
+                          $"\n{BuyProductCommand} - Купить товар." +
+                          $"\n{ExitCommand} - Закончить покупки и выйти из магазина.";
+            string requestMessage = "\nВведите команду: ";
             string continueMesaage = "\nНажмите любую клавишу чтобы продолжить...";
             string errorCommandMessage = "Такой команды нет! Попробуйте снова.";
 
@@ -60,10 +63,12 @@ namespace Lesson_43
             {
                 Console.Clear();
 
+                buyer.ShowBuyerInfo();
+                Display.Print(welcomeMessage, ConsoleColor.DarkYellow);
                 Display.Print(titleMenu);
                 Display.Print(menu);
 
-                Display.Print(requestMessage);
+                Display.Print(requestMessage, ConsoleColor.Green);
                 userInput = Console.ReadLine();
 
                 switch (userInput)
@@ -85,11 +90,11 @@ namespace Lesson_43
                         break;
 
                     default:
-                        Display.Print($"{userInput} - {errorCommandMessage}");
+                        Display.Print($"{userInput} - {errorCommandMessage}", ConsoleColor.DarkRed);
                         break;
                 }
 
-                Display.Print(continueMesaage);
+                Display.Print(continueMesaage, ConsoleColor.DarkYellow);
                 Console.ReadLine();
             }
         }
@@ -114,8 +119,8 @@ namespace Lesson_43
 
     class Seller
     {
-        private List<Product> _products = new() 
-        { 
+        private List<Product> _products = new()
+        {
             new Product("Апельсин", 100),
             new Product("Манго", 150),
             new Product("Хлеб", 120),
@@ -126,22 +131,64 @@ namespace Lesson_43
         public void ShowAllProducts()
         {
             int index = 0;
+            Display.Print("Доступный ассортимент продуктов:", ConsoleColor.Green);
 
             foreach (Product product in _products)
             {
-                Display.Print($"{++index}. {product}");
+                Display.Print($"\n{++index}. {product}");
             }
         }
 
         public void SellProduct(Buyer buyer)
         {
-            int index = 0;
-            Product product = _products[index];
-            _products.Remove(product);
+            Console.Clear();
+            ShowAllProducts();
+            buyer.ShowBuyerInfo();
 
-            Display.Print($"{buyer.Name} купил {product.Name} по цене {product.Price}");
+            Display.Print($"\nВведите номер желаемого продукта для покупки: ");
+            int inputIndex = ReadInt() - 1;
+            Product product = _products[inputIndex];
 
-            Display.Print($"У {buyer.Name} не хватает денег чтобы купить товар {product.Name}");
+            if (buyer.BuyProduct(product) == true)
+            {
+                _products.Remove(product);
+                Display.Print($"{buyer.Name} купил {product.Name} по цене {product.Price}");
+            }
+            else
+            {
+                Display.Print($"У {buyer.Name} не хватает денег чтобы купить товар {product.Name}");
+            }
+        }
+
+        private int ReadInt(int firstNumber = 0, int lastNumber = int.MaxValue)
+        {
+            bool isTryParse = false;
+            string userInput;
+            int number = 0;
+
+            while (isTryParse == false)
+            {
+                userInput = Console.ReadLine();
+
+                if (Int32.TryParse(userInput, out int result) == true)
+                {
+                    if (result > firstNumber && result <= lastNumber)
+                    {
+                        number = result;
+                        isTryParse = true;
+                    }
+                    else
+                    {
+                        Display.Print($"\nОшибка! Введеное число [{userInput}] должно быть больше: [{firstNumber}] и меньше, либо равным: [{lastNumber}]!\nПопробуйте снова: ");
+                    }
+                }
+                else
+                {
+                    Display.Print($"\nОшибка! Вы ввели не число: {userInput}!\nПопробуйте снова: ");
+                }
+            }
+
+            return number;
         }
     }
 
@@ -168,24 +215,54 @@ namespace Lesson_43
                 return;
             }
 
-            Display.Print($"Ваш список купленных продуктов:");
+            Display.Print($"\nВаш список купленных продуктов:");
 
             foreach (Product product in _products)
             {
-                Display.Print($"{++index}. {product}");
+                Display.Print($"\n{++index}. {product}");
             }
         }
 
-        public bool BuyProduct (Product product)
+        public bool BuyProduct(Product product)
         {
             if (Money >= product.Price)
             {
                 Money -= product.Price;
-                _products.Add(product);                
+                _products.Add(product);
                 return true;
             }
 
-            return false;            
+            return false;
+        }
+
+        public int GetProductsCount()
+        {
+
+            if (_products.Count != 0)
+            {
+                return _products.Count;
+            }
+
+            return 0;
+        }
+
+        public void ShowBuyerInfo()
+        {
+            int currentPositionLeft = Console.CursorLeft;
+            int currentPositionTop = Console.CursorTop;
+            int positionLeft = 60;
+            int positionTopName = 0;
+            int positionTopBalance = 1;
+            int positionTopCountProducts = 2;
+
+            Console.SetCursorPosition(positionLeft, positionTopName);
+            Display.Print($"# Имя покупателя: {Name}", ConsoleColor.Green);
+            Console.SetCursorPosition(positionLeft, positionTopBalance);
+            Display.Print($"# Баланс покупателя: {Money} рублей.", ConsoleColor.Green);
+            Console.SetCursorPosition(positionLeft, positionTopCountProducts);
+            Display.Print($"# Количество товаров у покупателя: {GetProductsCount()}.", ConsoleColor.Green);
+
+            Console.SetCursorPosition(currentPositionLeft, currentPositionTop);
         }
     }
 }
