@@ -228,10 +228,7 @@
 
     class Buyer : Human
     {
-        public Buyer(string name, int money) : base(name, money)
-        {
-
-        }
+        public Buyer(string name, int money) : base(name, money) { }
 
         public bool BuyProduct(Product product)
         {
