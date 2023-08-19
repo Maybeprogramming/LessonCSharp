@@ -45,7 +45,7 @@
             bool isWork = true;
 
             string welcomeMessage = "Добро пожаловать в магазин \"Продуктовый\"!!!";
-            string titleMenu = "\n\nМеню:";
+            string titleMenu = "\nМеню:";
             string menu = $"\n{ShowSellerProductsCommand} - Показать товары продавца." +
                           $"\n{ShowBuyerProductsCommand} - Показать купленные товары покупателя." +
                           $"\n{BuyProductCommand} - Купить товар." +
@@ -60,7 +60,7 @@
             {
                 Console.Clear();
 
-                buyer.ShowInfo();
+                buyer.DrawInfo();
                 Display.Print(welcomeMessage, ConsoleColor.DarkYellow);
                 Display.Print(titleMenu);
                 Display.Print(menu);
@@ -173,7 +173,7 @@
 
             Console.Clear();
             ShowAllProducts();
-            buyer.ShowInfo();
+            buyer.DrawInfo();
 
             Display.Print($"\nВведите номер желаемого продукта для покупки: ");
             int inputIndex = ReadInt(lastIndexProduct) - 1;
@@ -239,12 +239,7 @@
             return false;
         }
 
-        public int GetProductsCount()
-        {
-            return _products.Count;
-        }
-
-        public void ShowInfo()
+        public void DrawInfo()
         {
             int currentPositionLeft = Console.CursorLeft;
             int currentPositionTop = Console.CursorTop;
@@ -258,7 +253,7 @@
             Console.SetCursorPosition(positionLeft, positionTopBalance);
             Display.Print($"# Баланс покупателя: {Money} рублей.", ConsoleColor.Green);
             Console.SetCursorPosition(positionLeft, positionTopCountProducts);
-            Display.Print($"# Количество товаров у покупателя: {GetProductsCount()}.", ConsoleColor.Green);
+            Display.Print($"# Количество товаров у покупателя: {_products.Count}.", ConsoleColor.Green);
 
             Console.SetCursorPosition(currentPositionLeft, currentPositionTop);
         }
