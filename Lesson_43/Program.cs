@@ -75,7 +75,7 @@
                         break;
 
                     case ShowBuyerProductsCommand:
-                        buyer.ShowPurchasedProducts();
+                        buyer.ShowAllProducts();
                         break;
 
                     case BuyProductCommand:
@@ -119,10 +119,10 @@
 
     class Human
     {
-        protected List<Product> _products;
+        protected List<Product> _products = new();
 
-        protected string Name { get; private set; }
-        protected int Money { get; private set; }
+        public string Name { get; protected set; }
+        public int Money { get; protected set; }
 
         public Human(string name = "Anonymous", int money = 0)
         {
@@ -133,6 +133,13 @@
         public void ShowAllProducts()
         {
             int index = 0;
+
+            if (_products.Count <= 0)
+            {
+                Display.Print($"Нет товаров для отображения.", ConsoleColor.DarkRed);
+                return;
+            }
+
             Display.Print($"Список продуктов у {Name}:", ConsoleColor.Green);
 
             foreach (Product product in _products)
@@ -142,9 +149,9 @@
         }
     }
 
-    class Seller: Human
+    class Seller : Human
     {
-        public Seller(string name, int money): base(name, money)
+        public Seller(string name, int money) : base(name, money)
         {
             _products = new()
             {
@@ -175,6 +182,7 @@
 
             if (buyer.BuyProduct(product) == true)
             {
+                Money += product.Price;
                 _products.Remove(product);
                 Display.Print($"{buyer.Name} купил {product.Name} по цене {product.Price}");
             }
@@ -218,35 +226,11 @@
         }
     }
 
-    class Buyer
+    class Buyer : Human
     {
-        private List<Product> _products = new();
-
-        public Buyer(string name, int money)
+        public Buyer(string name, int money) : base(name, money)
         {
-            Name = name;
-            Money = money;
-        }
 
-        public string Name { get; private set; }
-        public int Money { get; private set; }
-
-        public void ShowPurchasedProducts()
-        {
-            int index = 0;
-
-            if (_products.Count <= 0)
-            {
-                Display.Print($"Список покупок пуст");
-                return;
-            }
-
-            Display.Print($"\nВаш список купленных продуктов:");
-
-            foreach (Product product in _products)
-            {
-                Display.Print($"\n{++index}. {product}");
-            }
         }
 
         public bool BuyProduct(Product product)
@@ -263,13 +247,7 @@
 
         public int GetProductsCount()
         {
-
-            if (_products.Count != 0)
-            {
-                return _products.Count;
-            }
-
-            return 0;
+            return _products.Count;
         }
 
         public void ShowInfo()
