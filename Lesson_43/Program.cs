@@ -169,7 +169,6 @@
 
         public void SellProduct(Buyer buyer)
         {
-            int firstIndexProduct = 0;
             int lastIndexProduct = _products.Count;
 
             Console.Clear();
@@ -177,7 +176,7 @@
             buyer.ShowInfo();
 
             Display.Print($"\nВведите номер желаемого продукта для покупки: ");
-            int inputIndex = ReadInt(firstIndexProduct, lastIndexProduct) - 1;
+            int inputIndex = ReadInt(lastIndexProduct) - 1;
             Product product = _products[inputIndex];
 
             if (buyer.BuyProduct(product) == true)
@@ -192,7 +191,7 @@
             }
         }
 
-        private int ReadInt(int firstNumber = 0, int lastNumber = int.MaxValue)
+        private int ReadInt(int collectionCount)
         {
             bool isTryParse = false;
             string userInput;
@@ -204,21 +203,19 @@
 
                 if (Int32.TryParse(userInput, out int result) == true)
                 {
-                    if (result > firstNumber && result <= lastNumber)
+                    if (result > 0 && result <= collectionCount)
                     {
                         number = result;
                         isTryParse = true;
                     }
                     else
                     {
-                        Display.Print($"\nОшибка! Введеное число [{userInput}] " +
-                                      $"должно быть больше: [{firstNumber}] и меньше, " +
-                                      $"либо равным: [{lastNumber}]!\nПопробуйте снова: ");
+                        Display.Print($"\nОшибка! Такого товара нет, попробуйте снова...", ConsoleColor.DarkRed);
                     }
                 }
                 else
                 {
-                    Display.Print($"\nОшибка! Вы ввели не число: {userInput}!\nПопробуйте снова: ");
+                    Display.Print($"\nОшибка! Вы ввели не число: {userInput}!\nПопробуйте снова: ", ConsoleColor.DarkRed);
                 }
             }
 
