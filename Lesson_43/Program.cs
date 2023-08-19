@@ -169,15 +169,15 @@
 
         public void SellProduct(Buyer buyer)
         {
-            int lastIndexProduct = _products.Count;
+            int productsCount = _products.Count;
 
             Console.Clear();
             ShowAllProducts();
             buyer.DrawInfo();
 
             Display.Print($"\nВведите номер желаемого продукта для покупки: ");
-            int inputIndex = ReadInt(lastIndexProduct) - 1;
-            Product product = _products[inputIndex];
+            int inputProductIndex = ReadInt(productsCount);
+            Product product = _products[inputProductIndex];
 
             if (buyer.BuyProduct(product) == true)
             {
@@ -195,7 +195,7 @@
         {
             bool isTryParse = false;
             string userInput;
-            int number = 0;
+            int productIndex = 0;
 
             while (isTryParse == false)
             {
@@ -205,12 +205,12 @@
                 {
                     if (result > 0 && result <= collectionCount)
                     {
-                        number = result;
+                        productIndex = result;
                         isTryParse = true;
                     }
                     else
                     {
-                        Display.Print($"\nОшибка! Такого товара нет!\nпопробуйте снова:", ConsoleColor.DarkRed);
+                        Display.Print($"\nОшибка! Такого товара нет!\nпопробуйте снова: ", ConsoleColor.DarkRed);
                     }
                 }
                 else
@@ -219,7 +219,7 @@
                 }
             }
 
-            return number;
+            return productIndex - 1;
         }
     }
 
