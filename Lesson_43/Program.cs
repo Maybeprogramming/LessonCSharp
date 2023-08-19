@@ -210,7 +210,7 @@
                     }
                     else
                     {
-                        Display.Print($"\nОшибка! Такого товара нет, попробуйте снова...", ConsoleColor.DarkRed);
+                        Display.Print($"\nОшибка! Такого товара нет!\nпопробуйте снова:", ConsoleColor.DarkRed);
                     }
                 }
                 else
