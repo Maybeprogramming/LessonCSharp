@@ -201,7 +201,7 @@
             {
                 userInput = Console.ReadLine();
 
-                if (Int32.TryParse(userInput, out int result) == true)
+                if (int.TryParse(userInput, out int result) == true)
                 {
                     if (result > 0 && result <= collectionCount)
                     {
