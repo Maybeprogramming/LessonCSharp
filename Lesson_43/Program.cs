@@ -37,8 +37,11 @@
 
             Random random = new();
             int maxBuyerMoney = 1000;
-            Seller seller = new();
-            Buyer buyer = new("Григорий", random.Next(maxBuyerMoney));
+            int sellerMoney = 0;
+            string sellerName = "Галя";
+            string buyerName = "Григорий";
+            Seller seller = new(sellerName, sellerMoney);
+            Buyer buyer = new(buyerName, random.Next(maxBuyerMoney));
             bool isWork = true;
 
             string welcomeMessage = "Добро пожаловать в магазин \"Продуктовый\"!!!";
@@ -114,30 +117,47 @@
         }
     }
 
-    class Seller
+    class Human
     {
-        private List<Product> _products = new()
+        protected List<Product> _products;
+
+        protected string Name { get; private set; }
+        protected int Money { get; private set; }
+
+        public Human(string name = "Anonymous", int money = 0)
         {
-            new Product("Апельсин", 100),
-            new Product("Клубника", 120),
-            new Product("Манго", 150),
-            new Product("Хлеб", 120),
-            new Product("Масло", 200),
-            new Product("Огурцы", 90),
-            new Product("Помидоры", 115),
-            new Product("Петрушка", 20),
-            new Product("Вода", 50)
-        };
+            Name = name;
+            Money = money;
+        }
 
         public void ShowAllProducts()
         {
             int index = 0;
-            Display.Print("Доступный ассортимент продуктов:", ConsoleColor.Green);
+            Display.Print($"Список продуктов у {Name}:", ConsoleColor.Green);
 
             foreach (Product product in _products)
             {
                 Display.Print($"\n{++index}. {product}");
             }
+        }
+    }
+
+    class Seller: Human
+    {
+        public Seller(string name, int money): base(name, money)
+        {
+            _products = new()
+            {
+                new Product("Апельсин", 100),
+                new Product("Клубника", 120),
+                new Product("Манго", 150),
+                new Product("Хлеб", 120),
+                new Product("Масло", 200),
+                new Product("Огурцы", 90),
+                new Product("Помидоры", 115),
+                new Product("Петрушка", 20),
+                new Product("Вода", 50)
+            };
         }
 
         public void SellProduct(Buyer buyer)
