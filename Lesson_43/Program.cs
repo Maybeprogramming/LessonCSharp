@@ -5,7 +5,7 @@
         static void Main()
         {
             Console.Title = "Магазин";
-            Shop shop = new Shop();
+            Shop shop = new();
             shop.Work();
         }
     }
@@ -35,10 +35,10 @@
             const string BuyProductCommand = "3";
             const string ExitCommand = "4";
 
-            Random random = new Random();
+            Random random = new();
             int maxBuyerMoney = 1000;
-            Seller seller = new Seller();
-            Buyer buyer = new Buyer("Григорий", random.Next(maxBuyerMoney));
+            Seller seller = new();
+            Buyer buyer = new("Григорий", random.Next(maxBuyerMoney));
             bool isWork = true;
 
             string welcomeMessage = "Добро пожаловать в магазин \"Продуктовый\"!!!";
