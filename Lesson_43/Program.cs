@@ -121,14 +121,14 @@
     {
         protected List<Product> _products = new();
 
-        public string Name { get; protected set; }
-        public int Money { get; protected set; }
-
         public Human(string name = "Anonymous", int money = 0)
         {
             Name = name;
             Money = money;
         }
+
+        public string Name { get; protected set; }
+        public int Money { get; protected set; }
 
         public void ShowAllProducts()
         {
@@ -169,17 +169,16 @@
 
         public void SellProduct(Buyer buyer)
         {
-            int productsCount = _products.Count;
-
             Console.Clear();
             ShowAllProducts();
             buyer.DrawInfo();
 
             Display.Print($"\nВведите номер желаемого продукта для покупки: ");
-            int inputProductIndex = ReadInt(productsCount);
+
+            int inputProductIndex = CheckProductIndex(_products.Count);
             Product product = _products[inputProductIndex];
 
-            if (buyer.BuyProduct(product) == true)
+            if (buyer.TruBuyProduct(product) == true)
             {
                 Money += product.Price;
                 _products.Remove(product);
@@ -191,7 +190,7 @@
             }
         }
 
-        private int ReadInt(int collectionCount)
+        private int CheckProductIndex(int collectionCount)
         {
             bool isTryParse = false;
             string userInput;
@@ -227,7 +226,7 @@
     {
         public Buyer(string name, int money) : base(name, money) { }
 
-        public bool BuyProduct(Product product)
+        public bool TruBuyProduct(Product product)
         {
             if (Money >= product.Price)
             {
