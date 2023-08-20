@@ -1,4 +1,6 @@
-﻿namespace Lesson_43
+﻿using Lesson_43;
+
+namespace Lesson_43
 {
     class Program
     {
@@ -119,7 +121,7 @@
 
     class Human
     {
-        protected List<Product> _products = new();
+        protected List<Product> Products = new();
 
         public Human(string name = "Anonymous", int money = 0)
         {
@@ -134,7 +136,7 @@
         {
             int index = 0;
 
-            if (_products.Count <= 0)
+            if (Products.Count <= 0)
             {
                 Display.Print($"Нет товаров для отображения.", ConsoleColor.DarkRed);
                 return;
@@ -142,7 +144,7 @@
 
             Display.Print($"Список продуктов у {Name}:", ConsoleColor.Green);
 
-            foreach (Product product in _products)
+            foreach (Product product in Products)
             {
                 Display.Print($"\n{++index}. {product}");
             }
@@ -153,7 +155,7 @@
     {
         public Seller(string name, int money) : base(name, money)
         {
-            _products = new()
+            Products = new()
             {
                 new Product("Апельсин", 100),
                 new Product("Клубника", 120),
@@ -175,13 +177,13 @@
 
             Display.Print($"\nВведите номер желаемого продукта для покупки: ");
 
-            int inputProductIndex = CheckProductIndex(_products.Count);
-            Product product = _products[inputProductIndex];
+            int inputProductIndex = CheckProductIndex(Products.Count);
+            Product product = Products[inputProductIndex];
 
             if (buyer.TruBuyProduct(product) == true)
             {
                 Money += product.Price;
-                _products.Remove(product);
+                Products.Remove(product);
                 Display.Print($"{buyer.Name} купил {product.Name} по цене {product.Price}");
             }
             else
@@ -231,7 +233,7 @@
             if (Money >= product.Price)
             {
                 Money -= product.Price;
-                _products.Add(product);
+                Products.Add(product);
                 return true;
             }
 
@@ -252,7 +254,7 @@
             Console.SetCursorPosition(positionLeft, positionTopBalance);
             Display.Print($"# Баланс покупателя: {Money} рублей.", ConsoleColor.Green);
             Console.SetCursorPosition(positionLeft, positionTopCountProducts);
-            Display.Print($"# Количество товаров у покупателя: {_products.Count}.", ConsoleColor.Green);
+            Display.Print($"# Количество товаров у покупателя: {Products.Count}.", ConsoleColor.Green);
 
             Console.SetCursorPosition(currentPositionLeft, currentPositionTop);
         }
@@ -267,3 +269,26 @@
 //и вы можете также посмотреть свои вещи.
 //Возможные классы – игрок, продавец, товар.
 //Вы можете сделать так, как вы видите это.
+
+
+
+//Доработать 1.
+//1.Для продавца и покупателя можно выделить общий класс,
+//который будет содержать список, деньги и метод показа информации. 
+//А для доступа использовать protected модификатор доступа.
+//2. private List<Product> _products -заполняйте массивы / коллекции в конструкторе класса. 
+//3. ReadInt(firstIndexProduct, lastIndexProduct) -1; -это привело меня в тупик, почему -1? 
+//Почему обязательно больше первого числа? Первое число можно обычно выбрать. 
+//Если можно выбрать от 0 до количества, или передавать 1 и количество, тогда понятно. 
+//Сейчас прям путаницу доставляет. 
+//Так же int lastIndexProduct = _products.Count; содержит не индекс в себе. 
+//4. if (_products.Count != 0) { return _products.Count; }
+//return 0; а зачем? 
+//Возвращайте _products.Count; будет 0, вернет его.
+
+//Доработать 2
+//1) Свойства объявляются после конструктора . 
+//2) метод SellProduct() -лишняя переменная int productsCount . 
+//3) ReadInt() - метод не считывает число, а проверяет есть ли товар с таким индексом .
+//4) BuyProduct - метод не всегда покупает товар, и возвращает логику - поэтому лучше TryBuyProduct .
+//5) protected поле именуется с большой буквы . - исправьте у себя, повторно отправлять на проверку не нужно.
