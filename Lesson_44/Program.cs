@@ -1,10 +1,20 @@
-﻿namespace Lesson_44
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Lesson_44
 {
     internal class Program
     {
         static void Main()
         {
+            
         }
+    }
+
+    class Train
+    {
+        public static int _count;
+        public const int Cost = 1;
+        private int _number;
     }
 }
 
