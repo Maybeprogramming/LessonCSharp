@@ -6,16 +6,44 @@ namespace Lesson_44
     {
         static void Main()
         {
-            
+
         }
+    }
+
+    static class Display
+    {
+
+    }
+
+    class Station
+    {
+        private Random _random = new Random();
+
     }
 
     class Train
     {
-        public static int _count;
-        public const int Cost = 1;
-        private int _number;
+
     }
+
+    class Route
+    {
+        public Route(string from, string to)
+        {
+            From = from;
+            To = to;
+        }
+
+        public string From { get; private set; }
+        public string To { get; private set; }
+
+        public string GetRoute()
+        {
+            return $"Выезд из: {From} по направлению в {To}";
+        }
+    }
+
+
 }
 
 //Конфигуратор пассажирских поездов
