@@ -18,7 +18,7 @@ namespace Lesson_44
     class Station
     {
         private Random _random = new Random();
-
+        private Route _route = new Route("Самара","Москва");
     }
 
     class Train
@@ -37,7 +37,7 @@ namespace Lesson_44
         public string From { get; private set; }
         public string To { get; private set; }
 
-        public string GetRoute()
+        public string AssignTo()
         {
             return $"Выезд из: {From} по направлению в {To}";
         }
