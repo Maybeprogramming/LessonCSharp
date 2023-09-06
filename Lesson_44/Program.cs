@@ -12,13 +12,27 @@ namespace Lesson_44
 
     static class Display
     {
+        public static void Print(string text)
+        {
 
+        }
     }
 
     class Station
     {
         private Random _random = new Random();
+
+        private string _stationDeparture;
+        private string _stationArrival;
+        private string _requestStationDepartureMessage = "Введите станцию отправления: ";
+        private string _requestStationArrivalMesage = "Введите станцию прибытия: ";
+
+
+
+
         private Route _route = new Route("Самара","Москва");
+
+
     }
 
     class Train
