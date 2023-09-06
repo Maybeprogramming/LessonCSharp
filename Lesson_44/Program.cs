@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Lesson_44
+﻿namespace Lesson_44
 {
     internal class Program
     {
@@ -20,19 +18,18 @@ namespace Lesson_44
 
     class Station
     {
-        private Random _random = new Random();
-
-        private string _stationDeparture;
-        private string _stationArrival;
-        private string _requestStationDepartureMessage = "Введите станцию отправления: ";
-        private string _requestStationArrivalMesage = "Введите станцию прибытия: ";
 
 
+        public void Work()
+        {
+            Random _random = new Random();
 
-
-        private Route _route = new Route("Самара","Москва");
-
-
+            string _stationDeparture;
+            string _stationArrival;
+            string _requestStationDepartureMessage = "Введите станцию отправления: ";
+            string _requestStationArrivalMesage = "Введите станцию прибытия: ";
+            Route _route = new Route("Самара", "Москва");
+        }
     }
 
     class Train
