@@ -4,7 +4,7 @@
     {
         static void Main()
         {
-
+            Console.Title = "Конфигуратор пассажирских поездов";
         }
     }
 
@@ -12,23 +12,29 @@
     {
         public static void Print(string text)
         {
-
+            Console.Write(text);
         }
     }
 
     class Station
     {
-
-
         public void Work()
         {
-            Random _random = new Random();
+            const string SetupTrainCommand = "1";
+            const string ExitCommand = "2";
 
-            string _stationDeparture;
-            string _stationArrival;
-            string _requestStationDepartureMessage = "Введите станцию отправления: ";
-            string _requestStationArrivalMesage = "Введите станцию прибытия: ";
-            Route _route = new Route("Самара", "Москва");
+            Random random = new Random();
+            string setupTrainMenuText = "Конфигурировать пассажирский поезд";
+            string exitMenuText = "Выйти из конфигуратора";
+            string menu = $"{SetupTrainCommand} - {setupTrainMenuText}" +
+                          $"\n{ExitCommand} - {exitMenuText}";
+            string stationDeparture = "";
+            string stationArrival = "";
+            string requestStationDepartureMessage = "Введите станцию отправления: ";
+            string requestStationArrivalMesage = "Введите станцию прибытия: ";
+            bool isWorkStation = true;
+
+            Route route = new Route(stationDeparture, stationArrival);
         }
     }
 
