@@ -5,6 +5,9 @@
         static void Main()
         {
             Console.Title = "Конфигуратор пассажирских поездов";
+
+            Station station = new Station();
+            station.Work();
         }
     }
 
@@ -34,13 +37,69 @@
             string requestStationArrivalMesage = "Введите станцию прибытия: ";
             bool isWorkStation = true;
 
-            Route route = new Route(stationDeparture, stationArrival);
+            while (isWorkStation == true)
+            {
+                Console.Clear();
+                PrintStatusTrainRoute();
+                Console.WriteLine();
+
+                Console.WriteLine(menu);
+
+                switch (Console.ReadLine())
+                {
+                    case SetupTrainCommand:
+                        SetupTrainRoute();
+                        break;
+                    case ExitCommand:
+                        isWorkStation = false;
+                        break;
+                    default:
+                        Console.WriteLine("Такой команды нет, попробуйте снова");
+                        break;
+                }
+
+                Console.WriteLine();
+                Console.ReadLine();
+            }
+
+            Console.WriteLine("Программа завершена. Возвращайтесь снова.");
+            Console.ReadLine();
+        }
+
+        private void PrintStatusTrainRoute()
+        {
+            Console.WriteLine("Блок вывода статуса маршрута поезда");
+        }
+
+        private void SetupTrainRoute()
+        {
+            Console.WriteLine("Блок с конфигурированием поезда");
         }
     }
 
     class Train
     {
+        private List<Carriage> _carriages = new List<Carriage>();
 
+        public Train() 
+        {
+            
+        }
+
+        public void AddCarriege(int capacity)
+        {
+            _carriages.Add(new Carriage());
+        }
+    }
+
+    class Carriage
+    {
+        public Carriage()
+        {
+
+        }
+
+        public int Capacity { get; private set; }
     }
 
     class Route
@@ -59,8 +118,6 @@
             return $"Выезд из: {From} по направлению в {To}";
         }
     }
-
-
 }
 
 //Конфигуратор пассажирских поездов
