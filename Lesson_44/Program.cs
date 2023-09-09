@@ -31,10 +31,6 @@
             string exitMenuText = "Выйти из конфигуратора";
             string menu = $"{SetupTrainCommand} - {setupTrainMenuText}" +
                           $"\n{ExitCommand} - {exitMenuText}";
-            string stationDeparture = "";
-            string stationArrival = "";
-            string requestStationDepartureMessage = "Введите станцию отправления: ";
-            string requestStationArrivalMesage = "Введите станцию прибытия: ";
             bool isWorkStation = true;
 
             while (isWorkStation == true)
@@ -138,6 +134,11 @@
 
         public string AssignTo()
         {
+            string stationDeparture = "";
+            string stationArrival = "";
+            string requestStationDepartureMessage = "Введите станцию отправления: ";
+            string requestStationArrivalMesage = "Введите станцию прибытия: ";
+
             return $"Выезд из: {From} по направлению в {To}";
         }
     }
