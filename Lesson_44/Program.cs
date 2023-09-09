@@ -80,23 +80,46 @@
     class Train
     {
         private List<Carriage> _carriages = new List<Carriage>();
+        private Random _random;
 
-        public Train() 
+        public Train(Random random, int passangersCount) 
         {
-            
+            _random = random;
         }
 
-        public void AddCarriege(int capacity)
+        private void Configure(int passangersCount)
         {
-            _carriages.Add(new Carriage());
+
         }
+
+        private void AddCarriege()
+        {
+            _carriages.Add(new Carriage(_random));
+        }
+
+        private int GetTrainCapacity()
+        {
+            int trainCapacity = 0;
+
+            foreach (Carriage carriage in _carriages)
+            {
+                trainCapacity += carriage.Capacity;
+            }
+
+            return trainCapacity;
+        }
+
+
     }
 
     class Carriage
     {
-        public Carriage()
-        {
+        private int _minCapacity = 20;
+        private int _maxCapacity = 50;
 
+        public Carriage(Random random)
+        {
+            Capacity = random.Next(_minCapacity, _maxCapacity + 1);
         }
 
         public int Capacity { get; private set; }
