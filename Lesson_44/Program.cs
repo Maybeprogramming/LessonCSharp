@@ -48,7 +48,7 @@
                 switch (Console.ReadLine())
                 {
                     case SetupTrainCommand:
-                        SetupTrainRoute();
+                        SetupTrain();
                         break;
                     case ExitCommand:
                         isWorkStation = false;
@@ -71,7 +71,7 @@
             Console.WriteLine("Блок вывода статуса маршрута поезда");
         }
 
-        private void SetupTrainRoute()
+        private void SetupTrain()
         {
             Console.WriteLine("Блок с конфигурированием поезда");
         }
@@ -89,7 +89,7 @@
             Configure(passangersCount);
         }
 
-        public int Capacity { get; private set; } = 0;
+        public int Capacity { get; private set; }
 
         public int GetCarriageCount()
         {
