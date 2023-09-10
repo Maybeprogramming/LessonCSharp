@@ -34,12 +34,12 @@ namespace Lesson_44
             TicketOffice ticketOffice = new TicketOffice();
             Train train = new Train(random);
             Route route = new Route();
+
             string setupTrainMenuText = "Конфигурировать пассажирский поезд";
             string exitMenuText = "Выйти из конфигуратора";
             string menu = $"{SetupTrainCommand} - {setupTrainMenuText}" +
                           $"\n{ExitCommand} - {exitMenuText}";
             bool isWorkStation = true;
-            int passangersCount = 10;
 
             while (isWorkStation == true)
             {
@@ -78,7 +78,7 @@ namespace Lesson_44
 
             train.Configure(ticketOffice.TiketsSoldCount);
 
-            board.AddInfo(route, train, ticketOffice);
+            board.AddInfo(route, ticketOffice);
         }
     }
 
@@ -136,13 +136,10 @@ namespace Lesson_44
 
         public void AssignTo()
         {
-            string requestStationDepartureMessage = "Введите станцию отправления: ";
-            string requestStationArrivalMesage = "Введите станцию прибытия: ";
-
-            Console.Write(requestStationDepartureMessage);
+            Console.Write("Введите станцию отправления: ");
             From = Console.ReadLine();
 
-            Console.Write(requestStationArrivalMesage);
+            Console.Write("Введите станцию прибытия: ");
             To = Console.ReadLine();
         }
     }
@@ -169,7 +166,7 @@ namespace Lesson_44
     {
         private List<String> _trainsInfo = new List<String>();
 
-        public void AddInfo(Route route, Train train, TicketOffice ticketOffice)
+        public void AddInfo(Route route, TicketOffice ticketOffice)
         {
             _trainsInfo.Add($"Выезд из: {route.From} по направлению в: {route.To} (Продано: {ticketOffice.TiketsSoldCount} билетов)");
         }
@@ -188,12 +185,17 @@ namespace Lesson_44
                 return;
             }
 
+            topCursorPosition = 1;
+            Console.WriteLine("Список доступных маршрутов:");
+
             foreach (String info in _trainsInfo)
             {
                 Console.WriteLine($"{++number}. {info}");
             }
 
-            topCursorPosition = _trainsInfo.Count + 1;
+            Console.WriteLine();
+
+            topCursorPosition += _trainsInfo.Count + 1;
             Console.SetCursorPosition(leftCursorPosition, topCursorPosition);
         }
     }
