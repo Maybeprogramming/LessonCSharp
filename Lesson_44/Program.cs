@@ -31,27 +31,27 @@ namespace Lesson_44
 
             Random random = new Random();
             Board board = new Board();
-            Train train = new Train(random, 200);
+            TicketOffice ticketOffice = new TicketOffice();
+            Train train = new Train(random);
             Route route = new Route();
             string setupTrainMenuText = "Конфигурировать пассажирский поезд";
             string exitMenuText = "Выйти из конфигуратора";
             string menu = $"{SetupTrainCommand} - {setupTrainMenuText}" +
                           $"\n{ExitCommand} - {exitMenuText}";
             bool isWorkStation = true;
-            int passangersCount = 0;
+            int passangersCount = 10;
 
             while (isWorkStation == true)
             {
                 Console.Clear();
                 board.ShowInfo();
-                Console.WriteLine();
 
                 Console.WriteLine(menu);
 
                 switch (Console.ReadLine())
                 {
                     case SetupTrainCommand:
-                        SetupTrain();
+                        SetupTrain(ticketOffice, route, train, board);
                         break;
                     case ExitCommand:
                         isWorkStation = false;
@@ -69,9 +69,16 @@ namespace Lesson_44
             Console.ReadLine();
         }
 
-        private void SetupTrain()
+        private void SetupTrain(TicketOffice ticketOffice, Route route, Train train, Board board)
         {
-            Console.WriteLine("Блок с конфигурированием поезда");
+            Console.WriteLine("Начинаем конфигурировать поезд и маршрут следования!");
+            route.AssignTo();
+
+            ticketOffice.SellTickets();
+
+            train.Configure(ticketOffice.TiketsSoldCount);
+
+            board.AddInfo(route, train, ticketOffice);
         }
     }
 
@@ -80,11 +87,10 @@ namespace Lesson_44
         private List<Carriage> _carriages = new List<Carriage>();
         private Random _random;
 
-        public Train(Random random, int passangersCount)
+        public Train(Random random)
         {
             _random = random;
             AddCarriege();
-            Configure(passangersCount);
         }
 
         public int Capacity { get; private set; }
@@ -94,9 +100,9 @@ namespace Lesson_44
             return _carriages.Count;
         }
 
-        private void Configure(int passangersCount)
+        public void Configure(int tiketsSoldCount)
         {
-            while (Capacity < passangersCount)
+            while (Capacity < tiketsSoldCount)
             {
                 AddCarriege();
             }
@@ -130,21 +136,33 @@ namespace Lesson_44
 
         public void AssignTo()
         {
-            string stationDeparture = "";
-            string stationArrival = "";
             string requestStationDepartureMessage = "Введите станцию отправления: ";
             string requestStationArrivalMesage = "Введите станцию прибытия: ";
+
+            Console.Write(requestStationDepartureMessage);
+            From = Console.ReadLine();
+
+            Console.Write(requestStationArrivalMesage);
+            To = Console.ReadLine();
         }
     }
 
     class TicketOffice
     {
-        public TicketOffice(int passangersCount)
+        public int TiketsSoldCount { get; private set; }
+
+        public void SellTickets()
         {
+            int passangersCount;
+            Console.Write("Введите количество пассажиров: ");
+
+            while (Int32.TryParse(Console.ReadLine(), out passangersCount) != true)
+            {
+                Console.WriteLine("Вы ввели не число, попробуйте снова!");
+            }
+
             TiketsSoldCount = passangersCount;
         }
-
-        public int TiketsSoldCount { get; private set; }
     }
 
     class Board
@@ -153,18 +171,20 @@ namespace Lesson_44
 
         public void AddInfo(Route route, Train train, TicketOffice ticketOffice)
         {
-            _trainsInfo.Add($"Выезд из: {route.From} по направлению в: {route.To} (Продано билетов: {ticketOffice.TiketsSoldCount}");
+            _trainsInfo.Add($"Выезд из: {route.From} по направлению в: {route.To} (Продано: {ticketOffice.TiketsSoldCount} билетов)");
         }
 
         public void ShowInfo()
         {
             int number = 0;
+            int leftCursorPosition = 0;
+            int topCursorPosition = 0;
 
-            Console.SetCursorPosition(0, 0);
+            Console.SetCursorPosition(leftCursorPosition, topCursorPosition);
 
             if (_trainsInfo.Count == 0)
             {
-                Console.WriteLine($"Нет маршрутов для следования.");
+                Console.WriteLine($"Нет маршрутов для следования.\n");
                 return;
             }
 
@@ -173,7 +193,8 @@ namespace Lesson_44
                 Console.WriteLine($"{++number}. {info}");
             }
 
-            Console.SetCursorPosition (0, _trainsInfo.Count + 1);
+            topCursorPosition = _trainsInfo.Count + 1;
+            Console.SetCursorPosition(leftCursorPosition, topCursorPosition);
         }
     }
 }
