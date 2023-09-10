@@ -1,6 +1,6 @@
 ﻿namespace Lesson_45
 {
-    internal class Program
+    class Program
     {
         static void Main()
         {
