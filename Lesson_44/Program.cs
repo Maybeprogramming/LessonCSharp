@@ -36,7 +36,7 @@
             while (isWorkStation == true)
             {
                 Console.Clear();
-                PrintStatusTrainRoute();
+                PrintStatusTrain();
                 Console.WriteLine();
 
                 Console.WriteLine(menu);
@@ -62,7 +62,7 @@
             Console.ReadLine();
         }
 
-        private void PrintStatusTrainRoute()
+        private void PrintStatusTrain()
         {
             Console.WriteLine("Блок вывода статуса маршрута поезда");
         }
