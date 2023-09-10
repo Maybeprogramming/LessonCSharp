@@ -31,7 +31,7 @@ namespace Lesson_44
 
             Random random = new Random();
             Board board = new Board();
-            TicketOffice ticketOffice = new TicketOffice();
+            TicketOffice ticketOffice = new TicketOffice(random);
             Train train = new Train(random);
             Route route = new Route();
 
@@ -146,19 +146,21 @@ namespace Lesson_44
 
     class TicketOffice
     {
+        private Random _random;
+        int minPassangers = 10;
+        int maxPassangers = 1000;
+
+        public TicketOffice(Random random)
+        {
+            _random = random;
+        }
+
         public int TiketsSoldCount { get; private set; }
 
         public void SellTickets()
         {
-            int passangersCount;
-            Console.Write("Введите количество пассажиров: ");
-
-            while (Int32.TryParse(Console.ReadLine(), out passangersCount) != true)
-            {
-                Console.WriteLine("Вы ввели не число, попробуйте снова!");
-            }
-
-            TiketsSoldCount = passangersCount;
+            TiketsSoldCount = _random.Next(minPassangers, maxPassangers + 1);
+            Console.Write($"Количество пассажиров: {TiketsSoldCount}");
         }
     }
 
