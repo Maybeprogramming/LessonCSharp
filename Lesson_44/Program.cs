@@ -31,6 +31,8 @@ namespace Lesson_44
 
             Random random = new Random();
             Board board = new Board();
+            Train train = new Train(random, 200);
+            Route route = new Route();
             string setupTrainMenuText = "Конфигурировать пассажирский поезд";
             string exitMenuText = "Выйти из конфигуратора";
             string menu = $"{SetupTrainCommand} - {setupTrainMenuText}" +
