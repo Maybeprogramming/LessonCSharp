@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using System.Net.NetworkInformation;
-
-namespace Lesson_44
+﻿namespace Lesson_44
 {
     internal class Program
     {
@@ -14,14 +11,6 @@ namespace Lesson_44
         }
     }
 
-    static class Display
-    {
-        public static void Print(string text)
-        {
-            Console.Write(text);
-        }
-    }
-
     class Station
     {
         public void Work()
@@ -29,16 +18,15 @@ namespace Lesson_44
             const string SetupTrainCommand = "1";
             const string ExitCommand = "2";
 
-            Random random = new Random();
             Board board = new Board();
-            TicketOffice ticketOffice = new TicketOffice(random);
-            Train train = new Train(random);
-            Route route = new Route();
 
+
+            string titleMenu = "Меню:";
             string setupTrainMenuText = "Конфигурировать пассажирский поезд";
             string exitMenuText = "Выйти из конфигуратора";
             string menu = $"{SetupTrainCommand} - {setupTrainMenuText}" +
                           $"\n{ExitCommand} - {exitMenuText}";
+            string requestMessage = "Введите команду: ";
             bool isWorkStation = true;
 
             while (isWorkStation == true)
@@ -46,12 +34,14 @@ namespace Lesson_44
                 Console.Clear();
                 board.ShowInfo();
 
+                Console.WriteLine(titleMenu);
                 Console.WriteLine(menu);
+                Console.Write(requestMessage);
 
                 switch (Console.ReadLine())
                 {
                     case SetupTrainCommand:
-                        SetupTrain(ticketOffice, route, train, board);
+                        SetupTrain(board);
                         break;
                     case ExitCommand:
                         isWorkStation = false;
@@ -61,7 +51,7 @@ namespace Lesson_44
                         break;
                 }
 
-                Console.WriteLine();
+                Console.WriteLine("\nНажмите любую клавишу чтобы продолжить...");
                 Console.ReadLine();
             }
 
@@ -69,16 +59,26 @@ namespace Lesson_44
             Console.ReadLine();
         }
 
-        private void SetupTrain(TicketOffice ticketOffice, Route route, Train train, Board board)
+        private void SetupTrain(Board board)
         {
+            Random random = new Random();
+            TicketOffice ticketOffice = new TicketOffice(random);
+            Train train = new Train(random);
+            Route route = new Route();
+
+            Console.Clear();
             Console.WriteLine("Начинаем конфигурировать поезд и маршрут следования!");
+
             route.AssignTo();
-
             ticketOffice.SellTickets();
-
             train.Configure(ticketOffice.TiketsSoldCount);
-
             board.AddInfo(route, ticketOffice);
+
+            Console.WriteLine($"\nКонфигурирование завершено! Создан маршрут: \n" +
+                              $"{route.ShowInfo()}\n" +
+                              $"Продано билетов: {ticketOffice.TiketsSoldCount}\n" +
+                              $"Состав поезда насчитывает {train.GetCarriageCount()} вагонов.");
+            Console.WriteLine("\nПоезд отправлен!");
         }
     }
 
@@ -142,6 +142,11 @@ namespace Lesson_44
             Console.Write("Введите станцию прибытия: ");
             To = Console.ReadLine();
         }
+
+        public string ShowInfo()
+        {
+            return $"Станция отправления: {From}, станция прибытия: {To}";
+        }
     }
 
     class TicketOffice
@@ -188,7 +193,7 @@ namespace Lesson_44
             }
 
             topCursorPosition = 1;
-            Console.WriteLine("Список доступных маршрутов:");
+            Console.WriteLine("Список маршрутов следования:");
 
             foreach (String info in _trainsInfo)
             {
