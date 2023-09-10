@@ -150,8 +150,6 @@
     class TicketOffice
     {
         private Random _random;
-        int minPassangers = 10;
-        int maxPassangers = 1000;
 
         public TicketOffice(Random random)
         {
@@ -162,14 +160,17 @@
 
         public void SellTickets()
         {
+            int minPassangers = 10;
+            int maxPassangers = 1000;
             TiketsSoldCount = _random.Next(minPassangers, maxPassangers + 1);
+
             Console.Write($"Количество проданных билетов: {TiketsSoldCount}");
         }
     }
 
     class Board
     {
-        private List<String> _trainsInfo = new List<String>();
+        private List<string> _trainsInfo = new List<string>();
 
         public void AddInfo(Route route, TicketOffice ticketOffice)
         {
@@ -193,7 +194,7 @@
             topCursorPosition = 1;
             Console.WriteLine("Список текущих рейсов:");
 
-            foreach (String info in _trainsInfo)
+            foreach (string info in _trainsInfo)
             {
                 Console.WriteLine($"{++number}. {info}");
             }
