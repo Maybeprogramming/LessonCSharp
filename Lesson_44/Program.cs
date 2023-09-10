@@ -20,7 +20,6 @@
 
             Board board = new Board();
 
-
             string titleMenu = "Меню:";
             string setupTrainMenuText = "Конфигурировать пассажирский поезд";
             string exitMenuText = "Выйти из конфигуратора";
@@ -32,8 +31,8 @@
             while (isWorkStation == true)
             {
                 Console.Clear();
-                board.ShowInfo();
 
+                board.ShowInfo();
                 Console.WriteLine(titleMenu);
                 Console.WriteLine(menu);
                 Console.Write(requestMessage);
@@ -67,7 +66,7 @@
             Route route = new Route();
 
             Console.Clear();
-            Console.WriteLine("Начинаем конфигурировать поезд и маршрут следования!");
+            Console.WriteLine("Начинаем конфигурировать поезд и маршрут следования!\n");
 
             route.AssignTo();
             ticketOffice.SellTickets();
@@ -76,7 +75,6 @@
 
             Console.WriteLine($"\nКонфигурирование завершено! Создан маршрут: \n" +
                               $"{route.ShowInfo()}\n" +
-                              $"Продано билетов: {ticketOffice.TiketsSoldCount}\n" +
                               $"Состав поезда насчитывает {train.GetCarriageCount()} вагонов.");
             Console.WriteLine("\nПоезд отправлен!");
         }
@@ -165,7 +163,7 @@
         public void SellTickets()
         {
             TiketsSoldCount = _random.Next(minPassangers, maxPassangers + 1);
-            Console.Write($"Количество пассажиров: {TiketsSoldCount}");
+            Console.Write($"Количество проданных билетов: {TiketsSoldCount}");
         }
     }
 
@@ -193,7 +191,7 @@
             }
 
             topCursorPosition = 1;
-            Console.WriteLine("Список маршрутов следования:");
+            Console.WriteLine("Список текущих рейсов:");
 
             foreach (String info in _trainsInfo)
             {
