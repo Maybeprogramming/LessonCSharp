@@ -1,4 +1,7 @@
-﻿namespace Lesson_44
+﻿using System.Globalization;
+using System.Net.NetworkInformation;
+
+namespace Lesson_44
 {
     internal class Program
     {
@@ -27,6 +30,7 @@
             const string ExitCommand = "2";
 
             Random random = new Random();
+            Board board = new Board();
             string setupTrainMenuText = "Конфигурировать пассажирский поезд";
             string exitMenuText = "Выйти из конфигуратора";
             string menu = $"{SetupTrainCommand} - {setupTrainMenuText}" +
@@ -36,7 +40,7 @@
             while (isWorkStation == true)
             {
                 Console.Clear();
-                PrintStatusTrain();
+                board.ShowInfo();
                 Console.WriteLine();
 
                 Console.WriteLine(menu);
@@ -62,11 +66,6 @@
             Console.ReadLine();
         }
 
-        private void PrintStatusTrain()
-        {
-            Console.WriteLine("Блок вывода статуса маршрута поезда");
-        }
-
         private void SetupTrain()
         {
             Console.WriteLine("Блок с конфигурированием поезда");
@@ -78,7 +77,7 @@
         private List<Carriage> _carriages = new List<Carriage>();
         private Random _random;
 
-        public Train(Random random, int passangersCount) 
+        public Train(Random random, int passangersCount)
         {
             _random = random;
             AddCarriege();
@@ -104,7 +103,7 @@
         {
             Carriage carriage = new Carriage(_random);
             Capacity += carriage.Capacity;
-            _carriages.Add(carriage);            
+            _carriages.Add(carriage);
         }
     }
 
@@ -126,14 +125,52 @@
         public string From { get; private set; }
         public string To { get; private set; }
 
-        public string AssignTo()
+        public void AssignTo()
         {
             string stationDeparture = "";
             string stationArrival = "";
             string requestStationDepartureMessage = "Введите станцию отправления: ";
             string requestStationArrivalMesage = "Введите станцию прибытия: ";
+        }
+    }
 
-            return $"Выезд из: {From} по направлению в {To}";
+    class TicketOffice
+    {
+        public TicketOffice(int passangersCount)
+        {
+            TiketsSoldCount = passangersCount;
+        }
+
+        public int TiketsSoldCount { get; private set; }
+    }
+
+    class Board
+    {
+        private List<String> _trainsInfo = new List<String>();
+
+        public void AddInfo(Route route, Train train, TicketOffice ticketOffice)
+        {
+            _trainsInfo.Add($"Выезд из: {route.From} по направлению в: {route.To} (Продано билетов: {ticketOffice.TiketsSoldCount}");
+        }
+
+        public void ShowInfo()
+        {
+            int number = 0;
+
+            Console.SetCursorPosition(0, 0);
+
+            if (_trainsInfo.Count == 0)
+            {
+                Console.WriteLine($"Нет маршрутов для следования.");
+                return;
+            }
+
+            foreach (String info in _trainsInfo)
+            {
+                Console.WriteLine($"{++number}. {info}");
+            }
+
+            Console.SetCursorPosition (0, _trainsInfo.Count + 1);
         }
     }
 }
