@@ -38,6 +38,7 @@ namespace Lesson_44
             string menu = $"{SetupTrainCommand} - {setupTrainMenuText}" +
                           $"\n{ExitCommand} - {exitMenuText}";
             bool isWorkStation = true;
+            int passangersCount = 0;
 
             while (isWorkStation == true)
             {
