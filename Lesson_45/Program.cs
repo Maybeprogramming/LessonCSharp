@@ -1,7 +1,7 @@
-﻿namespace Lesson_45
-{
-    using static Display;
+﻿using System.Security.Principal;
 
+namespace Lesson_45
+{
     class Program
     {
         static void Main()
@@ -14,8 +14,8 @@
 
             foreach (var fighter in fighters)
             {
-                PrintColorText(fighter.ShowInfo() + "\n", '<', '>', ConsoleColor.Green);
-                
+                Display.Print(fighter.ShowInfo() + "\n", '<', '>', ConsoleColor.Green);
+
                 if (fighter is Warrior warrior)
                     warrior.Healing();
 
@@ -25,11 +25,28 @@
                 Console.WriteLine(new string('-', 50));
             }
 
+            Input.TryEnterNumber("Введите число: ", out int number);
+
+            Display.Print(Input.EnterString("Введите имя: "));
+
+            Console.WriteLine();
+            //Console.WriteLine(number);
+
             Console.ReadLine();
         }
     }
 
-    abstract class Fighter
+    class BattleField
+    {
+        private List<Fighter> _fighters = new List<Fighter>();
+
+        public void Fight(Fighter fighterFirst, Fighter fighterSecond)
+        {
+
+        }
+    }
+
+    abstract class Fighter: IAttack
     {
         public Fighter(string name, int health, int damage, int armor)
         {
@@ -45,6 +62,8 @@
         public int Armor { get; private set; }
 
         public abstract void TakeDamage(int damage);
+
+        public abstract int Attack();      
 
         public virtual string ShowInfo()
         {
@@ -68,6 +87,11 @@
         {
             Console.WriteLine("Прилив священного огня! Исцели моё тело и душу!");
         }
+
+        public override int Attack()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     class Hunter : Fighter
@@ -78,32 +102,94 @@
 
         public override void TakeDamage(int damage)
         {
-            Console.WriteLine($"Я {Name} - получаю урон {damage}");            
+            Console.WriteLine($"Я {Name} - получаю урон {damage}");
         }
 
         public void SummonPet()
         {
             Console.WriteLine("Призываю грозную морскую свинку!");
         }
+
+        public override int Attack()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class Assasin : Fighter
+    {
+        public Assasin(string name, int health, int damage, int armor) : base(name, health, damage, armor)
+        {
+        }
+
+        public override int Attack()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void TakeDamage(int damage)
+        {
+
+        }
+    }
+
+    class Wizzard : Fighter
+    {        
+        public Wizzard(string name, int health, int damage, int armor, int mana) : base(name, health, damage, armor)
+        {
+            Mana = mana;
+        }
+
+        public int Mana { get; private set; }
+
+        public override int Attack()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void TakeDamage(int damage)
+        {
+
+        }
+    }
+
+    class Shaman : Fighter
+    {
+        public Shaman(string name, int health, int damage, int armor, int mana) : base(name, health, damage, armor)
+        {
+            Mana = mana;
+        }
+
+        public int Mana { get; private set; }
+
+        public override int Attack()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void TakeDamage(int damage)
+        {
+
+        }
     }
 
     static class Display
     {
-        public static void PrintColorText(string text,char startChar, char endChar, ConsoleColor consoleColor = ConsoleColor.White)
+        public static void Print(string sourceText, char startChar, char endChar, ConsoleColor consoleColor = ConsoleColor.White)
         {
             bool isStartChar = false;
             bool isFinishChar = false;
             ConsoleColor defaulColor = Console.ForegroundColor;
 
-            foreach (char symbol in text)
+            foreach (char symbol in sourceText)
             {
-                if(symbol.Equals(startChar)) 
+                if (symbol.Equals(startChar))
                 {
                     isStartChar = true;
                     Console.ForegroundColor = consoleColor;
                     Console.Write(symbol);
                 }
-                else if(symbol.Equals(endChar))
+                else if (symbol.Equals(endChar))
                 {
                     Console.Write(symbol);
                     isFinishChar = true;
@@ -114,7 +200,7 @@
                     Console.ForegroundColor = consoleColor;
                     Console.Write(symbol);
                 }
-                else if(isStartChar == true & isFinishChar == true)
+                else if (isStartChar == true & isFinishChar == true)
                 {
                     isFinishChar = false;
                     isStartChar = false;
@@ -125,9 +211,70 @@
                 {
                     Console.ForegroundColor = defaulColor;
                     Console.Write(symbol);
-                }                
+                }
             }
         }
+
+        public static void Print(string sourceText, ConsoleColor consoleColor = ConsoleColor.White)
+        {
+            ConsoleColor defaulColor = Console.ForegroundColor;
+            Console.ForegroundColor = consoleColor;
+            Console.Write(sourceText);
+            Console.ForegroundColor = defaulColor;
+        }
+    }
+
+    static class Input
+    {
+        public static bool TryEnterNumber(string messageText, out int number)
+        {
+            int result;
+            bool isParse = false;
+
+            while (isParse == false)
+            {
+                Display.Print($"\n{messageText} ");
+
+                if (Int32.TryParse(Console.ReadLine(), out result) == true)
+                {
+                    isParse = true;
+                    number = result;
+                    return true;
+                }
+                else
+                {
+                    Display.Print("Ошибка! Вы ввели не число! Попробуйте снова...");
+                }
+            }
+
+            number = 0;
+            return false;
+        }
+
+        public static string EnterString(string message)
+        {
+            string inputString;
+
+            Display.Print($"{message}");
+            inputString = Console.ReadLine();
+
+            if (inputString != String.Empty)
+            {
+                return inputString;
+            }
+            else
+            {
+                Display.Print("Строка не должна быть пустой! Попробуйте снова...\n", ConsoleColor.Red);
+                EnterString(message);
+            }
+
+            return String.Empty;
+        }
+    }
+
+    interface IAttack
+    {
+        public int Attack();
     }
 }
 
