@@ -30,9 +30,6 @@
 
             Display.Print(Input.EnterString("Введите имя: "));
 
-            Console.WriteLine();
-            //Console.WriteLine(number);
-
             Console.ReadLine();
         }
     }
