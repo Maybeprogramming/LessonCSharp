@@ -1,4 +1,5 @@
-﻿using System.Security.Principal;
+﻿using System.ComponentModel;
+using System.Security.Principal;
 
 namespace Lesson_45
 {
@@ -35,6 +36,7 @@ namespace Lesson_45
             Console.ReadLine();
         }
     }
+    
 
     class BattleField
     {
@@ -46,7 +48,7 @@ namespace Lesson_45
         }
     }
 
-    abstract class Fighter: IAttack
+    abstract class Fighter: IAttackProvider, IDamageable
     {
         public Fighter(string name, int health, int damage, int armor)
         {
@@ -90,7 +92,7 @@ namespace Lesson_45
 
         public override int Attack()
         {
-            throw new NotImplementedException();
+            return Damage;
         }
     }
 
@@ -112,7 +114,7 @@ namespace Lesson_45
 
         public override int Attack()
         {
-            throw new NotImplementedException();
+            return Damage;
         }
     }
 
@@ -124,7 +126,7 @@ namespace Lesson_45
 
         public override int Attack()
         {
-            throw new NotImplementedException();
+            return Damage;
         }
 
         public override void TakeDamage(int damage)
@@ -144,7 +146,7 @@ namespace Lesson_45
 
         public override int Attack()
         {
-            throw new NotImplementedException();
+            return Damage;
         }
 
         public override void TakeDamage(int damage)
@@ -164,7 +166,7 @@ namespace Lesson_45
 
         public override int Attack()
         {
-            throw new NotImplementedException();
+            return Damage;
         }
 
         public override void TakeDamage(int damage)
@@ -272,9 +274,14 @@ namespace Lesson_45
         }
     }
 
-    interface IAttack
+    interface IAttackProvider
     {
         public int Attack();
+    }
+
+    interface IDamageable
+    {
+        public void TakeDamage(int damage);
     }
 }
 
