@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Security.Principal;
-
-namespace Lesson_45
+﻿namespace Lesson_45
 {
     class Program
     {
@@ -10,12 +7,15 @@ namespace Lesson_45
             Fighter[] fighters =
             {
                 new Warrior("Володя", 100, 20, 20),
-                new Hunter ("Ева", 80, 25, 15)
+                new Hunter ("Ева", 80, 25, 15),
+                new Assasin ("Ева", 80, 25, 15),
+                new Wizzard ("Ева", 80, 25, 15, 50),
+                new Shaman ("Ева", 80, 25, 15, 100)
             };
 
             foreach (var fighter in fighters)
             {
-                Display.Print(fighter.ShowInfo() + "\n", '<', '>', ConsoleColor.Green);
+                Display.Print(fighter.ShowInfo() + $"({fighter.GetType()})" + "\n", '<', '>', ConsoleColor.Green);
 
                 if (fighter is Warrior warrior)
                     warrior.Healing();
