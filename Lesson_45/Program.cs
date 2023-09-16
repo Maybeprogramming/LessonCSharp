@@ -8,9 +8,9 @@
             {
                 new Warrior("Володя", 100, 20, 20),
                 new Hunter ("Ева", 80, 25, 15),
-                new Assasin ("Ева", 80, 25, 15),
-                new Wizzard ("Ева", 80, 25, 15, 50),
-                new Shaman ("Ева", 80, 25, 15, 100)
+                new Assasin ("Колян", 80, 25, 15),
+                new Wizzard ("Мишаня", 80, 25, 15, 50),
+                new Shaman ("Ангелинка", 80, 25, 15, 100)
             };
 
             foreach (var fighter in fighters)
