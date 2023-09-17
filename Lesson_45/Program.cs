@@ -1,8 +1,8 @@
 ﻿namespace Lesson_45
 {
-    using static Generator;
     using static Display;
     using static Input;
+    using static Generator;
 
     class Program
     {
@@ -48,14 +48,38 @@
             int minMana = 100;
             int maxMana = 200;
 
-            List <Fighter> fighters = new()
-            {
-                new Warrior(RandomName(), RandomNumber(minHealth,maxHealth), RandomNumber(minDamage,maxDamage), RandomNumber(minArmor,maxArmor)),
-                new Hunter(RandomName(), RandomNumber(minHealth,maxHealth), RandomNumber(minDamage,maxDamage), RandomNumber(minArmor,maxArmor)),
-                new Assasin(RandomName(), RandomNumber(minHealth,maxHealth), RandomNumber(minDamage,maxDamage), RandomNumber(minArmor,maxArmor)),
-                new Wizzard(RandomName(), RandomNumber(minHealth,maxHealth), RandomNumber(minDamage,maxDamage), RandomNumber(minArmor,maxArmor), RandomNumber(minMana,maxMana)),
-                new Shaman(RandomName(), RandomNumber(minHealth,maxHealth), RandomNumber(minDamage,maxDamage), RandomNumber(minArmor,maxArmor), RandomNumber(minMana,maxMana)),
+            List<TypeFighter> typeFighters = new() 
+            { 
+                TypeFighter.Warrior,
+                TypeFighter.Hunter,
+                TypeFighter.Assasign,
+                TypeFighter.Wizzard,
+                TypeFighter.Shaman
             };
+
+            List<Fighter> fighters = new(); 
+
+            for (int i = 0; i < typeFighters.Count; i++)
+            {
+                switch (typeFighters[i])
+                {
+                    case TypeFighter.Warrior:
+                        fighters.Add(new Warrior(RandomName(), RandomInt32(minHealth, maxHealth), RandomInt32(minDamage, maxDamage), RandomInt32(minArmor, maxArmor)));
+                        break;
+                    case TypeFighter.Hunter:
+                        fighters.Add(new Hunter(RandomName(), RandomInt32(minHealth, maxHealth), RandomInt32(minDamage, maxDamage), RandomInt32(minArmor, maxArmor)));
+                        break;
+                    case TypeFighter.Assasign:
+                        fighters.Add(new Assasin(RandomName(), RandomInt32(minHealth, maxHealth), RandomInt32(minDamage, maxDamage), RandomInt32(minArmor, maxArmor)));
+                        break;
+                    case TypeFighter.Wizzard:
+                        fighters.Add(new Wizzard(RandomName(), RandomInt32(minHealth, maxHealth), RandomInt32(minDamage, maxDamage), RandomInt32(minArmor, maxArmor), RandomInt32(minMana, maxMana)));
+                        break;
+                    case TypeFighter.Shaman:
+                        fighters.Add(new Shaman(RandomName(), RandomInt32(minHealth, maxHealth), RandomInt32(minDamage, maxDamage), RandomInt32(minArmor, maxArmor), RandomInt32(minMana, maxMana)));
+                        break;
+                }
+            }
 
             return fighters;
         }
@@ -166,7 +190,7 @@
         {
             int minPercentNumber = 0;
             int maxPercentNumber = 100;
-            int resultChance = RandomNumber(minPercentNumber, maxPercentNumber);
+            int resultChance = RandomInt32(minPercentNumber, maxPercentNumber);
 
             if (resultChance <= chanceDodge)
             {
@@ -217,6 +241,11 @@
 
         public int Mana { get; private set; }
 
+        public override void Attack(Fighter fighter)
+        {
+            base.Attack(fighter);
+        }
+
         public override string ShowPresentationInfo()
         {
             return $"Имя бойца: {Name}. " +
@@ -235,6 +264,11 @@
         }
 
         public int Mana { get; private set; }
+
+        public override void Attack(Fighter fighter)
+        {
+            base.Attack(fighter);
+        }
 
         public override string ShowPresentationInfo()
         {
@@ -355,7 +389,7 @@
             "Полинка", "Волкодав", "Кинетик", "Антибиотик", "Флеш"
         };
 
-        public static int RandomNumber(int minValue, int maxValue)
+        public static int RandomInt32(int minValue, int maxValue)
         {
             return _random.Next(minValue, maxValue + 1);
         }
@@ -374,6 +408,15 @@
     interface IDamageable
     {
         public bool TakeDamage(int damage);
+    }
+
+    enum TypeFighter
+    {
+        Warrior,
+        Hunter,
+        Assasign,
+        Wizzard,
+        Shaman
     }
 }
 
