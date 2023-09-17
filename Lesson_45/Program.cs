@@ -152,13 +152,13 @@
             }
         }
 
-        private bool IsDodged(int chanceDodgePercent)
+        private bool IsDodged(int chanceDodge)
         {
-            int minPercentNumber = 1;
-            int maxPercentNumber = 101;
-            int resultPercent = AssignRandomNumber(minPercentNumber, maxPercentNumber);
+            int minPercentNumber = 0;
+            int maxPercentNumber = 100;
+            int resultChance = AssignRandomNumber(minPercentNumber, maxPercentNumber);
 
-            if (resultPercent <= chanceDodgePercent)
+            if (resultChance <= chanceDodge)
             {
                 return true;
             }
