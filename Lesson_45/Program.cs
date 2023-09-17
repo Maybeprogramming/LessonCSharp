@@ -43,6 +43,11 @@
         {
 
         }
+
+        private List<Fighter> FillFighters()
+        {
+            return _fighters;
+        }
     }
 
     abstract class Fighter: IAttackProvider, IDamageable
@@ -62,7 +67,10 @@
 
         public abstract void TakeDamage(int damage);
 
-        public abstract int Attack();      
+        public virtual void Attack(Fighter fighter)
+        {
+            fighter.TakeDamage(Damage);
+        }      
 
         public virtual string ShowInfo()
         {
@@ -87,9 +95,9 @@
             Console.WriteLine("Прилив священного огня! Исцели моё тело и душу!");
         }
 
-        public override int Attack()
+        public override void Attack(Fighter target)
         {
-            return Damage;
+            target.TakeDamage(Damage);
         }
     }
 
@@ -109,9 +117,9 @@
             Console.WriteLine("Призываю грозную морскую свинку!");
         }
 
-        public override int Attack()
+        public override void Attack(Fighter target)
         {
-            return Damage;
+            target.TakeDamage(Damage);
         }
     }
 
@@ -121,9 +129,9 @@
         {
         }
 
-        public override int Attack()
+        public override void Attack(Fighter target)
         {
-            return Damage;
+            target.TakeDamage(Damage);
         }
 
         public override void TakeDamage(int damage)
@@ -141,9 +149,9 @@
 
         public int Mana { get; private set; }
 
-        public override int Attack()
+        public override void Attack(Fighter target)
         {
-            return Damage;
+            target.TakeDamage(Damage);
         }
 
         public override void TakeDamage(int damage)
@@ -161,9 +169,9 @@
 
         public int Mana { get; private set; }
 
-        public override int Attack()
+        public override void Attack(Fighter target)
         {
-            return Damage;
+            target.TakeDamage(Damage);
         }
 
         public override void TakeDamage(int damage)
@@ -273,7 +281,7 @@
 
     interface IAttackProvider
     {
-        public int Attack();
+        public void Attack(Fighter target);
     }
 
     interface IDamageable
