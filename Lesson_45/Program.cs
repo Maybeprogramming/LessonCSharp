@@ -8,20 +8,8 @@
     {
         static void Main()
         {
-            Fighter[] fighters =
-            {
-                new Warrior(RandomName(), RandomNumber(100,150), RandomNumber(10,30), RandomNumber(10,30)),
-                new Warrior(RandomName(), RandomNumber(100,150), RandomNumber(10,30), RandomNumber(10,30)),
-                new Warrior(RandomName(), RandomNumber(100,150), RandomNumber(10,30), RandomNumber(10,30)),
-                new Warrior(RandomName(), RandomNumber(100,150), RandomNumber(10,30), RandomNumber(10,30)),
-                new Warrior(RandomName(), RandomNumber(100,150), RandomNumber(10,30), RandomNumber(10,30))
-            };
-
-            foreach (var fighter in fighters)
-            {
-                Display.Print(fighter.ShowPresentationInfo(), '<', '>', ConsoleColor.Green);
-                Console.Write("\n" + new string('-', 100) + "\n");
-            }
+            BattleField battleField = new BattleField();
+            battleField.StartAutoFight();
 
             Input.TryEnterNumber("Введите число: ", out int number);
 
@@ -40,9 +28,13 @@
             _fighters = FillFighters();
         }
 
-        public void StartAutoFight(Fighter fighterFirst, Fighter fighterSecond)
+        public void StartAutoFight()
         {
-
+            foreach (var fighter in _fighters)
+            {
+                Display.Print(fighter.ShowPresentationInfo(), '<', '>', ConsoleColor.Green);
+                Console.Write("\n" + new string('-', 100) + "\n");
+            }
         }
 
         private List<Fighter> FillFighters()
@@ -359,8 +351,8 @@
         private static List<string> _name = new()
         {
             "Василий", "Аркадий", "Геннадий", "Евгения", "Мартин", "Джон",
-                "Калин", "Питер", "Снежок", "Аннет", "Валькирия", "Виверна",
-                "Полинка", "Волкодав", "Кинетик", "Антибиотик", "Флеш"
+            "Калин", "Питер", "Снежок", "Аннет", "Валькирия", "Виверна",
+            "Полинка", "Волкодав", "Кинетик", "Антибиотик", "Флеш"
         };
 
         public static int RandomNumber(int minValue, int maxValue)
