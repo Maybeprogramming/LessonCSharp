@@ -10,22 +10,17 @@
         {
             Fighter[] fighters =
             {
-                new Warrior("Володя", 100, 20, 20),
-                new Hunter ("Ева", 80, 25, 15),
-                new Assasin ("Колян", 80, 25, 15),
-                new Wizzard ("Мишаня", 80, 25, 15, 50),
-                new Shaman ("Ангелинка", 80, 25, 15, 100)
+                new Warrior(AssignRandomName(), AssignRandomNumber(100,150), AssignRandomNumber(10,30), AssignRandomNumber(10,30)),
+                new Warrior(AssignRandomName(), AssignRandomNumber(100,150), AssignRandomNumber(10,30), AssignRandomNumber(10,30)),
+                new Warrior(AssignRandomName(), AssignRandomNumber(100,150), AssignRandomNumber(10,30), AssignRandomNumber(10,30)),
+                new Warrior(AssignRandomName(), AssignRandomNumber(100,150), AssignRandomNumber(10,30), AssignRandomNumber(10,30)),
+                new Warrior(AssignRandomName(), AssignRandomNumber(100,150), AssignRandomNumber(10,30), AssignRandomNumber(10,30))
             };
 
             foreach (var fighter in fighters)
             {
-                Display.Print(fighter.ShowInfo() + $"({fighter.GetType()})" + "\n", '<', '>', ConsoleColor.Green);
-
-                if (fighter is Warrior warrior)
-
-                    if (fighter is Hunter hunter)
-
-                        Console.WriteLine(new string('-', 50));
+                Display.Print(fighter.ShowInfo(), '<', '>', ConsoleColor.Green);
+                Console.Write("\n" + new string('-', 100) + "\n");
             }
 
             Input.TryEnterNumber("Введите число: ", out int number);
@@ -58,6 +53,7 @@
 
     abstract class Fighter : IAttackProvider, IDamageable
     {
+        protected int _health;
         public Fighter(string name, int health, int damage, int armor)
         {
             Name = name;
@@ -69,8 +65,14 @@
         public string Name { get; protected set; }
         public int Health
         {
-            get => Health;
-            protected set => Health = value < 0 ? value = 0 : Health = value;
+            get => _health;
+            protected set
+            {
+                if (value < 0)
+                    _health = 0;
+                else
+                    _health = value;
+            }
         }
         public int Damage { get; protected set; }
         public int Armor { get; protected set; }
@@ -339,7 +341,7 @@
                 "Полинка", "Волкодав", "Кинетик", "Антибиотик", "Флеш"
         };
 
-        public static int AssignRandomValue(int minValue, int maxValue)
+        public static int AssignRandomNumber(int minValue, int maxValue)
         {
             return _random.Next(minValue, maxValue + 1);
         }
