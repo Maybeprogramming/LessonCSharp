@@ -1,5 +1,9 @@
 ﻿namespace Lesson_45
 {
+    using static Generator;
+    using static Display;
+    using static Input;
+
     class Program
     {
         static void Main()
@@ -18,12 +22,10 @@
                 Display.Print(fighter.ShowInfo() + $"({fighter.GetType()})" + "\n", '<', '>', ConsoleColor.Green);
 
                 if (fighter is Warrior warrior)
-                    warrior.Healing();
 
-                if (fighter is Hunter hunter)
-                    hunter.SummonPet();
+                    if (fighter is Hunter hunter)
 
-                Console.WriteLine(new string('-', 50));
+                        Console.WriteLine(new string('-', 50));
             }
 
             Input.TryEnterNumber("Введите число: ", out int number);
@@ -34,28 +36,21 @@
         }
     }
 
-
     class BattleField
     {
         private List<Fighter> _fighters;
-        private List<string> _namesFigthers;
 
         public BattleField()
         {
-            _namesFigthers = new()
-            {
-                "Василий", "Аркадий", "Геннадий", "Евгения", "Мартин", "Джон",
-                "Калин", "Питер", "Снежок", "Аннет", "Валькирия", "Виверна",
-                "Полинка", "Волкодав", "Кинетик", "Антибиотик"
-            };
+
         }
 
-        public void Fight(Fighter fighterFirst, Fighter fighterSecond)
+        public void StartAutoFight(Fighter fighterFirst, Fighter fighterSecond)
         {
 
         }
 
-        private List<Fighter> FillFighters()
+        private List<Fighter> FillFighters(int maxFighters)
         {
             return _fighters;
         }
@@ -71,17 +66,26 @@
             Armor = armor;
         }
 
-        public string Name { get; private set; }
-        public int Health { get; private set; }
-        public int Damage { get; private set; }
-        public int Armor { get; private set; }
+        public string Name { get; protected set; }
+        public int Health
+        {
+            get => Health;
+            protected set => Health = value < 0 ? value = 0 : Health = value;
+        }
+        public int Damage { get; protected set; }
+        public int Armor { get; protected set; }
         public bool IsAlive { get => Health > 0; }
 
-        public virtual void TakeDamage(int damage)
+        public virtual bool TakeDamage(int damage)
         {
-            if (IsAlive == false) return;
+            if (IsAlive == false)
+                return false;
 
             Health -= damage - Armor;
+
+            Console.WriteLine($"Я {Name} - получаю урон {damage}");
+
+            return true;
         }
 
         public virtual void Attack(Fighter fighter)
@@ -91,69 +95,98 @@
 
         public virtual string ShowInfo()
         {
-            return $"Имя бойца: {Name}. Характеристики: здоровье <{Health}>, наносимый урон <{Damage}>, показатель брони <{Armor}>";
+            return $"Имя бойца: {Name}. " +
+                   $"Характеристики: здоровье <{Health}>, " +
+                   $"наносимый урон <{Damage}>, " +
+                   $"показатель брони <{Armor}>";
         }
     }
 
     class Warrior : Fighter
     {
+        private int _attackCounter = 0;
+        private int _seriesAttackForCrit = 3;
+        private int _critMultiplier = 2;
+
         public Warrior(string name, int health, int damage, int armor) : base(name, health, damage, armor)
         {
 
         }
 
-        public override void TakeDamage(int damage)
-        {
-            Console.WriteLine($"Я {Name} - получаю урон {damage}");
-        }
-
-        public void Healing()
-        {
-            Console.WriteLine("Прилив священного огня! Исцели моё тело и душу!");
-        }
-
         public override void Attack(Fighter target)
         {
-            target.TakeDamage(Damage);
+            if (_attackCounter == _seriesAttackForCrit)
+            {
+                target.TakeDamage(Damage * _critMultiplier);
+                _attackCounter = 0;
+            }
+            else
+            {
+                target.TakeDamage(Damage);
+            }
+
+            _attackCounter++;
         }
     }
 
     class Hunter : Fighter
     {
+        private int _chanceDodgePercent;
+
         public Hunter(string name, int health, int damage, int armor) : base(name, health, damage, armor)
         {
+            _chanceDodgePercent = 30;
         }
 
-        public override void TakeDamage(int damage)
+        public override bool TakeDamage(int damage)
         {
-            Console.WriteLine($"Я {Name} - получаю урон {damage}");
+            if (IsDodged(_chanceDodgePercent) == true)
+            {
+                Console.WriteLine($"{Name} - уклонился от атаки");
+                return false;
+            }
+            {
+                return base.TakeDamage(damage);
+            }
         }
 
-        public void SummonPet()
+        private bool IsDodged(int chanceDodgePercent)
         {
-            Console.WriteLine("Призываю грозную морскую свинку!");
-        }
+            Random random = new Random();
+            int minPercentNumber = 1;
+            int maxPercentNumber = 101;
+            int resultPercent = random.Next(minPercentNumber, maxPercentNumber);
 
-        public override void Attack(Fighter target)
-        {
-            target.TakeDamage(Damage);
+            if (resultPercent <= chanceDodgePercent)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
     class Assasin : Fighter
     {
+        private int _healingPerAttackPercent;
+
         public Assasin(string name, int health, int damage, int armor) : base(name, health, damage, armor)
         {
+            _healingPerAttackPercent = 10;
         }
 
-        public override void Attack(Fighter target)
+        public override bool TakeDamage(int damage)
         {
-            target.TakeDamage(Damage);
-        }
+            int healingPoint;
+            int maxPercent = 100;
+            bool isTakeDamage = base.TakeDamage(damage);
 
-        public override void TakeDamage(int damage)
-        {
+            healingPoint = damage * _healingPerAttackPercent / maxPercent;
+            Health += healingPoint;
 
+            return isTakeDamage;
         }
     }
 
@@ -171,9 +204,9 @@
             target.TakeDamage(Damage);
         }
 
-        public override void TakeDamage(int damage)
+        public override bool TakeDamage(int damage)
         {
-
+            return false;
         }
     }
 
@@ -191,9 +224,9 @@
             target.TakeDamage(Damage);
         }
 
-        public override void TakeDamage(int damage)
+        public override bool TakeDamage(int damage)
         {
-
+            return false;
         }
     }
 
@@ -296,6 +329,27 @@
         }
     }
 
+    static class Generator
+    {
+        private static Random _random = new Random();
+        private static List<string> _name = new()
+        {
+            "Василий", "Аркадий", "Геннадий", "Евгения", "Мартин", "Джон",
+                "Калин", "Питер", "Снежок", "Аннет", "Валькирия", "Виверна",
+                "Полинка", "Волкодав", "Кинетик", "Антибиотик", "Флеш"
+        };
+
+        public static int AssignRandomValue(int minValue, int maxValue)
+        {
+            return _random.Next(minValue, maxValue + 1);
+        }
+
+        public static string AssignRandomName()
+        {
+            return _name[_random.Next(_name.Count)];
+        }
+    }
+
     interface IAttackProvider
     {
         public void Attack(Fighter target);
@@ -303,7 +357,7 @@
 
     interface IDamageable
     {
-        public void TakeDamage(int damage);
+        public bool TakeDamage(int damage);
     }
 }
 
