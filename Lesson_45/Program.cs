@@ -10,11 +10,11 @@
         {
             Fighter[] fighters =
             {
-                new Warrior(AssignRandomName(), AssignRandomNumber(100,150), AssignRandomNumber(10,30), AssignRandomNumber(10,30)),
-                new Warrior(AssignRandomName(), AssignRandomNumber(100,150), AssignRandomNumber(10,30), AssignRandomNumber(10,30)),
-                new Warrior(AssignRandomName(), AssignRandomNumber(100,150), AssignRandomNumber(10,30), AssignRandomNumber(10,30)),
-                new Warrior(AssignRandomName(), AssignRandomNumber(100,150), AssignRandomNumber(10,30), AssignRandomNumber(10,30)),
-                new Warrior(AssignRandomName(), AssignRandomNumber(100,150), AssignRandomNumber(10,30), AssignRandomNumber(10,30))
+                new Warrior(RandomName(), RandomNumber(100,150), RandomNumber(10,30), RandomNumber(10,30)),
+                new Warrior(RandomName(), RandomNumber(100,150), RandomNumber(10,30), RandomNumber(10,30)),
+                new Warrior(RandomName(), RandomNumber(100,150), RandomNumber(10,30), RandomNumber(10,30)),
+                new Warrior(RandomName(), RandomNumber(100,150), RandomNumber(10,30), RandomNumber(10,30)),
+                new Warrior(RandomName(), RandomNumber(100,150), RandomNumber(10,30), RandomNumber(10,30))
             };
 
             foreach (var fighter in fighters)
@@ -37,7 +37,7 @@
 
         public BattleField()
         {
-
+            _fighters = FillFighters();
         }
 
         public void StartAutoFight(Fighter fighterFirst, Fighter fighterSecond)
@@ -45,9 +45,27 @@
 
         }
 
-        private List<Fighter> FillFighters(int maxFighters)
+        private List<Fighter> FillFighters()
         {
-            return _fighters;
+            int minHealth = 80;
+            int maxHealth = 200;
+            int minDamage = 25;
+            int maxDamage = 50;
+            int minArmor = 10;
+            int maxArmor = 20;
+            int minMana = 100;
+            int maxMana = 200;
+
+            List <Fighter> fighters = new()
+            {
+                new Warrior(RandomName(), RandomNumber(minHealth,maxHealth), RandomNumber(minDamage,maxDamage), RandomNumber(minArmor,maxArmor)),
+                new Hunter(RandomName(), RandomNumber(minHealth,maxHealth), RandomNumber(minDamage,maxDamage), RandomNumber(minArmor,maxArmor)),
+                new Assasin(RandomName(), RandomNumber(minHealth,maxHealth), RandomNumber(minDamage,maxDamage), RandomNumber(minArmor,maxArmor)),
+                new Wizzard(RandomName(), RandomNumber(minHealth,maxHealth), RandomNumber(minDamage,maxDamage), RandomNumber(minArmor,maxArmor), RandomNumber(minMana,maxMana)),
+                new Shaman(RandomName(), RandomNumber(minHealth,maxHealth), RandomNumber(minDamage,maxDamage), RandomNumber(minArmor,maxArmor), RandomNumber(minMana,maxMana)),
+            };
+
+            return fighters;
         }
     }
 
@@ -156,7 +174,7 @@
         {
             int minPercentNumber = 0;
             int maxPercentNumber = 100;
-            int resultChance = AssignRandomNumber(minPercentNumber, maxPercentNumber);
+            int resultChance = RandomNumber(minPercentNumber, maxPercentNumber);
 
             if (resultChance <= chanceDodge)
             {
@@ -207,14 +225,13 @@
 
         public int Mana { get; private set; }
 
-        public override void Attack(Fighter target)
+        public override string ShowPresentationInfo()
         {
-            target.TakeDamage(Damage);
-        }
-
-        public override bool TakeDamage(int damage)
-        {
-            return false;
+            return $"Имя бойца: {Name}. " +
+                   $"Характеристики: здоровье <{Health}>, " +
+                   $"мана <{Mana}> " +
+                   $"наносимый урон <{Damage}>, " +
+                   $"показатель брони <{Armor}>";
         }
     }
 
@@ -227,14 +244,13 @@
 
         public int Mana { get; private set; }
 
-        public override void Attack(Fighter target)
+        public override string ShowPresentationInfo()
         {
-            target.TakeDamage(Damage);
-        }
-
-        public override bool TakeDamage(int damage)
-        {
-            return false;
+            return $"Имя бойца: {Name}. " +
+                   $"Характеристики: здоровье <{Health}>, " +
+                   $"мана <{Mana}> " +
+                   $"наносимый урон <{Damage}>, " +
+                   $"показатель брони <{Armor}>";
         }
     }
 
@@ -347,12 +363,12 @@
                 "Полинка", "Волкодав", "Кинетик", "Антибиотик", "Флеш"
         };
 
-        public static int AssignRandomNumber(int minValue, int maxValue)
+        public static int RandomNumber(int minValue, int maxValue)
         {
             return _random.Next(minValue, maxValue + 1);
         }
 
-        public static string AssignRandomName()
+        public static string RandomName()
         {
             return _name[_random.Next(_name.Count)];
         }
