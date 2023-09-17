@@ -53,7 +53,7 @@
 
     abstract class Fighter : IAttackProvider, IDamageable
     {
-        protected int _health;
+        private int _health;
         public Fighter(string name, int health, int damage, int armor)
         {
             Name = name;
