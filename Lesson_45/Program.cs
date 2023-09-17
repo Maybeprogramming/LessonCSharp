@@ -33,11 +33,22 @@
             Console.ReadLine();
         }
     }
-    
+
 
     class BattleField
     {
-        private List<Fighter> _fighters = new List<Fighter>();
+        private List<Fighter> _fighters;
+        private List<string> _namesFigthers;
+
+        public BattleField()
+        {
+            _namesFigthers = new()
+            {
+                "Василий", "Аркадий", "Геннадий", "Евгения", "Мартин", "Джон",
+                "Калин", "Питер", "Снежок", "Аннет", "Валькирия", "Виверна",
+                "Полинка", "Волкодав", "Кинетик", "Антибиотик"
+            };
+        }
 
         public void Fight(Fighter fighterFirst, Fighter fighterSecond)
         {
@@ -50,7 +61,7 @@
         }
     }
 
-    abstract class Fighter: IAttackProvider, IDamageable
+    abstract class Fighter : IAttackProvider, IDamageable
     {
         public Fighter(string name, int health, int damage, int armor)
         {
@@ -64,13 +75,19 @@
         public int Health { get; private set; }
         public int Damage { get; private set; }
         public int Armor { get; private set; }
+        public bool IsAlive { get => Health > 0; }
 
-        public abstract void TakeDamage(int damage);
+        public virtual void TakeDamage(int damage)
+        {
+            if (IsAlive == false) return;
+
+            Health -= damage - Armor;
+        }
 
         public virtual void Attack(Fighter fighter)
         {
             fighter.TakeDamage(Damage);
-        }      
+        }
 
         public virtual string ShowInfo()
         {
@@ -141,7 +158,7 @@
     }
 
     class Wizzard : Fighter
-    {        
+    {
         public Wizzard(string name, int health, int damage, int armor, int mana) : base(name, health, damage, armor)
         {
             Mana = mana;
