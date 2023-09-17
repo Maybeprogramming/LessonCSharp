@@ -19,7 +19,7 @@
 
             foreach (var fighter in fighters)
             {
-                Display.Print(fighter.ShowInfo(), '<', '>', ConsoleColor.Green);
+                Display.Print(fighter.ShowPresentationInfo(), '<', '>', ConsoleColor.Green);
                 Console.Write("\n" + new string('-', 100) + "\n");
             }
 
@@ -95,7 +95,7 @@
             fighter.TakeDamage(Damage);
         }
 
-        public virtual string ShowInfo()
+        public virtual string ShowPresentationInfo()
         {
             return $"Имя бойца: {Name}. " +
                    $"Характеристики: здоровье <{Health}>, " +
@@ -108,7 +108,7 @@
     {
         private int _attackCounter = 0;
         private int _seriesAttackForCrit = 3;
-        private int _critMultiplier = 2;
+        private int _critMultiplierDamage = 2;
 
         public Warrior(string name, int health, int damage, int armor) : base(name, health, damage, armor)
         {
@@ -119,7 +119,7 @@
         {
             if (_attackCounter == _seriesAttackForCrit)
             {
-                target.TakeDamage(Damage * _critMultiplier);
+                target.TakeDamage(Damage * _critMultiplierDamage);
                 _attackCounter = 0;
             }
             else
@@ -154,10 +154,9 @@
 
         private bool IsDodged(int chanceDodgePercent)
         {
-            Random random = new Random();
             int minPercentNumber = 1;
             int maxPercentNumber = 101;
-            int resultPercent = random.Next(minPercentNumber, maxPercentNumber);
+            int resultPercent = AssignRandomNumber(minPercentNumber, maxPercentNumber);
 
             if (resultPercent <= chanceDodgePercent)
             {
@@ -181,14 +180,21 @@
 
         public override bool TakeDamage(int damage)
         {
+            bool isTakeDamage = base.TakeDamage(damage);
+
+            if (isTakeDamage == true)
+                HealingPerTakeDamage(damage);
+
+            return isTakeDamage;
+        }
+
+        private void HealingPerTakeDamage(int damage)
+        {
             int healingPoint;
             int maxPercent = 100;
-            bool isTakeDamage = base.TakeDamage(damage);
 
             healingPoint = damage * _healingPerAttackPercent / maxPercent;
             Health += healingPoint;
-
-            return isTakeDamage;
         }
     }
 
