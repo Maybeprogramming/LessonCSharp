@@ -1,21 +1,45 @@
 ﻿namespace Lesson_45
 {
-    using static Display;
-    using static Input;
-    using static Generator;
-
     class Program
     {
         static void Main()
         {
+            const string BeginFightMenu = "1";
+            const string ExitMenu = "2";
+
+            Console.WindowWidth = 90;
+            Console.BufferHeight = 500;
+
             BattleField battleField = new BattleField();
-            battleField.StartAutoFight();
+            bool isRun = true;
 
-            Input.TryEnterNumber("Введите число: ", out int number);
+            while (isRun == true)
+            {
+                Console.Clear();
+                Console.WriteLine(
+                    $"Меню:\n" +
+                    $"{BeginFightMenu} - Начать подготовку битвы\n" +
+                    $"{ExitMenu} - Покинуть поле битвы.\n" +
+                    $"Введите команду для продолжения: ");
 
-            Display.Print(Input.EnterString("Введите имя: "));
+                switch (Console.ReadLine())
+                {
+                    case BeginFightMenu:
+                        battleField.BeginBattle();
+                        break;
 
-            Console.ReadLine();
+                    case ExitMenu:
+                        isRun = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Такой команды нет!!!");
+                        break;
+                }
+            }
+
+            Console.WriteLine("Работа программы завершена!");
+            Console.ReadKey();
         }
     }
 
@@ -23,400 +47,364 @@
     {
         private List<Fighter> _fighters;
 
-        public BattleField()
+        public void BeginBattle()
         {
-            _fighters = FillFighters();
-        }
+            const string ChooseFighterCommand = "0";
+            const string ChooseWarriorCommand = "1";
+            const string ChooseAssasignCommand = "2";
+            const string ChooseHunterCommand = "3";
+            const string ChooseWizzardCommand = "4";
 
-        public void StartAutoFight()
-        {
-            foreach (var fighter in _fighters)
+            _fighters = new List<Fighter>();
+
+            while (_fighters.Count < 2)
             {
-                Display.Print(fighter.ShowPresentationInfo(), '<', '>', ConsoleColor.Green);
-                Console.Write("\n" + new string('-', 100) + "\n");
-            }
-        }
+                Console.Clear();
 
-        private List<Fighter> FillFighters()
-        {
-            int minHealth = 80;
-            int maxHealth = 200;
-            int minDamage = 25;
-            int maxDamage = 50;
-            int minArmor = 10;
-            int maxArmor = 20;
-            int minMana = 100;
-            int maxMana = 200;
+                Console.WriteLine(
+                    $"Доступные классы героев:\n" +
+                    $"{ChooseFighterCommand} - Figter\n" +
+                    $"{ChooseWarriorCommand} - Warrior\n" +
+                    $"{ChooseAssasignCommand} - Assasign\n" +
+                    $"{ChooseHunterCommand} - Hunter\n" +
+                    $"{ChooseWizzardCommand} - Wizzard\n" +
+                    $"Введите номер для выбора {_fighters.Count + 1} класса героя:");
 
-            List<TypeFighter> typeFighters = new() 
-            { 
-                TypeFighter.Warrior,
-                TypeFighter.Hunter,
-                TypeFighter.Assasign,
-                TypeFighter.Wizzard,
-                TypeFighter.Shaman
-            };
-
-            List<Fighter> fighters = new(); 
-
-            for (int i = 0; i < typeFighters.Count; i++)
-            {
-                switch (typeFighters[i])
+                switch (Console.ReadLine())
                 {
-                    case TypeFighter.Warrior:
-                        fighters.Add(new Warrior(RandomName(), RandomInt32(minHealth, maxHealth), RandomInt32(minDamage, maxDamage), RandomInt32(minArmor, maxArmor)));
+                    case ChooseFighterCommand:
+                        ChooseFighter(new Fighter());
                         break;
-                    case TypeFighter.Hunter:
-                        fighters.Add(new Hunter(RandomName(), RandomInt32(minHealth, maxHealth), RandomInt32(minDamage, maxDamage), RandomInt32(minArmor, maxArmor)));
+
+                    case ChooseWarriorCommand:
+                        ChooseFighter(new Warrior());
                         break;
-                    case TypeFighter.Assasign:
-                        fighters.Add(new Assasin(RandomName(), RandomInt32(minHealth, maxHealth), RandomInt32(minDamage, maxDamage), RandomInt32(minArmor, maxArmor)));
+
+                    case ChooseAssasignCommand:
+                        ChooseFighter(new Assasign());
                         break;
-                    case TypeFighter.Wizzard:
-                        fighters.Add(new Wizzard(RandomName(), RandomInt32(minHealth, maxHealth), RandomInt32(minDamage, maxDamage), RandomInt32(minArmor, maxArmor), RandomInt32(minMana, maxMana)));
+
+                    case ChooseHunterCommand:
+                        ChooseFighter(new Hunter());
                         break;
-                    case TypeFighter.Shaman:
-                        fighters.Add(new Shaman(RandomName(), RandomInt32(minHealth, maxHealth), RandomInt32(minDamage, maxDamage), RandomInt32(minArmor, maxArmor), RandomInt32(minMana, maxMana)));
+
+                    case ChooseWizzardCommand:
+                        ChooseFighter(new Wizzard());
+                        break;
+
+                    default:
+                        Console.WriteLine("Нет такой команды!");
                         break;
                 }
             }
 
-            return fighters;
+            Console.WriteLine("Готовые к бою отважные герои:");
+            AnnounceFightresNames();
+
+            Console.WriteLine("Начать битву?\nДля продолжения нажмите любую клавишу...\n\n");
+            Console.ReadKey();
+
+            Fight();
+            CheckVictory();
+
+            Console.ReadKey();
         }
+
+        private void AnnounceFightresNames()
+        {
+            for (int i = 0; i < _fighters.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {_fighters[i].GetType().Name} ({_fighters[i].Name}): DMG: {_fighters[i].Damage}, HP: {_fighters[i].Health}");
+            }
+        }
+
+        private void Fight()
+        {
+            while (_fighters[0].IsAlive == true && _fighters[1].IsAlive == true)
+            {
+                _fighters[0].Attack(_fighters[1]);
+                _fighters[1].Attack(_fighters[0]);
+
+                Console.WriteLine(new string('-', 70));
+                Task.Delay(1000).Wait();
+            }
+        }
+
+        private void CheckVictory()
+        {
+            if (_fighters[0].IsAlive == false && _fighters[1].IsAlive == false)
+            {
+                Console.WriteLine("\nНичья! Оба героя пали на поле боя!");
+            }
+            else if (_fighters[0].IsAlive == true && _fighters[1].IsAlive == false)
+            {
+                Console.WriteLine($"\nПобедитель - {_fighters[0]} ({_fighters[0].Name})!");
+            }
+            else if (_fighters[0].IsAlive == false && _fighters[1].IsAlive == true)
+            {
+                Console.WriteLine($"\nПобедитель - {_fighters[1]} ({_fighters[1].Name})!");
+            }
+        }
+
+        private void ChooseFighter(Fighter fighter) => _fighters.Add(fighter);
+
+        private void ChooseFighter(Warrior warrior) => _fighters.Add(warrior);
+
+        private void ChooseFighter(Assasign assasign) => _fighters.Add(assasign);
+
+        private void ChooseFighter(Hunter hunter) => _fighters.Add(hunter);
+
+        private void ChooseFighter(Wizzard wizzard) => _fighters.Add(wizzard);
     }
 
-    abstract class Fighter : IAttackProvider, IDamageable
+    class Fighter
     {
         private int _health;
-        public Fighter(string name, int health, int damage, int armor)
+
+        public Fighter()
         {
-            Name = name;
-            Health = health;
-            Damage = damage;
-            Armor = armor;
+            Health = Generator.NextInt(150, 301);
+            Damage = Generator.NextInt(10, 21);
+            Name = Generator.NextName();
         }
 
-        public string Name { get; protected set; }
         public int Health
         {
             get => _health;
-            protected set
-            {
-                if (value < 0)
-                    _health = 0;
-                else
-                    _health = value;
-            }
+            protected set => SetHealth(value);
         }
         public int Damage { get; protected set; }
-        public int Armor { get; protected set; }
-        public bool IsAlive { get => Health > 0; }
+        public bool IsAlive => Health > 0;
+        public string Name { get; protected set; }
 
-        public virtual bool TakeDamage(int damage)
+        public virtual void Attack(Fighter target)
         {
             if (IsAlive == false)
-                return false;
+            {
+                return;
+            }
+            else
+            {
+                Console.WriteLine($"{GetType().Name} ({Name}) произвёл удар в сторону {target.GetType().Name} ({target.Name})");
 
-            Health -= damage - Armor;
-
-            Console.WriteLine($"Я {Name} - получаю урон {damage}");
-
-            return true;
+                if (target.IsAlive == true)
+                {
+                    target.TryTakeDamage(Damage);
+                }
+            }
         }
 
-        public virtual void Attack(Fighter fighter)
+        public virtual void Healing(int healingPoint)
         {
-            fighter.TakeDamage(Damage);
+            Health += healingPoint;
+            Console.WriteLine($"{GetType().Name} ({Name}) подлечил здоровье на ({healingPoint}) ед. Здоровье : ({Health})");
         }
 
-        public virtual string ShowPresentationInfo()
+        public virtual bool TryTakeDamage(int damage)
         {
-            return $"Имя бойца: {Name}. " +
-                   $"Характеристики: здоровье <{Health}>, " +
-                   $"наносимый урон <{Damage}>, " +
-                   $"показатель брони <{Armor}>";
+            if (Health > 0)
+            {
+                Health -= damage;
+                Console.WriteLine($"{GetType().Name} ({Name}) получил удар ({damage}) ед., осталось здоровья ({Health})");
+                return true;
+            }
+
+            return false;
+        }
+
+        public override string ToString()
+        {
+            return $"{GetType().Name}";
+        }
+
+        private void SetHealth(int value)
+        {
+            if (value > 0)
+            {
+                _health = value;
+            }
+            else
+            {
+                _health = 0;
+            }
         }
     }
 
     class Warrior : Fighter
     {
-        private int _attackCounter = 0;
-        private int _seriesAttackForCrit = 3;
-        private int _critMultiplierDamage = 2;
+        private int _missDamagePercent = 30;
+        private int _maxPercent = 100;
 
-        public Warrior(string name, int health, int damage, int armor) : base(name, health, damage, armor)
+        public override bool TryTakeDamage(int damage)
         {
+            int missChance = Generator.NextInt(0, _maxPercent + 1);
 
+            if (missChance < _missDamagePercent)
+            {
+                Console.WriteLine($"{GetType().Name} ({Name}) увернулся от удара, осталось здоровья ({Health})");
+                return false;
+            }
+
+            return base.TryTakeDamage(damage);
         }
+    }
 
+    class Assasign : Fighter
+    {
         public override void Attack(Fighter target)
         {
-            if (_attackCounter == _seriesAttackForCrit)
+            if (IsAlive == false || target.IsAlive == false)
             {
-                target.TakeDamage(Damage * _critMultiplierDamage);
-                _attackCounter = 0;
-            }
-            else
-            {
-                target.TakeDamage(Damage);
+                return;
             }
 
-            _attackCounter++;
+            Console.WriteLine($"{GetType().Name} ({Name}) произвёл удар в сторону {target.GetType().Name} ({target.Name})");
+
+            if (target.TryTakeDamage(Damage))
+            {
+                int damageDivider = 10;
+                int healingPoint = Damage / damageDivider;
+                Healing(healingPoint);
+            }
         }
     }
 
     class Hunter : Fighter
     {
-        private int _chanceDodgePercent;
+        private int _critPercent = 30;
+        private int _maxPercent = 100;
+        private int _damageModifyPercent = 150;
 
-        public Hunter(string name, int health, int damage, int armor) : base(name, health, damage, armor)
+        public override void Attack(Fighter target)
         {
-            _chanceDodgePercent = 30;
-        }
-
-        public override bool TakeDamage(int damage)
-        {
-            if (IsDodged(_chanceDodgePercent) == true)
+            if (IsAlive == false)
             {
-                Console.WriteLine($"{Name} - уклонился от атаки");
-                return false;
-            }
-            {
-                return base.TakeDamage(damage);
-            }
-        }
-
-        private bool IsDodged(int chanceDodge)
-        {
-            int minPercentNumber = 0;
-            int maxPercentNumber = 100;
-            int resultChance = RandomInt32(minPercentNumber, maxPercentNumber);
-
-            if (resultChance <= chanceDodge)
-            {
-                return true;
+                return;
             }
             else
             {
-                return false;
+                int currentDamage = CalculateCriteDamage();
+                Console.WriteLine($"{GetType().Name} ({Name}) произвёл удар в сторону {target.GetType().Name} ({target.Name})");
+
+                if (target.IsAlive == true)
+                {
+                    target.TryTakeDamage(currentDamage);
+                }
             }
         }
-    }
 
-    class Assasin : Fighter
-    {
-        private int _healingPerAttackPercent;
-
-        public Assasin(string name, int health, int damage, int armor) : base(name, health, damage, armor)
+        private int CalculateCriteDamage()
         {
-            _healingPerAttackPercent = 10;
-        }
+            int critChance = Generator.NextInt(0, _maxPercent + 1);
 
-        public override bool TakeDamage(int damage)
-        {
-            bool isTakeDamage = base.TakeDamage(damage);
+            if (critChance < _critPercent)
+            {
+                return Damage * _damageModifyPercent / _maxPercent;
+            }
 
-            if (isTakeDamage == true)
-                HealingPerTakeDamage(damage);
-
-            return isTakeDamage;
-        }
-
-        private void HealingPerTakeDamage(int damage)
-        {
-            int healingPoint;
-            int maxPercent = 100;
-
-            healingPoint = damage * _healingPerAttackPercent / maxPercent;
-            Health += healingPoint;
+            return Damage;
         }
     }
 
     class Wizzard : Fighter
     {
-        public Wizzard(string name, int health, int damage, int armor, int mana) : base(name, health, damage, armor)
+        private int _mana;
+        private int _manMana = 50;
+        private int _maxMana = 100;
+        private int _castingManaCost = 20;
+        private int _regenerationManaCount = 10;
+
+        public Wizzard()
         {
-            Mana = mana;
+            _mana = Generator.NextInt(_manMana, _maxMana + 1);
         }
 
-        public int Mana { get; private set; }
+        public int Mana { get => _mana; }
 
-        public override void Attack(Fighter fighter)
+        public override void Attack(Fighter target)
         {
-            base.Attack(fighter);
-        }
-
-        public override string ShowPresentationInfo()
-        {
-            return $"Имя бойца: {Name}. " +
-                   $"Характеристики: здоровье <{Health}>, " +
-                   $"мана <{Mana}> " +
-                   $"наносимый урон <{Damage}>, " +
-                   $"показатель брони <{Armor}>";
-        }
-    }
-
-    class Shaman : Fighter
-    {
-        public Shaman(string name, int health, int damage, int armor, int mana) : base(name, health, damage, armor)
-        {
-            Mana = mana;
-        }
-
-        public int Mana { get; private set; }
-
-        public override void Attack(Fighter fighter)
-        {
-            base.Attack(fighter);
-        }
-
-        public override string ShowPresentationInfo()
-        {
-            return $"Имя бойца: {Name}. " +
-                   $"Характеристики: здоровье <{Health}>, " +
-                   $"мана <{Mana}> " +
-                   $"наносимый урон <{Damage}>, " +
-                   $"показатель брони <{Armor}>";
-        }
-    }
-
-    static class Display
-    {
-        public static void Print(string sourceText, char startChar, char endChar, ConsoleColor consoleColor = ConsoleColor.White)
-        {
-            bool isStartChar = false;
-            bool isFinishChar = false;
-            ConsoleColor defaulColor = Console.ForegroundColor;
-
-            foreach (char symbol in sourceText)
+            if (_mana >= _castingManaCost)
             {
-                if (symbol.Equals(startChar))
-                {
-                    isStartChar = true;
-                    Console.ForegroundColor = consoleColor;
-                    Console.Write(symbol);
-                }
-                else if (symbol.Equals(endChar))
-                {
-                    Console.Write(symbol);
-                    isFinishChar = true;
-                    Console.ForegroundColor = defaulColor;
-                }
-                else if (isStartChar == true & isFinishChar == false)
-                {
-                    Console.ForegroundColor = consoleColor;
-                    Console.Write(symbol);
-                }
-                else if (isStartChar == true & isFinishChar == true)
-                {
-                    isFinishChar = false;
-                    isStartChar = false;
-                    Console.ForegroundColor = defaulColor;
-                    Console.Write(symbol);
-                }
-                else
-                {
-                    Console.ForegroundColor = defaulColor;
-                    Console.Write(symbol);
-                }
-            }
-        }
-
-        public static void Print(string sourceText, ConsoleColor consoleColor = ConsoleColor.White)
-        {
-            ConsoleColor defaulColor = Console.ForegroundColor;
-            Console.ForegroundColor = consoleColor;
-            Console.Write(sourceText);
-            Console.ForegroundColor = defaulColor;
-        }
-    }
-
-    static class Input
-    {
-        public static bool TryEnterNumber(string messageText, out int number)
-        {
-            int result;
-            bool isParse = false;
-
-            while (isParse == false)
-            {
-                Display.Print($"\n{messageText} ");
-
-                if (Int32.TryParse(Console.ReadLine(), out result) == true)
-                {
-                    isParse = true;
-                    number = result;
-                    return true;
-                }
-                else
-                {
-                    Display.Print("Ошибка! Вы ввели не число! Попробуйте снова...");
-                }
-            }
-
-            number = 0;
-            return false;
-        }
-
-        public static string EnterString(string message)
-        {
-            string inputString;
-
-            Display.Print($"{message}");
-            inputString = Console.ReadLine();
-
-            if (inputString != String.Empty)
-            {
-                return inputString;
+                _mana -= _castingManaCost;
+                base.Attack(target);
             }
             else
             {
-                Display.Print("Строка не должна быть пустой! Попробуйте снова...\n", ConsoleColor.Red);
-                EnterString(message);
+                _mana += _regenerationManaCount;
+                Console.WriteLine($"{GetType().Name} ({Name}) не хватает маны для удара {target.GetType().Name} ({target.Name})");
             }
+        }
 
-            return String.Empty;
+        public override bool TryTakeDamage(int damage)
+        {
+            _mana += _regenerationManaCount;
+            return base.TryTakeDamage(damage);
         }
     }
 
     static class Generator
     {
         private static Random _random = new Random();
-        private static List<string> _name = new()
-        {
-            "Василий", "Аркадий", "Геннадий", "Евгения", "Мартин", "Джон",
-            "Калин", "Питер", "Снежок", "Аннет", "Валькирия", "Виверна",
-            "Полинка", "Волкодав", "Кинетик", "Антибиотик", "Флеш"
-        };
+        private static string[] _names =
+            {
+                "Варвар",
+                "Космонафт",
+                "Миледи",
+                "Вульфич",
+                "Страйк",
+                "Герандич",
+                "Фрея",
+                "Крыса",
+                "Нинка",
+                "Царь",
+                "Забота",
+                "Прожариватель",
+                "Овощ",
+                "Имба",
+                "Нагибатель",
+                "Топчик",
+                "Холивар",
+                "Бывалый",
+                "Пирожок",
+                "Котейка",
+                "Оливер",
+                "Викрам",
+                "Архидея",
+                "Метрономщик",
+                "Зимник",
+                "Волкодав",
+                "Богатырь",
+                "Вафлич",
+                "Вурдолакыч",
+                "Зяблик",
+                "Кудахта",
+                "Чувиха",
+                "Мордорка",
+                "Куряха",
+                "Смоляха",
+                "Крендель",
+                "Остряк",
+                "Крушила",
+                "Очкович",
+                "Щавель",
+                "Днище",
+                "Нубичка",
+                "Жираф",
+                "Подлиза",
+                "Лимурчик",
+                "Попрыгун",
+                "Тряпкович"
+            };
 
-        public static int RandomInt32(int minValue, int maxValue)
+        public static string NextName()
         {
-            return _random.Next(minValue, maxValue + 1);
+            return _names[_random.Next(0, _names.Length - 1)];
         }
 
-        public static string RandomName()
+        public static int NextInt(int minValue, int maxValue)
         {
-            return _name[_random.Next(_name.Count)];
+            return _random.Next(minValue, maxValue);
         }
-    }
-
-    interface IAttackProvider
-    {
-        public void Attack(Fighter target);
-    }
-
-    interface IDamageable
-    {
-        public bool TakeDamage(int damage);
-    }
-
-    enum TypeFighter
-    {
-        Warrior,
-        Hunter,
-        Assasign,
-        Wizzard,
-        Shaman
     }
 }
 
