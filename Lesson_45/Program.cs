@@ -25,7 +25,7 @@
                 switch (Console.ReadLine())
                 {
                     case BeginFightMenu:
-                        battleField.BeginBattle();
+                        battleField.Work();
                         break;
 
                     case ExitMenu:
@@ -47,7 +47,7 @@
     {
         private List<Fighter> _fighters;
 
-        public void BeginBattle()
+        public void Work()
         {
             const string ChooseFighterCommand = "0";
             const string ChooseWarriorCommand = "1";
@@ -97,29 +97,27 @@
                         break;
                 }
             }
-
-            Console.WriteLine("Готовые к бою отважные герои:");
-            AnnounceFightresNames();
-
-            Console.WriteLine("Начать битву?\nДля продолжения нажмите любую клавишу...\n\n");
-            Console.ReadKey();
-
+            
+            AnnounceFightersReadyForFight();
             Fight();
-            CheckVictory();
-
-            Console.ReadKey();
+            AnnounceWinner();            
         }
 
-        private void AnnounceFightresNames()
+        private void AnnounceFightersReadyForFight()
         {
+            Console.WriteLine("Готовые к бою отважные герои:");
+
             for (int i = 0; i < _fighters.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {_fighters[i].GetType().Name} ({_fighters[i].Name}): DMG: {_fighters[i].Damage}, HP: {_fighters[i].Health}");
+                Console.WriteLine($"{i + 1}. {_fighters[i].ClassName} ({_fighters[i].Name}): DMG: {_fighters[i].Damage}, HP: {_fighters[i].Health}");
             }
         }
 
         private void Fight()
         {
+            Console.WriteLine("Начать битву?\nДля продолжения нажмите любую клавишу...\n\n");
+            Console.ReadKey();
+
             while (_fighters[0].IsAlive == true && _fighters[1].IsAlive == true)
             {
                 _fighters[0].Attack(_fighters[1]);
@@ -130,7 +128,7 @@
             }
         }
 
-        private void CheckVictory()
+        private void AnnounceWinner()
         {
             if (_fighters[0].IsAlive == false && _fighters[1].IsAlive == false)
             {
@@ -144,6 +142,8 @@
             {
                 Console.WriteLine($"\nПобедитель - {_fighters[1]} ({_fighters[1].Name})!");
             }
+
+            Console.ReadKey();
         }
 
         private void ChooseFighter(Fighter fighter) => _fighters.Add(fighter);
@@ -163,11 +163,13 @@
 
         public Fighter()
         {
-            Health = Generator.NextInt(150, 301);
-            Damage = Generator.NextInt(10, 21);
-            Name = Generator.NextName();
+            ClassName = "Боец";
+            Health = Randomaizer.GenerateRandomNumber(150, 301);
+            Damage = Randomaizer.GenerateRandomNumber(10, 21);
+            Name = Randomaizer.GenerateRandomName();
         }
 
+        public string ClassName { get; protected set; }
         public int Health
         {
             get => _health;
@@ -185,7 +187,7 @@
             }
             else
             {
-                Console.WriteLine($"{GetType().Name} ({Name}) произвёл удар в сторону {target.GetType().Name} ({target.Name})");
+                Console.WriteLine($"{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
 
                 if (target.IsAlive == true)
                 {
@@ -197,7 +199,7 @@
         public virtual void Healing(int healingPoint)
         {
             Health += healingPoint;
-            Console.WriteLine($"{GetType().Name} ({Name}) подлечил здоровье на ({healingPoint}) ед. Здоровье : ({Health})");
+            Console.WriteLine($"{ClassName} ({Name}) подлечил здоровье на ({healingPoint}) ед. Здоровье : ({Health})");
         }
 
         public virtual bool TryTakeDamage(int damage)
@@ -205,7 +207,7 @@
             if (Health > 0)
             {
                 Health -= damage;
-                Console.WriteLine($"{GetType().Name} ({Name}) получил удар ({damage}) ед., осталось здоровья ({Health})");
+                Console.WriteLine($"{ClassName} ({Name}) получил удар ({damage}) ед., осталось здоровья ({Health})");
                 return true;
             }
 
@@ -214,7 +216,7 @@
 
         public override string ToString()
         {
-            return $"{GetType().Name}";
+            return $"{ClassName}";
         }
 
         private void SetHealth(int value)
@@ -235,13 +237,15 @@
         private int _missDamagePercent = 30;
         private int _maxPercent = 100;
 
+        public Warrior() => ClassName = "Воин";
+
         public override bool TryTakeDamage(int damage)
         {
-            int missChance = Generator.NextInt(0, _maxPercent + 1);
+            int missChance = Randomaizer.GenerateRandomNumber(0, _maxPercent + 1);
 
             if (missChance < _missDamagePercent)
             {
-                Console.WriteLine($"{GetType().Name} ({Name}) увернулся от удара, осталось здоровья ({Health})");
+                Console.WriteLine($"{ClassName} ({Name}) увернулся от удара, осталось здоровья ({Health})");
                 return false;
             }
 
@@ -251,6 +255,8 @@
 
     class Assasign : Fighter
     {
+        public Assasign() => ClassName = "Разбойник";
+
         public override void Attack(Fighter target)
         {
             if (IsAlive == false || target.IsAlive == false)
@@ -258,7 +264,7 @@
                 return;
             }
 
-            Console.WriteLine($"{GetType().Name} ({Name}) произвёл удар в сторону {target.GetType().Name} ({target.Name})");
+            Console.WriteLine($"{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
 
             if (target.TryTakeDamage(Damage))
             {
@@ -275,6 +281,8 @@
         private int _maxPercent = 100;
         private int _damageModifyPercent = 150;
 
+        public Hunter() => ClassName = "Охотник";
+
         public override void Attack(Fighter target)
         {
             if (IsAlive == false)
@@ -284,7 +292,7 @@
             else
             {
                 int currentDamage = CalculateCriteDamage();
-                Console.WriteLine($"{GetType().Name} ({Name}) произвёл удар в сторону {target.GetType().Name} ({target.Name})");
+                Console.WriteLine($"{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
 
                 if (target.IsAlive == true)
                 {
@@ -295,7 +303,7 @@
 
         private int CalculateCriteDamage()
         {
-            int critChance = Generator.NextInt(0, _maxPercent + 1);
+            int critChance = Randomaizer.GenerateRandomNumber(0, _maxPercent + 1);
 
             if (critChance < _critPercent)
             {
@@ -309,14 +317,15 @@
     class Wizzard : Fighter
     {
         private int _mana;
-        private int _manMana = 50;
+        private int _minMana = 50;
         private int _maxMana = 100;
         private int _castingManaCost = 20;
         private int _regenerationManaCount = 10;
 
         public Wizzard()
         {
-            _mana = Generator.NextInt(_manMana, _maxMana + 1);
+            ClassName = "Волшебник";
+            _mana = Randomaizer.GenerateRandomNumber(_minMana, _maxMana + 1);
         }
 
         public int Mana { get => _mana; }
@@ -331,7 +340,7 @@
             else
             {
                 _mana += _regenerationManaCount;
-                Console.WriteLine($"{GetType().Name} ({Name}) не хватает маны для удара {target.GetType().Name} ({target.Name})");
+                Console.WriteLine($"{ClassName} ({Name}) не хватает маны для удара {target.ClassName} ({target.Name})");
             }
         }
 
@@ -342,10 +351,10 @@
         }
     }
 
-    static class Generator
+    static class Randomaizer
     {
-        private static Random _random = new Random();
-        private static string[] _names =
+        private static Random s_random = new Random();
+        private static string[] s_names =
             {
                 "Варвар",
                 "Космонафт",
@@ -396,14 +405,14 @@
                 "Тряпкович"
             };
 
-        public static string NextName()
+        public static string GenerateRandomName()
         {
-            return _names[_random.Next(0, _names.Length - 1)];
+            return s_names[s_random.Next(0, s_names.Length - 1)];
         }
 
-        public static int NextInt(int minValue, int maxValue)
+        public static int GenerateRandomNumber(int minValue, int maxValue)
         {
-            return _random.Next(minValue, maxValue);
+            return s_random.Next(minValue, maxValue);
         }
     }
 }
