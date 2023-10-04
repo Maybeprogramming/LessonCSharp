@@ -63,11 +63,11 @@
 
                 Console.WriteLine(
                     $"Доступные классы героев:\n" +
-                    $"{ChooseFighterCommand} - Figter\n" +
-                    $"{ChooseWarriorCommand} - Warrior\n" +
-                    $"{ChooseAssasignCommand} - Assasign\n" +
-                    $"{ChooseHunterCommand} - Hunter\n" +
-                    $"{ChooseWizzardCommand} - Wizzard\n" +
+                    $"{ChooseFighterCommand} - Боец\n" +
+                    $"{ChooseWarriorCommand} - Воин\n" +
+                    $"{ChooseAssasignCommand} - Разбойник\n" +
+                    $"{ChooseHunterCommand} - Охотник\n" +
+                    $"{ChooseWizzardCommand} - Волшебник\n" +
                     $"Введите номер для выбора {_fighters.Count + 1} класса героя:");
 
                 switch (Console.ReadLine())
