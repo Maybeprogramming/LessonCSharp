@@ -51,8 +51,8 @@ namespace Lesson_45
         private List<Fighter> _fighters;
 
         private List<Fighter>? _fightersCatalog;
-        private IFighterClone _fighter1;
-        private IFighterClone _fighter2;
+        private Fighter _fighter1;
+        private Fighter _fighter2;
 
         public BattleField()
         {
@@ -61,12 +61,6 @@ namespace Lesson_45
 
         public void Work()
         {
-            const string ChooseFighterCommand = "0";
-            const string ChooseWarriorCommand = "1";
-            const string ChooseAssasignCommand = "2";
-            const string ChooseHunterCommand = "3";
-            const string ChooseWizzardCommand = "4";
-
             _fighters = new List<Fighter>();
 
             ClearFighters();
@@ -75,42 +69,23 @@ namespace Lesson_45
             {
                 Console.Clear();
 
-                for (int i = 0; i < _fightersCatalog.Count; i++)
-                {
-                    Console.WriteLine($"{i} - {_fightersCatalog[i].GetInfo()}");
-                }
+                ShowListFighters();
 
-                switch (Console.ReadLine())
-                {
-                    case ChooseFighterCommand:
-                        ChooseFighter(0);
-                        break;
-
-                    case ChooseWarriorCommand:
-                        ChooseFighter(0);
-                        break;
-
-                    case ChooseAssasignCommand:
-                        ChooseFighter(2);                        
-                        break;
-
-                    case ChooseHunterCommand:
-                        ChooseFighter(3);                        
-                        break;
-
-                    case ChooseWizzardCommand:
-                        ChooseFighter(4);                        
-                        break;
-
-                    default:
-                        Console.WriteLine("Нет такой команды!");
-                        break;
-                }
+                ChooseFighter(0);
+                ChooseFighter(4);
             }
 
             AnnounceFightersReadyForFight();
             Fight();
             AnnounceWinner();
+        }
+
+        private void ShowListFighters()
+        {
+            for (int i = 0; i < _fightersCatalog.Count; i++)
+            {
+                Console.WriteLine($"{i} - {_fightersCatalog[i].GetInfo()}");
+            }
         }
 
         private void FillFightersCatalog()
@@ -134,11 +109,8 @@ namespace Lesson_45
         private void AnnounceFightersReadyForFight()
         {
             Console.WriteLine("Готовые к бою отважные герои:");
-
-            for (int i = 0; i < _fighters.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {_fighters[i].ClassName} ({_fighters[i].Name}): DMG: {_fighters[i].Damage}, HP: {_fighters[i].Health}");
-            }
+            Console.WriteLine($"1. {_fighter1.ClassName} ({_fighter1.Name}): DMG: {_fighter1.Damage}, HP: {_fighter1.Health}");
+            Console.WriteLine($"2. {_fighter2.ClassName} ({_fighter2.Name}): DMG: {_fighter2.Damage}, HP: {_fighter2.Health}");
         }
 
         private void Fight()
@@ -146,10 +118,10 @@ namespace Lesson_45
             Console.WriteLine("Начать битву?\nДля продолжения нажмите любую клавишу...\n\n");
             Console.ReadKey();
 
-            while (_fighters[0].IsAlive == true && _fighters[1].IsAlive == true)
+            while (_fighter1.IsAlive == true && _fighter2.IsAlive == true)
             {
-                _fighters[0].Attack(_fighters[1]);
-                _fighters[1].Attack(_fighters[0]);
+                _fighter1.Attack(_fighter2);
+                _fighter2.Attack(_fighter1);
 
                 Console.WriteLine(new string('-', 70));
                 Task.Delay(1000).Wait();
@@ -158,17 +130,17 @@ namespace Lesson_45
 
         private void AnnounceWinner()
         {
-            if (_fighters[0].IsAlive == false && _fighters[1].IsAlive == false)
+            if (_fighter1.IsAlive == false && _fighter2.IsAlive == false)
             {
                 Console.WriteLine("\nНичья! Оба героя пали на поле боя!");
             }
-            else if (_fighters[0].IsAlive == true && _fighters[1].IsAlive == false)
+            else if (_fighter1.IsAlive == true && _fighter2.IsAlive == false)
             {
-                Console.WriteLine($"\nПобедитель - {_fighters[0]} ({_fighters[0].Name})!");
+                Console.WriteLine($"\nПобедитель - {_fighter1.ClassName} ({_fighter1.Name})!");
             }
-            else if (_fighters[0].IsAlive == false && _fighters[1].IsAlive == true)
+            else if (_fighter1.IsAlive == false && _fighter2.IsAlive == true)
             {
-                Console.WriteLine($"\nПобедитель - {_fighters[1]} ({_fighters[1].Name})!");
+                Console.WriteLine($"\nПобедитель - {_fighter2.ClassName} ({_fighter2.Name})!");
             }
 
             Console.ReadKey();
@@ -178,11 +150,11 @@ namespace Lesson_45
         {
             if (_fighter1 == null)
             {
-                _fighter1 = _fightersCatalog[number].Clone();
+                _fighter1 = (Fighter?)_fightersCatalog[number].Clone();
             }
             else if (_fighter2 == null)
             {
-                _fighter2 = _fightersCatalog[number].Clone();
+                _fighter2 = (Fighter?)_fightersCatalog[number].Clone();
             }
         }
     }
