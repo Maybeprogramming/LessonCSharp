@@ -48,21 +48,24 @@ namespace Lesson_45
 
     class BattleField
     {
-        private List<Fighter> _fighters;
-
         private List<Fighter>? _fightersCatalog;
-        private Fighter _fighter1;
-        private Fighter _fighter2;
+        private Fighter? _fighter1;
+        private Fighter? _fighter2;
 
         public BattleField()
         {
-            FillFightersCatalog();
+            _fightersCatalog = new()
+            {
+                new Fighter(),
+                new Warrior(),
+                new Assasign(),
+                new Hunter(),
+                new Wizzard()
+            };
         }
 
         public void Work()
         {
-            _fighters = new List<Fighter>();
-
             ClearFighters();
 
             while (_fighter1 == null || _fighter2 == null)
@@ -71,8 +74,7 @@ namespace Lesson_45
 
                 ShowListFighters();
 
-                ChooseFighter(2);
-                ChooseFighter(3);
+                ChooseFighter(UserInput.ReadInt());
             }
 
             AnnounceFightersReadyForFight();
@@ -86,18 +88,6 @@ namespace Lesson_45
             {
                 Console.WriteLine($"{i} - {_fightersCatalog[i].GetInfo()}");
             }
-        }
-
-        private void FillFightersCatalog()
-        {
-            _fightersCatalog = new()
-            {
-                new Fighter(),
-                new Warrior(),
-                new Assasign(),
-                new Hunter(),
-                new Wizzard()
-            };
         }
 
         private void ClearFighters()
@@ -455,6 +445,21 @@ namespace Lesson_45
         public static int GenerateRandomNumber(int minValue, int maxValue)
         {
             return s_random.Next(minValue, maxValue);
+        }
+    }
+
+    static class UserInput
+    {
+        public static int ReadInt(int minValue = int.MinValue, int maxValue = int.MaxValue)
+        {
+            int result;
+
+            while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
+            {
+                Console.Error.WriteLine("Ошибка!. Попробуйте снова!");
+            }
+
+            return result;
         }
     }
 }
