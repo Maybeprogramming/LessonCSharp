@@ -66,7 +66,7 @@
         {
             ClearFighters();
 
-            while (IsFigtersChosen() == true)
+            while (IsFigtersNotChosen() == true)
             {
                 Console.Clear();
 
@@ -80,7 +80,7 @@
             AnnounceWinner();
         }
 
-        private bool IsFigtersChosen()
+        private bool IsFigtersNotChosen()
         {
             return _fighter1 == null || _fighter2 == null;
         }
