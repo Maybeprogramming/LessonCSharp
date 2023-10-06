@@ -167,7 +167,7 @@
         }
     }
 
-    class Fighter : IFighterClone
+    class Fighter : IClone
     {
         private int _health;
 
@@ -249,7 +249,7 @@
             }
         }
 
-        public virtual IFighterClone Clone()
+        public virtual IClone Clone()
         {
             return new Fighter();
         }
@@ -275,7 +275,7 @@
             return base.TryTakeDamage(damage);
         }
 
-        public override IFighterClone Clone()
+        public override IClone Clone()
         {
             return new Warrior();
         }
@@ -302,7 +302,7 @@
             }
         }
 
-        public override IFighterClone Clone()
+        public override IClone Clone()
         {
             return new Assasign();
         }
@@ -334,7 +334,7 @@
             }
         }
 
-        public override IFighterClone Clone()
+        public override IClone Clone()
         {
             return new Hunter();
         }
@@ -382,7 +382,7 @@
             }
         }
 
-        public override IFighterClone Clone()
+        public override IClone Clone()
         {
             return new Wizzard();
         }
@@ -396,9 +396,9 @@
 
     }
 
-    interface IFighterClone
+    interface IClone
     {
-        IFighterClone Clone();
+        IClone Clone();
     }
 
     static class Randomaizer
