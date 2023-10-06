@@ -34,6 +34,7 @@
 
                     default:
                         Console.WriteLine("Такой команды нет!!!");
+                        Console.ReadKey();
                         break;
                 }
             }
@@ -65,13 +66,13 @@
         {
             ClearFighters();
 
-            while (_fighter1 == null || _fighter2 == null)
+            while (IsFigtersChosen() == true)
             {
                 Console.Clear();
 
                 ShowListFighters();
 
-                ChooseFighter(UserInput.ReadInt());
+                ChooseFighter(UserInput.ReadInt("Введите номер бойца: "));
             }
 
             AnnounceFightersReadyForFight();
@@ -79,8 +80,15 @@
             AnnounceWinner();
         }
 
+        private bool IsFigtersChosen()
+        {
+            return _fighter1 == null || _fighter2 == null;
+        }
+
         private void ShowListFighters()
         {
+            Console.WriteLine($"Список доступных бойцов для выбора:");
+
             for (int i = 0; i < _fightersCatalog.Count; i++)
             {
                 Console.WriteLine($"{i} - {_fightersCatalog[i].GetInfo()}");
@@ -135,14 +143,25 @@
 
         private void ChooseFighter(int number)
         {
+            if (number >= _fightersCatalog.Count || number < 0)
+            {
+                Console.WriteLine("Нет такого бойца в каталоге!");
+                Console.ReadKey();
+                return;
+            }
+
             if (_fighter1 == null)
             {
                 _fighter1 = (Fighter?)_fightersCatalog[number].Clone();
+                Console.WriteLine($"Вы выбрали: {_fighter1.GetInfo()}");
             }
             else if (_fighter2 == null)
             {
                 _fighter2 = (Fighter?)_fightersCatalog[number].Clone();
+                Console.WriteLine($"Вы выбрали: {_fighter2.GetInfo()}");
             }
+
+            Console.ReadKey();
         }
     }
 
@@ -201,7 +220,7 @@
 
         public virtual string GetInfo()
         {
-            return $"({ClassName}): {Name}";
+            return $"{ClassName}";
         }
 
         public bool TryTakeDamage(int damage)
@@ -447,9 +466,11 @@
 
     static class UserInput
     {
-        public static int ReadInt(int minValue = int.MinValue, int maxValue = int.MaxValue)
+        public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
         {
             int result;
+
+            Console.WriteLine(message);
 
             while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
             {
