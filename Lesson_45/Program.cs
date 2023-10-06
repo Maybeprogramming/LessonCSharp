@@ -71,8 +71,8 @@ namespace Lesson_45
 
                 ShowListFighters();
 
-                ChooseFighter(0);
-                ChooseFighter(4);
+                ChooseFighter(2);
+                ChooseFighter(3);
             }
 
             AnnounceFightersReadyForFight();
@@ -108,14 +108,14 @@ namespace Lesson_45
 
         private void AnnounceFightersReadyForFight()
         {
-            Console.WriteLine("Готовые к бою отважные герои:");
+            Console.WriteLine("\nГотовые к бою отважные герои:");
             Console.WriteLine($"1. {_fighter1.ClassName} ({_fighter1.Name}): DMG: {_fighter1.Damage}, HP: {_fighter1.Health}");
             Console.WriteLine($"2. {_fighter2.ClassName} ({_fighter2.Name}): DMG: {_fighter2.Damage}, HP: {_fighter2.Health}");
         }
 
         private void Fight()
         {
-            Console.WriteLine("Начать битву?\nДля продолжения нажмите любую клавишу...\n\n");
+            Console.WriteLine("\nНачать битву?\nДля продолжения нажмите любую клавишу...\n");
             Console.ReadKey();
 
             while (_fighter1.IsAlive == true && _fighter2.IsAlive == true)
@@ -217,7 +217,7 @@ namespace Lesson_45
             return $"({ClassName}): {Name}";
         }
 
-        protected bool TryTakeDamage(int damage)
+        public bool TryTakeDamage(int damage)
         {
             if (Health > 0)
             {
@@ -227,11 +227,6 @@ namespace Lesson_45
             }
 
             return false;
-        }
-
-        public override string ToString()
-        {
-            return $"{ClassName}";
         }
 
         private void SetHealth(int value)
@@ -248,7 +243,7 @@ namespace Lesson_45
 
         public virtual IFighterClone Clone()
         {
-            return new Fighter(this.ClassName, this.Health, this.Damage, this.Name);
+            return new Fighter();
         }
     }
 
@@ -257,17 +252,9 @@ namespace Lesson_45
         private readonly int _missDamagePercent = 30;
         private readonly int _maxPercent = 100;
 
-        public Warrior(string className, int health, int damage, string name)
-        {
-            ClassName = className;
-            Health = health;
-            Damage = damage;
-            Name = name;
-        }
-
         public Warrior() => ClassName = "Воин";
 
-        protected bool TryTakeDamage(int damage)
+        public bool TryTakeDamage(int damage)
         {
             int missChance = Randomaizer.GenerateRandomNumber(0, _maxPercent + 1);
 
@@ -282,20 +269,12 @@ namespace Lesson_45
 
         public override IFighterClone Clone()
         {
-            return new Warrior(this.ClassName, this.Health, this.Damage, this.Name);
+            return new Warrior();
         }
     }
 
     class Assasign : Fighter
     {
-        public Assasign(string className, int health, int damage, string name)
-        {
-            ClassName = className;
-            Health = health;
-            Damage = damage;
-            Name = name;
-        }
-
         public Assasign() => ClassName = "Разбойник";
 
         public override void Attack(Fighter target)
@@ -307,17 +286,17 @@ namespace Lesson_45
 
             Console.WriteLine($"{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
 
-            //if (target.TryTakeDamage(Damage))
-            //{
-            //    int damageDivider = 10;
-            //    int healingPoint = Damage / damageDivider;
-            //    Healing(healingPoint);
-            //}
+            if (target.TryTakeDamage(Damage))
+            {
+                int damageDivider = 10;
+                int healingPoint = Damage / damageDivider;
+                Healing(healingPoint);
+            }
         }
 
         public override IFighterClone Clone()
         {
-            return new Assasign(this.ClassName, this.Health, this.Damage, this.Name);
+            return new Assasign();
         }
     }
 
@@ -326,14 +305,6 @@ namespace Lesson_45
         private readonly int _critPercent = 30;
         private readonly int _maxPercent = 100;
         private readonly int _damageModifyPercent = 150;
-
-        public Hunter(string className, int health, int damage, string name)
-        {
-            ClassName = className;
-            Health = health;
-            Damage = damage;
-            Name = name;
-        }
 
         public Hunter() => ClassName = "Охотник";
 
@@ -350,14 +321,14 @@ namespace Lesson_45
 
                 if (target.IsAlive == true)
                 {
-                    //target.TryTakeDamage(currentDamage);
+                    target.TryTakeDamage(currentDamage);
                 }
             }
         }
 
         public override IFighterClone Clone()
         {
-            return new Hunter(this.ClassName, this.Health, this.Damage, this.Name);
+            return new Hunter();
         }
 
         private int CalculateCriteDamage()
@@ -380,15 +351,6 @@ namespace Lesson_45
         private readonly int _maxMana = 100;
         private readonly int _castingManaCost = 20;
         private readonly int _regenerationManaCount = 10;
-
-        public Wizzard(string className, int health, int damage, string name, int mana)
-        {
-            ClassName = className;
-            Health = health;
-            Damage = damage;
-            Name = name;
-            _mana = mana;
-        }
 
         public Wizzard()
         {
@@ -414,7 +376,7 @@ namespace Lesson_45
 
         public override IFighterClone Clone()
         {
-            return new Wizzard(this.ClassName, this.Health, this.Damage, this.Name, this._mana);
+            return new Wizzard();
         }
 
         private bool TryTakeDamage(int damage)
