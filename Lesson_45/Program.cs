@@ -146,6 +146,7 @@
             if (number >= _fightersCatalog.Count || number < 0)
             {
                 Console.WriteLine("Нет такого бойца в каталоге!");
+                Console.WriteLine($"Для продолжения нажмите любую клавишу...");
                 Console.ReadKey();
                 return;
             }
@@ -161,6 +162,7 @@
                 Console.WriteLine($"Вы выбрали: {_fighter2.GetInfo()}");
             }
 
+            Console.WriteLine($"Для продолжения нажмите любую клавишу...");
             Console.ReadKey();
         }
     }
@@ -228,7 +230,7 @@
             if (Health > 0)
             {
                 Health -= damage;
-                Console.WriteLine($"{ClassName} ({Name}) получил удар ({damage}) ед., осталось здоровья ({Health})");
+                Console.WriteLine($"{ClassName} ({Name}) получил урон ({damage}) ед., осталось здоровья ({Health})");
                 return true;
             }
 
