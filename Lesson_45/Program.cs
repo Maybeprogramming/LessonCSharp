@@ -1,7 +1,4 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-using System.Xml.Linq;
-
-namespace Lesson_45
+﻿namespace Lesson_45
 {
     class Program
     {
