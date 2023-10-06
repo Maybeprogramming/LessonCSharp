@@ -1,4 +1,7 @@
-﻿namespace Lesson_45
+﻿using static System.Net.Mime.MediaTypeNames;
+using System.Xml.Linq;
+
+namespace Lesson_45
 {
     class Program
     {
@@ -10,7 +13,7 @@
             Console.WindowWidth = 90;
             Console.BufferHeight = 500;
 
-            BattleField battleField = new BattleField();
+            BattleField battleField = new();
             bool isRun = true;
 
             while (isRun == true)
@@ -47,6 +50,15 @@
     {
         private List<Fighter> _fighters;
 
+        private List<Fighter>? _fightersCatalog;
+        private IFighterClone _fighter1;
+        private IFighterClone _fighter2;
+
+        public BattleField()
+        {
+            FillFightersCatalog();
+        }
+
         public void Work()
         {
             const string ChooseFighterCommand = "0";
@@ -57,39 +69,37 @@
 
             _fighters = new List<Fighter>();
 
-            while (_fighters.Count < 2)
+            ClearFighters();
+
+            while (_fighter1 == null || _fighter2 == null)
             {
                 Console.Clear();
 
-                Console.WriteLine(
-                    $"Доступные классы героев:\n" +
-                    $"{ChooseFighterCommand} - Боец\n" +
-                    $"{ChooseWarriorCommand} - Воин\n" +
-                    $"{ChooseAssasignCommand} - Разбойник\n" +
-                    $"{ChooseHunterCommand} - Охотник\n" +
-                    $"{ChooseWizzardCommand} - Волшебник\n" +
-                    $"Введите номер для выбора {_fighters.Count + 1} класса героя:");
+                for (int i = 0; i < _fightersCatalog.Count; i++)
+                {
+                    Console.WriteLine($"{i} - {_fightersCatalog[i].GetInfo()}");
+                }
 
                 switch (Console.ReadLine())
                 {
                     case ChooseFighterCommand:
-                        ChooseFighter(new Fighter());
+                        ChooseFighter(0);
                         break;
 
                     case ChooseWarriorCommand:
-                        ChooseFighter(new Warrior());
+                        ChooseFighter(0);
                         break;
 
                     case ChooseAssasignCommand:
-                        ChooseFighter(new Assasign());
+                        ChooseFighter(2);                        
                         break;
 
                     case ChooseHunterCommand:
-                        ChooseFighter(new Hunter());
+                        ChooseFighter(3);                        
                         break;
 
                     case ChooseWizzardCommand:
-                        ChooseFighter(new Wizzard());
+                        ChooseFighter(4);                        
                         break;
 
                     default:
@@ -97,10 +107,28 @@
                         break;
                 }
             }
-            
+
             AnnounceFightersReadyForFight();
             Fight();
-            AnnounceWinner();            
+            AnnounceWinner();
+        }
+
+        private void FillFightersCatalog()
+        {
+            _fightersCatalog = new()
+            {
+                new Fighter(),
+                new Warrior(),
+                new Assasign(),
+                new Hunter(),
+                new Wizzard()
+            };
+        }
+
+        private void ClearFighters()
+        {
+            _fighter1 = null;
+            _fighter2 = null;
         }
 
         private void AnnounceFightersReadyForFight()
@@ -146,18 +174,20 @@
             Console.ReadKey();
         }
 
-        private void ChooseFighter(Fighter fighter) => _fighters.Add(fighter); 
-
-        private void ChooseFighter(Warrior warrior) => _fighters.Add(warrior);
-
-        private void ChooseFighter(Assasign assasign) => _fighters.Add(assasign);
-
-        private void ChooseFighter(Hunter hunter) => _fighters.Add(hunter);
-
-        private void ChooseFighter(Wizzard wizzard) => _fighters.Add(wizzard);
+        private void ChooseFighter(int number)
+        {
+            if (_fighter1 == null)
+            {
+                _fighter1 = _fightersCatalog[number].Clone();
+            }
+            else if (_fighter2 == null)
+            {
+                _fighter2 = _fightersCatalog[number].Clone();
+            }
+        }
     }
 
-    class Fighter
+    class Fighter : IFighterClone
     {
         private int _health;
 
@@ -167,6 +197,14 @@
             Health = Randomaizer.GenerateRandomNumber(150, 301);
             Damage = Randomaizer.GenerateRandomNumber(10, 21);
             Name = Randomaizer.GenerateRandomName();
+        }
+
+        public Fighter(string className, int health, int damage, string name)
+        {
+            ClassName = className;
+            Health = health;
+            Damage = damage;
+            Name = name;
         }
 
         public string ClassName { get; protected set; }
@@ -202,7 +240,12 @@
             Console.WriteLine($"{ClassName} ({Name}) подлечил здоровье на ({healingPoint}) ед. Здоровье : ({Health})");
         }
 
-        public virtual bool TryTakeDamage(int damage)
+        public virtual string GetInfo()
+        {
+            return $"({ClassName}): {Name}";
+        }
+
+        protected bool TryTakeDamage(int damage)
         {
             if (Health > 0)
             {
@@ -230,16 +273,29 @@
                 _health = 0;
             }
         }
+
+        public virtual IFighterClone Clone()
+        {
+            return new Fighter(this.ClassName, this.Health, this.Damage, this.Name);
+        }
     }
 
     class Warrior : Fighter
     {
-        private int _missDamagePercent = 30;
-        private int _maxPercent = 100;
+        private readonly int _missDamagePercent = 30;
+        private readonly int _maxPercent = 100;
+
+        public Warrior(string className, int health, int damage, string name)
+        {
+            ClassName = className;
+            Health = health;
+            Damage = damage;
+            Name = name;
+        }
 
         public Warrior() => ClassName = "Воин";
 
-        public override bool TryTakeDamage(int damage)
+        protected bool TryTakeDamage(int damage)
         {
             int missChance = Randomaizer.GenerateRandomNumber(0, _maxPercent + 1);
 
@@ -251,10 +307,23 @@
 
             return base.TryTakeDamage(damage);
         }
+
+        public override IFighterClone Clone()
+        {
+            return new Warrior(this.ClassName, this.Health, this.Damage, this.Name);
+        }
     }
 
     class Assasign : Fighter
     {
+        public Assasign(string className, int health, int damage, string name)
+        {
+            ClassName = className;
+            Health = health;
+            Damage = damage;
+            Name = name;
+        }
+
         public Assasign() => ClassName = "Разбойник";
 
         public override void Attack(Fighter target)
@@ -266,20 +335,33 @@
 
             Console.WriteLine($"{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
 
-            if (target.TryTakeDamage(Damage))
-            {
-                int damageDivider = 10;
-                int healingPoint = Damage / damageDivider;
-                Healing(healingPoint);
-            }
+            //if (target.TryTakeDamage(Damage))
+            //{
+            //    int damageDivider = 10;
+            //    int healingPoint = Damage / damageDivider;
+            //    Healing(healingPoint);
+            //}
+        }
+
+        public override IFighterClone Clone()
+        {
+            return new Assasign(this.ClassName, this.Health, this.Damage, this.Name);
         }
     }
 
     class Hunter : Fighter
     {
-        private int _critPercent = 30;
-        private int _maxPercent = 100;
-        private int _damageModifyPercent = 150;
+        private readonly int _critPercent = 30;
+        private readonly int _maxPercent = 100;
+        private readonly int _damageModifyPercent = 150;
+
+        public Hunter(string className, int health, int damage, string name)
+        {
+            ClassName = className;
+            Health = health;
+            Damage = damage;
+            Name = name;
+        }
 
         public Hunter() => ClassName = "Охотник";
 
@@ -296,9 +378,14 @@
 
                 if (target.IsAlive == true)
                 {
-                    target.TryTakeDamage(currentDamage);
+                    //target.TryTakeDamage(currentDamage);
                 }
             }
+        }
+
+        public override IFighterClone Clone()
+        {
+            return new Hunter(this.ClassName, this.Health, this.Damage, this.Name);
         }
 
         private int CalculateCriteDamage()
@@ -317,10 +404,19 @@
     class Wizzard : Fighter
     {
         private int _mana;
-        private int _minMana = 50;
-        private int _maxMana = 100;
-        private int _castingManaCost = 20;
-        private int _regenerationManaCount = 10;
+        private readonly int _minMana = 50;
+        private readonly int _maxMana = 100;
+        private readonly int _castingManaCost = 20;
+        private readonly int _regenerationManaCount = 10;
+
+        public Wizzard(string className, int health, int damage, string name, int mana)
+        {
+            ClassName = className;
+            Health = health;
+            Damage = damage;
+            Name = name;
+            _mana = mana;
+        }
 
         public Wizzard()
         {
@@ -344,17 +440,29 @@
             }
         }
 
-        public override bool TryTakeDamage(int damage)
+        public override IFighterClone Clone()
+        {
+            return new Wizzard(this.ClassName, this.Health, this.Damage, this.Name, this._mana);
+        }
+
+        private bool TryTakeDamage(int damage)
         {
             _mana += _regenerationManaCount;
             return base.TryTakeDamage(damage);
         }
+
+
+    }
+
+    interface IFighterClone
+    {
+        IFighterClone Clone();
     }
 
     static class Randomaizer
     {
-        private static Random s_random = new Random();
-        private static string[] s_names =
+        private static readonly Random s_random = new();
+        private static readonly string[] s_names =
             {
                 "Варвар",
                 "Космонафт",
