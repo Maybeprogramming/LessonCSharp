@@ -354,11 +354,11 @@
 
     class Wizzard : Fighter
     {
-        private int _mana;
         private readonly int _minMana = 50;
         private readonly int _maxMana = 100;
         private readonly int _castingManaCost = 20;
         private readonly int _regenerationManaCount = 10;
+        private int _mana;
 
         public Wizzard()
         {
