@@ -146,7 +146,7 @@
             Console.ReadKey();
         }
 
-        private void ChooseFighter(Fighter fighter) => _fighters.Add(fighter);
+        private void ChooseFighter(Fighter fighter) => _fighters.Add(fighter); 
 
         private void ChooseFighter(Warrior warrior) => _fighters.Add(warrior);
 
