@@ -133,7 +133,7 @@
             {
                 Console.WriteLine($"\nПобедитель - {_fighter1.ClassName} ({_fighter1.Name})!");
             }
-            else if (_fighter1.IsAlive == false && _fighter2.IsAlive == true)
+            else
             {
                 Console.WriteLine($"\nПобедитель - {_fighter2.ClassName} ({_fighter2.Name})!");
             }
@@ -199,18 +199,10 @@
 
         public virtual void Attack(Fighter target)
         {
-            if (IsAlive == false)
-            {
-                return;
-            }
-            else
+            if (IsAlive == true && target.IsAlive == true)
             {
                 Console.WriteLine($"{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
-
-                if (target.IsAlive == true)
-                {
-                    target.TryTakeDamage(Damage);
-                }
+                target.TryTakeDamage(Damage);
             }
         }
 
@@ -225,7 +217,7 @@
             return $"{ClassName}";
         }
 
-        public bool TryTakeDamage(int damage)
+        public virtual bool TryTakeDamage(int damage)
         {
             if (Health > 0)
             {
@@ -287,18 +279,16 @@
 
         public override void Attack(Fighter target)
         {
-            if (IsAlive == false || target.IsAlive == false)
+            if (IsAlive == true || target.IsAlive == true)
             {
-                return;
-            }
+                Console.WriteLine($"{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
 
-            Console.WriteLine($"{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
-
-            if (target.TryTakeDamage(Damage))
-            {
-                int damageDivider = 10;
-                int healingPoint = Damage / damageDivider;
-                Healing(healingPoint);
+                if (target.TryTakeDamage(Damage))
+                {
+                    int damageDivider = 10;
+                    int healingPoint = Damage / damageDivider;
+                    Healing(healingPoint);
+                }
             }
         }
 
@@ -318,19 +308,11 @@
 
         public override void Attack(Fighter target)
         {
-            if (IsAlive == false)
-            {
-                return;
-            }
-            else
+            if (IsAlive == true && target.IsAlive == true)
             {
                 int currentDamage = CalculateCriteDamage();
                 Console.WriteLine($"{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
-
-                if (target.IsAlive == true)
-                {
-                    target.TryTakeDamage(currentDamage);
-                }
+                target.TryTakeDamage(currentDamage);
             }
         }
 
@@ -387,13 +369,11 @@
             return new Wizzard();
         }
 
-        private bool TryTakeDamage(int damage)
+        public override bool TryTakeDamage(int damage)
         {
             _mana += _regenerationManaCount;
             return base.TryTakeDamage(damage);
         }
-
-
     }
 
     interface IClone
@@ -457,7 +437,7 @@
 
         public static string GenerateRandomName()
         {
-            return s_names[s_random.Next(0, s_names.Length - 1)];
+            return s_names[s_random.Next(0, s_names.Length)];
         }
 
         public static int GenerateRandomNumber(int minValue, int maxValue)
