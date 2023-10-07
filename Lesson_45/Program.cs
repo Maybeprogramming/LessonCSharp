@@ -1,5 +1,9 @@
 ﻿namespace Lesson_45
 {
+    using static UserInput;
+    using static Randomaizer;
+    using static Display;
+
     class Program
     {
         static void Main()
@@ -16,7 +20,7 @@
             while (isRun == true)
             {
                 Console.Clear();
-                Console.WriteLine(
+                Print(
                     $"Меню:\n" +
                     $"{BeginFightMenu} - Начать подготовку битвы\n" +
                     $"{ExitMenu} - Покинуть поле битвы.\n" +
@@ -39,7 +43,7 @@
                 }
             }
 
-            Console.WriteLine("Работа программы завершена!");
+            Print("\nРабота программы завершена!");
             Console.ReadKey();
         }
     }
@@ -72,7 +76,7 @@
 
                 ShowListFighters();
 
-                ChooseFighter(UserInput.ReadInt("Введите номер бойца: "));
+                ChooseFighter(ReadInt("Введите номер бойца: "));
             }
 
             AnnounceFightersReadyForFight();
@@ -87,11 +91,11 @@
 
         private void ShowListFighters()
         {
-            Console.WriteLine($"Список доступных бойцов для выбора:");
+            Print($"Список доступных бойцов для выбора:\n");
 
             for (int i = 0; i < _fightersCatalog.Count; i++)
             {
-                Console.WriteLine($"{i} - {_fightersCatalog[i].GetInfo()}");
+                Print($"{i} - {_fightersCatalog[i].GetInfo()}\n");
             }
         }
 
@@ -103,14 +107,14 @@
 
         private void AnnounceFightersReadyForFight()
         {
-            Console.WriteLine("\nГотовые к бою отважные герои:");
-            Console.WriteLine($"1. {_fighter1.ClassName} ({_fighter1.Name}): DMG: {_fighter1.Damage}, HP: {_fighter1.Health}");
-            Console.WriteLine($"2. {_fighter2.ClassName} ({_fighter2.Name}): DMG: {_fighter2.Damage}, HP: {_fighter2.Health}");
+            Print("\n\nГотовые к бою отважные герои:\n");
+            Print($"1. {_fighter1.ClassName} ({_fighter1.Name}): DMG: {_fighter1.Damage}, HP: {_fighter1.Health}\n");
+            Print($"2. {_fighter2.ClassName} ({_fighter2.Name}): DMG: {_fighter2.Damage}, HP: {_fighter2.Health}\n");
         }
 
         private void Fight()
         {
-            Console.WriteLine("\nНачать битву?\nДля продолжения нажмите любую клавишу...\n");
+            Print("\nНачать битву?\nДля продолжения нажмите любую клавишу...\n\n");
             Console.ReadKey();
 
             while (_fighter1.IsAlive == true && _fighter2.IsAlive == true)
@@ -118,7 +122,7 @@
                 _fighter1.Attack(_fighter2);
                 _fighter2.Attack(_fighter1);
 
-                Console.WriteLine(new string('-', 70));
+                Print(new string('-', 70));
                 Task.Delay(1000).Wait();
             }
         }
@@ -127,15 +131,15 @@
         {
             if (_fighter1.IsAlive == false && _fighter2.IsAlive == false)
             {
-                Console.WriteLine("\nНичья! Оба героя пали на поле боя!");
+                Print("\nНичья! Оба героя пали на поле боя!");
             }
             else if (_fighter1.IsAlive == true && _fighter2.IsAlive == false)
             {
-                Console.WriteLine($"\nПобедитель - {_fighter1.ClassName} ({_fighter1.Name})!");
+                Print($"\nПобедитель - {_fighter1.ClassName} ({_fighter1.Name})!");
             }
             else
             {
-                Console.WriteLine($"\nПобедитель - {_fighter2.ClassName} ({_fighter2.Name})!");
+                Print($"\nПобедитель - {_fighter2.ClassName} ({_fighter2.Name})!");
             }
 
             Console.ReadKey();
@@ -145,8 +149,8 @@
         {
             if (number >= _fightersCatalog.Count || number < 0)
             {
-                Console.WriteLine("Нет такого бойца в каталоге!");
-                Console.WriteLine($"Для продолжения нажмите любую клавишу...");
+                Print("\nНет такого бойца в каталоге!");
+                Print("\nДля продолжения нажмите любую клавишу...");
                 Console.ReadKey();
                 return;
             }
@@ -154,15 +158,15 @@
             if (_fighter1 == null)
             {
                 _fighter1 = (Fighter?)_fightersCatalog[number].Clone();
-                Console.WriteLine($"Вы выбрали: {_fighter1.GetInfo()}");
+                Print($"\nВы выбрали: {_fighter1.GetInfo()}");
             }
             else if (_fighter2 == null)
             {
                 _fighter2 = (Fighter?)_fightersCatalog[number].Clone();
-                Console.WriteLine($"Вы выбрали: {_fighter2.GetInfo()}");
+                Print($"\nВы выбрали: {_fighter2.GetInfo()}");
             }
 
-            Console.WriteLine($"Для продолжения нажмите любую клавишу...");
+            Print($"\nДля продолжения нажмите любую клавишу...");
             Console.ReadKey();
         }
     }
@@ -174,17 +178,9 @@
         public Fighter()
         {
             ClassName = "Боец";
-            Health = Randomaizer.GenerateRandomNumber(150, 301);
-            Damage = Randomaizer.GenerateRandomNumber(10, 21);
-            Name = Randomaizer.GenerateRandomName();
-        }
-
-        public Fighter(string className, int health, int damage, string name)
-        {
-            ClassName = className;
-            Health = health;
-            Damage = damage;
-            Name = name;
+            Health = GenerateRandomNumber(150, 301);
+            Damage = GenerateRandomNumber(10, 21);
+            Name = GenerateRandomName();
         }
 
         public string ClassName { get; protected set; }
@@ -201,7 +197,7 @@
         {
             if (IsAlive == true && target.IsAlive == true)
             {
-                Console.WriteLine($"{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
+                Print($"\n{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
                 target.TryTakeDamage(Damage);
             }
         }
@@ -209,7 +205,7 @@
         public virtual void Healing(int healingPoint)
         {
             Health += healingPoint;
-            Console.WriteLine($"{ClassName} ({Name}) подлечил здоровье на ({healingPoint}) ед. Здоровье : ({Health})");
+            Print($"\n{ClassName} ({Name}) подлечил здоровье на ({healingPoint}) ед. Здоровье : ({Health})", ConsoleColor.Green);
         }
 
         public virtual string GetInfo()
@@ -222,7 +218,7 @@
             if (Health > 0)
             {
                 Health -= damage;
-                Console.WriteLine($"{ClassName} ({Name}) получил урон ({damage}) ед., осталось здоровья ({Health})");
+                Print($"\n{ClassName} ({Name}) получил урон ({damage}) ед., осталось здоровья ({Health})", ConsoleColor.Red);
                 return true;
             }
 
@@ -254,13 +250,13 @@
 
         public Warrior() => ClassName = "Воин";
 
-        public bool TryTakeDamage(int damage)
+        public override bool TryTakeDamage(int damage)
         {
-            int missChance = Randomaizer.GenerateRandomNumber(0, _maxPercent + 1);
+            int missChance = GenerateRandomNumber(0, _maxPercent + 1);
 
             if (missChance < _missDamagePercent)
             {
-                Console.WriteLine($"{ClassName} ({Name}) увернулся от удара, осталось здоровья ({Health})");
+                Print($"\n{ClassName} ({Name}) увернулся от удара, осталось здоровья ({Health})", ConsoleColor.DarkYellow);
                 return false;
             }
 
@@ -281,7 +277,7 @@
         {
             if (IsAlive == true || target.IsAlive == true)
             {
-                Console.WriteLine($"{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
+                Print($"\n{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
 
                 if (target.TryTakeDamage(Damage))
                 {
@@ -310,8 +306,17 @@
         {
             if (IsAlive == true && target.IsAlive == true)
             {
-                int currentDamage = CalculateCriteDamage();
-                Console.WriteLine($"{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
+                int currentDamage = CalculateCriteDamage(out bool isCritacalDamage);
+
+                if (isCritacalDamage == true)
+                {
+                    Print($"\n{ClassName} ({Name}) произвёл критический удар в сторону {target.ClassName} ({target.Name})", ConsoleColor.DarkCyan);
+                }
+                else
+                {
+                    Print($"\n{ClassName} ({Name}) произвёл удар в сторону {target.ClassName} ({target.Name})");
+                }
+
                 target.TryTakeDamage(currentDamage);
             }
         }
@@ -321,15 +326,17 @@
             return new Hunter();
         }
 
-        private int CalculateCriteDamage()
+        private int CalculateCriteDamage(out bool isCriticalDamage)
         {
-            int critChance = Randomaizer.GenerateRandomNumber(0, _maxPercent + 1);
+            int critChance = GenerateRandomNumber(0, _maxPercent + 1);
 
             if (critChance < _critPercent)
             {
+                isCriticalDamage = true;
                 return Damage * _damageModifyPercent / _maxPercent;
             }
 
+            isCriticalDamage = false;
             return Damage;
         }
     }
@@ -345,7 +352,7 @@
         public Wizzard()
         {
             ClassName = "Волшебник";
-            _mana = Randomaizer.GenerateRandomNumber(_minMana, _maxMana + 1);
+            _mana = GenerateRandomNumber(_minMana, _maxMana + 1);
         }
 
         public int Mana { get => _mana; }
@@ -360,7 +367,7 @@
             else
             {
                 _mana += _regenerationManaCount;
-                Console.WriteLine($"{ClassName} ({Name}) не хватает маны для удара {target.ClassName} ({target.Name})");
+                Print($"\n{ClassName} ({Name}) не хватает маны для удара {target.ClassName} ({target.Name})", ConsoleColor.DarkYellow);
             }
         }
 
@@ -460,6 +467,17 @@
             }
 
             return result;
+        }
+    }
+
+    static class Display
+    {
+        public static void Print(string message, ConsoleColor consoleColor = ConsoleColor.White)
+        {
+            ConsoleColor defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = consoleColor;
+            Console.Write(message);
+            Console.ForegroundColor = defaultColor;
         }
     }
 }
