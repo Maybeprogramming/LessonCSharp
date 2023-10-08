@@ -11,15 +11,16 @@
             const string BeginFightMenu = "1";
             const string ExitMenu = "2";
 
+            bool isRun = true;
+            BattleField battleField = new();
+
             Console.WindowWidth = 90;
             Console.BufferHeight = 500;
-
-            BattleField battleField = new();
-            bool isRun = true;
 
             while (isRun == true)
             {
                 Console.Clear();
+
                 Print(
                     $"Меню:\n" +
                     $"{BeginFightMenu} - Начать подготовку битвы\n" +
@@ -70,26 +71,26 @@
         {
             ClearFighters();
 
-            while (IsFigtersNotChosen() == true)
+            while (IsChoosedFigters() == false)
             {
                 Console.Clear();
 
-                ShowListFighters();
+                ShowAllFighters();
 
                 ChooseFighter(ReadInt("Введите номер бойца: "));
             }
 
-            AnnounceFightersReadyForFight();
+            AnnouncingFightersReadyForFight();
             Fight();
-            AnnounceWinner();
+            AnnouncingWinner();
         }
 
-        private bool IsFigtersNotChosen()
+        private bool IsChoosedFigters()
         {
-            return _fighter1 == null || _fighter2 == null;
+            return _fighter1 != null && _fighter2 != null;
         }
 
-        private void ShowListFighters()
+        private void ShowAllFighters()
         {
             Print($"Список доступных бойцов для выбора:\n");
 
@@ -105,7 +106,7 @@
             _fighter2 = null;
         }
 
-        private void AnnounceFightersReadyForFight()
+        private void AnnouncingFightersReadyForFight()
         {
             Print("\n\nГотовые к бою отважные герои:\n");
             Print($"1. {_fighter1.ClassName} ({_fighter1.Name}): DMG: {_fighter1.Damage}, HP: {_fighter1.Health}\n");
@@ -114,20 +115,22 @@
 
         private void Fight()
         {
+            int delayMiliseconds = 1000;
+
             Print("\nНачать битву?\nДля продолжения нажмите любую клавишу...\n\n");
             Console.ReadKey();
 
             while (_fighter1.IsAlive == true && _fighter2.IsAlive == true)
             {
-                _fighter1.Attack(_fighter2);
-                _fighter2.Attack(_fighter1);
+                _fighter1.ToAttack(_fighter2);
+                _fighter2.ToAttack(_fighter1);
 
-                Print(new string('-', 70));
-                Task.Delay(1000).Wait();
+                Print("\n " + new string('-', 70));
+                Task.Delay(delayMiliseconds).Wait();
             }
         }
 
-        private void AnnounceWinner()
+        private void AnnouncingWinner()
         {
             if (_fighter1.IsAlive == false && _fighter2.IsAlive == false)
             {
@@ -193,7 +196,7 @@
         public bool IsAlive => Health > 0;
         public string Name { get; protected set; }
 
-        public virtual void Attack(Fighter target)
+        public virtual void ToAttack(Fighter target)
         {
             if (IsAlive == true && target.IsAlive == true)
             {
@@ -202,7 +205,7 @@
             }
         }
 
-        public virtual void Healing(int healingPoint)
+        public virtual void Heal(int healingPoint)
         {
             Health += healingPoint;
             Print($"\n{ClassName} ({Name}) подлечил здоровье на ({healingPoint}) ед. Здоровье : ({Health})", ConsoleColor.Green);
@@ -225,6 +228,11 @@
             return false;
         }
 
+        public virtual IClone Clone()
+        {
+            return new Fighter();
+        }
+
         private void SetHealth(int value)
         {
             if (value > 0)
@@ -236,19 +244,19 @@
                 _health = 0;
             }
         }
-
-        public virtual IClone Clone()
-        {
-            return new Fighter();
-        }
     }
 
     class Warrior : Fighter
     {
-        private readonly int _missDamagePercent = 30;
-        private readonly int _maxPercent = 100;
+        private readonly int _missDamagePercent;
+        private readonly int _maxPercent;
 
-        public Warrior() => ClassName = "Воин";
+        public Warrior()
+        {
+            _missDamagePercent = 30;
+            _maxPercent = 100;
+            ClassName = "Воин";
+        }
 
         public override bool TryTakeDamage(int damage)
         {
@@ -273,7 +281,7 @@
     {
         public Assasign() => ClassName = "Разбойник";
 
-        public override void Attack(Fighter target)
+        public override void ToAttack(Fighter target)
         {
             if (IsAlive == true || target.IsAlive == true)
             {
@@ -283,7 +291,7 @@
                 {
                     int damageDivider = 10;
                     int healingPoint = Damage / damageDivider;
-                    Healing(healingPoint);
+                    Heal(healingPoint);
                 }
             }
         }
@@ -296,13 +304,19 @@
 
     class Hunter : Fighter
     {
-        private readonly int _critPercent = 30;
-        private readonly int _maxPercent = 100;
-        private readonly int _damageModifyPercent = 150;
+        private readonly int _critPercent;
+        private readonly int _maxPercent;
+        private readonly int _damageModifyPercent;
 
-        public Hunter() => ClassName = "Охотник";
+        public Hunter()
+        {
+            _critPercent = 30;
+            _maxPercent = 100;
+            _damageModifyPercent = 150;
+            ClassName = "Охотник";
+        } 
 
-        public override void Attack(Fighter target)
+        public override void ToAttack(Fighter target)
         {
             if (IsAlive == true && target.IsAlive == true)
             {
@@ -343,26 +357,30 @@
 
     class Wizzard : Fighter
     {
-        private readonly int _minMana = 50;
-        private readonly int _maxMana = 100;
-        private readonly int _castingManaCost = 20;
-        private readonly int _regenerationManaCount = 10;
+        private readonly int _minMana;
+        private readonly int _maxMana;
+        private readonly int _castingManaCost;
+        private readonly int _regenerationManaCount;
         private int _mana;
 
         public Wizzard()
         {
-            ClassName = "Волшебник";
             _mana = GenerateRandomNumber(_minMana, _maxMana + 1);
+            _minMana = 50;
+            _maxMana = 100;
+            _castingManaCost = 20;
+            _regenerationManaCount = 10;
+            ClassName = "Волшебник";
         }
 
         public int Mana { get => _mana; }
 
-        public override void Attack(Fighter target)
+        public override void ToAttack(Fighter target)
         {
             if (_mana >= _castingManaCost)
             {
                 _mana -= _castingManaCost;
-                base.Attack(target);
+                base.ToAttack(target);
             }
             else
             {
@@ -390,8 +408,13 @@
 
     static class Randomaizer
     {
-        private static readonly Random s_random = new();
-        private static readonly string[] s_names =
+        private static readonly Random s_random;
+        private static readonly string[] s_names;
+
+        static Randomaizer() 
+        {
+            s_random = new();
+            s_names = new string[]
             {
                 "Варвар",
                 "Космонафт",
@@ -441,6 +464,7 @@
                 "Попрыгун",
                 "Тряпкович"
             };
+        }
 
         public static string GenerateRandomName()
         {
@@ -459,7 +483,7 @@
         {
             int result;
 
-            Console.WriteLine(message);
+            Console.Write(message);
 
             while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
             {
