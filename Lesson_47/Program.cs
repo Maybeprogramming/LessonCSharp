@@ -73,7 +73,7 @@ namespace Lesson_47
         public Fighter()
         {
             ClassName = "Боец (По умолчанию)";
-            EntityName = "Пехотинец";
+            EntityName = "Пехота";
             Damage = 10;
             Health = 100;
             Armor = 5;
@@ -130,7 +130,7 @@ namespace Lesson_47
 
     class Tank : FighterVihicles
     {
-
+        
     }
 
     class Helicopter : FighterVihicles
