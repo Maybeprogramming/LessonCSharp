@@ -8,7 +8,10 @@
     {
         static void Main()
         {
+            Market market = new Market();
+            market.Work();
 
+            Console.ReadKey();
         }
     }
 
@@ -24,21 +27,55 @@
         {
             _seller = new();
             _showcase = new();
-            _queueBuyersCount = 5;
             _buyers = new();
+            _queueBuyersCount = 5;
+            CreateQueueBuyers(_queueBuyersCount);
         }
 
         public void Work()
         {
+            Buyer buyer = _buyers.Dequeue();
+            Cart cart = new Cart();
 
+            _showcase.ShowProducts();
+
+            buyer.PutProductToCart(_showcase.GetProduct(0));
+            buyer.PutProductToCart(_showcase.GetProduct(1));
+            buyer.PutProductToCart(_showcase.GetProduct(2));
+            buyer.PutProductToCart(_showcase.GetProduct(3));
+            buyer.PutProductToCart(_showcase.GetProduct(4));
+
+            cart = buyer.GetCart();
+
+            Console.WriteLine($"{new string ('-', 50)}");
+
+            foreach (var item in cart.GetAllProducts())
+            {
+                Console.WriteLine($"{item.GetInfo()}");
+            }
+
+            Console.WriteLine($"{new string ('-', 50)}");
+
+            _seller.TrySellProducts(buyer);
+
+            cart = buyer.GetCart();
+
+            Console.WriteLine($"{new string ('-', 50)}");
+
+            foreach (var item in cart.GetAllProducts())
+            {
+                Console.WriteLine($"{item.GetInfo()}");
+            }
+
+            Console.WriteLine($"{new string ('-', 50)}");
         }
 
-        private void FillBuyers(int buyersCount)
+        private void CreateQueueBuyers(int buyersCount)
         {
             for (int i = 0; i < buyersCount; i++)
             {
                 _buyers.Enqueue(new Buyer());
-            } 
+            }
         }
     }
 
@@ -101,15 +138,22 @@
             {
                 totalCost = CalculateProductsCost(buyer.GetCart());
 
+                Console.WriteLine($"LOG: цена продуктов: {totalCost}");
+
                 if (buyer.TryBuyProduct(totalCost) == true)
                 {
                     isPay = true;
                     Money += totalCost;
+
+                    Console.WriteLine($"LOG: Наконец то!");
                 }
                 else
                 {
+                    Console.WriteLine($"LOG: ты там удаляешь или нет?!");
                     buyer.RemoveRandomProduct();
                 }
+
+                Task.Delay(3000).Wait();
             }
         }
 
@@ -134,7 +178,7 @@
         public Buyer()
         {
             _cart = new();
-            _money = GenerateRandomNumber(100, 200);
+            _money = GenerateRandomNumber(200, 300);
         }
 
         public bool TryBuyProduct(int totalCost)
@@ -159,7 +203,12 @@
             int maxIndex = _cart.ProductsCount;
 
             int randomIndex = GenerateRandomNumber(minIndex, maxIndex);
+
+            Console.WriteLine($"LOG: случайный номер продукта: {randomIndex}");
+
             Product product = _cart.GetOneProduct(randomIndex);
+
+            Console.WriteLine($"LOG: продукт: {product.GetInfo()}");
 
             _cart.RemoveProduct(product);
         }
@@ -188,12 +237,13 @@
 
         public void RemoveProduct(Product product)
         {
+            Console.WriteLine($"LOG: метод удаления продукта: {product.GetInfo()}");
             _products?.Remove(product);
         }
 
         public Product GetOneProduct(int index)
         {
-            return _products[index].Clone();
+            return _products[index];
         }
 
         public List<Product> GetAllProducts()
