@@ -41,17 +41,50 @@
 
     class Buyer
     {
-        private readonly int _money;
+        private int _money;
         private Cart? _cart;
 
-        public bool TryBuyProduct()
+        public Buyer()
         {
+            _cart = new();
+        }
+
+        public bool TryBuyProduct(int totalCost)
+        {
+            bool IsPay = false;
+
+            while (IsPay == false)
+            {
+                if (_money >= totalCost)
+                {
+                    _money -= totalCost;
+                    IsPay = true;
+                    return true;
+                }
+                else
+                {
+                    RemoveRandomProduct();
+                    return false;
+                }
+            }
+
             return false;
+        }
+
+        public void PutProductToCart(Product product)
+        {
+            _cart?.AddProduct(product);
         }
 
         private void RemoveRandomProduct()
         {
+            int minProductNumber = 0;
+            int maxProductNumber = _cart.ProductsCount;
 
+            int randomProductNumber = GenerateRandomNumber(minProductNumber, maxProductNumber);
+            Product product = _cart.GetProducts()[randomProductNumber];
+
+            _cart.RemoveProduct(product);
         }
     }
 
@@ -64,14 +97,21 @@
             _products = new();
         }
 
+        public int ProductsCount { get => _products.Count; }
+
         public void AddProduct(Product product)
         {
             _products?.Add(product);
         }
 
-        public void RemoveProduct()
+        public void RemoveProduct(Product product)
         {
+            _products?.Remove(product);
+        }
 
+        public List<Product> GetProducts()
+        {
+            return new List<Product>(_products);
         }
     }
 
