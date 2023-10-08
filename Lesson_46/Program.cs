@@ -178,7 +178,8 @@
         public Buyer()
         {
             _cart = new();
-            _money = GenerateRandomNumber(200, 300);
+            _money = GenerateRandomNumber(200, 500);
+            Console.WriteLine($"Денег у покупателя: {_money}");
         }
 
         public bool TryBuyProduct(int totalCost)
