@@ -1,4 +1,6 @@
-﻿namespace Lesson_47
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace Lesson_47
 {
     class Program
     {
@@ -16,6 +18,11 @@
         {
 
         }
+
+        public void Fight()
+        {
+
+        }
     }
 
     class Squad
@@ -23,45 +30,148 @@
 
     }
 
-    abstract class Fighter
+    abstract class CombatUnit : ICombatEntity, IDamageable, IDamageProvider
     {
+        protected CombatUnit()
+        {
+            ClassName = "Default";
+            Damage = 10;
+            Health = 100;
+            Armor = 5;
+            EntityName = "DefaultEntity";
+        }
 
+        public string ClassName { get; protected set; }
+        public int Damage { get; protected set; }
+        public int Health { get; protected set; }
+        public int Armor { get; protected set; }
+        public bool IsAlive { get => Health > 0; }
+        public abstract string EntityName { get; set; }
+
+        public virtual bool TryTakeDamage(int damage)
+        {
+            if (IsAlive == true)
+            {
+                Health -= damage;
+                return true;
+            }
+
+            return false;
+        }
+
+        public virtual void AttackTo(Fighter target)
+        {
+            if (IsAlive == true && target.IsAlive == true)
+            {
+                target.TryTakeDamage(Damage);
+            }
+        }
+    }
+
+    abstract class Fighter : CombatUnit, IHeal
+    {
+        public Fighter()
+        {
+            ClassName = "Боец (По умолчанию)";
+            EntityName = "Боевая единица (По умолчанию)";
+            Damage = 10;
+            Health = 100;
+            Armor = 5;
+        }
+
+        public virtual void Heal(int healthPoint)
+        {
+            Health += healthPoint;
+        }
     }
 
     class Stormtrooper : Fighter
     {
+        public Stormtrooper()
+        {
+            Health = 20;
+        }
 
+        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 
-    class Sniper: Fighter
+    class Sniper : Fighter
     {
-
+        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 
-    class Paratrooper: Fighter
+    class Paratrooper : Fighter
     {
-
+        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 
-    class Scout: Fighter
+    class Scout : Fighter
     {
-
+        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 
     class Heavy : Fighter
     {
-
+        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 
-    class GrenadeLauncher: Fighter
+    class GrenadeLauncher : Fighter
     {
-
+        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 
-    class Medic: Fighter
+    class Medic : Fighter
     {
-
+        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
+
+    abstract class FighterVihicles : ICombatEntity, IDamageable, IDamageProvider
+    {
+        public abstract string EntityName { get; set; }
+
+        public abstract void AttackTo(Fighter target);
+
+        public abstract bool TryTakeDamage(int damage);
+    }
+
+    class Tank : FighterVihicles
+    {
+        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public override void AttackTo(Fighter target)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool TryTakeDamage(int damage)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    #region Intarfaces
+
+    interface ICombatEntity
+    {
+        string EntityName { get; set; }
+    }
+
+    interface IDamageable
+    {
+        public abstract bool TryTakeDamage(int damage);
+    }
+
+    interface IDamageProvider
+    {
+        public abstract void AttackTo(Fighter target);
+    }
+
+    interface IHeal
+    {
+        public abstract void Heal(int healthPoint);
+    }
+
+    #endregion
 }
 
 //Война
@@ -83,3 +193,5 @@
 //Пулеметчик - Heavy
 //Гранатометчик - Grenade launcher
 //Медик - Medic
+
+//Combat Unit - реализовать
