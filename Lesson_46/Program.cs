@@ -31,7 +31,12 @@
 
     class Seller
     {
+        public void SellProducts(Buyer buyer)
+        {
 
+        }
+
+        public int TotalMoney { get; private set; }
     }
 
     class Buyer
@@ -43,11 +48,31 @@
         {
             return false;
         }
+
+        private void RemoveRandomProduct()
+        {
+
+        }
     }
 
     class Cart
     {
-        private List<Product> _products;
+        private List<Product>? _products;
+
+        public Cart()
+        {
+            _products = new();
+        }
+
+        public void AddProduct(Product product)
+        {
+            _products?.Add(product);
+        }
+
+        public void RemoveProduct()
+        {
+
+        }
     }
 
     class Product
