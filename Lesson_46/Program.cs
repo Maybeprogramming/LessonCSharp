@@ -51,21 +51,10 @@
 
         public bool TryBuyProduct(int totalCost)
         {
-            bool IsPay = false;
-
-            while (IsPay == false)
+            if (_money >= totalCost)
             {
-                if (_money >= totalCost)
-                {
-                    _money -= totalCost;
-                    IsPay = true;
-                    return true;
-                }
-                else
-                {
-                    RemoveRandomProduct();
-                    return false;
-                }
+                _money -= totalCost;
+                return true;
             }
 
             return false;
