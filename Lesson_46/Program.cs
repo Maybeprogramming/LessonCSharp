@@ -18,17 +18,27 @@
         private Seller? _seller;
         private Queue<Buyer>? _buyers;
         private Showcase _showcase;
+        private int _queueBuyersCount;
 
         public Market()
         {
             _seller = new();
-            _buyers = new();
             _showcase = new();
+            _queueBuyersCount = 5;
+            _buyers = new();
         }
 
         public void Work()
         {
 
+        }
+
+        private void FillBuyers(int buyersCount)
+        {
+            for (int i = 0; i < buyersCount; i++)
+            {
+                _buyers.Enqueue(new Buyer());
+            } 
         }
     }
 
@@ -40,16 +50,16 @@
         {
             _products = new()
             {
-                new Product("Апельсин", GenerateRandomNumber(10, 100)),
-                new Product("Яблоко", GenerateRandomNumber(10, 100)),
-                new Product("Груша", GenerateRandomNumber(10, 100)),
-                new Product("Малина", GenerateRandomNumber(10, 100)),
-                new Product("Клубника", GenerateRandomNumber(10, 100)),
-                new Product("Смородина", GenerateRandomNumber(10, 100)),
-                new Product("Манго", GenerateRandomNumber(10, 100)),
-                new Product("Арбуз", GenerateRandomNumber(10, 100)),
-                new Product("Дыня", GenerateRandomNumber(10, 100)),
-                new Product("Абрикос", GenerateRandomNumber(10, 100))
+                new Product("Апельсин", GenerateRandomNumber(50, 100)),
+                new Product("Яблоко", GenerateRandomNumber(50, 100)),
+                new Product("Груша", GenerateRandomNumber(50, 100)),
+                new Product("Малина", GenerateRandomNumber(50, 100)),
+                new Product("Клубника", GenerateRandomNumber(50, 100)),
+                new Product("Смородина", GenerateRandomNumber(50, 100)),
+                new Product("Манго", GenerateRandomNumber(50, 100)),
+                new Product("Арбуз", GenerateRandomNumber(50, 100)),
+                new Product("Дыня", GenerateRandomNumber(50, 100)),
+                new Product("Абрикос", GenerateRandomNumber(50, 100))
             };
 
             ProductsCount = _products.Count;
@@ -124,6 +134,7 @@
         public Buyer()
         {
             _cart = new();
+            _money = GenerateRandomNumber(100, 200);
         }
 
         public bool TryBuyProduct(int totalCost)
