@@ -73,7 +73,7 @@ namespace Lesson_47
         public Fighter()
         {
             ClassName = "Боец (По умолчанию)";
-            EntityName = "Боевая единица (По умолчанию)";
+            EntityName = "Пехотинец";
             Damage = 10;
             Health = 100;
             Armor = 5;
@@ -92,61 +92,52 @@ namespace Lesson_47
             Health = 20;
         }
 
-        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override string EntityName { get; set; }
     }
 
     class Sniper : Fighter
     {
-        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override string EntityName { get; set; }
     }
 
     class Paratrooper : Fighter
     {
-        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override string EntityName { get; set; }
     }
 
     class Scout : Fighter
     {
-        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override string EntityName { get; set; }
     }
 
     class Heavy : Fighter
     {
-        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override string EntityName { get; set; }
     }
 
     class GrenadeLauncher : Fighter
     {
-        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override string EntityName { get; set; }
     }
 
     class Medic : Fighter
     {
-        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override string EntityName { get; set; }
     }
 
-    abstract class FighterVihicles : ICombatEntity, IDamageable, IDamageProvider
+    abstract class FighterVihicles : CombatUnit
     {
-        public abstract string EntityName { get; set; }
 
-        public abstract void AttackTo(Fighter target);
-
-        public abstract bool TryTakeDamage(int damage);
     }
 
     class Tank : FighterVihicles
     {
-        public override string EntityName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override string EntityName { get; set; }
+    }
 
-        public override void AttackTo(Fighter target)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool TryTakeDamage(int damage)
-        {
-            throw new NotImplementedException();
-        }
+    class Helicopter : FighterVihicles
+    {
+        public override string EntityName { get; set; }
     }
 
     #region Intarfaces
