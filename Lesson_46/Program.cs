@@ -14,13 +14,16 @@
 
     class Market
     {
+        private int BalanceMoney;
         private Seller? _seller;
         private Queue<Buyer>? _buyers;
+        private Showcase _showcase;
 
         public Market()
         {
             _seller = new();
             _buyers = new();
+            _showcase = new();
         }
 
         public void Work()
@@ -29,14 +32,88 @@
         }
     }
 
-    class Seller
+    class Showcase
     {
-        public void SellProducts(Buyer buyer)
-        {
+        private List<Product> _products;
 
+        public Showcase()
+        {
+            _products = new()
+            {
+                new Product("Апельсин", GenerateRandomNumber(10, 100)),
+                new Product("Яблоко", GenerateRandomNumber(10, 100)),
+                new Product("Груша", GenerateRandomNumber(10, 100)),
+                new Product("Малина", GenerateRandomNumber(10, 100)),
+                new Product("Клубника", GenerateRandomNumber(10, 100)),
+                new Product("Смородина", GenerateRandomNumber(10, 100)),
+                new Product("Манго", GenerateRandomNumber(10, 100)),
+                new Product("Арбуз", GenerateRandomNumber(10, 100)),
+                new Product("Дыня", GenerateRandomNumber(10, 100)),
+                new Product("Абрикос", GenerateRandomNumber(10, 100))
+            };
+
+            ProductsCount = _products.Count;
         }
 
-        public int TotalMoney { get; private set; }
+        public int ProductsCount { get; }
+
+        public void ShowProducts()
+        {
+            Print($"Список продуктов в магазине:\n");
+
+            for (int i = 0; i < _products.Count; i++)
+            {
+                Print($"{i} - {_products[i].GetInfo()}\n");
+            }
+        }
+
+        public Product GetProduct(int index)
+        {
+            return _products[index].Clone();
+        }
+    }
+
+    class Seller
+    {
+        public Seller()
+        {
+            Money = 0;
+        }
+
+        public int Money { get; private set; }
+
+        public void TrySellProducts(Buyer buyer)
+        {
+            int totalCost;
+            bool isPay = false;
+
+            while (isPay == false)
+            {
+                totalCost = CalculateProductsCost(buyer.GetCart());
+
+                if (buyer.TryBuyProduct(totalCost) == true)
+                {
+                    isPay = true;
+                    Money += totalCost;
+                }
+                else
+                {
+                    buyer.RemoveRandomProduct();
+                }
+            }
+        }
+
+        private int CalculateProductsCost(Cart cart)
+        {
+            int totalCost = 0;
+
+            foreach (var product in cart.GetAllProducts())
+            {
+                totalCost += product.Price;
+            }
+
+            return totalCost;
+        }
     }
 
     class Buyer
@@ -65,15 +142,20 @@
             _cart?.AddProduct(product);
         }
 
-        private void RemoveRandomProduct()
+        public void RemoveRandomProduct()
         {
-            int minProductNumber = 0;
-            int maxProductNumber = _cart.ProductsCount;
+            int minIndex = 0;
+            int maxIndex = _cart.ProductsCount;
 
-            int randomProductNumber = GenerateRandomNumber(minProductNumber, maxProductNumber);
-            Product product = _cart.GetProducts()[randomProductNumber];
+            int randomIndex = GenerateRandomNumber(minIndex, maxIndex);
+            Product product = _cart.GetOneProduct(randomIndex);
 
             _cart.RemoveProduct(product);
+        }
+
+        public Cart GetCart()
+        {
+            return _cart;
         }
     }
 
@@ -98,7 +180,12 @@
             _products?.Remove(product);
         }
 
-        public List<Product> GetProducts()
+        public Product GetOneProduct(int index)
+        {
+            return _products[index].Clone();
+        }
+
+        public List<Product> GetAllProducts()
         {
             return new List<Product>(_products);
         }
@@ -114,6 +201,16 @@
 
         public string Description { get; }
         public int Price { get; }
+
+        public Product Clone()
+        {
+            return new Product(Description, Price);
+        }
+
+        public string GetInfo()
+        {
+            return $"{Description} - цена: {Price}";
+        }
     }
 
     static class Randomaizer
