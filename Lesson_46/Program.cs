@@ -1,10 +1,35 @@
 ﻿namespace Lesson_46
 {
-    internal class Program
+    class Program
     {
         static void Main()
         {
         }
+    }
+
+    class Market
+    {
+
+    }
+
+    class Seller
+    {
+
+    }
+
+    class Buyer
+    {
+        private readonly int _money;
+    }
+
+    class Cart
+    {
+
+    }
+
+    class  Product
+    {
+        
     }
 }
 
