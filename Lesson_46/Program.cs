@@ -9,7 +9,8 @@
 
     class Market
     {
-
+        private Seller? _seller;
+        private Queue<Buyer>? _buyers;
     }
 
     class Seller
@@ -20,16 +21,37 @@
     class Buyer
     {
         private readonly int _money;
+        private Cart? _cart;
+
+        public bool TryBuyProduct()
+        {
+            return false;
+        }
     }
 
     class Cart
     {
-
+        private List<Product> _products;
     }
 
     class  Product
     {
         
+    }
+
+    static class Randomizer
+    {
+
+    }
+
+    static class UserInput
+    {
+
+    }
+
+    static class Display
+    {
+
     }
 }
 
