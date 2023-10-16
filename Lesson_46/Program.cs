@@ -36,15 +36,33 @@
         {
             Customer customer = _customers.Dequeue();
             Cart cartCurrentCustomer;
-            int productsCount = 6;
+            int productsCount = 5;            
 
             //  Показать очередь покупателей
             ShowCustomersQueue();
 
-            //  Показать меню доступных продуктов
-            ShowAllProducts();
-
             //  Покупатель кладёт продукты в корзину
+
+            int exitCommdand = _productCase.ProductsCount + 1;
+
+            bool isCustomerCompleteShopping = false;
+            int userInputNumber;
+
+            while (isCustomerCompleteShopping == false)
+            {
+                //  Показать меню доступных продуктов
+                ShowAllProducts();
+
+                Print($"{exitCommdand} - закончить наполнять корзину.");
+
+                userInputNumber = ReadInt("Введите номер: ");
+
+                if (userInputNumber >= 0 && userInputNumber < _productCase.ProductsCount + 1)
+                {
+
+                }
+            }
+
             for (int i = 0; i < productsCount; i++)
             {
                 customer.PutProductToCart(_productCase.GetProduct(i));
@@ -96,7 +114,7 @@
 
         private void CreateQueueBuyers(int buyersCount)
         {
-            for (int i = 0; i <= buyersCount; i++)
+            for (int i = 0; i < buyersCount + 1; i++)
             {
                 _customers.Enqueue(new Customer());
             }
