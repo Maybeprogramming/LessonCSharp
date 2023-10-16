@@ -8,6 +8,8 @@
     {
         static void Main()
         {
+            Console.WindowWidth = 100;
+
             Market market = new Market(customersCount: 5);
             market.Work();
 
@@ -33,39 +35,63 @@
         public void Work()
         {
             Customer customer = _customers.Dequeue();
-            Cart cart = new Cart();
+            Cart cartCurrentCustomer;
 
-            _productCase.ShowAllProducts();
+            //  Показать очередь покупателей
+            ShowCustomersQueue();
 
+            //  Показать меню доступных продуктов
+            ShowAllProducts();
+
+            //  Покупатель кладёт продукты в корзину
             customer.PutProductToCart(_productCase.GetProduct(0));
             customer.PutProductToCart(_productCase.GetProduct(1));
             customer.PutProductToCart(_productCase.GetProduct(2));
             customer.PutProductToCart(_productCase.GetProduct(3));
             customer.PutProductToCart(_productCase.GetProduct(4));
 
-            cart = customer.GetCart();
+            // Показать продукты из корзины покупателя
+            cartCurrentCustomer = customer.GetCart();
 
-            Console.WriteLine($"{new string ('-', 50)}");
+            Print($"{new string('-', 50)}\n");
 
-            foreach (var item in cart.GetAllProducts())
+            foreach (var item in cartCurrentCustomer.GetAllProducts())
             {
-                Console.WriteLine($"{item.GetInfo()}");
+                Print($"{item.GetInfo()}\n");
             }
 
-            Console.WriteLine($"{new string ('-', 50)}");
+            // Продавец продаёт продукты покупателю
+            Print($"{new string('-', 50)}\n");
 
             _seller.TrySellProducts(customer);
 
-            cart = customer.GetCart();
+            cartCurrentCustomer = customer.GetCart();
 
-            Console.WriteLine($"{new string ('-', 50)}");
+            // Показать оплаченные продукты у покупателя
+            Print($"{new string('-', 50)}\n");
 
-            foreach (var item in cart.GetAllProducts())
+            foreach (var item in cartCurrentCustomer.GetAllProducts())
             {
-                Console.WriteLine($"{item.GetInfo()}");
+                Print($"{item.GetInfo()}\n");
             }
 
-            Console.WriteLine($"{new string ('-', 50)}");
+            Print($"{new string('-', 50)}\n");
+        }
+
+        private void ShowCustomersQueue()
+        {
+            Print($">----- Очередь покупателей: ------<\n");
+
+            foreach (var client in _customers)
+            {
+                Print($"{client}\n");
+            }
+        }
+
+        private void ShowAllProducts()
+        {
+            Print($">----- Список продуктов в магазине: ------<\n");
+            _productCase.ShowAllProducts();
         }
 
         private void CreateQueueBuyers(int buyersCount)
@@ -101,9 +127,7 @@
         public int ProductsCount { get => _products.Count; }
 
         public void ShowAllProducts()
-        {
-            Print($"Список продуктов в магазине:\n");
-
+        {    
             for (int i = 0; i < _products.Count; i++)
             {
                 Print($"{i} - {_products[i].GetInfo()}\n");
@@ -134,18 +158,18 @@
             {
                 totalCost = CalculateProductsCost(customer.GetCart());
 
-                Console.WriteLine($"LOG: цена продуктов: {totalCost}");
+                //Console.WriteLine($"LOG: цена продуктов: {totalCost}");
 
                 if (customer.TryBuyProduct(totalCost) == true)
                 {
                     isPay = true;
                     Money += totalCost;
 
-                    Console.WriteLine($"LOG: Наконец то!");
+                    //Console.WriteLine($"LOG: Наконец то!");
                 }
                 else
                 {
-                    Console.WriteLine($"LOG: ты там удаляешь или нет?!");
+                    //Console.WriteLine($"LOG: ты там удаляешь или нет?!");
                     customer.RemoveRandomProduct();
                 }
 
@@ -175,7 +199,6 @@
         {
             _cart = new();
             _money = GenerateRandomNumber(200, 500);
-            Console.WriteLine($"Денег у покупателя: {_money}");
         }
 
         public bool TryBuyProduct(int totalCost)
@@ -201,11 +224,12 @@
 
             int randomIndex = GenerateRandomNumber(minIndex, maxIndex);
 
-            Console.WriteLine($"LOG: случайный номер продукта: {randomIndex}");
+            //Console.WriteLine($"LOG: случайный номер продукта: {randomIndex}");
 
             Product product = _cart.GetOneProduct(randomIndex);
 
-            Console.WriteLine($"LOG: продукт: {product.GetInfo()}");
+            //Console.WriteLine($"LOG: продукт: {product.GetInfo()}");
+            Print($"Покупатель выложил и не будет покупать: {product.GetInfo()}\n");
 
             _cart.RemoveProduct(product);
         }
@@ -213,6 +237,11 @@
         public Cart GetCart()
         {
             return _cart;
+        }
+
+        public override string ToString()
+        {
+            return $"Баланс у покупателя: {_money}";
         }
     }
 
@@ -234,7 +263,7 @@
 
         public void RemoveProduct(Product product)
         {
-            Console.WriteLine($"LOG: метод удаления продукта: {product.GetInfo()}");
+            //Console.WriteLine($"LOG: метод удаления продукта: {product.GetInfo()}");
             _products?.Remove(product);
         }
 
