@@ -36,14 +36,14 @@
         {
             Customer customer = _customers.Dequeue();
             Cart cartCurrentCustomer;
-            int productsCount = 5;            
+            int productsCount = 5;
 
             //  Показать очередь покупателей
             ShowCustomersQueue();
 
             //  Покупатель кладёт продукты в корзину
 
-            int exitCommdand = _productCase.ProductsCount + 1;
+            int exitCommdand = _productCase.ProductsCount;
 
             bool isCustomerCompleteShopping = false;
             int userInputNumber;
@@ -53,19 +53,19 @@
                 //  Показать меню доступных продуктов
                 ShowAllProducts();
 
-                Print($"{exitCommdand} - закончить наполнять корзину.");
+                Print($"{exitCommdand} - Пойти на кассу.\n", ConsoleColor.Green);
 
                 userInputNumber = ReadInt("Введите номер: ");
 
-                if (userInputNumber >= 0 && userInputNumber < _productCase.ProductsCount + 1)
+                if (userInputNumber == exitCommdand)
                 {
-
+                    isCustomerCompleteShopping = true;
                 }
-            }
 
-            for (int i = 0; i < productsCount; i++)
-            {
-                customer.PutProductToCart(_productCase.GetProduct(i));
+                if (userInputNumber >= 0 && userInputNumber < _productCase.ProductsCount)
+                {
+                    customer.PutProductToCart(_productCase.GetProduct(userInputNumber));
+                }
             }
 
             // Показать продукты из корзины покупателя
