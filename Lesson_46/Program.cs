@@ -17,33 +17,33 @@
 
     class Market
     {
-        private int BalanceMoney;
+        private int MarketBalanceMoney;
         private Seller? _seller;
-        private Queue<Buyer>? _buyers;
-        private Showcase _showcase;
-        private int _queueBuyersCount;
+        private Queue<Buyer>? _customers;
+        private ProductCase _productCase;
+        private int _customersCount;
 
         public Market()
         {
             _seller = new();
-            _showcase = new();
-            _buyers = new();
-            _queueBuyersCount = 5;
-            CreateQueueBuyers(_queueBuyersCount);
+            _productCase = new();
+            _customers = new();
+            _customersCount = 5;
+            CreateQueueBuyers(_customersCount);
         }
 
         public void Work()
         {
-            Buyer customer = _buyers.Dequeue();
+            Buyer customer = _customers.Dequeue();
             Cart cart = new Cart();
 
-            _showcase.ShowProducts();
+            _productCase.ShowProducts();
 
-            customer.PutProductToCart(_showcase.GetProduct(0));
-            customer.PutProductToCart(_showcase.GetProduct(1));
-            customer.PutProductToCart(_showcase.GetProduct(2));
-            customer.PutProductToCart(_showcase.GetProduct(3));
-            customer.PutProductToCart(_showcase.GetProduct(4));
+            customer.PutProductToCart(_productCase.GetProduct(0));
+            customer.PutProductToCart(_productCase.GetProduct(1));
+            customer.PutProductToCart(_productCase.GetProduct(2));
+            customer.PutProductToCart(_productCase.GetProduct(3));
+            customer.PutProductToCart(_productCase.GetProduct(4));
 
             cart = customer.GetCart();
 
@@ -74,16 +74,16 @@
         {
             for (int i = 0; i < buyersCount; i++)
             {
-                _buyers.Enqueue(new Buyer());
+                _customers.Enqueue(new Buyer());
             }
         }
     }
 
-    class Showcase
+    class ProductCase
     {
         private List<Product> _products;
 
-        public Showcase()
+        public ProductCase()
         {
             _products = new()
             {
