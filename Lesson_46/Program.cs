@@ -34,18 +34,18 @@
 
         public void Work()
         {
-            Buyer buyer = _buyers.Dequeue();
+            Buyer customer = _buyers.Dequeue();
             Cart cart = new Cart();
 
             _showcase.ShowProducts();
 
-            buyer.PutProductToCart(_showcase.GetProduct(0));
-            buyer.PutProductToCart(_showcase.GetProduct(1));
-            buyer.PutProductToCart(_showcase.GetProduct(2));
-            buyer.PutProductToCart(_showcase.GetProduct(3));
-            buyer.PutProductToCart(_showcase.GetProduct(4));
+            customer.PutProductToCart(_showcase.GetProduct(0));
+            customer.PutProductToCart(_showcase.GetProduct(1));
+            customer.PutProductToCart(_showcase.GetProduct(2));
+            customer.PutProductToCart(_showcase.GetProduct(3));
+            customer.PutProductToCart(_showcase.GetProduct(4));
 
-            cart = buyer.GetCart();
+            cart = customer.GetCart();
 
             Console.WriteLine($"{new string ('-', 50)}");
 
@@ -56,9 +56,9 @@
 
             Console.WriteLine($"{new string ('-', 50)}");
 
-            _seller.TrySellProducts(buyer);
+            _seller.TrySellProducts(customer);
 
-            cart = buyer.GetCart();
+            cart = customer.GetCart();
 
             Console.WriteLine($"{new string ('-', 50)}");
 
