@@ -36,6 +36,7 @@
         {
             Customer customer = _customers.Dequeue();
             Cart cartCurrentCustomer;
+            int productsCount = 6;
 
             //  Показать очередь покупателей
             ShowCustomersQueue();
@@ -44,11 +45,10 @@
             ShowAllProducts();
 
             //  Покупатель кладёт продукты в корзину
-            customer.PutProductToCart(_productCase.GetProduct(0));
-            customer.PutProductToCart(_productCase.GetProduct(1));
-            customer.PutProductToCart(_productCase.GetProduct(2));
-            customer.PutProductToCart(_productCase.GetProduct(3));
-            customer.PutProductToCart(_productCase.GetProduct(4));
+            for (int i = 0; i < productsCount; i++)
+            {
+                customer.PutProductToCart(_productCase.GetProduct(i));
+            }
 
             // Показать продукты из корзины покупателя
             cartCurrentCustomer = customer.GetCart();
@@ -96,7 +96,7 @@
 
         private void CreateQueueBuyers(int buyersCount)
         {
-            for (int i = 0; i < buyersCount; i++)
+            for (int i = 0; i <= buyersCount; i++)
             {
                 _customers.Enqueue(new Customer());
             }
@@ -127,7 +127,7 @@
         public int ProductsCount { get => _products.Count; }
 
         public void ShowAllProducts()
-        {    
+        {
             for (int i = 0; i < _products.Count; i++)
             {
                 Print($"{i} - {_products[i].GetInfo()}\n");
@@ -173,7 +173,7 @@
                     customer.RemoveRandomProduct();
                 }
 
-                Task.Delay(3000).Wait();
+                Task.Delay(1000).Wait();
             }
         }
 
@@ -241,7 +241,7 @@
 
         public override string ToString()
         {
-            return $"Баланс у покупателя: {_money}";
+            return $"Баланс у покупателя: {_money}. Тише, тише - мы этого знать не должны.";
         }
     }
 
