@@ -8,7 +8,7 @@
     {
         static void Main()
         {
-            Market market = new Market();
+            Market market = new Market(customersCount: 5);
             market.Work();
 
             Console.ReadKey();
@@ -19,25 +19,23 @@
     {
         private int MarketBalanceMoney;
         private Seller? _seller;
-        private Queue<Buyer>? _customers;
-        private ProductCase _productCase;
-        private int _customersCount;
+        private Queue<Customer>? _customers;
+        private ProductsCase _productCase;
 
-        public Market()
+        public Market(int customersCount)
         {
             _seller = new();
             _productCase = new();
             _customers = new();
-            _customersCount = 5;
-            CreateQueueBuyers(_customersCount);
+            CreateQueueBuyers(customersCount);
         }
 
         public void Work()
         {
-            Buyer customer = _customers.Dequeue();
+            Customer customer = _customers.Dequeue();
             Cart cart = new Cart();
 
-            _productCase.ShowProducts();
+            _productCase.ShowAllProducts();
 
             customer.PutProductToCart(_productCase.GetProduct(0));
             customer.PutProductToCart(_productCase.GetProduct(1));
@@ -74,16 +72,16 @@
         {
             for (int i = 0; i < buyersCount; i++)
             {
-                _customers.Enqueue(new Buyer());
+                _customers.Enqueue(new Customer());
             }
         }
     }
 
-    class ProductCase
+    class ProductsCase
     {
         private List<Product> _products;
 
-        public ProductCase()
+        public ProductsCase()
         {
             _products = new()
             {
@@ -98,13 +96,11 @@
                 new Product("Дыня", GenerateRandomNumber(50, 100)),
                 new Product("Абрикос", GenerateRandomNumber(50, 100))
             };
-
-            ProductsCount = _products.Count;
         }
 
-        public int ProductsCount { get; }
+        public int ProductsCount { get => _products.Count; }
 
-        public void ShowProducts()
+        public void ShowAllProducts()
         {
             Print($"Список продуктов в магазине:\n");
 
@@ -129,18 +125,18 @@
 
         public int Money { get; private set; }
 
-        public void TrySellProducts(Buyer buyer)
+        public void TrySellProducts(Customer customer)
         {
             int totalCost;
             bool isPay = false;
 
             while (isPay == false)
             {
-                totalCost = CalculateProductsCost(buyer.GetCart());
+                totalCost = CalculateProductsCost(customer.GetCart());
 
                 Console.WriteLine($"LOG: цена продуктов: {totalCost}");
 
-                if (buyer.TryBuyProduct(totalCost) == true)
+                if (customer.TryBuyProduct(totalCost) == true)
                 {
                     isPay = true;
                     Money += totalCost;
@@ -150,7 +146,7 @@
                 else
                 {
                     Console.WriteLine($"LOG: ты там удаляешь или нет?!");
-                    buyer.RemoveRandomProduct();
+                    customer.RemoveRandomProduct();
                 }
 
                 Task.Delay(3000).Wait();
@@ -170,12 +166,12 @@
         }
     }
 
-    class Buyer
+    class Customer
     {
         private int _money;
         private Cart? _cart;
 
-        public Buyer()
+        public Customer()
         {
             _cart = new();
             _money = GenerateRandomNumber(200, 500);
@@ -255,23 +251,23 @@
 
     class Product
     {
-        public Product(string description, int price)
+        public Product(string name, int price)
         {
-            Description = description;
+            Name = name;
             Price = price;
         }
 
-        public string Description { get; }
+        public string Name { get; }
         public int Price { get; }
 
         public Product Clone()
         {
-            return new Product(Description, Price);
+            return new Product(Name, Price);
         }
 
         public string GetInfo()
         {
-            return $"{Description} - цена: {Price}";
+            return $"{Name} - цена: {Price}";
         }
     }
 
