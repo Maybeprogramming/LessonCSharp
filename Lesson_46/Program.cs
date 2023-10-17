@@ -9,8 +9,9 @@
         static void Main()
         {
             Console.WindowWidth = 100;
+            Console.BufferHeight = 500;
 
-            Market market = new Market(customersCount: 5);
+            Market market = new Market(GenerateRandomNumber(2,6));
             market.Work();
 
             Console.ReadKey();
@@ -26,37 +27,57 @@
 
         public Market(int customersCount)
         {
+            _marketBalanceMoney = 0;
             _seller = new();
             _productCase = new();
             _customers = new();
-            CreateQueueBuyers(customersCount);
+            CreateQueueCustomers(customersCount);
         }
 
         public void Work()
         {
             Customer customer = _customers.Dequeue();
-            Cart cartCurrentCustomer;
+
+            ShowMarketBalance();
 
             //  Показать покупателей
             ShowCustomers();
 
-            //  Покупатель кладёт продукты в корзину
+            //  Покупатель выбирает продукты и кладёт в корзину
             ToFillsCart(customer);
 
-            // Показать продукты из корзины покупателя
-            PrintLine();
-            customer.ShowProductsInCart();
-            PrintLine();
+            // Покупатель показывает продукты из корзины продавцу
+            ShowProductsInCart(customer, $">----- Покупатель показывает продукты из корзины продавцу: ------<\n");
 
             // Продавец продаёт продукты покупателю
-            PrintLine();
-
-            _seller.TrySellProducts(customer);
+            TryToPayProducts(customer, $">----- Покупатель проходит на кассу для оплаты продуктов: ------<\n");
 
             // Показать оплаченные продукты у покупателя
-            PrintLine();
+            ShowProductsInCart(customer, $">----- Покупатель купил продукты: ------<\n");
+
+            //
+            ShowMarketBalance();
+
+
+        }
+
+        private void ShowProductsInCart(Customer customer, string message)
+        {
+            Print(message, ConsoleColor.DarkYellow);
             customer.ShowProductsInCart();
-            PrintLine();
+        }
+
+        private void ShowMarketBalance()
+        {
+            string MarketBalance = "Баланс магазина: " + _marketBalanceMoney.ToString() + " рублей";
+            Console.Title = MarketBalance;
+        }
+
+        private void TryToPayProducts(Customer customer, string message)
+        {
+            Print(message, ConsoleColor.DarkYellow);
+            _seller.TrySellProducts(customer);
+            _marketBalanceMoney = _seller.Money;
         }
 
         private void ToFillsCart(Customer customer)
@@ -68,11 +89,13 @@
 
             while (isCustomerCompleteShopping == false)
             {
+                Console.Clear();
+
                 ShowAllProducts();
 
                 Print($"{exitCommdand} - Пойти на кассу.\n", ConsoleColor.Green);
 
-                userInputNumber = ReadInt("Введите номер: ");
+                userInputNumber = ReadInt("Введите номер продукта, чтобы положить его в корзину: ");
 
                 if (userInputNumber == exitCommdand)
                 {
@@ -98,21 +121,21 @@
         {
             int clientNumber = 0;
 
-            Print($">----- Очередь покупателей: ------<\n");
+            Print($">----- Очередь покупателей: ------<\n", ConsoleColor.DarkYellow);
 
             foreach (var client in _customers)
             {
-                Print($"{++clientNumber}. {client}\n");
+                Print($"{++clientNumber}. Покупатель [{client}]\n");
             }
         }
 
         private void ShowAllProducts()
         {
-            Print($">----- Список продуктов в магазине: ------<\n");
+            Print($">----- Продукты на витрине магазина: ------<\n", ConsoleColor.DarkYellow);
             _productCase.ShowAllProducts();
         }
 
-        private void CreateQueueBuyers(int buyersCount)
+        private void CreateQueueCustomers(int buyersCount)
         {
             for (int i = 0; i < buyersCount + 1; i++)
             {
@@ -133,12 +156,15 @@
                 new Product("Яблоко", GenerateRandomNumber(50, 100)),
                 new Product("Груша", GenerateRandomNumber(50, 100)),
                 new Product("Малина", GenerateRandomNumber(50, 100)),
-                new Product("Клубника", GenerateRandomNumber(50, 100)),
+                new Product("Клубника", GenerateRandomNumber(100, 150)),
                 new Product("Смородина", GenerateRandomNumber(50, 100)),
-                new Product("Манго", GenerateRandomNumber(50, 100)),
+                new Product("Манго", GenerateRandomNumber(100, 150)),
                 new Product("Арбуз", GenerateRandomNumber(50, 100)),
                 new Product("Дыня", GenerateRandomNumber(50, 100)),
-                new Product("Абрикос", GenerateRandomNumber(50, 100))
+                new Product("Абрикос", GenerateRandomNumber(50, 100)),
+                new Product ("Гранат", GenerateRandomNumber(50, 150)),
+                new Product ("Помело", GenerateRandomNumber(50, 150)),
+                new Product ("Виноград", GenerateRandomNumber(100, 150))
             };
         }
 
@@ -170,22 +196,28 @@
         public void TrySellProducts(Customer customer)
         {
             int totalCost;
-            bool isPay = false;
+            bool isToPay = false;
 
-            while (isPay == false)
+            while (isToPay == false)
             {
                 totalCost = CalculateProductsCost(customer.GetCart());
 
+                Print($"Стоимость товаров в корзине составляет: {totalCost} рублей\n");
+
                 if (customer.TryBuyProduct(totalCost) == true)
                 {
-                    isPay = true;
+                    isToPay = true;
                     Money += totalCost;
+
+                    Print($"Покупатель произвёл оплату товаров на сумму: {totalCost} рублей\n");
                 }
                 else
                 {
+                    Print($"Покупатель не может произвести оплату на сумму: {totalCost} рублей\n");
                     customer.RemoveRandomProduct();
                 }
 
+                PrintLine();
                 Task.Delay(1000).Wait();
             }
         }
@@ -259,7 +291,7 @@
 
         public override string ToString()
         {
-            return $"Баланс: {_money}.";
+            return $"Баланс: {_money} рублей";
         }
     }
 
@@ -313,7 +345,7 @@
 
         public string GetInfo()
         {
-            return $"{Name} - цена: {Price}";
+            return $"{Name} - цена: {Price} рублей";
         }
     }
 
