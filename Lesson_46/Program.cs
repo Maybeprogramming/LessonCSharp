@@ -123,7 +123,7 @@
 
         private void ToFillsCart(Customer customer)
         {
-            int exitCommdand = _productCase.ProductsCount;
+            int ToFinishFillsCartCommand = _productCase.ProductsCount;
 
             bool isCustomerCompleteShopping = false;
             int userInputNumber;
@@ -134,11 +134,11 @@
 
                 ShowAllProducts();
 
-                Print($"{exitCommdand} - Пойти на кассу.\n", ConsoleColor.Green);
+                Print($"{ToFinishFillsCartCommand} - Пойти на кассу.\n", ConsoleColor.Green);
 
                 userInputNumber = ReadInt("Введите номер продукта, чтобы положить его в корзину: ");
 
-                if (userInputNumber == exitCommdand)
+                if (userInputNumber == ToFinishFillsCartCommand)
                 {
                     isCustomerCompleteShopping = true;
                 }
