@@ -44,30 +44,18 @@
             ToFillsCart(customer);
 
             // Показать продукты из корзины покупателя
-            cartCurrentCustomer = customer.GetCart();
-
             PrintLine();
-
-            foreach (var item in cartCurrentCustomer.GetAllProducts())
-            {
-                Print($"{item.GetInfo()}\n");
-            }
+            customer.ShowProductsInCart();
+            PrintLine();
 
             // Продавец продаёт продукты покупателю
             PrintLine();
 
             _seller.TrySellProducts(customer);
 
-            cartCurrentCustomer = customer.GetCart();
-
             // Показать оплаченные продукты у покупателя
             PrintLine();
-
-            foreach (var item in cartCurrentCustomer.GetAllProducts())
-            {
-                Print($"{item.GetInfo()}\n");
-            }
-
+            customer.ShowProductsInCart();
             PrintLine();
         }
 
@@ -188,18 +176,13 @@
             {
                 totalCost = CalculateProductsCost(customer.GetCart());
 
-                //Console.WriteLine($"LOG: цена продуктов: {totalCost}");
-
                 if (customer.TryBuyProduct(totalCost) == true)
                 {
                     isPay = true;
                     Money += totalCost;
-
-                    //Console.WriteLine($"LOG: Наконец то!");
                 }
                 else
                 {
-                    //Console.WriteLine($"LOG: ты там удаляешь или нет?!");
                     customer.RemoveRandomProduct();
                 }
 
@@ -251,14 +234,9 @@
         {
             int minIndex = 0;
             int maxIndex = _cart.ProductsCount;
-
             int randomIndex = GenerateRandomNumber(minIndex, maxIndex);
-
-            //Console.WriteLine($"LOG: случайный номер продукта: {randomIndex}");
-
             Product product = _cart.GetOneProduct(randomIndex);
 
-            //Console.WriteLine($"LOG: продукт: {product.GetInfo()}");
             Print($"Покупатель выложил и не будет покупать: {product.GetInfo()}\n");
 
             _cart.RemoveProduct(product);
@@ -267,6 +245,16 @@
         public Cart GetCart()
         {
             return _cart;
+        }
+
+        public void ShowProductsInCart()
+        {
+            List<Product> products = _cart.GetAllProducts();
+
+            for (int i = 0; i < products.Count; i++)
+            {
+                Print($"{i + 1}. {products[i].GetInfo()}\n");
+            }
         }
 
         public override string ToString()
@@ -293,7 +281,6 @@
 
         public void RemoveProduct(Product product)
         {
-            //Console.WriteLine($"LOG: метод удаления продукта: {product.GetInfo()}");
             _products?.Remove(product);
         }
 
