@@ -50,6 +50,8 @@
 
             while (isCustomerCompleteShopping == false)
             {
+                Console.Clear();
+
                 //  Показать меню доступных продуктов
                 ShowAllProducts();
 
