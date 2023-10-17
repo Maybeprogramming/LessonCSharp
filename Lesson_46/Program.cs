@@ -4,6 +4,7 @@
     using static UserInput;
     using static Display;
     using System.Security.Cryptography.X509Certificates;
+    using System.Data.SqlTypes;
 
     class Program
     {
@@ -11,6 +12,7 @@
         {
             const string OpenMarketCommand = "1";
             const string ExitProgrammCommand = "2";
+
 
             Console.WindowWidth = 100;
             Console.BufferHeight = 500;
@@ -23,7 +25,7 @@
 
             bool isRun = true;
 
-            while(isRun == true)
+            while (isRun == true)
             {
                 Console.Clear();
                 Print($"{menu}");
@@ -31,7 +33,8 @@
                 switch (Console.ReadLine())
                 {
                     case OpenMarketCommand:
-                        OpenMarket();
+                        Market market = new Market(GenerateRandomNumber(1, 5));
+                        market.Work();
                         break;
 
                     case ExitProgrammCommand:
@@ -46,12 +49,6 @@
 
             Print($"\nВсего доброго!!! Возвращайтесь к нам за новыми покупками!\n");
             Console.ReadKey();
-        }
-
-        private static void OpenMarket()
-        {
-            Market market = new Market(GenerateRandomNumber(1, 6));
-            market.Work();
         }
     }
 
@@ -72,16 +69,18 @@
 
         public void Work()
         {
+            Customer customer;
             bool isThereCustomers = true;
+
+            ShowMarketBalance();
 
             while (isThereCustomers == true)
             {
-                Customer customer = _customers.Dequeue();
-
                 Console.Clear();
-                ShowMarketBalance();
 
                 ShowCustomers();
+                customer = _customers.Dequeue();
+
                 WaitToPressKey($"\nНачать наполнение корзины товарами\n");
 
                 ToFillsCart(customer);
@@ -93,7 +92,9 @@
                 ShowProductsInCart(customer, $"\n>----- Покупатель купил продукты: ------<\n");
                 WaitToPressKey($"\nПерейти к следующему покупателю\n");
 
-                isThereCustomers = _customers.Count > 1;
+                ShowMarketBalance();
+
+                isThereCustomers = _customers.Count > 0;
             }
         }
 
@@ -178,11 +179,11 @@
             _productCase.ShowAllProducts();
         }
 
-        private void CreateQueueCustomers(int buyersCount)
+        private void CreateQueueCustomers(int customerCount)
         {
             _customers = new();
 
-            for (int i = 0; i < buyersCount + 1; i++)
+            for (int i = 0; i < customerCount; i++)
             {
                 _customers.Enqueue(new Customer());
             }
@@ -339,6 +340,11 @@
         {
             return $"Баланс: {_money} рублей";
         }
+
+        public int GetMoney()
+        {
+            return _money;
+        }
     }
 
     class Cart
@@ -352,24 +358,24 @@
 
         public int ProductsCount { get => _products.Count; }
 
-        public void AddProduct(Product product)
-        {
-            _products?.Add(product);
-        }
-
         public void RemoveProduct(Product product)
         {
             _products?.Remove(product);
         }
 
-        public Product GetOneProduct(int index)
-        {
-            return _products[index];
-        }
-
         public List<Product> GetAllProducts()
         {
             return new List<Product>(_products);
+        }
+
+        public void AddProduct(Product product)
+        {
+            _products?.Add(product);
+        }
+
+        public Product GetOneProduct(int index)
+        {
+            return _products[index];
         }
     }
 
