@@ -3,6 +3,7 @@
     using static Randomaizer;
     using static UserInput;
     using static Display;
+    using System.Security.Cryptography.X509Certificates;
 
     class Program
     {
@@ -11,7 +12,7 @@
             Console.WindowWidth = 100;
             Console.BufferHeight = 500;
 
-            Market market = new Market(GenerateRandomNumber(2,6));
+            Market market = new Market(GenerateRandomNumber(2,2));
             market.Work();
 
             Console.ReadKey();
@@ -30,35 +31,47 @@
             _marketBalanceMoney = 0;
             _seller = new();
             _productCase = new();
-            _customers = new();
             CreateQueueCustomers(customersCount);
         }
 
         public void Work()
         {
-            Customer customer = _customers.Dequeue();
+            bool isThereCustomers = true;
 
-            ShowMarketBalance();
+            while (isThereCustomers == true)
+            {
+                Customer customer = _customers.Dequeue();
 
-            //  Показать покупателей
-            ShowCustomers();
+                Console.Clear();
+                ShowMarketBalance();
 
-            //  Покупатель выбирает продукты и кладёт в корзину
-            ToFillsCart(customer);
+                //  Показать покупателей
+                ShowCustomers();
+                WaitToPressKey($"\nНачать наполнение корзины товарами\n");
 
-            // Покупатель показывает продукты из корзины продавцу
-            ShowProductsInCart(customer, $">----- Покупатель показывает продукты из корзины продавцу: ------<\n");
+                //  Покупатель выбирает продукты и кладёт в корзину
+                ToFillsCart(customer);
 
-            // Продавец продаёт продукты покупателю
-            TryToPayProducts(customer, $">----- Покупатель проходит на кассу для оплаты продуктов: ------<\n");
+                // Покупатель показывает продукты из корзины продавцу
+                ShowProductsInCart(customer, $"\n>----- Покупатель показывает продукты из корзины продавцу: ------<\n");
 
-            // Показать оплаченные продукты у покупателя
-            ShowProductsInCart(customer, $">----- Покупатель купил продукты: ------<\n");
+                // Продавец продаёт продукты покупателю
+                TryToPayProducts(customer, $"\n>----- Покупатель проходит на кассу для оплаты продуктов: ------<\n");
 
-            //
-            ShowMarketBalance();
+                // Показать оплаченные продукты у покупателя
+                ShowProductsInCart(customer, $"\n>----- Покупатель купил продукты: ------<\n");
 
+                WaitToPressKey($"\nПерейти к следующему покупателю\n");
 
+                isThereCustomers = _customers.Count > 1;
+            }
+        }
+
+        private static void WaitToPressKey(string message)
+        {
+            Print(message);
+            Print($"Для продолжения нажмите любую клавишу...\n");
+            Console.ReadKey();
         }
 
         private void ShowProductsInCart(Customer customer, string message)
@@ -121,7 +134,7 @@
         {
             int clientNumber = 0;
 
-            Print($">----- Очередь покупателей: ------<\n", ConsoleColor.DarkYellow);
+            Print($">----- Покупатели: ------<\n", ConsoleColor.DarkYellow);
 
             foreach (var client in _customers)
             {
@@ -137,6 +150,8 @@
 
         private void CreateQueueCustomers(int buyersCount)
         {
+            _customers = new();
+
             for (int i = 0; i < buyersCount + 1; i++)
             {
                 _customers.Enqueue(new Customer());
@@ -164,7 +179,8 @@
                 new Product("Абрикос", GenerateRandomNumber(50, 100)),
                 new Product ("Гранат", GenerateRandomNumber(50, 150)),
                 new Product ("Помело", GenerateRandomNumber(50, 150)),
-                new Product ("Виноград", GenerateRandomNumber(100, 150))
+                new Product ("Виноград", GenerateRandomNumber(100, 150)),
+                new Product ("Банан", GenerateRandomNumber(30, 50))
             };
         }
 
