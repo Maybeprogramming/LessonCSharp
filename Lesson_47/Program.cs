@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace Lesson_47
+﻿namespace Lesson_47
 {
     class Program
     {
@@ -34,11 +32,11 @@ namespace Lesson_47
     {
         protected CombatUnit()
         {
-            ClassName = "Default";
+            ClassName = "Боец";
             Damage = 10;
             Health = 100;
             Armor = 5;
-            EntityName = "DefaultEntity";
+            EntityName = "Новичок";
         }
 
         public string ClassName { get; protected set; }
