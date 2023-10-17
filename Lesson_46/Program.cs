@@ -36,7 +36,6 @@
         {
             Customer customer = _customers.Dequeue();
             Cart cartCurrentCustomer;
-            int productsCount = 5;
 
             //  Показать очередь покупателей
             ShowCustomersQueue();
@@ -50,7 +49,7 @@
 
             while (isCustomerCompleteShopping == false)
             {
-                Console.Clear();
+                //Console.Clear();
 
                 //  Показать меню доступных продуктов
                 ShowAllProducts();
@@ -66,8 +65,17 @@
 
                 if (userInputNumber >= 0 && userInputNumber < _productCase.ProductsCount)
                 {
-                    customer.PutProductToCart(_productCase.GetProduct(userInputNumber));
+                    Product product = _productCase.GetProduct(userInputNumber);
+                    customer.PutProductToCart(product);
+                    Print($"Покупатель положил в корзину: {product.GetInfo()}\n", ConsoleColor.Green);
                 }
+                else
+                {
+                    Print($"Ошибка! Такого продукта нет.\n");
+                }
+
+                Print($"Нажмите любую клавишу чтобы продолжить...\n");
+                Console.ReadKey();
             }
 
             // Показать продукты из корзины покупателя
@@ -100,11 +108,13 @@
 
         private void ShowCustomersQueue()
         {
+            int clientNumber = 0;
+
             Print($">----- Очередь покупателей: ------<\n");
 
             foreach (var client in _customers)
             {
-                Print($"{client}\n");
+                Print($"{++clientNumber}. {client}\n");
             }
         }
 
@@ -261,7 +271,7 @@
 
         public override string ToString()
         {
-            return $"Баланс у покупателя: {_money}. Тише, тише - мы этого знать не должны.";
+            return $"Баланс: {_money}.";
         }
     }
 
