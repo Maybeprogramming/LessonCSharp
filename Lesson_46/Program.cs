@@ -3,8 +3,6 @@
     using static Randomaizer;
     using static UserInput;
     using static Display;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Data.SqlTypes;
 
     class Program
     {
@@ -12,7 +10,6 @@
         {
             const string OpenMarketCommand = "1";
             const string ExitProgrammCommand = "2";
-
 
             Console.WindowWidth = 100;
             Console.BufferHeight = 500;
