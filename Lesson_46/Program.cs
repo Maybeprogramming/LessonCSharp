@@ -19,7 +19,7 @@
 
     class Market
     {
-        private int MarketBalanceMoney;
+        private int _marketBalanceMoney;
         private Seller? _seller;
         private Queue<Customer>? _customers;
         private ProductsCase _productCase;
@@ -37,11 +37,42 @@
             Customer customer = _customers.Dequeue();
             Cart cartCurrentCustomer;
 
-            //  Показать очередь покупателей
-            ShowCustomersQueue();
+            //  Показать покупателей
+            ShowCustomers();
 
             //  Покупатель кладёт продукты в корзину
+            ToFillsCart(customer);
 
+            // Показать продукты из корзины покупателя
+            cartCurrentCustomer = customer.GetCart();
+
+            PrintLine();
+
+            foreach (var item in cartCurrentCustomer.GetAllProducts())
+            {
+                Print($"{item.GetInfo()}\n");
+            }
+
+            // Продавец продаёт продукты покупателю
+            PrintLine();
+
+            _seller.TrySellProducts(customer);
+
+            cartCurrentCustomer = customer.GetCart();
+
+            // Показать оплаченные продукты у покупателя
+            PrintLine();
+
+            foreach (var item in cartCurrentCustomer.GetAllProducts())
+            {
+                Print($"{item.GetInfo()}\n");
+            }
+
+            PrintLine();
+        }
+
+        private void ToFillsCart(Customer customer)
+        {
             int exitCommdand = _productCase.ProductsCount;
 
             bool isCustomerCompleteShopping = false;
@@ -49,9 +80,6 @@
 
             while (isCustomerCompleteShopping == false)
             {
-                //Console.Clear();
-
-                //  Показать меню доступных продуктов
                 ShowAllProducts();
 
                 Print($"{exitCommdand} - Пойти на кассу.\n", ConsoleColor.Green);
@@ -62,8 +90,7 @@
                 {
                     isCustomerCompleteShopping = true;
                 }
-
-                if (userInputNumber >= 0 && userInputNumber < _productCase.ProductsCount)
+                else if (userInputNumber >= 0 && userInputNumber < _productCase.ProductsCount)
                 {
                     Product product = _productCase.GetProduct(userInputNumber);
                     customer.PutProductToCart(product);
@@ -77,36 +104,9 @@
                 Print($"Нажмите любую клавишу чтобы продолжить...\n");
                 Console.ReadKey();
             }
-
-            // Показать продукты из корзины покупателя
-            cartCurrentCustomer = customer.GetCart();
-
-            Print($"{new string('-', 50)}\n");
-
-            foreach (var item in cartCurrentCustomer.GetAllProducts())
-            {
-                Print($"{item.GetInfo()}\n");
-            }
-
-            // Продавец продаёт продукты покупателю
-            Print($"{new string('-', 50)}\n");
-
-            _seller.TrySellProducts(customer);
-
-            cartCurrentCustomer = customer.GetCart();
-
-            // Показать оплаченные продукты у покупателя
-            Print($"{new string('-', 50)}\n");
-
-            foreach (var item in cartCurrentCustomer.GetAllProducts())
-            {
-                Print($"{item.GetInfo()}\n");
-            }
-
-            Print($"{new string('-', 50)}\n");
         }
 
-        private void ShowCustomersQueue()
+        private void ShowCustomers()
         {
             int clientNumber = 0;
 
@@ -370,6 +370,11 @@
             Console.ForegroundColor = consoleColor;
             Console.Write(message);
             Console.ForegroundColor = defaultColor;
+        }
+
+        public static void PrintLine(int symbolCount = 100)
+        {
+            Print($"{new string('-', symbolCount)}");
         }
     }
 }
