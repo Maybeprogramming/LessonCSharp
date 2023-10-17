@@ -9,13 +9,49 @@
     {
         static void Main()
         {
+            const string OpenMarketCommand = "1";
+            const string ExitProgrammCommand = "2";
+
             Console.WindowWidth = 100;
             Console.BufferHeight = 500;
+            Console.Title = "Магазин > Фруктовый <";
 
-            Market market = new Market(GenerateRandomNumber(2,2));
-            market.Work();
+            string menu = $"Какое действие выполнить?\n" +
+                          $"{OpenMarketCommand} - Открыть магазин\n" +
+                          $"{ExitProgrammCommand} - Выйти из программы\n" +
+                          $"Введите номер команды для продолжения: ";
 
+            bool isRun = true;
+
+            while(isRun == true)
+            {
+                Console.Clear();
+                Print($"{menu}");
+
+                switch (Console.ReadLine())
+                {
+                    case OpenMarketCommand:
+                        OpenMarket();
+                        break;
+
+                    case ExitProgrammCommand:
+                        isRun = false;
+                        break;
+
+                    default:
+                        Print($"\n");
+                        break;
+                }
+            }
+
+            Print($"\nВсего доброго!!! Возвращайтесь к нам за новыми покупками!\n");
             Console.ReadKey();
+        }
+
+        private static void OpenMarket()
+        {
+            Market market = new Market(GenerateRandomNumber(1, 6));
+            market.Work();
         }
     }
 
@@ -45,22 +81,16 @@
                 Console.Clear();
                 ShowMarketBalance();
 
-                //  Показать покупателей
                 ShowCustomers();
                 WaitToPressKey($"\nНачать наполнение корзины товарами\n");
 
-                //  Покупатель выбирает продукты и кладёт в корзину
                 ToFillsCart(customer);
 
-                // Покупатель показывает продукты из корзины продавцу
                 ShowProductsInCart(customer, $"\n>----- Покупатель показывает продукты из корзины продавцу: ------<\n");
 
-                // Продавец продаёт продукты покупателю
                 TryToPayProducts(customer, $"\n>----- Покупатель проходит на кассу для оплаты продуктов: ------<\n");
 
-                // Показать оплаченные продукты у покупателя
                 ShowProductsInCart(customer, $"\n>----- Покупатель купил продукты: ------<\n");
-
                 WaitToPressKey($"\nПерейти к следующему покупателю\n");
 
                 isThereCustomers = _customers.Count > 1;
@@ -90,7 +120,7 @@
         {
             Print(message, ConsoleColor.DarkYellow);
             _seller.TrySellProducts(customer);
-            _marketBalanceMoney = _seller.Money;
+            _marketBalanceMoney += _seller.Money;
         }
 
         private void ToFillsCart(Customer customer)
@@ -223,7 +253,7 @@
                 if (customer.TryBuyProduct(totalCost) == true)
                 {
                     isToPay = true;
-                    Money += totalCost;
+                    Money = totalCost;
 
                     Print($"Покупатель произвёл оплату товаров на сумму: {totalCost} рублей\n");
                 }
@@ -231,9 +261,9 @@
                 {
                     Print($"Покупатель не может произвести оплату на сумму: {totalCost} рублей\n");
                     customer.RemoveRandomProduct();
+                    PrintLine();
                 }
 
-                PrintLine();
                 Task.Delay(1000).Wait();
             }
         }
