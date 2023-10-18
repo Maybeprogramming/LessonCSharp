@@ -36,7 +36,6 @@
         {
             Customer customer = _customers.Dequeue();
             Cart cartCurrentCustomer;
-            int productsCount = 5;
 
             //  Показать очередь покупателей
             ShowCustomersQueue();
