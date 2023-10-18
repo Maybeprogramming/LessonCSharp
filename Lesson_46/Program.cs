@@ -166,7 +166,7 @@
 
             foreach (var client in _customers)
             {
-                Print($"{++clientNumber}. Покупатель [{client}]\n");
+                Print($"{++clientNumber}. Покупатель \"{client.Name}\" [{client}]\n");
             }
         }
 
@@ -339,7 +339,7 @@
 
         public override string ToString()
         {
-            return $"\"{_name}\". Баланс: {_money} рублей";
+            return $"Баланс: {_money} рублей";
         }
 
         public int GetMoney()
