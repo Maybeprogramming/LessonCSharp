@@ -70,7 +70,7 @@
             {
                 target.TryTakeDamage(Damage);
             }
-        }
+        } 
     }
 
     abstract class Fighter : FighterUnit, IHeal
