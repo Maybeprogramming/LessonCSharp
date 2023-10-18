@@ -158,7 +158,7 @@
 
             foreach (var client in _customers)
             {
-                Print($"{++clientNumber}. Покупатель \"{client.Name}\" [{client}]\n");
+                Print($"{++clientNumber}. Покупатель \"{client.Name}\" [Баланс: {client.GetMoney()} рублей]\n");
             }
         }
 
@@ -317,6 +317,11 @@
         public Cart GetCart()
         {
             return _cart;
+        }
+
+        public int GetMoney() 
+        { 
+            return _money; 
         }
 
         public void ShowProductsInCart()
