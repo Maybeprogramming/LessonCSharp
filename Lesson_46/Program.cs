@@ -82,11 +82,11 @@
 
                 ToFillsCart(customer);
 
-                ShowProductsInCart(customer, $"\n>----- Покупатель показывает продукты из корзины продавцу: ------<\n");
+                ShowProductsInCart(customer, $"\n>----- Покупатель \"{customer.Name}\" показывает продукты из корзины продавцу: ------<\n");
 
-                TryToPayProducts(customer, $"\n>----- Покупатель проходит на кассу для оплаты продуктов: ------<\n");
+                TryToPayProducts(customer, $"\n>----- Покупатель \"{customer.Name}\" проходит на кассу для оплаты продуктов: ------<\n");
 
-                ShowProductsInCart(customer, $"\n>----- Покупатель купил продукты: ------<\n");
+                ShowProductsInCart(customer, $"\n>----- Покупатель \"{customer.Name}\" купил продукты: ------<\n");
                 WaitToPressKey($"\nПерейти к следующему покупателю\n");
 
                 ShowMarketBalance();
@@ -146,7 +146,7 @@
                 {
                     Product product = _productCase.GetProduct(userInputNumber);
                     customer.PutProductToCart(product);
-                    Print($"Покупатель положил в корзину: {product.GetInfo()}\n", ConsoleColor.Green);
+                    Print($"Покупатель \"{customer.Name}\" положил в корзину: {product.GetInfo()}\n", ConsoleColor.Green);
                 }
                 else
                 {
@@ -281,6 +281,7 @@
 
     class Customer
     {
+        private string _name;
         private int _money;
         private Cart? _cart;
 
@@ -288,7 +289,10 @@
         {
             _cart = new();
             _money = GenerateRandomNumber(200, 500);
+            _name = GenerateRandomName();
         }
+
+        public string Name { get => _name; }
 
         public bool TryBuyProduct(int totalCost)
         {
@@ -335,7 +339,7 @@
 
         public override string ToString()
         {
-            return $"Баланс: {_money} рублей";
+            return $"\"{_name}\". Баланс: {_money} рублей";
         }
 
         public int GetMoney()
