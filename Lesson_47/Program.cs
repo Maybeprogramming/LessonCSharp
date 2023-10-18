@@ -28,9 +28,9 @@
 
     }
 
-    abstract class CombatUnit : ICombatEntity, IDamageable, IDamageProvider
+    abstract class FighterUnit : ICombatEntity, IDamageable, IDamageProvider
     {
-        protected CombatUnit()
+        protected FighterUnit()
         {
             ClassName = "Боец";
             Damage = 10;
@@ -57,7 +57,7 @@
             return false;
         }
 
-        public virtual void AttackTo(Fighter target)
+        public virtual void AttackTo(FighterUnit target)
         {
             if (IsAlive == true && target.IsAlive == true)
             {
@@ -66,7 +66,7 @@
         }
     }
 
-    abstract class Fighter : CombatUnit, IHeal
+    abstract class Fighter : FighterUnit, IHeal
     {
         public Fighter()
         {
@@ -83,7 +83,7 @@
         }
     }
 
-    class Stormtrooper : Fighter
+    class Stormtrooper : FighterUnit
     {
         public Stormtrooper()
         {
@@ -92,33 +92,33 @@
 
     }
 
-    class Sniper : Fighter
+    class Sniper : FighterUnit
     {
     }
 
-    class Paratrooper : Fighter
+    class Paratrooper : FighterUnit
     {
     }
 
-    class Scout : Fighter
+    class Scout : FighterUnit
     {
     }
 
-    class Heavy : Fighter
+    class Heavy : FighterUnit
     {
     }
 
-    class GrenadeLauncher : Fighter
+    class GrenadeLauncher : FighterUnit
     {
     }
 
-    class Medic : Fighter
+    class Medic : FighterUnit
     {
     }
 
-    abstract class FighterVihicles : CombatUnit
+    abstract class Vihicles : FighterUnit
     {
-        protected FighterVihicles()
+        protected Vihicles()
         {
             EntityName = "Боевая техника";
         }
@@ -126,12 +126,12 @@
         public override string EntityName { get; set; }
     }
 
-    class Tank : FighterVihicles
+    class Tank : Vihicles
     {
         
     }
 
-    class Helicopter : FighterVihicles
+    class Helicopter : Vihicles
     {
 
     }
@@ -150,7 +150,7 @@
 
     interface IDamageProvider
     {
-        public abstract void AttackTo(Fighter target);
+        public abstract void AttackTo(FighterUnit target);
     }
 
     interface IHeal
