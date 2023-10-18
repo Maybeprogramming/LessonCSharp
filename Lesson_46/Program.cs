@@ -1,4 +1,6 @@
-﻿namespace Lesson_46
+﻿using Lesson_46;
+
+namespace Lesson_46
 {
     using static Randomaizer;
     using static UserInput;
@@ -93,13 +95,6 @@
 
                 isThereCustomers = _customers.Count > 0;
             }
-        }
-
-        private static void WaitToPressKey(string message)
-        {
-            Print(message);
-            Print($"Для продолжения нажмите любую клавишу...\n");
-            Console.ReadKey();
         }
 
         private void ShowProductsInCart(Customer customer, string message)
@@ -336,16 +331,6 @@
                 Print($"{i + 1}. {products[i].GetInfo()}\n");
             }
         }
-
-        public override string ToString()
-        {
-            return $"Баланс: {_money} рублей";
-        }
-
-        public int GetMoney()
-        {
-            return _money;
-        }
     }
 
     class Cart
@@ -488,6 +473,13 @@
 
             return result;
         }
+
+        public static void WaitToPressKey(string message)
+        {
+            Print(message);
+            Print($"Для продолжения нажмите любую клавишу...\n");
+            Console.ReadKey();
+        }
     }
 
     static class Display
@@ -519,3 +511,11 @@
 //пока его денег не хватит для оплаты.
 //Клиентов можно делать ограниченное число на старте программы.
 //Супермаркет содержит список товаров, из которых клиент выбирает товары для покупки.
+
+
+//- 1) class Customer --ShowProductsInCart()-- List<Product> products = _cart.GetAllProducts();
+//, чтобы не плодить передачу списков, метод показать товары можно было сделать в корзинке. (рекомендация, а не требование исправить) .
+//+ 2) Удаляйте не используемые методы :
+//см. class Customer.
+//+ 3) WaitToPressKey() это метод не Супермаркета, а скорее класса UserInput
+//4) Принято, исправьте у себя, повторно отправлять на проверку не нужно.
