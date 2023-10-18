@@ -1,6 +1,4 @@
-﻿using Lesson_46;
-
-namespace Lesson_46
+﻿namespace Lesson_46
 {
     using static Randomaizer;
     using static UserInput;
@@ -324,12 +322,7 @@ namespace Lesson_46
 
         public void ShowProductsInCart()
         {
-            List<Product> products = _cart.GetAllProducts();
-
-            for (int i = 0; i < products.Count; i++)
-            {
-                Print($"{i + 1}. {products[i].GetInfo()}\n");
-            }
+            _cart?.ShowProducts();
         }
     }
 
@@ -362,6 +355,14 @@ namespace Lesson_46
         public Product GetOneProduct(int index)
         {
             return _products[index];
+        }
+
+        public void ShowProducts()
+        {
+            for (int i = 0; i < _products.Count; i++)
+            {
+                Print($"{i + 1}. {_products[i].GetInfo()}\n");
+            }
         }
     }
 
