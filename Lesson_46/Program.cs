@@ -514,7 +514,7 @@
 //Супермаркет содержит список товаров, из которых клиент выбирает товары для покупки.
 
 
-//- 1) class Customer --ShowProductsInCart()-- List<Product> products = _cart.GetAllProducts();
+//+ 1) class Customer --ShowProductsInCart()-- List<Product> products = _cart.GetAllProducts();
 //, чтобы не плодить передачу списков, метод показать товары можно было сделать в корзинке. (рекомендация, а не требование исправить) .
 //+ 2) Удаляйте не используемые методы :
 //см. class Customer.
