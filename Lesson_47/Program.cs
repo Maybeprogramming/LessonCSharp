@@ -8,6 +8,9 @@
     {
         static void Main()
         {
+            Console.WindowWidth = 100;
+            Console.BufferHeight = 500;
+            Console.Title = "Война";
         }
     }
 
@@ -241,7 +244,7 @@
         {
             int result;
 
-            Console.Write(message);
+            Print(message);
 
             while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
             {
