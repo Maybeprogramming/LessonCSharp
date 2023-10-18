@@ -8,112 +8,179 @@
     {
         static void Main()
         {
+            const string OpenMarketCommand = "1";
+            const string ExitProgrammCommand = "2";
+
             Console.WindowWidth = 100;
+            Console.BufferHeight = 500;
+            Console.Title = "Магазин > Фруктовый <";
 
-            Market market = new Market(customersCount: 5);
-            market.Work();
+            string menu = $"Какое действие выполнить?\n" +
+                          $"{OpenMarketCommand} - Открыть магазин\n" +
+                          $"{ExitProgrammCommand} - Выйти из программы\n" +
+                          $"Введите номер команды для продолжения: ";
 
+            bool isRun = true;
+
+            while (isRun == true)
+            {
+                Console.Clear();
+                Print($"{menu}");
+
+                switch (Console.ReadLine())
+                {
+                    case OpenMarketCommand:
+                        Market market = new Market(GenerateRandomNumber(1, 5));
+                        market.Work();
+                        break;
+
+                    case ExitProgrammCommand:
+                        isRun = false;
+                        break;
+
+                    default:
+                        Print($"\n");
+                        break;
+                }
+            }
+
+            Print($"\nВсего доброго!!! Возвращайтесь к нам за новыми покупками!\n");
             Console.ReadKey();
         }
     }
 
     class Market
     {
-        private int MarketBalanceMoney;
+        private int _marketBalanceMoney;
         private Seller? _seller;
         private Queue<Customer>? _customers;
         private ProductsCase _productCase;
 
         public Market(int customersCount)
         {
+            _marketBalanceMoney = 0;
             _seller = new();
             _productCase = new();
-            _customers = new();
-            CreateQueueBuyers(customersCount);
+            CreateQueueCustomers(customersCount);
         }
 
         public void Work()
         {
-            Customer customer = _customers.Dequeue();
-            Cart cartCurrentCustomer;
+            Customer customer;
+            bool isThereCustomers = true;
 
-            //  Показать очередь покупателей
-            ShowCustomersQueue();
+            ShowMarketBalance();
 
-            //  Покупатель кладёт продукты в корзину
+            while (isThereCustomers == true)
+            {
+                Console.Clear();
 
-            int exitCommdand = _productCase.ProductsCount;
+                ShowCustomers();
+                customer = _customers.Dequeue();
+
+                WaitToPressKey($"\nНачать наполнение корзины товарами\n");
+
+                ToFillsCart(customer);
+
+                ShowProductsInCart(customer, $"\n>----- Покупатель показывает продукты из корзины продавцу: ------<\n");
+
+                TryToPayProducts(customer, $"\n>----- Покупатель проходит на кассу для оплаты продуктов: ------<\n");
+
+                ShowProductsInCart(customer, $"\n>----- Покупатель купил продукты: ------<\n");
+                WaitToPressKey($"\nПерейти к следующему покупателю\n");
+
+                ShowMarketBalance();
+
+                isThereCustomers = _customers.Count > 0;
+            }
+        }
+
+        private static void WaitToPressKey(string message)
+        {
+            Print(message);
+            Print($"Для продолжения нажмите любую клавишу...\n");
+            Console.ReadKey();
+        }
+
+        private void ShowProductsInCart(Customer customer, string message)
+        {
+            Print(message, ConsoleColor.DarkYellow);
+            customer.ShowProductsInCart();
+        }
+
+        private void ShowMarketBalance()
+        {
+            string MarketBalance = "Баланс магазина: " + _marketBalanceMoney.ToString() + " рублей";
+            Console.Title = MarketBalance;
+        }
+
+        private void TryToPayProducts(Customer customer, string message)
+        {
+            Print(message, ConsoleColor.DarkYellow);
+            _seller.TrySellProducts(customer);
+            _marketBalanceMoney += _seller.Money;
+        }
+
+        private void ToFillsCart(Customer customer)
+        {
+            int ToFinishFillsCartCommand = _productCase.ProductsCount;
 
             bool isCustomerCompleteShopping = false;
             int userInputNumber;
 
             while (isCustomerCompleteShopping == false)
             {
-                //  Показать меню доступных продуктов
+                Console.Clear();
+
                 ShowAllProducts();
 
-                Print($"{exitCommdand} - Пойти на кассу.\n", ConsoleColor.Green);
+                Print($"{ToFinishFillsCartCommand} - Пойти на кассу.\n", ConsoleColor.Green);
 
-                userInputNumber = ReadInt("Введите номер: ");
+                userInputNumber = ReadInt("Введите номер продукта, чтобы положить его в корзину: ");
 
-                if (userInputNumber == exitCommdand)
+                if (userInputNumber == ToFinishFillsCartCommand)
                 {
                     isCustomerCompleteShopping = true;
                 }
-
-                if (userInputNumber >= 0 && userInputNumber < _productCase.ProductsCount)
+                else if (userInputNumber >= 0 && userInputNumber < _productCase.ProductsCount)
                 {
-                    customer.PutProductToCart(_productCase.GetProduct(userInputNumber));
+                    Product product = _productCase.GetProduct(userInputNumber);
+                    customer.PutProductToCart(product);
+                    Print($"Покупатель положил в корзину: {product.GetInfo()}\n", ConsoleColor.Green);
                 }
+                else
+                {
+                    Print($"Ошибка! Такого продукта нет.\n");
+                }
+
+                Print($"Нажмите любую клавишу чтобы продолжить...\n");
+                Console.ReadKey();
             }
-
-            // Показать продукты из корзины покупателя
-            cartCurrentCustomer = customer.GetCart();
-
-            Print($"{new string('-', 50)}\n");
-
-            foreach (var item in cartCurrentCustomer.GetAllProducts())
-            {
-                Print($"{item.GetInfo()}\n");
-            }
-
-            // Продавец продаёт продукты покупателю
-            Print($"{new string('-', 50)}\n");
-
-            _seller.TrySellProducts(customer);
-
-            cartCurrentCustomer = customer.GetCart();
-
-            // Показать оплаченные продукты у покупателя
-            Print($"{new string('-', 50)}\n");
-
-            foreach (var item in cartCurrentCustomer.GetAllProducts())
-            {
-                Print($"{item.GetInfo()}\n");
-            }
-
-            Print($"{new string('-', 50)}\n");
         }
 
-        private void ShowCustomersQueue()
+        private void ShowCustomers()
         {
-            Print($">----- Очередь покупателей: ------<\n");
+            int clientNumber = 0;
+
+            Print($">----- Покупатели: ------<\n", ConsoleColor.DarkYellow);
 
             foreach (var client in _customers)
             {
-                Print($"{client}\n");
+                Print($"{++clientNumber}. Покупатель [{client}]\n");
             }
         }
 
         private void ShowAllProducts()
         {
-            Print($">----- Список продуктов в магазине: ------<\n");
+            Print($">----- Продукты на витрине магазина: ------<\n", ConsoleColor.DarkYellow);
             _productCase.ShowAllProducts();
         }
 
-        private void CreateQueueBuyers(int buyersCount)
+        private void CreateQueueCustomers(int customerCount)
         {
-            for (int i = 0; i < buyersCount + 1; i++)
+            _customers = new();
+
+            for (int i = 0; i < customerCount; i++)
             {
                 _customers.Enqueue(new Customer());
             }
@@ -132,12 +199,16 @@
                 new Product("Яблоко", GenerateRandomNumber(50, 100)),
                 new Product("Груша", GenerateRandomNumber(50, 100)),
                 new Product("Малина", GenerateRandomNumber(50, 100)),
-                new Product("Клубника", GenerateRandomNumber(50, 100)),
+                new Product("Клубника", GenerateRandomNumber(100, 150)),
                 new Product("Смородина", GenerateRandomNumber(50, 100)),
-                new Product("Манго", GenerateRandomNumber(50, 100)),
+                new Product("Манго", GenerateRandomNumber(100, 150)),
                 new Product("Арбуз", GenerateRandomNumber(50, 100)),
                 new Product("Дыня", GenerateRandomNumber(50, 100)),
-                new Product("Абрикос", GenerateRandomNumber(50, 100))
+                new Product("Абрикос", GenerateRandomNumber(50, 100)),
+                new Product ("Гранат", GenerateRandomNumber(50, 150)),
+                new Product ("Помело", GenerateRandomNumber(50, 150)),
+                new Product ("Виноград", GenerateRandomNumber(100, 150)),
+                new Product ("Банан", GenerateRandomNumber(30, 50))
             };
         }
 
@@ -169,25 +240,26 @@
         public void TrySellProducts(Customer customer)
         {
             int totalCost;
-            bool isPay = false;
+            bool isToPay = false;
 
-            while (isPay == false)
+            while (isToPay == false)
             {
                 totalCost = CalculateProductsCost(customer.GetCart());
 
-                //Console.WriteLine($"LOG: цена продуктов: {totalCost}");
+                Print($"Стоимость товаров в корзине составляет: {totalCost} рублей\n");
 
                 if (customer.TryBuyProduct(totalCost) == true)
                 {
-                    isPay = true;
-                    Money += totalCost;
+                    isToPay = true;
+                    Money = totalCost;
 
-                    //Console.WriteLine($"LOG: Наконец то!");
+                    Print($"Покупатель произвёл оплату товаров на сумму: {totalCost} рублей\n");
                 }
                 else
                 {
-                    //Console.WriteLine($"LOG: ты там удаляешь или нет?!");
+                    Print($"Покупатель не может произвести оплату на сумму: {totalCost} рублей\n");
                     customer.RemoveRandomProduct();
+                    PrintLine();
                 }
 
                 Task.Delay(1000).Wait();
@@ -238,14 +310,9 @@
         {
             int minIndex = 0;
             int maxIndex = _cart.ProductsCount;
-
             int randomIndex = GenerateRandomNumber(minIndex, maxIndex);
-
-            //Console.WriteLine($"LOG: случайный номер продукта: {randomIndex}");
-
             Product product = _cart.GetOneProduct(randomIndex);
 
-            //Console.WriteLine($"LOG: продукт: {product.GetInfo()}");
             Print($"Покупатель выложил и не будет покупать: {product.GetInfo()}\n");
 
             _cart.RemoveProduct(product);
@@ -256,9 +323,24 @@
             return _cart;
         }
 
+        public void ShowProductsInCart()
+        {
+            List<Product> products = _cart.GetAllProducts();
+
+            for (int i = 0; i < products.Count; i++)
+            {
+                Print($"{i + 1}. {products[i].GetInfo()}\n");
+            }
+        }
+
         public override string ToString()
         {
-            return $"Баланс у покупателя: {_money}. Тише, тише - мы этого знать не должны.";
+            return $"Баланс: {_money} рублей";
+        }
+
+        public int GetMoney()
+        {
+            return _money;
         }
     }
 
@@ -273,25 +355,24 @@
 
         public int ProductsCount { get => _products.Count; }
 
-        public void AddProduct(Product product)
-        {
-            _products?.Add(product);
-        }
-
         public void RemoveProduct(Product product)
         {
-            //Console.WriteLine($"LOG: метод удаления продукта: {product.GetInfo()}");
             _products?.Remove(product);
-        }
-
-        public Product GetOneProduct(int index)
-        {
-            return _products[index];
         }
 
         public List<Product> GetAllProducts()
         {
             return new List<Product>(_products);
+        }
+
+        public void AddProduct(Product product)
+        {
+            _products?.Add(product);
+        }
+
+        public Product GetOneProduct(int index)
+        {
+            return _products[index];
         }
     }
 
@@ -313,7 +394,7 @@
 
         public string GetInfo()
         {
-            return $"{Name} - цена: {Price}";
+            return $"{Name} - цена: {Price} рублей";
         }
     }
 
@@ -357,6 +438,11 @@
             Console.ForegroundColor = consoleColor;
             Console.Write(message);
             Console.ForegroundColor = defaultColor;
+        }
+
+        public static void PrintLine(int symbolCount = 100)
+        {
+            Print($"{new string('-', symbolCount)}");
         }
     }
 }
