@@ -158,7 +158,7 @@
 
             foreach (var client in _customers)
             {
-                Print($"{++clientNumber}. Покупатель \"{client.Name}\" [{client}]\n");
+                Print($"{++clientNumber}. Покупатель \"{client.Name}\" [Баланс: {client.GetMoney()} рублей]\n");
             }
         }
 
@@ -319,6 +319,11 @@
             return _cart.Clone();
         }
 
+        public int GetMoney()
+        {
+            return _money;
+        }
+
         public void ShowProductsInCart()
         {
             _cart?.ShowProducts();
@@ -333,7 +338,6 @@
         {
             _products = new();
         }
-
         public Cart(List<Product>? products)
         {
             _products = products;
