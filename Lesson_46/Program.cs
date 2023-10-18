@@ -39,7 +39,7 @@
                         break;
 
                     default:
-                        Print($"\n");
+                        Print($"Ошибка! Попробуйте снова...\n");
                         break;
                 }
             }
