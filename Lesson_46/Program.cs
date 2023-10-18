@@ -316,7 +316,7 @@
 
         public Cart GetCart()
         {
-            return _cart;
+            return _cart.Clone();
         }
 
         public void ShowProductsInCart()
@@ -332,6 +332,11 @@
         public Cart()
         {
             _products = new();
+        }
+
+        public Cart(List<Product>? products)
+        {
+            _products = products;
         }
 
         public int ProductsCount { get => _products.Count; }
@@ -362,6 +367,11 @@
             {
                 Print($"{i + 1}. {_products[i].GetInfo()}\n");
             }
+        }
+
+        public Cart Clone()
+        {
+            return new Cart(_products);
         }
     }
 
