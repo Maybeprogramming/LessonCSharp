@@ -90,7 +90,7 @@
         }
     }
 
-    class Stormtrooper : FighterUnit
+    class Stormtrooper : Fighter
     {
         public Stormtrooper()
         {
@@ -99,27 +99,27 @@
 
     }
 
-    class Sniper : FighterUnit
+    class Sniper : Fighter
     {
     }
 
-    class Paratrooper : FighterUnit
+    class Paratrooper : Fighter
     {
     }
 
-    class Scout : FighterUnit
+    class Scout : Fighter
     {
     }
 
-    class Heavy : FighterUnit
+    class Heavy : Fighter
     {
     }
 
-    class GrenadeLauncher : FighterUnit
+    class GrenadeLauncher : Fighter
     {
     }
 
-    class Medic : FighterUnit
+    class Medic : Fighter
     {
     }
 
