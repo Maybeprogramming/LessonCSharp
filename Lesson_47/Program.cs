@@ -1,5 +1,9 @@
 ﻿namespace Lesson_47
 {
+    using static Randomaizer;
+    using static UserInput;
+    using static Display;
+
     class Program
     {
         static void Main()
@@ -159,6 +163,117 @@
     }
 
     #endregion
+
+    static class Randomaizer
+    {
+        private static readonly Random s_random;
+        private static readonly string[] s_names;
+
+        static Randomaizer()
+        {
+            s_random = new();
+            s_names = new string[]
+            {
+                "Варвар",
+                "Космонафт",
+                "Миледи",
+                "Вульфич",
+                "Страйк",
+                "Герандич",
+                "Фрея",
+                "Крыса",
+                "Нинка",
+                "Царь",
+                "Забота",
+                "Прожариватель",
+                "Овощ",
+                "Имба",
+                "Нагибатель",
+                "Топчик",
+                "Холивар",
+                "Бывалый",
+                "Пирожок",
+                "Котейка",
+                "Оливер",
+                "Викрам",
+                "Архидея",
+                "Метрономщик",
+                "Зимник",
+                "Волкодав",
+                "Богатырь",
+                "Вафлич",
+                "Вурдолакыч",
+                "Зяблик",
+                "Кудахта",
+                "Чувиха",
+                "Мордорка",
+                "Куряха",
+                "Смоляха",
+                "Крендель",
+                "Остряк",
+                "Крушила",
+                "Очкович",
+                "Щавель",
+                "Днище",
+                "Нубичка",
+                "Жираф",
+                "Подлиза",
+                "Лимурчик",
+                "Попрыгун",
+                "Тряпкович"
+            };
+        }
+
+        public static string GenerateRandomName()
+        {
+            return s_names[s_random.Next(0, s_names.Length)];
+        }
+
+        public static int GenerateRandomNumber(int minValue, int maxValue)
+        {
+            return s_random.Next(minValue, maxValue);
+        }
+    }
+
+    static class UserInput
+    {
+        public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
+        {
+            int result;
+
+            Console.Write(message);
+
+            while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
+            {
+                Print("Ошибка!. Попробуйте снова!\n");
+            }
+
+            return result;
+        }
+
+        public static void WaitToPressKey(string message)
+        {
+            Print(message);
+            Print($"Для продолжения нажмите любую клавишу...\n");
+            Console.ReadKey();
+        }
+    }
+
+    static class Display
+    {
+        public static void Print(string message, ConsoleColor consoleColor = ConsoleColor.White)
+        {
+            ConsoleColor defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = consoleColor;
+            Console.Write(message);
+            Console.ForegroundColor = defaultColor;
+        }
+
+        public static void PrintLine(int symbolCount = 100)
+        {
+            Print($"{new string('-', symbolCount)}\n");
+        }
+    }
 }
 
 //Война
