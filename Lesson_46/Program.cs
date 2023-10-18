@@ -102,8 +102,8 @@
 
         private void ShowMarketBalance()
         {
-            string MarketBalance = "Баланс магазина: " + _marketBalanceMoney.ToString() + " рублей";
-            Console.Title = MarketBalance;
+            string marketBalance = "Баланс магазина: " + _marketBalanceMoney.ToString() + " рублей";
+            Console.Title = marketBalance;
         }
 
         private void TryToPayProducts(Customer customer, string message)
