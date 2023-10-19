@@ -39,7 +39,7 @@
                         break;
 
                     default:
-                        Print($"\n");
+                        Print($"Ошибка! Попробуйте снова...\n");
                         break;
                 }
             }
@@ -102,8 +102,8 @@
 
         private void ShowMarketBalance()
         {
-            string MarketBalance = "Баланс магазина: " + _marketBalanceMoney.ToString() + " рублей";
-            Console.Title = MarketBalance;
+            string marketBalance = "Баланс магазина: " + _marketBalanceMoney.ToString() + " рублей";
+            Console.Title = marketBalance;
         }
 
         private void TryToPayProducts(Customer customer, string message)
@@ -145,8 +145,7 @@
                     Print($"Ошибка! Такого продукта нет.\n");
                 }
 
-                Print($"Нажмите любую клавишу чтобы продолжить...\n");
-                Console.ReadKey();
+                WaitToPressKey($"Нажмите любую клавишу чтобы продолжить...\n");
             }
         }
 
@@ -316,12 +315,12 @@
 
         public Cart GetCart()
         {
-            return _cart;
+            return _cart.Clone();
         }
 
-        public int GetMoney() 
-        { 
-            return _money; 
+        public int GetMoney()
+        {
+            return _money;
         }
 
         public void ShowProductsInCart()
@@ -337,6 +336,10 @@
         public Cart()
         {
             _products = new();
+        }
+        public Cart(List<Product>? products)
+        {
+            _products = products;
         }
 
         public int ProductsCount { get => _products.Count; }
@@ -367,6 +370,11 @@
             {
                 Print($"{i + 1}. {_products[i].GetInfo()}\n");
             }
+        }
+
+        public Cart Clone()
+        {
+            return new Cart(_products);
         }
     }
 
