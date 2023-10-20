@@ -49,12 +49,12 @@
 
     class Squad
     {
-        private List<FighterUnit>? squad;
+        private List<Unit>? squad;
     }
 
-    abstract class FighterUnit : ICombatEntity, IDamageable, IDamageProvider
+    abstract class Unit : ICombatEntity, IDamageable, IDamageProvider
     {
-        protected FighterUnit()
+        protected Unit()
         {
             ClassName = "Юнит";
             Damage = 10;
@@ -81,7 +81,7 @@
             return false;
         }
 
-        public virtual void AttackTo(FighterUnit target)
+        public virtual void AttackTo(Unit target)
         {
             if (IsAlive == true && target.IsAlive == true)
             {
@@ -90,7 +90,7 @@
         }
     }
 
-    abstract class Fighter : FighterUnit, IHealable
+    abstract class Fighter : Unit, IHealable
     {
         public Fighter()
         {
@@ -144,7 +144,7 @@
 
     class Engineer : IRepairProvider
     {
-        public void Repair(FighterUnit target)
+        public void Repair(Unit target)
         {
             IRepairable healableTarget = target as IRepairable;
 
@@ -168,7 +168,7 @@
 
     class Medic : Fighter, IHeal
     {
-        public void Heal(FighterUnit target)
+        public void Heal(Unit target)
         {
             IHealable healableTarget = target as IHealable;
 
@@ -190,7 +190,7 @@
         }
     }
 
-    abstract class Vihicles : FighterUnit, IRepairable
+    abstract class Vihicles : Unit, IRepairable
     {
         protected Vihicles()
         {
@@ -235,12 +235,12 @@
 
     interface IDamageProvider
     {
-        public abstract void AttackTo(FighterUnit target);
+        public abstract void AttackTo(Unit target);
     }
 
     interface IHeal
     {
-        public abstract void Heal(FighterUnit target);
+        public abstract void Heal(Unit target);
     }
 
     interface IHealable
@@ -250,7 +250,7 @@
 
     interface IRepairProvider
     {
-        public abstract void Repair(FighterUnit target);
+        public abstract void Repair(Unit target);
     }
 
     interface IRepairable
