@@ -1,15 +1,13 @@
 ﻿namespace Lesson_47
 {
-    using static Randomaizer;
-    using static UserInput;
     using static Display;
 
     class Program
     {
         static void Main()
         {
-            Console.WindowWidth = 100;
-            Console.BufferHeight = 500;
+            //Console.WindowWidth = 100;
+            //Console.BufferHeight = 500;
             Console.Title = "Война";
 
             Medic medic = new Medic();
@@ -22,7 +20,7 @@
             engineer.Repair(tank);
             Print($"После {tank.Health}\n\n");
 
-            
+
             Print($"До {fighter.Health}\n");
             medic.Heal(fighter);
             Print($"После {fighter.Health}\n");
@@ -174,7 +172,7 @@
 
             if (healableTarget != null)
             {
-                if(healableTarget.TryTakeHealing(50) == true)
+                if (healableTarget.TryTakeHealing(50) == true)
                 {
                     Print($"Получилось вылечить {target.ClassName} на {50} поинтов\n");
                 }
