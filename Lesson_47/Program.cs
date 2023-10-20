@@ -6,24 +6,22 @@
     {
         static void Main()
         {
-            //Console.WindowWidth = 100;
-            //Console.BufferHeight = 500;
             Console.Title = "Война";
 
-            Medic medic = new Medic();
-            Fighter fighter = new Sniper();
+            Medic medic = new();
+            Stormtrooper stormtrooper = new();
+            Tank tank = new();
+            Engineer engineer = new ();
 
-            Tank tank = new Tank();
-            Engineer engineer = new Engineer();
-
-            Print($"До {tank.Health}\n");
             engineer.Repair(tank);
-            Print($"После {tank.Health}\n\n");
+            medic.Heal(stormtrooper);
 
+            List<Unit> units = new();
+            units.Add(medic);
+            units.Add(stormtrooper);
+            units.Add(tank);
+            units.Add(engineer);
 
-            Print($"До {fighter.Health}\n");
-            medic.Heal(fighter);
-            Print($"После {fighter.Health}\n");
 
             Console.ReadKey();
         }
@@ -140,7 +138,7 @@
     {
     }
 
-    class Engineer : IRepairProvider
+    class Engineer : Unit, IRepairProvider
     {
         public void Repair(Unit target)
         {
