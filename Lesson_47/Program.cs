@@ -77,7 +77,7 @@
     {
         public Fighter()
         {
-            ClassName = "Боец (По умолчанию)";
+            ClassName = "Солдат";
             EntityName = "Пехота";
             Damage = 10;
             Health = 100;
