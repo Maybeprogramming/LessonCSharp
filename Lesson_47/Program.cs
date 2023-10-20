@@ -15,6 +15,13 @@
             Medic medic = new Medic();
             Fighter fighter = new Sniper();
 
+            Tank tank = new Tank();
+            Engineer engineer = new Engineer();
+
+            Print($"До {tank.Health}\n");
+            engineer.Repair(tank);
+            Print($"После {tank.Health}\n\n");
+
             
             Print($"До {fighter.Health}\n");
             medic.Heal(fighter);
@@ -49,11 +56,11 @@
     {
         protected FighterUnit()
         {
-            ClassName = "Боец";
+            ClassName = "Юнит";
             Damage = 10;
             Health = 100;
             Armor = 5;
-            UnitName = "Валера";
+            UnitName = "Юнит";
         }
 
         public string ClassName { get; protected set; }
@@ -135,6 +142,30 @@
     {
     }
 
+    class Engineer : IRepairProvider
+    {
+        public void Repair(FighterUnit target)
+        {
+            IRepairable healableTarget = target as IRepairable;
+
+            if (healableTarget != null)
+            {
+                if (healableTarget.TryAcceptRepair(50) == true)
+                {
+                    Print($"Получилось отремонтровать {target.UnitName} на {50} поинтов\n");
+                }
+                else
+                {
+                    Print($"Ааааа, не получилось отремонтировать {target.UnitName}!!!\n");
+                }
+            }
+            else
+            {
+                Print($"Всё сломалось! цель без цели! =(\n");
+            }
+        }
+    }
+
     class Medic : Fighter, IHeal
     {
         public void Heal(FighterUnit target)
@@ -159,7 +190,7 @@
         }
     }
 
-    abstract class Vihicles : FighterUnit
+    abstract class Vihicles : FighterUnit, IRepairable
     {
         protected Vihicles()
         {
@@ -167,6 +198,17 @@
         }
 
         public override string UnitName { get; set; }
+
+        public virtual bool TryAcceptRepair(int healthPoint)
+        {
+            if (IsAlive == true)
+            {
+                Health += healthPoint;
+                return true;
+            }
+
+            return false;
+        }
     }
 
     class Tank : Vihicles
