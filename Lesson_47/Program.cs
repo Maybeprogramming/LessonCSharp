@@ -11,6 +11,16 @@
             Console.WindowWidth = 100;
             Console.BufferHeight = 500;
             Console.Title = "Война";
+
+            Medic medic = new Medic();
+            Fighter fighter = new Sniper();
+
+            
+            Print($"До {fighter.Health}\n");
+            medic.Heal(fighter);
+            Print($"После {fighter.Health}\n");
+
+            Console.ReadKey();
         }
     }
 
@@ -32,7 +42,7 @@
 
     class Squad
     {
-
+        private List<FighterUnit>? squad;
     }
 
     abstract class FighterUnit : ICombatEntity, IDamageable, IDamageProvider
@@ -43,7 +53,7 @@
             Damage = 10;
             Health = 100;
             Armor = 5;
-            EntityName = "Новичок";
+            UnitName = "Валера";
         }
 
         public string ClassName { get; protected set; }
@@ -51,7 +61,7 @@
         public int Health { get; protected set; }
         public int Armor { get; protected set; }
         public bool IsAlive { get => Health > 0; }
-        public virtual string EntityName { get; set; }
+        public virtual string UnitName { get; set; }
 
         public virtual bool TryTakeDamage(int damage)
         {
@@ -70,23 +80,29 @@
             {
                 target.TryTakeDamage(Damage);
             }
-        } 
+        }
     }
 
-    abstract class Fighter : FighterUnit, IHeal
+    abstract class Fighter : FighterUnit, IHealable
     {
         public Fighter()
         {
-            ClassName = "Солдат";
-            EntityName = "Пехота";
+            ClassName = "Пехота";
+            UnitName = "Василий";
             Damage = 10;
             Health = 100;
             Armor = 5;
         }
 
-        public virtual void Heal(int healthPoint)
+        public virtual bool TryTakeHealing(int healthPoint)
         {
-            Health += healthPoint;
+            if (IsAlive == true)
+            {
+                Health += healthPoint;
+                return true;
+            }
+
+            return false;
         }
     }
 
@@ -119,23 +135,43 @@
     {
     }
 
-    class Medic : Fighter
+    class Medic : Fighter, IHeal
     {
+        public void Heal(FighterUnit target)
+        {
+            IHealable healableTarget = target as IHealable;
+
+            if (healableTarget != null)
+            {
+                if(healableTarget.TryTakeHealing(50) == true)
+                {
+                    Print($"Получилось вылечить {target.ClassName} на {50} поинтов\n");
+                }
+                else
+                {
+                    Print($"Ааааа, не получилось вылечить {target.ClassName}!!!\n");
+                }
+            }
+            else
+            {
+                Print($"Всё сломалось! цель без цели! =(\n");
+            }
+        }
     }
 
     abstract class Vihicles : FighterUnit
     {
         protected Vihicles()
         {
-            EntityName = "Боевая техника";
+            UnitName = "Боевая техника";
         }
 
-        public override string EntityName { get; set; }
+        public override string UnitName { get; set; }
     }
 
     class Tank : Vihicles
     {
-        
+
     }
 
     class Helicopter : Vihicles
@@ -147,7 +183,7 @@
 
     interface ICombatEntity
     {
-        string EntityName { get; set; }
+        string UnitName { get; set; }
     }
 
     interface IDamageable
@@ -162,7 +198,22 @@
 
     interface IHeal
     {
-        public abstract void Heal(int healthPoint);
+        public abstract void Heal(FighterUnit target);
+    }
+
+    interface IHealable
+    {
+        public abstract bool TryTakeHealing(int healthPoint);
+    }
+
+    interface IRepairProvider
+    {
+        public abstract void Repair(FighterUnit target);
+    }
+
+    interface IRepairable
+    {
+        public abstract bool TryAcceptRepair(int healthPoint);
     }
 
     #endregion
