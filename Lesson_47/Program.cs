@@ -143,7 +143,7 @@
 
     }
 
-    #region Intarfaces
+    #region Interfaces
 
     interface ICombatEntity
     {
