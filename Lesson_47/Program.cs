@@ -16,11 +16,13 @@
             engineer.Repair(tank);
             medic.Heal(stormtrooper);
 
-            List<Unit> units = new();
-            units.Add(medic);
-            units.Add(stormtrooper);
-            units.Add(tank);
-            units.Add(engineer);
+            List<Unit> units = new()
+            {
+                medic,
+                stormtrooper,
+                tank,
+                engineer
+            };
 
 
             Console.ReadKey();
