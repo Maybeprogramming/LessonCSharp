@@ -102,9 +102,16 @@
 
     class FighterCreator : UnitCreator
     {
-        public override T Create<T>(T unit)
+        public override Fighter Create<Fighter>(Fighter unit)
         {
             return unit;
+        }
+
+        public void testc()
+        {
+            UnitCreator unitCreator = new FighterCreator();
+
+            Sniper sniper = unitCreator.Create(new Sniper());
         }
     }
 
@@ -118,7 +125,7 @@
 
     #region Пехота
 
-    abstract class Unit : UnitCreator, ICombatEntity, IDamageable, IDamageProvider
+    abstract class Unit : ICombatEntity, IDamageable, IDamageProvider
     {
         protected Unit()
         {
@@ -156,7 +163,7 @@
         }
     }
 
-    class Fighter : Unit, IHealable
+    abstract class Fighter : ICombatEntity, IDamageable, IDamageProvider, IHealable
     {
         public Fighter()
         {
@@ -178,7 +185,31 @@
             return false;
         }
 
-        public override Fighter? Create() => null;
+        public string ClassName { get; protected set; }
+        public int Damage { get; protected set; }
+        public int Health { get; protected set; }
+        public int Armor { get; protected set; }
+        public bool IsAlive { get => Health > 0; }
+        public virtual string Name { get; set; }
+
+        public virtual bool TryTakeDamage(int damage)
+        {
+            if (IsAlive == true)
+            {
+                Health -= damage - Armor;
+                return true;
+            }
+
+            return false;
+        }
+
+        public virtual void AttackTo(IDamageable target)
+        {
+            if (IsAlive == true && target.IsAlive == true)
+            {
+                target.TryTakeDamage(Damage);
+            }
+        }
     }
 
     class Stormtrooper : Fighter
@@ -191,10 +222,10 @@
             Armor = Randomaizer.GenerateRandomNumber(0, 6);
         }
 
-        public override Fighter Create()
-        {
-            return new Stormtrooper();
-        }
+        //public override Fighter Create()
+        //{
+        //    return new Stormtrooper();
+        //}
     }
 
     class Sniper : Fighter
@@ -207,10 +238,10 @@
             Armor = Randomaizer.GenerateRandomNumber(0, 1);
         }
 
-        public override Fighter Create()
-        {
-            return new Sniper();
-        }
+        //public override Fighter Create()
+        //{
+        //    return new Sniper();
+        //}
     }
 
     class Paratrooper : Fighter
@@ -223,10 +254,10 @@
             Armor = Randomaizer.GenerateRandomNumber(0, 6);
         }
 
-        public override Fighter Create()
-        {
-            return new Paratrooper();
-        }
+        //public override Fighter Create()
+        //{
+        //    return new Paratrooper();
+        //}
     }
 
     class Scout : Fighter
@@ -239,10 +270,10 @@
             Armor = Randomaizer.GenerateRandomNumber(0, 2);
         }
 
-        public override Fighter Create()
-        {
-            return new Scout();
-        }
+        //public override Fighter Create()
+        //{
+        //    return new Scout();
+        //}
     }
 
     class Heavy : Fighter
@@ -255,10 +286,10 @@
             Armor = Randomaizer.GenerateRandomNumber(0, 2);
         }
 
-        public override Fighter Create()
-        {
-            return new Heavy();
-        }
+        //public override Fighter Create()
+        //{
+        //    return new Heavy();
+        //}
     }
 
     class GrenadeLauncher : Fighter
@@ -292,10 +323,10 @@
             base.AttackTo(target);
         }
 
-        public override Fighter Create()
-        {
-            return new Heavy();
-        }
+        //public override Fighter Create()
+        //{
+        //    return new Heavy();
+        //}
     }
 
     class Engineer : Fighter, IRepairProvider
@@ -308,10 +339,10 @@
             _repairPoints = Randomaizer.GenerateRandomNumber(20, 40);
         }
 
-        public override Fighter Create()
-        {
-            return new Engineer();
-        }
+        //public override Fighter Create()
+        //{
+        //    return new Engineer();
+        //}
 
         public void Repair(Vihicle target)
         {
@@ -342,10 +373,10 @@
             _healingPoints = Randomaizer.GenerateRandomNumber(20, 40);
         }
 
-        public override Fighter Create()
-        {
-            return new Medic();
-        }
+        //public override Fighter Create()
+        //{
+        //    return new Medic();
+        //}
 
         public void Heal(Fighter target)
         {
@@ -369,15 +400,38 @@
     #endregion
 
     #region Боевая техника
-    class Vihicle : Unit, IRepairable, IDamageable
+    class Vihicle : ICombatEntity, IDamageable, IDamageProvider, IRepairable
     {
         public Vihicle()
         {
             ClassName = "Техника";
             Name = Randomaizer.GenerateRandomVihiclesName();
         }
+        public string ClassName { get; protected set; }
+        public int Damage { get; protected set; }
+        public int Health { get; protected set; }
+        public int Armor { get; protected set; }
+        public bool IsAlive { get => Health > 0; }
+        public virtual string Name { get; set; }
 
-        public override string Name { get; set; }
+        public virtual bool TryTakeDamage(int damage)
+        {
+            if (IsAlive == true)
+            {
+                Health -= damage - Armor;
+                return true;
+            }
+
+            return false;
+        }
+
+        public virtual void AttackTo(IDamageable target)
+        {
+            if (IsAlive == true && target.IsAlive == true)
+            {
+                target.TryTakeDamage(Damage);
+            }
+        }
 
         public virtual bool TryAcceptRepair(int healthPoint)
         {
@@ -390,7 +444,7 @@
             return false;
         }
 
-        public override Vihicle? Create() => null;
+        //public override Vihicle? Create() => null;
     }
 
     class Tank : Vihicle
@@ -401,10 +455,10 @@
             ClassName = "Танк";
         }
 
-        public override Vihicle Create()
-        {
-            return new Tank();
-        }
+        //public override Vihicle Create()
+        //{
+        //    return new Tank();
+        //}
     }
 
     class Helicopter : Vihicle
@@ -415,10 +469,10 @@
             ClassName = "Вертолёт";
         }
 
-        public override Vihicle Create()
-        {
-            return new Helicopter();
-        }
+        //public override Vihicle Create()
+        //{
+        //    return new Helicopter();
+        //}
     }
 
     #endregion
@@ -462,6 +516,10 @@
     interface ICombatEntity
     {
         string Name { get; set; }
+        string ClassName { get; }
+        int Damage { get; }
+        int Health { get; }
+        int Armor { get; }
     }
 
     interface IDamageable
