@@ -50,9 +50,13 @@
         private List<Unit>? _squad;
         private List<Fighter>? _fighters;
         private List<Vihicle>? _vihicles;
+        private UnitCreator _fighterCreator;
+        private UnitCreator _vihicleCreator;
 
         public Squad()
         {
+            _fighterCreator = new FighterCreator();
+            _vihicleCreator = new VihicleCreator();
             _fighters = new()
             {
                 new Stormtrooper(),
@@ -89,21 +93,28 @@
                 int typeNumber = Randomaizer.GenerateRandomNumber(0, 2);
             }
         }
-
-        private T CreateUnit<T>(int index, List<T> units)
-        {
-            return units[index];
-        }
     }
-
-    #region Factory Method
 
     abstract class UnitCreator
     {
         public abstract Unit Create();
     }
 
-    #endregion
+    class FighterCreator : UnitCreator
+    {
+        public override Unit Create()
+        {
+            return new Fighter();
+        }
+    }
+
+    class VihicleCreator : UnitCreator
+    {
+        public override Unit Create()
+        {
+            return new Vihicle();
+        }
+    }
 
     #region Пехота
 
@@ -145,7 +156,7 @@
         }
     }
 
-    abstract class Fighter : Unit, IHealable
+    class Fighter : Unit, IHealable
     {
         public Fighter()
         {
@@ -166,6 +177,8 @@
 
             return false;
         }
+
+        public override Fighter? Create() => null;
     }
 
     class Stormtrooper : Fighter
@@ -178,7 +191,7 @@
             Armor = Randomaizer.GenerateRandomNumber(0, 6);
         }
 
-        public override Unit Create()
+        public override Fighter Create()
         {
             return new Stormtrooper();
         }
@@ -194,7 +207,7 @@
             Armor = Randomaizer.GenerateRandomNumber(0, 1);
         }
 
-        public override Unit Create()
+        public override Fighter Create()
         {
             return new Sniper();
         }
@@ -210,7 +223,7 @@
             Armor = Randomaizer.GenerateRandomNumber(0, 6);
         }
 
-        public override Unit Create()
+        public override Fighter Create()
         {
             return new Paratrooper();
         }
@@ -226,7 +239,7 @@
             Armor = Randomaizer.GenerateRandomNumber(0, 2);
         }
 
-        public override Unit Create()
+        public override Fighter Create()
         {
             return new Scout();
         }
@@ -242,7 +255,7 @@
             Armor = Randomaizer.GenerateRandomNumber(0, 2);
         }
 
-        public override Unit Create()
+        public override Fighter Create()
         {
             return new Heavy();
         }
@@ -279,7 +292,7 @@
             base.AttackTo(target);
         }
 
-        public override Unit Create()
+        public override Fighter Create()
         {
             return new Heavy();
         }
@@ -295,7 +308,7 @@
             _repairPoints = Randomaizer.GenerateRandomNumber(20, 40);
         }
 
-        public override Unit Create()
+        public override Fighter Create()
         {
             return new Engineer();
         }
@@ -329,7 +342,7 @@
             _healingPoints = Randomaizer.GenerateRandomNumber(20, 40);
         }
 
-        public override Unit Create()
+        public override Fighter Create()
         {
             return new Medic();
         }
@@ -356,9 +369,9 @@
     #endregion
 
     #region Боевая техника
-    abstract class Vihicle : Unit, IRepairable, IDamageable
+    class Vihicle : Unit, IRepairable, IDamageable
     {
-        protected Vihicle()
+        public Vihicle()
         {
             ClassName = "Техника";
             Name = Randomaizer.GenerateRandomVihiclesName();
@@ -376,6 +389,8 @@
 
             return false;
         }
+
+        public override Vihicle? Create() => null;
     }
 
     class Tank : Vihicle
@@ -386,7 +401,7 @@
             ClassName = "Танк";
         }
 
-        public override Unit Create()
+        public override Vihicle Create()
         {
             return new Tank();
         }
@@ -400,7 +415,7 @@
             ClassName = "Вертолёт";
         }
 
-        public override Unit Create()
+        public override Vihicle Create()
         {
             return new Helicopter();
         }
