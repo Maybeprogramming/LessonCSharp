@@ -11,7 +11,7 @@
             Medic medic = new();
             Stormtrooper stormtrooper = new();
             Tank tank = new();
-            Engineer engineer = new ();
+            Engineer engineer = new();
 
             engineer.Repair(tank);
             medic.Heal(stormtrooper);
@@ -140,48 +140,43 @@
 
     class Engineer : Fighter, IRepairProvider
     {
-        public void Repair(Unit target)
+        public void Repair(Vihicles target)
         {
-            IRepairable healableTarget = target as IRepairable;
 
-            if (healableTarget != null)
+            if (target == null || target is IRepairable == false)
             {
-                if (healableTarget.TryAcceptRepair(50) == true)
-                {
-                    Print($"Получилось отремонтровать {target.Name} на {50} поинтов\n");
-                }
-                else
-                {
-                    Print($"Ааааа, не получилось отремонтировать {target.Name}!!!\n");
-                }
+                Print($"Всё сломалось! Цели нет, ааааа! =(\n");
+                return;
+            }
+
+            if (target.TryAcceptRepair(50) == true)
+            {
+                Print($"Получилось отремонтровать {target.Name} на {50} поинтов\n");
             }
             else
             {
-                Print($"Всё сломалось! Цели нет, ааааа! =(\n");
+                Print($"Ааааа, не получилось отремонтировать {target.Name}!!!\n");
             }
         }
     }
 
     class Medic : Fighter, IHeal
     {
-        public void Heal(Unit target)
+        public void Heal(Fighter target)
         {
-            IHealable healableTarget = target as IHealable;
-
-            if (healableTarget != null)
+            if (target == null && target is IHealable == false)
             {
-                if (healableTarget.TryTakeHealing(50) == true)
-                {
-                    Print($"Получилось вылечить {target.ClassName} на {50} поинтов\n");
-                }
-                else
-                {
-                    Print($"Ааааа, не получилось вылечить {target.ClassName}!!!\n");
-                }
+                Print($"Всё сломалось! Цели нет, ааааа! =(\n");
+                return;
+            }
+
+            if (target.TryTakeHealing(50) == true)
+            {
+                Print($"Получилось вылечить {target.ClassName} на {50} поинтов\n");
             }
             else
             {
-                Print($"Всё сломалось! Цели нет, ааааа! =(\n");
+                Print($"Ааааа, не получилось вылечить {target.ClassName}!!!\n");
             }
         }
     }
@@ -236,7 +231,7 @@
 
     interface IHeal
     {
-        public abstract void Heal(Unit target);
+        public abstract void Heal(Fighter target);
     }
 
     interface IHealable
@@ -246,7 +241,7 @@
 
     interface IRepairProvider
     {
-        public abstract void Repair(Unit target);
+        public abstract void Repair(Vihicles target);
     }
 
     interface IRepairable
