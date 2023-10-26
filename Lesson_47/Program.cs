@@ -16,18 +16,14 @@
             engineer.Repair(tank);
             medic.Heal(stormtrooper);
 
-
-            Console.WriteLine($"{medic.Health}");
-            engineer.AttackTo(medic);
-            Console.WriteLine($"{medic.Health}");
-
-            List<Unit> units = new()
+            while(engineer.IsAlive == true && medic.IsAlive == true)
             {
-                medic,
-                stormtrooper,
-                tank,
-                engineer
-            };
+                engineer.AttackTo(medic);
+                medic.AttackTo(engineer);
+
+                Print($"Медик: {medic.Health}\n" +
+                    $"Инженер: {engineer.Health}\n");
+            }
 
             Console.ReadKey();
         }
@@ -35,8 +31,8 @@
 
     class BattleField
     {
-        Squad squad1 = new Squad();
-        Squad squad2 = new Squad();
+        Squad squad1 = new Squad(8,2);
+        Squad squad2 = new Squad(9,1);
 
         public void BeginWar()
         {
@@ -52,6 +48,13 @@
     class Squad
     {
         private List<Unit>? squad;
+        
+        public Squad(int fighterCount, int vihiclesCount)
+        {
+
+        }
+
+
     }
 
     abstract class Unit : ICombatEntity, IDamageable, IDamageProvider
@@ -183,7 +186,7 @@
 
         public override void AttackTo(IDamageable target)
         {
-            if (target is Vihicles == true)
+            if (target is Vihicle == true)
             {
                 Damage = _criticalDamage;
             }
@@ -206,7 +209,7 @@
             _repairPoints = Randomaizer.GenerateRandomNumber(20, 40);
         }
 
-        public void Repair(Vihicles target)
+        public void Repair(Vihicle target)
         {
             if (target == null || target is IRepairable == false)
             {
@@ -254,11 +257,12 @@
         }
     }
 
-    abstract class Vihicles : Unit, IRepairable, IDamageable
+    abstract class Vihicle : Unit, IRepairable, IDamageable
     {
-        protected Vihicles()
+        protected Vihicle()
         {
-            Name = "Боевая техника";
+            ClassName = "Техника";
+            Name = Randomaizer.GenerateRandomVihiclesName();
         }
 
         public override string Name { get; set; }
@@ -275,14 +279,22 @@
         }
     }
 
-    class Tank : Vihicles
+    class Tank : Vihicle
     {
-
+        public Tank()
+        {
+            Damage = Randomaizer.GenerateRandomNumber(30, 50);
+            ClassName = "Танк";
+        }
     }
 
-    class Helicopter : Vihicles
+    class Helicopter : Vihicle
     {
-
+        public Helicopter()
+        {
+            Damage = Randomaizer.GenerateRandomNumber(30, 50);
+            ClassName = "Вертолёт";
+        }
     }
 
     abstract class Ability
@@ -295,6 +307,24 @@
             _name = name;
             _description = description;
         }
+    }
+
+    enum Fighters
+    {
+        Stormtrooper,
+        Sniper,
+        Paratrooper,
+        Scout,
+        Heavy,
+        GrenadeLauncher,
+        Engineer,
+        Medic
+    }
+
+    enum Vihicles
+    {
+        Tank,
+        Helicopter
     }
 
     #region Interfaces
@@ -327,7 +357,7 @@
 
     interface IRepairProvider
     {
-        public void Repair(Vihicles target);
+        public void Repair(Vihicle target);
     }
 
     interface IRepairable
@@ -343,6 +373,7 @@
     {
         private static readonly Random s_random;
         private static readonly string[] s_names;
+        private static readonly string[] s_vihicles_names;
 
         static Randomaizer()
         {
@@ -397,11 +428,35 @@
                 "Попрыгун",
                 "Тряпкович"
             };
+            s_vihicles_names = new string[]
+            {
+                "Тигр",
+                "Пантера",
+                "Насорог",
+                "Т-34",
+                "ИС-2",
+                "М48 Паттон",
+                "Крусайдер",
+                "Маус",
+                "ИСУ-152",
+                "Фердинанд",
+                "Хелкат",
+                "Вульфирина",
+                "Шеридан",
+                "Кромвель",
+                "Челенджер",
+                "Центурион",
+            };
         }
 
         public static string GenerateRandomName()
         {
             return s_names[s_random.Next(0, s_names.Length)];
+        }
+
+        public static string GenerateRandomVihiclesName()
+        {
+            return s_vihicles_names[s_random.Next(0, s_vihicles_names.Length)];
         }
 
         public static int GenerateRandomNumber(int minValue, int maxValue)
