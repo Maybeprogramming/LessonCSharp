@@ -16,7 +16,10 @@
             engineer.Repair(tank);
             medic.Heal(stormtrooper);
 
+
+            Console.WriteLine($"{medic.Health}");
             engineer.AttackTo(medic);
+            Console.WriteLine($"{medic.Health}");
 
             List<Unit> units = new()
             {
