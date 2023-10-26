@@ -67,7 +67,7 @@
             _vihicles = new()
             {
                 new Tank(),
-                new Helicopter()            
+                new Helicopter()
             };
         }
 
@@ -81,9 +81,6 @@
 
             for (int i = 0; i < fighterCount; i++)
             {
-                Fighters typeFihgter = (Fighters)Randomaizer.GenerateRandomNumber(0, 8);
-
-
 
             }
 
@@ -93,15 +90,24 @@
             }
         }
 
-        private T CreateUnit <T> (int index, List<T> units)
+        private T CreateUnit<T>(int index, List<T> units)
         {
             return units[index];
         }
     }
 
+    #region Factory Method
+
+    abstract class UnitCreator
+    {
+        public abstract Unit Create();
+    }
+
+    #endregion
+
     #region Пехота
 
-    abstract class Unit : ICombatEntity, IDamageable, IDamageProvider
+    abstract class Unit : UnitCreator, ICombatEntity, IDamageable, IDamageProvider
     {
         protected Unit()
         {
@@ -171,6 +177,11 @@
             Health = Randomaizer.GenerateRandomNumber(100, 150);
             Armor = Randomaizer.GenerateRandomNumber(0, 6);
         }
+
+        public override Unit Create()
+        {
+            return new Stormtrooper();
+        }
     }
 
     class Sniper : Fighter
@@ -181,6 +192,11 @@
             Damage = Randomaizer.GenerateRandomNumber(15, 20);
             Health = Randomaizer.GenerateRandomNumber(80, 100);
             Armor = Randomaizer.GenerateRandomNumber(0, 1);
+        }
+
+        public override Unit Create()
+        {
+            return new Sniper();
         }
     }
 
@@ -193,6 +209,11 @@
             Health = Randomaizer.GenerateRandomNumber(120, 180);
             Armor = Randomaizer.GenerateRandomNumber(0, 6);
         }
+
+        public override Unit Create()
+        {
+            return new Paratrooper();
+        }
     }
 
     class Scout : Fighter
@@ -204,6 +225,11 @@
             Health = Randomaizer.GenerateRandomNumber(60, 80);
             Armor = Randomaizer.GenerateRandomNumber(0, 2);
         }
+
+        public override Unit Create()
+        {
+            return new Scout();
+        }
     }
 
     class Heavy : Fighter
@@ -214,6 +240,11 @@
             Damage = Randomaizer.GenerateRandomNumber(10, 15);
             Health = Randomaizer.GenerateRandomNumber(150, 200);
             Armor = Randomaizer.GenerateRandomNumber(0, 2);
+        }
+
+        public override Unit Create()
+        {
+            return new Heavy();
         }
     }
 
@@ -247,6 +278,11 @@
 
             base.AttackTo(target);
         }
+
+        public override Unit Create()
+        {
+            return new Heavy();
+        }
     }
 
     class Engineer : Fighter, IRepairProvider
@@ -257,6 +293,11 @@
         {
             ClassName = "Инженер";
             _repairPoints = Randomaizer.GenerateRandomNumber(20, 40);
+        }
+
+        public override Unit Create()
+        {
+            return new Engineer();
         }
 
         public void Repair(Vihicle target)
@@ -286,6 +327,11 @@
         {
             ClassName = "Медик";
             _healingPoints = Randomaizer.GenerateRandomNumber(20, 40);
+        }
+
+        public override Unit Create()
+        {
+            return new Medic();
         }
 
         public void Heal(Fighter target)
@@ -339,6 +385,11 @@
             Damage = Randomaizer.GenerateRandomNumber(30, 50);
             ClassName = "Танк";
         }
+
+        public override Unit Create()
+        {
+            return new Tank();
+        }
     }
 
     class Helicopter : Vihicle
@@ -347,6 +398,11 @@
         {
             Damage = Randomaizer.GenerateRandomNumber(30, 50);
             ClassName = "Вертолёт";
+        }
+
+        public override Unit Create()
+        {
+            return new Helicopter();
         }
     }
 
