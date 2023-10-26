@@ -31,8 +31,8 @@
 
     class BattleField
     {
-        Squad squad1 = new Squad(8, 2);
-        Squad squad2 = new Squad(9, 1);
+        Squad squad1 = new Squad();
+        Squad squad2 = new Squad();
 
         public void BeginWar()
         {
@@ -47,14 +47,56 @@
 
     class Squad
     {
-        private List<Unit>? squad;
+        private List<Unit>? _squad;
+        private List<Fighter>? _fighters;
+        private List<Vihicle>? _vihicles;
 
-        public Squad(int fighterCount, int vihiclesCount)
+        public Squad()
         {
-
+            _fighters = new()
+            {
+                new Stormtrooper(),
+                new Sniper(),
+                new Paratrooper(),
+                new Scout(),
+                new Heavy(),
+                new GrenadeLauncher(),
+                new Engineer(),
+                new Medic()
+            };
+            _vihicles = new()
+            {
+                new Tank(),
+                new Helicopter()            
+            };
         }
 
+        private void Create(int fighterCount, int vihiclesCount)
+        {
+            Print($">>> Начинается процедура формирования отряда");
+            Print($">>> ");
+            int fullCount = fighterCount + vihiclesCount;
+            Print($"Отряд сформирован: {fullCount} боевых единиц");
 
+
+            for (int i = 0; i < fighterCount; i++)
+            {
+                Fighters typeFihgter = (Fighters)Randomaizer.GenerateRandomNumber(0, 8);
+
+
+
+            }
+
+            for (int i = 0; i < vihiclesCount; i++)
+            {
+                int typeNumber = Randomaizer.GenerateRandomNumber(0, 2);
+            }
+        }
+
+        private T CreateUnit <T> (int index, List<T> units)
+        {
+            return units[index];
+        }
     }
 
     #region Пехота
