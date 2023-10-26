@@ -97,10 +97,10 @@
         public Fighter()
         {
             ClassName = "Пехота";
-            Name = "Василий";
+            Name = Randomaizer.GenerateRandomName();
             Damage = 10;
             Health = 100;
-            Armor = 5;
+            Armor = 0;
         }
 
         public virtual bool TryTakeHealing(int healthPoint)
@@ -119,68 +119,137 @@
     {
         public Stormtrooper()
         {
-            Health = 20;
+            Damage = Randomaizer.GenerateRandomNumber(10, 20);
+            Health = Randomaizer.GenerateRandomNumber(100, 150);
+            Armor = Randomaizer.GenerateRandomNumber(0, 6);
         }
     }
 
     class Sniper : Fighter
     {
+        public Sniper()
+        {
+            Damage = Randomaizer.GenerateRandomNumber(15, 20);
+            Health = Randomaizer.GenerateRandomNumber(80, 100);
+            Armor = Randomaizer.GenerateRandomNumber(0, 1);
+        }
     }
 
     class Paratrooper : Fighter
     {
+        public Paratrooper()
+        {
+            Damage = Randomaizer.GenerateRandomNumber(10, 15);
+            Health = Randomaizer.GenerateRandomNumber(120, 180);
+            Armor = Randomaizer.GenerateRandomNumber(0, 6);
+        }
     }
 
     class Scout : Fighter
     {
+        public Scout()
+        {
+            Damage = Randomaizer.GenerateRandomNumber(8, 10);
+            Health = Randomaizer.GenerateRandomNumber(60, 80);
+            Armor = Randomaizer.GenerateRandomNumber(0, 2);
+        }
     }
 
     class Heavy : Fighter
     {
+        public Heavy()
+        {
+            Damage = Randomaizer.GenerateRandomNumber(10, 15);
+            Health = Randomaizer.GenerateRandomNumber(150, 200);
+            Armor = Randomaizer.GenerateRandomNumber(0, 2);
+        }
     }
 
     class GrenadeLauncher : Fighter
     {
+        private int _criticalModifier;
+        private int _criticalDamage;
+        private int _baseDamage;
+
+        public GrenadeLauncher()
+        {
+            Damage = Randomaizer.GenerateRandomNumber(20, 30);
+            Health = Randomaizer.GenerateRandomNumber(150, 200);
+            Armor = Randomaizer.GenerateRandomNumber(0, 2);
+            _baseDamage = Damage;
+            _criticalModifier = 2;
+            _criticalDamage = _criticalModifier * Damage;
+        }
+
+        public override void AttackTo(IDamageable target)
+        {
+            if (target is Vihicles == true)
+            {
+                Damage = _criticalDamage;
+            }
+            else
+            {
+                Damage = _baseDamage;
+            }
+
+            base.AttackTo(target);
+        }
     }
 
     class Engineer : Fighter, IRepairProvider
     {
+        private int _repairPoints;
+
+        public Engineer()
+        {
+            ClassName = "Инженер";
+            _repairPoints = Randomaizer.GenerateRandomNumber(20, 40);
+        }
+
         public void Repair(Vihicles target)
         {
             if (target == null || target is IRepairable == false)
             {
-                Print($"Всё сломалось! Цели нет, ааааа! =(\n");
+                Print($"Ошибка! Цели нет, памагите! =(\n");
                 return;
             }
 
-            if (target.TryAcceptRepair(50) == true)
+            if (target.TryAcceptRepair(_repairPoints) == true)
             {
-                Print($"Получилось отремонтровать {target.Name} на {50} поинтов\n");
+                Print($"{ClassName}: {Name} отремотировал цель: {target.Name} на {_repairPoints} очков здоровья\n");
             }
             else
             {
-                Print($"Ааааа, не получилось отремонтировать {target.Name}!!!\n");
+                Print($"Не получилось отремонтировать цель: {target.Name}!!!\n");
             }
         }
     }
 
     class Medic : Fighter, IHeal
     {
+        private int _healingPoints;
+
+        public Medic()
+        {
+            ClassName = "Медик";
+            _healingPoints = Randomaizer.GenerateRandomNumber(20, 40);
+        }
+
         public void Heal(Fighter target)
         {
             if (target == null && target is IHealable == false)
             {
-                Print($"Всё сломалось! Цели нет, ааааа! =(\n");
+                Print($"Ошибка! Цели нет, памагите! =(\n");
                 return;
             }
 
-            if (target.TryTakeHealing(50) == true)
+            if (target.TryTakeHealing(_healingPoints) == true)
             {
-                Print($"Получилось вылечить {target.ClassName} на {50} поинтов\n");
+                Print($"{ClassName}: {Name} вылечил цель: {target.ClassName} на {_healingPoints} очков здоровья\n");
             }
             else
             {
-                Print($"Ааааа, не получилось вылечить {target.ClassName}!!!\n");
+                Print($"Не получилось вылечить цель: {target.ClassName}!!!\n");
             }
         }
     }
@@ -403,5 +472,3 @@
 //Пулеметчик - Heavy
 //Гранатометчик - Grenade launcher
 //Медик - Medic
-
-//Combat Unit - реализовать
