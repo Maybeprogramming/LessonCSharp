@@ -16,12 +16,12 @@
             engineer.Repair(tank);
             medic.Heal(stormtrooper);
 
-            while (engineer.IsAlive == true && medic.IsAlive == true)
+            while (engineer.IsAlive == true && tank.IsAlive == true)
             {
-                engineer.AttackTo(medic);
-                medic.AttackTo(engineer);
+                engineer.AttackTo(tank);
+                tank.AttackTo(engineer);
 
-                Print($"Медик: {medic.Health}\n" +
+                Print($"Танк: {tank.Health}\n" +
                     $"Инженер: {engineer.Health}\n");
             }
 
@@ -406,6 +406,7 @@
         {
             ClassName = "Техника";
             Name = Randomaizer.GenerateRandomVihiclesName();
+            Health = 200;
         }
         public string ClassName { get; protected set; }
         public int Damage { get; protected set; }
