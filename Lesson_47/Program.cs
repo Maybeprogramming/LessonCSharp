@@ -142,7 +142,6 @@
     {
         public void Repair(Vihicles target)
         {
-
             if (target == null || target is IRepairable == false)
             {
                 Print($"Всё сломалось! Цели нет, ааааа! =(\n");
@@ -250,6 +249,8 @@
     }
 
     #endregion
+
+    #region UserUtils
 
     static class Randomaizer
     {
@@ -361,6 +362,8 @@
             Print($"{new string('-', symbolCount)}\n");
         }
     }
+
+    #endregion
 }
 
 //Война
