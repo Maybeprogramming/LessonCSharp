@@ -16,7 +16,7 @@
             engineer.Repair(tank);
             medic.Heal(stormtrooper);
 
-            while(engineer.IsAlive == true && medic.IsAlive == true)
+            while (engineer.IsAlive == true && medic.IsAlive == true)
             {
                 engineer.AttackTo(medic);
                 medic.AttackTo(engineer);
@@ -31,8 +31,8 @@
 
     class BattleField
     {
-        Squad squad1 = new Squad(8,2);
-        Squad squad2 = new Squad(9,1);
+        Squad squad1 = new Squad(8, 2);
+        Squad squad2 = new Squad(9, 1);
 
         public void BeginWar()
         {
@@ -48,7 +48,7 @@
     class Squad
     {
         private List<Unit>? squad;
-        
+
         public Squad(int fighterCount, int vihiclesCount)
         {
 
@@ -56,6 +56,8 @@
 
 
     }
+
+    #region Пехота
 
     abstract class Unit : ICombatEntity, IDamageable, IDamageProvider
     {
@@ -99,7 +101,7 @@
     {
         public Fighter()
         {
-            ClassName = "Пехота";
+            ClassName = "Пехотинец";
             Name = Randomaizer.GenerateRandomName();
             Damage = 10;
             Health = 100;
@@ -122,6 +124,7 @@
     {
         public Stormtrooper()
         {
+            ClassName = "Штурмовик";
             Damage = Randomaizer.GenerateRandomNumber(10, 20);
             Health = Randomaizer.GenerateRandomNumber(100, 150);
             Armor = Randomaizer.GenerateRandomNumber(0, 6);
@@ -132,6 +135,7 @@
     {
         public Sniper()
         {
+            ClassName = "Снайпер";
             Damage = Randomaizer.GenerateRandomNumber(15, 20);
             Health = Randomaizer.GenerateRandomNumber(80, 100);
             Armor = Randomaizer.GenerateRandomNumber(0, 1);
@@ -142,6 +146,7 @@
     {
         public Paratrooper()
         {
+            ClassName = "Десантник";
             Damage = Randomaizer.GenerateRandomNumber(10, 15);
             Health = Randomaizer.GenerateRandomNumber(120, 180);
             Armor = Randomaizer.GenerateRandomNumber(0, 6);
@@ -152,6 +157,7 @@
     {
         public Scout()
         {
+            ClassName = "Разведчик";
             Damage = Randomaizer.GenerateRandomNumber(8, 10);
             Health = Randomaizer.GenerateRandomNumber(60, 80);
             Armor = Randomaizer.GenerateRandomNumber(0, 2);
@@ -162,6 +168,7 @@
     {
         public Heavy()
         {
+            ClassName = "Пулеметчик";
             Damage = Randomaizer.GenerateRandomNumber(10, 15);
             Health = Randomaizer.GenerateRandomNumber(150, 200);
             Armor = Randomaizer.GenerateRandomNumber(0, 2);
@@ -176,6 +183,7 @@
 
         public GrenadeLauncher()
         {
+            ClassName = "Гранатометчик";
             Damage = Randomaizer.GenerateRandomNumber(20, 30);
             Health = Randomaizer.GenerateRandomNumber(150, 200);
             Armor = Randomaizer.GenerateRandomNumber(0, 2);
@@ -257,6 +265,9 @@
         }
     }
 
+    #endregion
+
+    #region Боевая техника
     abstract class Vihicle : Unit, IRepairable, IDamageable
     {
         protected Vihicle()
@@ -297,6 +308,8 @@
         }
     }
 
+    #endregion
+
     abstract class Ability
     {
         private string? _name;
@@ -308,6 +321,8 @@
             _description = description;
         }
     }
+
+    #region Enums
 
     enum Fighters
     {
@@ -326,6 +341,8 @@
         Tank,
         Helicopter
     }
+
+    #endregion
 
     #region Interfaces
 
