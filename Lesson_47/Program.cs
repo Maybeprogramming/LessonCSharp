@@ -57,7 +57,7 @@
             Damage = 10;
             Health = 100;
             Armor = 5;
-            UnitName = "Юнит";
+            Name = "Юнит";
         }
 
         public string ClassName { get; protected set; }
@@ -65,7 +65,7 @@
         public int Health { get; protected set; }
         public int Armor { get; protected set; }
         public bool IsAlive { get => Health > 0; }
-        public virtual string UnitName { get; set; }
+        public virtual string Name { get; set; }
 
         public virtual bool TryTakeDamage(int damage)
         {
@@ -92,7 +92,7 @@
         public Fighter()
         {
             ClassName = "Пехота";
-            UnitName = "Василий";
+            Name = "Василий";
             Damage = 10;
             Health = 100;
             Armor = 5;
@@ -138,7 +138,7 @@
     {
     }
 
-    class Engineer : Unit, IRepairProvider
+    class Engineer : Fighter, IRepairProvider
     {
         public void Repair(Unit target)
         {
@@ -148,11 +148,11 @@
             {
                 if (healableTarget.TryAcceptRepair(50) == true)
                 {
-                    Print($"Получилось отремонтровать {target.UnitName} на {50} поинтов\n");
+                    Print($"Получилось отремонтровать {target.Name} на {50} поинтов\n");
                 }
                 else
                 {
-                    Print($"Ааааа, не получилось отремонтировать {target.UnitName}!!!\n");
+                    Print($"Ааааа, не получилось отремонтировать {target.Name}!!!\n");
                 }
             }
             else
@@ -181,7 +181,7 @@
             }
             else
             {
-                Print($"Всё сломалось! цель без цели! =(\n");
+                Print($"Всё сломалось! Цели нет, ааааа! =(\n");
             }
         }
     }
@@ -190,10 +190,10 @@
     {
         protected Vihicles()
         {
-            UnitName = "Боевая техника";
+            Name = "Боевая техника";
         }
 
-        public override string UnitName { get; set; }
+        public override string Name { get; set; }
 
         public virtual bool TryAcceptRepair(int healthPoint)
         {
@@ -221,7 +221,7 @@
 
     interface ICombatEntity
     {
-        string UnitName { get; set; }
+        string Name { get; set; }
     }
 
     interface IDamageable
