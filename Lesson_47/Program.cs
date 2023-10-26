@@ -97,22 +97,22 @@
 
     abstract class UnitCreator
     {
-        public abstract Unit Create();
+        public abstract T Create<T>(T unit);
     }
 
     class FighterCreator : UnitCreator
     {
-        public override Unit Create()
+        public override T Create<T>(T unit)
         {
-            return new Fighter();
+            return unit;
         }
     }
 
     class VihicleCreator : UnitCreator
     {
-        public override Unit Create()
+        public override T Create<T>(T unit)
         {
-            return new Vihicle();
+            return unit;
         }
     }
 
