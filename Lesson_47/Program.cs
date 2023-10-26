@@ -16,6 +16,8 @@
             engineer.Repair(tank);
             medic.Heal(stormtrooper);
 
+            engineer.AttackTo(medic);
+
             List<Unit> units = new()
             {
                 medic,
@@ -71,14 +73,14 @@
         {
             if (IsAlive == true)
             {
-                Health -= damage;
+                Health -= damage - Armor;
                 return true;
             }
 
             return false;
         }
 
-        public virtual void AttackTo(Unit target)
+        public virtual void AttackTo(IDamageable target)
         {
             if (IsAlive == true && target.IsAlive == true)
             {
@@ -180,7 +182,7 @@
         }
     }
 
-    abstract class Vihicles : Unit, IRepairable
+    abstract class Vihicles : Unit, IRepairable, IDamageable
     {
         protected Vihicles()
         {
@@ -232,32 +234,33 @@
 
     interface IDamageable
     {
-        public abstract bool TryTakeDamage(int damage);
+        bool IsAlive { get; }
+        bool TryTakeDamage(int damage);
     }
 
     interface IDamageProvider
     {
-        public abstract void AttackTo(Unit target);
+        public void AttackTo(IDamageable target);
     }
 
     interface IHeal
     {
-        public abstract void Heal(Fighter target);
+        public void Heal(Fighter target);
     }
 
     interface IHealable
     {
-        public abstract bool TryTakeHealing(int healthPoint);
+        public bool TryTakeHealing(int healthPoint);
     }
 
     interface IRepairProvider
     {
-        public abstract void Repair(Vihicles target);
+        public void Repair(Vihicles target);
     }
 
     interface IRepairable
     {
-        public abstract bool TryAcceptRepair(int healthPoint);
+        public bool TryAcceptRepair(int healthPoint);
     }
 
     #endregion
