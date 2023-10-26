@@ -211,6 +211,18 @@
 
     }
 
+    abstract class Ability
+    {
+        private string? _name;
+        private string? _description;
+
+        public Ability(string name, string description)
+        {
+            _name = name;
+            _description = description;
+        }
+    }
+
     #region Interfaces
 
     interface ICombatEntity
