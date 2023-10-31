@@ -1,5 +1,6 @@
 ﻿namespace Lesson_47
 {
+    using System.Reflection;
     using static Display;
 
     class Program
@@ -98,7 +99,7 @@
 
     abstract class UnitFactory
     {
-        public abstract T Create<T>();
+        public abstract T? Create<T>();
     }
 
     abstract class FighterFactory : UnitFactory
@@ -121,9 +122,27 @@
 
     class FighterBarrack : FighterFactory
     {
-        public override Fighter Create<Fighter>()
+        private List<Type> _fighters;
+
+        public FighterBarrack()
         {
-            return unit;
+            _fighters = new()
+            {
+                typeof(Engineer),
+                typeof(Medic),
+                typeof(Heavy),
+                typeof(GrenadeLauncher),
+                typeof(Paratrooper),
+                typeof(Sniper),
+                typeof(Scout),
+                typeof(Stormtrooper)
+            };
+        }
+
+        public override Fighter? Create<Fighter>()
+        {
+            Engineer engineer = new (Engineer)_fighters[0];
+            return null;
         }
 
         public override Engineer CreateEngineer()
@@ -169,9 +188,9 @@
 
     class VihicleManufacturing : VihicleFactory
     {
-        public override Vihicle Create<Vihicle>()
+        public override Vihicle? Create<Vihicle>()
         {
-            return unit;
+            return null;
         }
 
         public override Helicopter CreateHelicopter()
