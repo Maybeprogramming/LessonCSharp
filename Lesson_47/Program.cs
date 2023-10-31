@@ -8,29 +8,40 @@
         {
             Console.Title = "Война";
 
-            Medic medic = new();
-            Stormtrooper stormtrooper = new();
-            Tank tank = new();
-            Engineer engineer = new();
+            Squad squad1 = new Squad();
+            Squad squad2 = new Squad();
 
-            Squad squad = new Squad();
+            PrintLine();
 
-            foreach (var item in squad.GetUnit())
+            foreach (var item in squad1.GetUnit())
             {
-                Console.WriteLine($"{item.ClassName}");
+                Console.WriteLine($"{item.ClassName} - {item.Health}");
             }
 
-            engineer.Repair(tank);
-            medic.Heal(stormtrooper);
+            PrintLine();
 
-            while (engineer.IsAlive == true && tank.IsAlive == true)
+            foreach (var item in squad2.GetUnit())
             {
-                engineer.AttackTo(tank);
-                tank.AttackTo(engineer);
-
-                Print($"Танк: {tank.Health}\n" +
-                    $"Инженер: {engineer.Health}\n");
+                Console.WriteLine($"{item.ClassName} - {item.Health}");
             }
+
+            PrintLine();
+
+            Unit unit1 = squad1.GetUnit()[8];
+            Unit unit2 = squad2.GetUnit()[9];
+
+            while (unit1.IsAlive == true && unit2.IsAlive == true)
+            {
+                unit1.AttackTo(unit2);
+                unit2.AttackTo(unit1);
+
+                Print($"1. {unit1.Health}\n" +
+                      $"2. {unit2.Health}\n");
+                PrintLine();
+            }
+
+            Print($"ХР: {unit1.IsAlive} {unit1.ClassName}\n" +
+                $"XP: {unit2.IsAlive} {unit2.ClassName}");
 
             Console.ReadKey();
         }
@@ -57,13 +68,17 @@
         private List<Unit>? _squad;
         private List<Fighter>? _fighters;
         private List<Vihicle>? _vihicles;
-        private FighterFactory fighterFactory = new FighterBarrack();
-        private VihicleFactory vihicleFactory = new VihicleManufacturing();
-
+        private UnitFactory fighterFactory;
+        private UnitFactory vihicleFactory;
 
         public Squad()
         {
-            Create(8,2);
+            _fighters = new();
+            _vihicles = new();
+            _squad = new();
+            fighterFactory = new FighterBarrack();
+            vihicleFactory = new VihicleManufacturing();
+            Create(8, 2);
         }
 
         public List<Unit> GetUnit()
@@ -73,30 +88,63 @@
 
         private void Create(int fighterCount, int vihiclesCount)
         {
-            Print($">>> Начинается процедура формирования отряда");
-            Print($">>> ");
+            Print($">>> Начинается процедура формирования отряда\n");
+            Print($">>> \n");
             int fullCount = fighterCount + vihiclesCount;
-            Print($"Отряд сформирован: {fullCount} боевых единиц");
-
+            Print($"Отряд сформирован: {fullCount} боевых единиц\n");
 
             for (int i = 0; i < fighterCount; i++)
             {
-                Fighter fighter = (Fighter)fighterFactory.CreateRandomUnit();
-                _fighters.Add(fighter);
+                if (fighterFactory.CreateRandomUnit() is Fighter fighter)
+                {
+                    _fighters.Add(fighter);
+                }
+                else
+                {
+                    continue;
+                }
             }
 
             for (int i = 0; i < vihiclesCount; i++)
             {
-                Vihicle vihicle = (Vihicle)vihicleFactory.CreateRandomUnit();
-                _vihicles.Add(vihicle);
+                if (vihicleFactory.CreateRandomUnit() is Vihicle vihicle)
+                {
+                    _vihicles.Add(vihicle);
+                }
+                else
+                {
+                    continue;
+                }
             }
 
             _squad.AddRange(_fighters);
             _squad.AddRange(_vihicles);
         }
+
+        private void CreateFighters(int unitCount, UnitFactory factory, Type typeUnit)
+        {
+            Unit unit;
+
+            if (typeUnit == typeof(Fighter))
+            {
+                (Fighter)unit;
+            }
+
+            for (int i = 0; i < unitCount; i++)
+            {
+                if (factory.CreateRandomUnit() is Fighter fighter)
+                {
+                    _fighters.Add(fighter);
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
     }
 
-    #region Abstract Factory
+    #region Pattern Abstract Factory
 
     abstract class UnitFactory
     {
@@ -120,6 +168,8 @@
         public abstract Tank CreateTank();
         public abstract Helicopter CreateHelicopter();
     }
+
+    #region Concrete Factory
 
     class FighterBarrack : FighterFactory
     {
@@ -218,6 +268,8 @@
             return new Tank();
         }
     }
+
+    #endregion
 
     #endregion
 
@@ -437,7 +489,7 @@
     #region Боевая техника
     class Vihicle : Unit, ICombatEntity, IDamageable, IDamageProvider, IRepairable
     {
-        
+
 
         public Vihicle()
         {
