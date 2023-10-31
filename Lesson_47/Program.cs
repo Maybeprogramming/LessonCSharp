@@ -52,15 +52,21 @@
 
     class BattleField
     {
-        Squad squad1 = new Squad();
-        Squad squad2 = new Squad();
+        Squad? squad1;
+        Squad? squad2;
 
-        public void BeginWar()
+        public void Work()
         {
 
         }
 
-        public void Fight()
+        private void BeginWar()
+        {
+            squad1 = new Squad();
+            squad2 = new Squad();
+        }
+
+        private void Fight()
         {
 
         }
@@ -98,24 +104,31 @@
 
             Print($"Отряд сформирован: {fullCount} боевых единиц\n");
 
-            CreateUnit(fighterCount, fighterFactory);
-            CreateUnit(vihiclesCount, vihicleFactory);            
+            FillUnits(fighterCount, fighterFactory);
+            FillUnits(vihiclesCount, vihicleFactory);
 
-            _squad.AddRange(_fighters);
-            _squad.AddRange(_vihicles);
+            if (_fighters?.Count != 0)
+            {
+                _squad?.AddRange(_fighters);
+            }
+
+            if (_vihicles?.Count != 0)
+            {
+                _squad?.AddRange(_vihicles);
+            }
         }
 
-        private void CreateUnit(int unitCount, UnitFactory factory)
-        { 
+        private void FillUnits(int unitCount, UnitFactory factory)
+        {
             for (int i = 0; i < unitCount; i++)
             {
                 if (factory.CreateRandomUnit() is Fighter fighter)
                 {
-                    _fighters.Add(fighter);
+                    _fighters?.Add(fighter);
                 }
                 else if (factory.CreateRandomUnit() is Vihicle vihicle)
                 {
-                    _vihicles.Add(vihicle);
+                    _vihicles?.Add(vihicle);
                 }
                 else
                 {
@@ -297,6 +310,7 @@
     #endregion
 
     #region Пехота
+
     abstract class Fighter : Unit, ICombatEntity, IDamageable, IDamageProvider, IHealable
     {
         public Fighter()
@@ -468,6 +482,7 @@
     #endregion
 
     #region Боевая техника
+
     class Vihicle : Unit, ICombatEntity, IDamageable, IDamageProvider, IRepairable
     {
 
