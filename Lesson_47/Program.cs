@@ -50,13 +50,9 @@
         private List<Unit>? _squad;
         private List<Fighter>? _fighters;
         private List<Vihicle>? _vihicles;
-        private UnitCreator _fighterCreator;
-        private UnitCreator _vihicleCreator;
 
         public Squad()
         {
-            _fighterCreator = new FighterCreator();
-            _vihicleCreator = new VihicleCreator();
             _fighters = new()
             {
                 new Stormtrooper(),
@@ -92,34 +88,6 @@
             {
                 int typeNumber = Randomaizer.GenerateRandomNumber(0, 2);
             }
-        }
-    }
-
-    abstract class UnitCreator
-    {
-        public abstract T Create<T>(T unit);
-    }
-
-    class FighterCreator : UnitCreator
-    {
-        public override Fighter Create<Fighter>(Fighter unit)
-        {
-            return unit;
-        }
-
-        public void testc()
-        {
-            UnitCreator unitCreator = new FighterCreator();
-
-            Sniper sniper = unitCreator.Create(new Sniper());
-        }
-    }
-
-    class VihicleCreator : UnitCreator
-    {
-        public override T Create<T>(T unit)
-        {
-            return unit;
         }
     }
 
