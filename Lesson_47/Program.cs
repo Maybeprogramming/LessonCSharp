@@ -18,22 +18,22 @@
 
             PrintLine();
 
-            foreach (var item in squad1.GetUnit())
+            foreach (var item in squad1.GetAllUnits())
             {
                 Console.WriteLine($"{item.ClassName} - {item.Health}");
             }
 
             PrintLine();
 
-            foreach (var item in squad2.GetUnit())
+            foreach (var item in squad2.GetAllUnits())
             {
                 Console.WriteLine($"{item.ClassName} - {item.Health}");
             }
 
             PrintLine();
 
-            Unit unit1 = squad1.GetUnit()[8];
-            Unit unit2 = squad2.GetUnit()[9];
+            Unit unit1 = squad1.GetAllUnits()[8];
+            Unit unit2 = squad2.GetAllUnits()[9];
 
             while (unit1?.IsAlive == true && unit2?.IsAlive == true)
             {
@@ -72,11 +72,16 @@
 
         private void BeginWar()
         {
-            unit1 = squad1.GetFirstUnit();
-            unit2 = squad2.GetFirstUnit();
+            unit1 = squad1.GetUnit();
+            unit2 = squad2.GetUnit();
         }
 
         private void Fight(Unit unit1, Unit unit2)
+        {
+
+        }
+
+        private void AnnounceVictory()
         {
 
         }
@@ -106,12 +111,12 @@
             _squad = Shuffle(_squad);
         }
 
-        public List<Unit> GetUnit()
+        public List<Unit> GetAllUnits()
         {
             return new List<Unit>(_squad);
         }
 
-        public Unit GetFirstUnit()
+        public Unit GetUnit()
         {
             Unit unit = _squad.First();
             _squad.Remove(_squad.First());
