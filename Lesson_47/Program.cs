@@ -1,6 +1,8 @@
 ﻿namespace Lesson_47
 {
     using static Display;
+    using static Randomaizer;
+    using static UserInput;
 
     class Program
     {
