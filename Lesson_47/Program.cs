@@ -54,6 +54,14 @@
     {
         Squad? squad1;
         Squad? squad2;
+        Unit unit1;
+        Unit unit2;
+
+        public BattleField()
+        {
+            squad1 = new Squad();
+            squad2 = new Squad();
+        }
 
         public void Work()
         {
@@ -62,8 +70,7 @@
 
         private void BeginWar()
         {
-            squad1 = new Squad();
-            squad2 = new Squad();
+            unit1 = squad1.GetUnit().First();
         }
 
         private void Fight()
@@ -107,15 +114,8 @@
             FillUnits(fighterCount, fighterFactory);
             FillUnits(vihiclesCount, vihicleFactory);
 
-            if (_fighters?.Count != 0)
-            {
-                _squad?.AddRange(_fighters);
-            }
-
-            if (_vihicles?.Count != 0)
-            {
-                _squad?.AddRange(_vihicles);
-            }
+            _squad?.AddRange(_fighters);
+            _squad?.AddRange(_vihicles);
         }
 
         private void FillUnits(int unitCount, UnitFactory factory)
