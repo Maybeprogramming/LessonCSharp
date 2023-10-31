@@ -72,13 +72,8 @@
 
         private void BeginWar()
         {
-            Print($">>> Этап подготовки отрядов к бою");
-
             unit1 = squad1.GetUnit();
-            Print($">>> Первый отряд сформирован");
-
             unit2 = squad2.GetUnit();
-            Print($">>> Второй отряд сформирован");
         }
 
         private void Fight(Unit unit1, Unit unit2)
