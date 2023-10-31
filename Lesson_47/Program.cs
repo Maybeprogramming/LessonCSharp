@@ -72,8 +72,13 @@
 
         private void BeginWar()
         {
+            Print($">>> Этап подготовки отрядов к бою");
+
             unit1 = squad1.GetUnit();
+            Print($">>> Первый отряд сформирован");
+
             unit2 = squad2.GetUnit();
+            Print($">>> Второй отряд сформирован");
         }
 
         private void Fight(Unit unit1, Unit unit2)
@@ -99,8 +104,8 @@
 
         public Squad()
         {
-            _fightersCount = 8;
-            _vihiclesCount = 2;
+            _fightersCount = Randomaizer.GenerateRandomNumber(7,9);
+            _vihiclesCount = Randomaizer.GenerateRandomNumber(2,4);
             _fighters = new();
             _vihicles = new();
             _squad = new();
