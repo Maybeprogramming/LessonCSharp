@@ -1,6 +1,5 @@
 ﻿namespace Lesson_47
 {
-    using System.Reflection;
     using static Display;
 
     class Program
@@ -13,6 +12,13 @@
             Stormtrooper stormtrooper = new();
             Tank tank = new();
             Engineer engineer = new();
+
+            Squad squad = new Squad();
+
+            foreach (var item in squad.GetUnit())
+            {
+                Console.WriteLine($"{item.ClassName}");
+            }
 
             engineer.Repair(tank);
             medic.Heal(stormtrooper);
@@ -57,22 +63,12 @@
 
         public Squad()
         {
-            _fighters = new()
-            {
-                new Stormtrooper(),
-                new Sniper(),
-                new Paratrooper(),
-                new Scout(),
-                new Heavy(),
-                new GrenadeLauncher(),
-                new Engineer(),
-                new Medic()
-            };
-            _vihicles = new()
-            {
-                new Tank(),
-                new Helicopter()
-            };
+            Create(8,2);
+        }
+
+        public List<Unit> GetUnit()
+        {
+            return new List<Unit>(_squad);
         }
 
         private void Create(int fighterCount, int vihiclesCount)
@@ -85,13 +81,18 @@
 
             for (int i = 0; i < fighterCount; i++)
             {
-                //_fighters.Add();
+                Fighter fighter = (Fighter)fighterFactory.CreateRandomUnit();
+                _fighters.Add(fighter);
             }
 
             for (int i = 0; i < vihiclesCount; i++)
             {
-                int typeNumber = Randomaizer.GenerateRandomNumber(0, 2);
+                Vihicle vihicle = (Vihicle)vihicleFactory.CreateRandomUnit();
+                _vihicles.Add(vihicle);
             }
+
+            _squad.AddRange(_fighters);
+            _squad.AddRange(_vihicles);
         }
     }
 
@@ -99,7 +100,7 @@
 
     abstract class UnitFactory
     {
-        public abstract T? Create<T>();
+        public abstract object? CreateRandomUnit();
     }
 
     abstract class FighterFactory : UnitFactory
@@ -139,10 +140,11 @@
             };
         }
 
-        public override Fighter? Create<Fighter>()
+        public override object? CreateRandomUnit()
         {
-            Engineer engineer = new (Engineer)_fighters[0];
-            return null;
+            int randomTypeFighterNumber = Randomaizer.GenerateRandomNumber(0, _fighters.Count);
+
+            return Activator.CreateInstance(_fighters[randomTypeFighterNumber]);
         }
 
         public override Engineer CreateEngineer()
@@ -188,14 +190,27 @@
 
     class VihicleManufacturing : VihicleFactory
     {
-        public override Vihicle? Create<Vihicle>()
+        private List<Type> _vihiclesType;
+
+        public VihicleManufacturing()
         {
-            return null;
+            _vihiclesType = new()
+            {
+                typeof(Tank),
+                typeof(Helicopter)
+            };
         }
 
         public override Helicopter CreateHelicopter()
         {
             return new Helicopter();
+        }
+
+        public override object? CreateRandomUnit()
+        {
+            int randomTypeFighterNumber = Randomaizer.GenerateRandomNumber(0, _vihiclesType.Count);
+
+            return Activator.CreateInstance(_vihiclesType[randomTypeFighterNumber]);
         }
 
         public override Tank CreateTank()
@@ -422,6 +437,8 @@
     #region Боевая техника
     class Vihicle : Unit, ICombatEntity, IDamageable, IDamageProvider, IRepairable
     {
+        
+
         public Vihicle()
         {
             ClassName = "Техника";
