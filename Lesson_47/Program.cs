@@ -32,10 +32,10 @@
 
             PrintLine();
 
-            Unit unit1 = squad1.GetUnit()[8];
-            Unit unit2 = squad2.GetUnit()[9];
+            Unit unit1 = squad1?.GetUnit()[8];
+            Unit unit2 = squad2?.GetUnit()[9];
 
-            while (unit1.IsAlive == true && unit2.IsAlive == true)
+            while (unit1?.IsAlive == true && unit2?.IsAlive == true)
             {
                 unit1.AttackTo(unit2);
                 unit2.AttackTo(unit1);
@@ -73,9 +73,10 @@
         private void BeginWar()
         {
             unit1 = squad1.GetUnit().First();
+            unit2 = squad2.GetUnit().First();
         }
 
-        private void Fight()
+        private void Fight(Unit unit1, Unit unit2)
         {
 
         }
@@ -83,25 +84,39 @@
 
     class Squad
     {
+        private int _fightersCount;
+        private int _vihiclesCount;
         private List<Unit>? _squad;
         private List<Fighter>? _fighters;
         private List<Vihicle>? _vihicles;
-        private UnitFactory fighterFactory;
-        private UnitFactory vihicleFactory;
+        private UnitFactory _fighterFactory;
+        private UnitFactory _vihicleFactory;
 
         public Squad()
         {
+            _fightersCount = 8;
+            _vihiclesCount = 2;
             _fighters = new();
             _vihicles = new();
             _squad = new();
-            fighterFactory = new FighterBarrack();
-            vihicleFactory = new VihicleManufacturing();
-            Create(8, 2);
+            _fighterFactory = new FighterBarrack();
+            _vihicleFactory = new VihicleManufacturing();
+
+            Create(_fightersCount, _vihiclesCount);
+            _squad = Shuffle(_squad);
         }
 
         public List<Unit> GetUnit()
         {
             return new List<Unit>(_squad);
+        }
+
+        public Unit GetFirstUnit()
+        {
+            Unit unit = _squad.First();
+            _squad.Remove(_squad.First());
+
+            return unit;
         }
 
         private void Create(int fighterCount, int vihiclesCount)
@@ -113,8 +128,8 @@
 
             Print($"Отряд сформирован: {fullCount} боевых единиц\n");
 
-            FillUnits(fighterCount, fighterFactory);
-            FillUnits(vihiclesCount, vihicleFactory);
+            FillUnits(fighterCount, _fighterFactory);
+            FillUnits(vihiclesCount, _vihicleFactory);
 
             _squad?.AddRange(_fighters);
             _squad?.AddRange(_vihicles);
@@ -702,6 +717,22 @@
         public static int GenerateRandomNumber(int minValue, int maxValue)
         {
             return s_random.Next(minValue, maxValue);
+        }
+
+        public static List<T> Shuffle<T>(List<T> array)
+        {
+            List<T> tempArray = new();
+            int elementIndex;
+            int arrayElementCount = array.Count;
+
+            for (int i = 0; i < arrayElementCount; i++)
+            {
+                elementIndex = GenerateRandomNumber(0, array.Count);
+                tempArray.Add(array[elementIndex]);
+                array.RemoveAt(elementIndex);
+            }
+
+            return tempArray;
         }
     }
 
