@@ -91,7 +91,100 @@
         }
     }
 
-    #region Пехота
+    #region Abstract Factory
+
+    abstract class UnitFactory
+    {
+        public abstract Unit Create(Unit unit);
+    }
+
+    abstract class FighterFactory : UnitFactory
+    {
+        public abstract Stormtrooper CreateStormtrooper();
+        public abstract Sniper CreateSniper();
+        public abstract Paratrooper CreateParatrooper();
+        public abstract Scout CreateScout();
+        public abstract Heavy CreateHeavy();
+        public abstract GrenadeLauncher CreateGrenadeLauncher();
+        public abstract Engineer CreateEngineer();
+        public abstract Medic CreateMedic();
+    }
+
+    abstract class VihicleFactory : UnitFactory
+    {
+        public abstract Tank CreateTank();
+        public abstract Helicopter CreateHelicopter();
+    }
+
+    class Barrack : FighterFactory
+    {
+        public override Unit Create(Unit unit)
+        {
+            return unit;
+        }
+
+        public override Engineer CreateEngineer()
+        {
+            return new Engineer();
+        }
+
+        public override GrenadeLauncher CreateGrenadeLauncher()
+        {
+            return new GrenadeLauncher();
+        }
+
+        public override Heavy CreateHeavy()
+        {
+            return new Heavy();
+        }
+
+        public override Medic CreateMedic()
+        {
+            return new Medic();
+        }
+
+        public override Paratrooper CreateParatrooper()
+        {
+            return new Paratrooper();
+        }
+
+        public override Scout CreateScout()
+        {
+            return new Scout();
+        }
+
+        public override Sniper CreateSniper()
+        {
+            return new Sniper();
+        }
+
+        public override Stormtrooper CreateStormtrooper()
+        {
+            return new Stormtrooper();
+        }
+    }
+
+    class MachineManufactur : VihicleFactory
+    {
+        public override Unit Create(Unit unit)
+        {
+            return unit;
+        }
+
+        public override Helicopter CreateHelicopter()
+        {
+            return new Helicopter();
+        }
+
+        public override Tank CreateTank()
+        {
+            return new Tank();
+        }
+    }
+
+    #endregion
+
+    #region Abstract class Unit
 
     abstract class Unit : ICombatEntity, IDamageable, IDamageProvider
     {
@@ -131,7 +224,10 @@
         }
     }
 
-    abstract class Fighter : ICombatEntity, IDamageable, IDamageProvider, IHealable
+    #endregion
+
+    #region Пехота
+    abstract class Fighter : Unit, ICombatEntity, IDamageable, IDamageProvider, IHealable
     {
         public Fighter()
         {
@@ -368,7 +464,7 @@
     #endregion
 
     #region Боевая техника
-    class Vihicle : ICombatEntity, IDamageable, IDamageProvider, IRepairable
+    class Vihicle : Unit, ICombatEntity, IDamageable, IDamageProvider, IRepairable
     {
         public Vihicle()
         {
@@ -376,6 +472,7 @@
             Name = Randomaizer.GenerateRandomVihiclesName();
             Health = 200;
         }
+
         public string ClassName { get; protected set; }
         public int Damage { get; protected set; }
         public int Health { get; protected set; }
@@ -412,8 +509,6 @@
 
             return false;
         }
-
-        //public override Vihicle? Create() => null;
     }
 
     class Tank : Vihicle
@@ -484,7 +579,7 @@
 
     interface ICombatEntity
     {
-        string Name { get; set; }
+        string Name { get; }
         string ClassName { get; }
         int Damage { get; }
         int Health { get; }
@@ -515,6 +610,7 @@
     interface IRepairProvider
     {
         public void Repair(Vihicle target);
+
     }
 
     interface IRepairable
