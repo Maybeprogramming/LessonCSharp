@@ -10,11 +10,11 @@
         {
             Console.Title = "Война";
 
-            Squad squad1 = new Squad();
+            Squad squad1 = new Squad("1");
 
             PrintLine();
 
-            Squad squad2 = new Squad();
+            Squad squad2 = new Squad("2");
 
             PrintLine();
 
@@ -61,8 +61,8 @@
 
         public BattleField()
         {
-            squad1 = new Squad();
-            squad2 = new Squad();
+            squad1 = new Squad("Браво");
+            squad2 = new Squad("Дельта");
         }
 
         public void Work()
@@ -89,6 +89,7 @@
 
     class Squad
     {
+        private string _name;
         private int _fightersCount;
         private int _vihiclesCount;
         private List<Unit>? _squad;
@@ -97,10 +98,11 @@
         private UnitFactory _fighterFactory;
         private UnitFactory _vihicleFactory;
 
-        public Squad()
+        public Squad(string name)
         {
-            _fightersCount = Randomaizer.GenerateRandomNumber(7,9);
-            _vihiclesCount = Randomaizer.GenerateRandomNumber(2,4);
+            _name = name;
+            _fightersCount = GenerateRandomNumber(7, 10);
+            _vihiclesCount = GenerateRandomNumber(2, 5);
             _fighters = new();
             _vihicles = new();
             _squad = new();
@@ -126,18 +128,22 @@
 
         private void Create(int fighterCount, int vihiclesCount)
         {
-            Print($">>> Начинается процедура формирования отряда\n");
-            Print($">>> \n");
+            Print($">>> Начинается процедура формирования отряда #{_name}\n");
 
             int fullCount = fighterCount + vihiclesCount;
 
-            Print($"Отряд сформирован: {fullCount} боевых единиц\n");
-
+            
             FillUnits(fighterCount, _fighterFactory);
+            Print($"> Рекруты наняты.\n");
+
             FillUnits(vihiclesCount, _vihicleFactory);
+            Print($"> Боевая техника изготовлена\n");
 
             _squad?.AddRange(_fighters);
             _squad?.AddRange(_vihicles);
+
+            Print($"Отряд сформирован!\n" +
+                  $"В отряде {fullCount} боевых единиц\n");
         }
 
         private void FillUnits(int unitCount, UnitFactory factory)
