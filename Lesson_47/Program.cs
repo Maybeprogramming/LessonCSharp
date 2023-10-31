@@ -32,8 +32,8 @@
 
             PrintLine();
 
-            Unit unit1 = squad1?.GetUnit()[8];
-            Unit unit2 = squad2?.GetUnit()[9];
+            Unit unit1 = squad1.GetUnit()[8];
+            Unit unit2 = squad2.GetUnit()[9];
 
             while (unit1?.IsAlive == true && unit2?.IsAlive == true)
             {
@@ -72,8 +72,8 @@
 
         private void BeginWar()
         {
-            unit1 = squad1.GetUnit().First();
-            unit2 = squad2.GetUnit().First();
+            unit1 = squad1.GetFirstUnit();
+            unit2 = squad2.GetFirstUnit();
         }
 
         private void Fight(Unit unit1, Unit unit2)
@@ -99,8 +99,8 @@
             _fighters = new();
             _vihicles = new();
             _squad = new();
-            _fighterFactory = new FighterBarrack();
-            _vihicleFactory = new VihicleManufacturing();
+            _fighterFactory = new FighterFactory();
+            _vihicleFactory = new VihicleFactory();
 
             Create(_fightersCount, _vihiclesCount);
             _squad = Shuffle(_squad);
@@ -162,31 +162,13 @@
         public abstract object? CreateRandomUnit();
     }
 
-    abstract class FighterFactory : UnitFactory
-    {
-        public abstract Stormtrooper CreateStormtrooper();
-        public abstract Sniper CreateSniper();
-        public abstract Paratrooper CreateParatrooper();
-        public abstract Scout CreateScout();
-        public abstract Heavy CreateHeavy();
-        public abstract GrenadeLauncher CreateGrenadeLauncher();
-        public abstract Engineer CreateEngineer();
-        public abstract Medic CreateMedic();
-    }
-
-    abstract class VihicleFactory : UnitFactory
-    {
-        public abstract Tank CreateTank();
-        public abstract Helicopter CreateHelicopter();
-    }
-
     #region Concrete Factory
 
-    class FighterBarrack : FighterFactory
+    class FighterFactory : UnitFactory
     {
         private List<Type> _fighters;
 
-        public FighterBarrack()
+        public FighterFactory()
         {
             _fighters = new()
             {
@@ -207,53 +189,13 @@
 
             return Activator.CreateInstance(_fighters[randomTypeFighterNumber]);
         }
-
-        public override Engineer CreateEngineer()
-        {
-            return new Engineer();
-        }
-
-        public override GrenadeLauncher CreateGrenadeLauncher()
-        {
-            return new GrenadeLauncher();
-        }
-
-        public override Heavy CreateHeavy()
-        {
-            return new Heavy();
-        }
-
-        public override Medic CreateMedic()
-        {
-            return new Medic();
-        }
-
-        public override Paratrooper CreateParatrooper()
-        {
-            return new Paratrooper();
-        }
-
-        public override Scout CreateScout()
-        {
-            return new Scout();
-        }
-
-        public override Sniper CreateSniper()
-        {
-            return new Sniper();
-        }
-
-        public override Stormtrooper CreateStormtrooper()
-        {
-            return new Stormtrooper();
-        }
     }
 
-    class VihicleManufacturing : VihicleFactory
+    class VihicleFactory : UnitFactory
     {
         private List<Type> _vihiclesType;
 
-        public VihicleManufacturing()
+        public VihicleFactory()
         {
             _vihiclesType = new()
             {
@@ -262,21 +204,11 @@
             };
         }
 
-        public override Helicopter CreateHelicopter()
-        {
-            return new Helicopter();
-        }
-
         public override object? CreateRandomUnit()
         {
             int randomTypeFighterNumber = Randomaizer.GenerateRandomNumber(0, _vihiclesType.Count);
 
             return Activator.CreateInstance(_vihiclesType[randomTypeFighterNumber]);
-        }
-
-        public override Tank CreateTank()
-        {
-            return new Tank();
         }
     }
 
