@@ -9,6 +9,9 @@
             Console.Title = "Война";
 
             Squad squad1 = new Squad();
+
+            PrintLine();
+
             Squad squad2 = new Squad();
 
             PrintLine();
@@ -90,51 +93,29 @@
         {
             Print($">>> Начинается процедура формирования отряда\n");
             Print($">>> \n");
+
             int fullCount = fighterCount + vihiclesCount;
+
             Print($"Отряд сформирован: {fullCount} боевых единиц\n");
 
-            for (int i = 0; i < fighterCount; i++)
-            {
-                if (fighterFactory.CreateRandomUnit() is Fighter fighter)
-                {
-                    _fighters.Add(fighter);
-                }
-                else
-                {
-                    continue;
-                }
-            }
-
-            for (int i = 0; i < vihiclesCount; i++)
-            {
-                if (vihicleFactory.CreateRandomUnit() is Vihicle vihicle)
-                {
-                    _vihicles.Add(vihicle);
-                }
-                else
-                {
-                    continue;
-                }
-            }
+            CreateUnit(fighterCount, fighterFactory);
+            CreateUnit(vihiclesCount, vihicleFactory);            
 
             _squad.AddRange(_fighters);
             _squad.AddRange(_vihicles);
         }
 
-        private void CreateFighters(int unitCount, UnitFactory factory, Type typeUnit)
-        {
-            Unit unit;
-
-            if (typeUnit == typeof(Fighter))
-            {
-                (Fighter)unit;
-            }
-
+        private void CreateUnit(int unitCount, UnitFactory factory)
+        { 
             for (int i = 0; i < unitCount; i++)
             {
                 if (factory.CreateRandomUnit() is Fighter fighter)
                 {
                     _fighters.Add(fighter);
+                }
+                else if (factory.CreateRandomUnit() is Vihicle vihicle)
+                {
+                    _vihicles.Add(vihicle);
                 }
                 else
                 {
