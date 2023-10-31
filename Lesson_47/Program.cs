@@ -50,6 +50,9 @@
         private List<Unit>? _squad;
         private List<Fighter>? _fighters;
         private List<Vihicle>? _vihicles;
+        private FighterFactory fighterFactory = new FighterBarrack();
+        private VihicleFactory vihicleFactory = new VihicleManufacturing();
+
 
         public Squad()
         {
@@ -81,7 +84,7 @@
 
             for (int i = 0; i < fighterCount; i++)
             {
-
+                //_fighters.Add();
             }
 
             for (int i = 0; i < vihiclesCount; i++)
@@ -95,7 +98,7 @@
 
     abstract class UnitFactory
     {
-        public abstract Unit Create(Unit unit);
+        public abstract T Create<T>();
     }
 
     abstract class FighterFactory : UnitFactory
@@ -116,9 +119,9 @@
         public abstract Helicopter CreateHelicopter();
     }
 
-    class Barrack : FighterFactory
+    class FighterBarrack : FighterFactory
     {
-        public override Unit Create(Unit unit)
+        public override Fighter Create<Fighter>()
         {
             return unit;
         }
@@ -164,9 +167,9 @@
         }
     }
 
-    class MachineManufactur : VihicleFactory
+    class VihicleManufacturing : VihicleFactory
     {
-        public override Unit Create(Unit unit)
+        public override Vihicle Create<Vihicle>()
         {
             return unit;
         }
@@ -248,32 +251,6 @@
 
             return false;
         }
-
-        public string ClassName { get; protected set; }
-        public int Damage { get; protected set; }
-        public int Health { get; protected set; }
-        public int Armor { get; protected set; }
-        public bool IsAlive { get => Health > 0; }
-        public virtual string Name { get; set; }
-
-        public virtual bool TryTakeDamage(int damage)
-        {
-            if (IsAlive == true)
-            {
-                Health -= damage - Armor;
-                return true;
-            }
-
-            return false;
-        }
-
-        public virtual void AttackTo(IDamageable target)
-        {
-            if (IsAlive == true && target.IsAlive == true)
-            {
-                target.TryTakeDamage(Damage);
-            }
-        }
     }
 
     class Stormtrooper : Fighter
@@ -285,11 +262,6 @@
             Health = Randomaizer.GenerateRandomNumber(100, 150);
             Armor = Randomaizer.GenerateRandomNumber(0, 6);
         }
-
-        //public override Fighter Create()
-        //{
-        //    return new Stormtrooper();
-        //}
     }
 
     class Sniper : Fighter
@@ -301,11 +273,6 @@
             Health = Randomaizer.GenerateRandomNumber(80, 100);
             Armor = Randomaizer.GenerateRandomNumber(0, 1);
         }
-
-        //public override Fighter Create()
-        //{
-        //    return new Sniper();
-        //}
     }
 
     class Paratrooper : Fighter
@@ -317,11 +284,6 @@
             Health = Randomaizer.GenerateRandomNumber(120, 180);
             Armor = Randomaizer.GenerateRandomNumber(0, 6);
         }
-
-        //public override Fighter Create()
-        //{
-        //    return new Paratrooper();
-        //}
     }
 
     class Scout : Fighter
@@ -333,11 +295,6 @@
             Health = Randomaizer.GenerateRandomNumber(60, 80);
             Armor = Randomaizer.GenerateRandomNumber(0, 2);
         }
-
-        //public override Fighter Create()
-        //{
-        //    return new Scout();
-        //}
     }
 
     class Heavy : Fighter
@@ -349,11 +306,6 @@
             Health = Randomaizer.GenerateRandomNumber(150, 200);
             Armor = Randomaizer.GenerateRandomNumber(0, 2);
         }
-
-        //public override Fighter Create()
-        //{
-        //    return new Heavy();
-        //}
     }
 
     class GrenadeLauncher : Fighter
@@ -386,11 +338,6 @@
 
             base.AttackTo(target);
         }
-
-        //public override Fighter Create()
-        //{
-        //    return new Heavy();
-        //}
     }
 
     class Engineer : Fighter, IRepairProvider
@@ -402,11 +349,6 @@
             ClassName = "Инженер";
             _repairPoints = Randomaizer.GenerateRandomNumber(20, 40);
         }
-
-        //public override Fighter Create()
-        //{
-        //    return new Engineer();
-        //}
 
         public void Repair(Vihicle target)
         {
@@ -436,11 +378,6 @@
             ClassName = "Медик";
             _healingPoints = Randomaizer.GenerateRandomNumber(20, 40);
         }
-
-        //public override Fighter Create()
-        //{
-        //    return new Medic();
-        //}
 
         public void Heal(Fighter target)
         {
@@ -473,32 +410,6 @@
             Health = 200;
         }
 
-        public string ClassName { get; protected set; }
-        public int Damage { get; protected set; }
-        public int Health { get; protected set; }
-        public int Armor { get; protected set; }
-        public bool IsAlive { get => Health > 0; }
-        public virtual string Name { get; set; }
-
-        public virtual bool TryTakeDamage(int damage)
-        {
-            if (IsAlive == true)
-            {
-                Health -= damage - Armor;
-                return true;
-            }
-
-            return false;
-        }
-
-        public virtual void AttackTo(IDamageable target)
-        {
-            if (IsAlive == true && target.IsAlive == true)
-            {
-                target.TryTakeDamage(Damage);
-            }
-        }
-
         public virtual bool TryAcceptRepair(int healthPoint)
         {
             if (IsAlive == true)
@@ -518,11 +429,6 @@
             Damage = Randomaizer.GenerateRandomNumber(30, 50);
             ClassName = "Танк";
         }
-
-        //public override Vihicle Create()
-        //{
-        //    return new Tank();
-        //}
     }
 
     class Helicopter : Vihicle
@@ -532,11 +438,6 @@
             Damage = Randomaizer.GenerateRandomNumber(30, 50);
             ClassName = "Вертолёт";
         }
-
-        //public override Vihicle Create()
-        //{
-        //    return new Helicopter();
-        //}
     }
 
     #endregion
