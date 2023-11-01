@@ -84,7 +84,7 @@
 
                 Print($"Первый ход делает отряд: {_squad1.Name}\n");
             }
-            
+
             PrintLine();
         }
 
@@ -175,7 +175,7 @@
         }
     }
 
-    #region Pattern Abstract Factory
+    #region Abstract Factory
 
     abstract class UnitFactory
     {
@@ -278,9 +278,9 @@
 
     #endregion
 
-    #region Пехота
+    #region Fighters classes
 
-    abstract class Fighter : Unit, ICombatEntity, IDamageable, IDamageProvider, IHealable
+    abstract class Fighter : Unit, IHealable
     {
         public Fighter()
         {
@@ -450,9 +450,9 @@
 
     #endregion
 
-    #region Боевая техника
+    #region Vihicles classes
 
-    class Vihicle : Unit, ICombatEntity, IDamageable, IDamageProvider, IRepairable
+    class Vihicle : Unit, IRepairable
     {
 
 
