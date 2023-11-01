@@ -13,6 +13,9 @@
             BattleField battleField = new BattleField();
             battleField.Work();
 
+            Print($"\n\n\n");
+            PrintLine(ConsoleColor.Red);
+
             #region Example Test
             Squad squad1 = new Squad("1");
 
@@ -36,8 +39,8 @@
 
             PrintLine();
 
-            Unit unit1 = squad1.GetAllUnits()[8];
-            Unit unit2 = squad2.GetAllUnits()[9];
+            Unit unit1 = squad1.GetAllUnits()[squad1.GetAllUnits().Count-1];
+            Unit unit2 = squad2.GetAllUnits()[squad2.GetAllUnits().Count-1];
 
             while (unit1?.IsAlive == true && unit2?.IsAlive == true)
             {
@@ -77,6 +80,7 @@
         public void Work()
         {
             BeginWar();
+            DecidingWhoGoesFirst();
             Fight(_unit1, _unit2);
             AnnounceVictory();
         }
@@ -90,11 +94,19 @@
         private void Fight(Unit unit1, Unit unit2)
         {
             Print($"Этап битвы...\n");
+            PrintLine();
+        }
+
+        private void DecidingWhoGoesFirst() 
+        {
+            Print($"Этап жеребьевки...\n");
+            PrintLine();
         }
 
         private void AnnounceVictory()
         {
             Print($"Этап объявления победителя...\n");
+            PrintLine();
         }
     }
 
@@ -142,7 +154,7 @@
             Print($">>> Начинается процедура формирования отряда #{_name}\n");
 
             int fullCount = fighterCount + vihiclesCount;
-            
+
             FillUnits(fighterCount, _fighterFactory);
             Print($"> Рекруты наняты.\n");
 
@@ -723,10 +735,10 @@
             Console.ForegroundColor = defaultColor;
         }
 
-        public static void PrintLine()
+        public static void PrintLine(ConsoleColor color = ConsoleColor.White)
         {
-            int symbolCount = Console.WindowWidth;
-            Print($"{new string('-', symbolCount)}\n");
+            int symbolCount = Console.WindowWidth - 1;
+            Print($"{new string('-', symbolCount)}\n", color);
         }
     }
 
