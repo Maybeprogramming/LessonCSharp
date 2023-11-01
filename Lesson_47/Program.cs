@@ -1,6 +1,5 @@
 ﻿namespace Lesson_47
 {
-    using System.ComponentModel;
     using static Display;
     using static Randomaizer;
     using static UserInput;
@@ -16,47 +15,6 @@
 
             Print($"\n\n\n");
             PrintLine(ConsoleColor.Red);
-
-            #region Example Test
-            Squad squad1 = new Squad("1");
-
-            PrintLine();
-
-            Squad squad2 = new Squad("2");
-
-            PrintLine();
-
-            foreach (var item in squad1.GetAllUnits())
-            {
-                Console.WriteLine($"{item.ClassName} - {item.Health}");
-            }
-
-            PrintLine();
-
-            foreach (var item in squad2.GetAllUnits())
-            {
-                Console.WriteLine($"{item.ClassName} - {item.Health}");
-            }
-
-            PrintLine();
-
-            Unit unit1 = squad1.GetAllUnits()[squad1.GetAllUnits().Count - 1];
-            Unit unit2 = squad2.GetAllUnits()[squad2.GetAllUnits().Count - 1];
-
-            while (unit1?.IsAlive == true && unit2?.IsAlive == true)
-            {
-                unit1.AttackTo(unit2);
-                unit2.AttackTo(unit1);
-
-                Print($"1. {unit1.Health}\n" +
-                      $"2. {unit2.Health}\n");
-                PrintLine();
-            }
-
-            Print($"ХР: {unit1.IsAlive} {unit1.ClassName}\n" +
-                $"XP: {unit2.IsAlive} {unit2.ClassName}");
-
-            #endregion
 
             Console.ReadKey();
         }
