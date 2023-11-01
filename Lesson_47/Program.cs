@@ -1,5 +1,6 @@
 ﻿namespace Lesson_47
 {
+    using System.ComponentModel;
     using static Display;
     using static Randomaizer;
     using static UserInput;
@@ -39,8 +40,8 @@
 
             PrintLine();
 
-            Unit unit1 = squad1.GetAllUnits()[squad1.GetAllUnits().Count-1];
-            Unit unit2 = squad2.GetAllUnits()[squad2.GetAllUnits().Count-1];
+            Unit unit1 = squad1.GetAllUnits()[squad1.GetAllUnits().Count - 1];
+            Unit unit2 = squad2.GetAllUnits()[squad2.GetAllUnits().Count - 1];
 
             while (unit1?.IsAlive == true && unit2?.IsAlive == true)
             {
@@ -70,10 +71,10 @@
 
         public BattleField()
         {
-            _squad1 = new Squad("Браво");
+            _squad1 = new Squad("Браво #1");
             PrintLine();
 
-            _squad2 = new Squad("Дельта");
+            _squad2 = new Squad("Дельта #2");
             PrintLine();
         }
 
@@ -94,12 +95,35 @@
         private void Fight(Unit unit1, Unit unit2)
         {
             Print($"Этап битвы...\n");
+
+
+
             PrintLine();
         }
 
-        private void DecidingWhoGoesFirst() 
+        private void DecidingWhoGoesFirst()
         {
-            Print($"Этап жеребьевки...\n");
+            int minNumber = 0;
+            int maxNumber = 100;
+            int averageNumber = (minNumber + maxNumber) / 2;
+            int randomNumber = GenerateRandomNumber(minNumber, maxNumber);
+            Squad tempSquad;
+
+            Print($"Этап жеребьевки... Выпало число: {randomNumber}\n");
+
+            if (randomNumber < averageNumber)
+            {
+                Print($"Первый ход делает отряд: {_squad1.Name}\n");
+            }
+            else
+            {
+                tempSquad = _squad2;
+                _squad2 = _squad1;
+                _squad1 = tempSquad;
+
+                Print($"Первый ход делает отряд: {_squad1.Name}\n");
+            }
+            
             PrintLine();
         }
 
@@ -135,6 +159,8 @@
             Create(_fightersCount, _vihiclesCount);
             _squad = Shuffle(_squad);
         }
+
+        public string Name { get => _name; }
 
         public List<Unit> GetAllUnits()
         {
