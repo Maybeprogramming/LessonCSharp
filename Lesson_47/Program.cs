@@ -454,12 +454,10 @@
 
     class Vihicle : Unit, IRepairable
     {
-
-
         public Vihicle()
         {
             ClassName = "Техника";
-            Name = Randomaizer.GenerateRandomVihiclesName();
+            Name = GenerateRandomVihiclesName();
             Health = 200;
         }
 
