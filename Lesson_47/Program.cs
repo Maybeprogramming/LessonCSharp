@@ -66,13 +66,13 @@
         {
             int minNumber = 0;
             int maxNumber = 100;
-            int averageNumber = (minNumber + maxNumber) / 2;
+            int middleNumber = (minNumber + maxNumber) / 2;
             int randomNumber = GenerateRandomNumber(minNumber, maxNumber);
             Squad tempSquad;
 
             Print($"Этап жеребьевки... Выпало число: {randomNumber}\n");
 
-            if (randomNumber < averageNumber)
+            if (randomNumber < middleNumber)
             {
                 Print($"Первый ход делает отряд: {_squad1.Name}\n");
             }
@@ -186,11 +186,11 @@
 
     class FighterFactory : UnitFactory
     {
-        private List<Type> _fighters;
+        private List<Type> _fightersType;
 
         public FighterFactory()
         {
-            _fighters = new()
+            _fightersType = new()
             {
                 typeof(Engineer),
                 typeof(Medic),
@@ -205,9 +205,9 @@
 
         public override object? CreateRandomUnit()
         {
-            int randomTypeFighterNumber = Randomaizer.GenerateRandomNumber(0, _fighters.Count);
+            int randomNumber = GenerateRandomNumber(0, _fightersType.Count);
 
-            return Activator.CreateInstance(_fighters[randomTypeFighterNumber]);
+            return Activator.CreateInstance(_fightersType[randomNumber]);
         }
     }
 
@@ -226,7 +226,7 @@
 
         public override object? CreateRandomUnit()
         {
-            int randomTypeFighterNumber = Randomaizer.GenerateRandomNumber(0, _vihiclesType.Count);
+            int randomTypeFighterNumber = GenerateRandomNumber(0, _vihiclesType.Count);
 
             return Activator.CreateInstance(_vihiclesType[randomTypeFighterNumber]);
         }
