@@ -39,8 +39,11 @@
         public void Work()
         {
             BeginWar();
+
             DecidingWhoGoesFirst();
+
             Fight(_unit1, _unit2);
+
             AnnounceVictory();
         }
 
