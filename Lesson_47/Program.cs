@@ -723,8 +723,9 @@
             Console.ForegroundColor = defaultColor;
         }
 
-        public static void PrintLine(int symbolCount = 100)
+        public static void PrintLine()
         {
+            int symbolCount = Console.WindowWidth;
             Print($"{new string('-', symbolCount)}\n");
         }
     }
