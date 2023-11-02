@@ -1,5 +1,6 @@
 ﻿namespace Lesson_47
 {
+    using System;
     using static Display;
     using static Randomaizer;
     using static UserInput;
@@ -49,8 +50,10 @@
 
         private void BeginWar()
         {
-            Print("Выбор бойцов для начала сражения:");
+            Print("Выбор бойцов для начала сражения:\n");
 
+            _squad1.TryGetUnit(out _unit1);
+            _squad2.TryGetUnit(out _unit2);
 
             PrintLine();
         }
@@ -59,24 +62,32 @@
         {
             Print($"Этап битвы...\n");
 
-            while (unit1.IsAlive == true && unit2.IsAlive == true)
+            while (_squad1.IsAlive == true && _squad2.IsAlive == true)
             {
-                unit1.AttackTo(unit2);
-                unit2.AttackTo(unit1);
+                while (unit1.IsAlive == true && unit2.IsAlive == true)
+                {
+                    unit1.AttackTo(unit2);
+                    unit2.AttackTo(unit1);
 
-                PrintLine(ConsoleColor.DarkYellow);
+                    Task.Delay(50).Wait();
+                    PrintLine(ConsoleColor.DarkYellow);
+                }
+
+                //Сделать другой общий метод с ветвлениями
+                Print($"{TryToChooseUnitFromSquad(ref unit1, _squad1)}\n");
+                Print($"{TryToChooseUnitFromSquad(ref unit2, _squad2)}\n");
+
+                PrintLine(ConsoleColor.Cyan);
+
+                Task.Delay(500).Wait();
             }
 
-            //Сделать другой общий метод с ветвлениями
-            TryToChooseUnitFromSquad(unit1, _squad1);
-            TryToChooseUnitFromSquad(unit2, _squad2);
-
-            PrintLine();
+            PrintLine(ConsoleColor.DarkMagenta);
         }
 
-        private bool TryToChooseUnitFromSquad(Unit currentUnit, Squad squad)
+        private bool TryToChooseUnitFromSquad(ref Unit currentUnit, Squad squad)
         {
-            if (currentUnit.IsAlive == false)
+            if (currentUnit.IsAlive == false || currentUnit == null)
             {
                 if (squad.TryGetUnit(out Unit unit))
                 {
@@ -125,6 +136,23 @@
         private void AnnounceVictory()
         {
             Print($"Этап объявления победителя...\n");
+
+            if(_squad1.IsAlive == false && _squad2.IsAlive == false)
+            {
+                Print($"Победителей нет. Ничья!");
+            }
+            else if (_squad1.IsAlive == true && _squad2.IsAlive == false)
+            {
+                Print($"Победитель отряд: > {_squad1.Name} <\n" +
+                      $"В отряде осталось: [{_squad1.UnitsCount}] боевых единиц");
+
+            }
+            else
+            {
+                Print($"Победитель отряд: > {_squad2.Name} <\n" +
+                      $"В отряде осталось: [{_squad2.UnitsCount}] боевых единиц\n");
+            }
+
             PrintLine();
         }
     }
@@ -156,10 +184,11 @@
         }
 
         public string Name { get => _name; }
+        public int UnitsCount { get => _squad.Count; }
 
         public bool TryGetUnit(out Unit unit)
         {
-            if(IsAlive == true)
+            if (IsAlive == true)
             {
                 unit = _squad.First();
                 _squad.Remove(_squad.First());
@@ -288,10 +317,10 @@
 
         public string ClassName { get; protected set; }
         public int Damage { get; protected set; }
-        public int Health 
-        { 
-            get => _health; 
-            protected set => SetHealth(value); 
+        public int Health
+        {
+            get => _health;
+            protected set => SetHealth(value);
         }
         public int Armor { get; protected set; }
         public bool IsAlive { get => Health > 0; }
