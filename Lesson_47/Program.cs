@@ -40,7 +40,7 @@
         {
             BeginWar();
 
-            DecidingWhуreSquadGoesFirst();
+            DecidingWhichSquadGoesFirst();
 
             Fight(_unit1, _unit2);
 
@@ -51,13 +51,6 @@
         {
             Print("Выбор бойцов для начала сражения:");
 
-            if(_squad1.TryGetUnit(out _unit1) == true && _squad2.TryGetUnit(out _unit2) == true)
-            {
-
-            }
-            {
-
-            }
 
             PrintLine();
         }
@@ -74,31 +67,27 @@
                 PrintLine(ConsoleColor.DarkYellow);
             }
 
-            ChooseNewUnitToSquad(unit1, unit2);
+            //Сделать другой общий метод с ветвлениями
+            TryToChooseUnitFromSquad(unit1, _squad1);
+            TryToChooseUnitFromSquad(unit2, _squad2);
 
             PrintLine();
         }
 
-        private void ChooseNewUnitToSquad(Unit currentUnit1, Unit currentUnit2)
+        private bool TryToChooseUnitFromSquad(Unit currentUnit, Squad squad)
         {
-            if (currentUnit1.IsAlive == false && _squad1.IsAlive == true)
+            if (currentUnit.IsAlive == false)
             {
-                _squad1.TryGetUnit(out Unit unit);
-
-                if (unit != null)
+                if (squad.TryGetUnit(out Unit unit))
                 {
-                    currentUnit1 = unit;
+                    currentUnit = unit;
+                    return true;
                 }
-            }
-            else if (currentUnit2.IsAlive == false && _squad2.IsAlive == true)
-            {
-                _squad2.TryGetUnit(out Unit unit);
 
-                if (unit != null)
-                {
-                    currentUnit2 = unit;
-                }
+                return false;
             }
+
+            return false;
         }
 
         private void DecidingWhichSquadGoesFirst()
