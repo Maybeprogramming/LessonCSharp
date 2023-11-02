@@ -123,11 +123,6 @@
 
         public string Name { get => _name; }
 
-        public List<Unit> GetAllUnits()
-        {
-            return new List<Unit>(_squad);
-        }
-
         public Unit GetUnit()
         {
             Unit unit = _squad.First();
