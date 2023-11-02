@@ -40,7 +40,7 @@
         {
             BeginWar();
 
-            DecidingWhoGoesFirst();
+            DecidingWhуreSquadGoesFirst();
 
             Fight(_unit1, _unit2);
 
@@ -49,8 +49,17 @@
 
         private void BeginWar()
         {
-            _unit1 = _squad1.GetUnit();
-            _unit2 = _squad2.GetUnit();
+            Print("Выбор бойцов для начала сражения:");
+
+            if(_squad1.TryGetUnit(out _unit1) == true && _squad2.TryGetUnit(out _unit2) == true)
+            {
+
+            }
+            {
+
+            }
+
+            PrintLine();
         }
 
         private void Fight(Unit unit1, Unit unit2)
@@ -65,10 +74,34 @@
                 PrintLine(ConsoleColor.DarkYellow);
             }
 
+            ChooseNewUnitToSquad(unit1, unit2);
+
             PrintLine();
         }
 
-        private void DecidingWhoGoesFirst()
+        private void ChooseNewUnitToSquad(Unit currentUnit1, Unit currentUnit2)
+        {
+            if (currentUnit1.IsAlive == false && _squad1.IsAlive == true)
+            {
+                _squad1.TryGetUnit(out Unit unit);
+
+                if (unit != null)
+                {
+                    currentUnit1 = unit;
+                }
+            }
+            else if (currentUnit2.IsAlive == false && _squad2.IsAlive == true)
+            {
+                _squad2.TryGetUnit(out Unit unit);
+
+                if (unit != null)
+                {
+                    currentUnit2 = unit;
+                }
+            }
+        }
+
+        private void DecidingWhichSquadGoesFirst()
         {
             int minNumber = 0;
             int maxNumber = 100;
@@ -135,13 +168,23 @@
 
         public string Name { get => _name; }
 
-        public Unit GetUnit()
+        public bool TryGetUnit(out Unit unit)
         {
-            Unit unit = _squad.First();
-            _squad.Remove(_squad.First());
+            if(IsAlive == true)
+            {
+                unit = _squad.First();
+                _squad.Remove(_squad.First());
 
-            return unit;
+                return true;
+            }
+            else
+            {
+                unit = null;
+                return false;
+            }
         }
+
+        public bool IsAlive => _squad.Count > 0;
 
         private void Create(int fighterCount, int vihiclesCount)
         {
@@ -243,6 +286,8 @@
 
     abstract class Unit : ICombatEntity, IDamageable, IDamageProvider
     {
+        protected int _health;
+
         protected Unit()
         {
             ClassName = "Юнит";
@@ -254,7 +299,11 @@
 
         public string ClassName { get; protected set; }
         public int Damage { get; protected set; }
-        public int Health { get; protected set; }
+        public int Health 
+        { 
+            get => _health; 
+            protected set => SetHealth(value); 
+        }
         public int Armor { get; protected set; }
         public bool IsAlive { get => Health > 0; }
         public virtual string Name { get; set; }
@@ -281,6 +330,18 @@
                 Print($"{ClassName}: {Name} атакует >>> {target.Name}\n");
 
                 target.TryTakeDamage(Damage);
+            }
+        }
+
+        protected void SetHealth(int value)
+        {
+            if (value > 0)
+            {
+                _health = value;
+            }
+            else
+            {
+                _health = 0;
             }
         }
     }
