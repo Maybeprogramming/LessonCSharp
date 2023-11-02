@@ -57,7 +57,8 @@
         {
             Print($"Этап битвы...\n");
 
-
+            unit1.AttackTo(unit2);
+            unit2.AttackTo(unit1);
 
             PrintLine();
         }
@@ -67,10 +68,16 @@
             int minNumber = 0;
             int maxNumber = 100;
             int middleNumber = (minNumber + maxNumber) / 2;
-            int randomNumber = GenerateRandomNumber(minNumber, maxNumber);
+            int randomNumber;
             Squad tempSquad;
 
-            Print($"Этап жеребьевки... Выпало число: {randomNumber}\n");
+            Print($"Жеребьевка права на первый ход...\n" +
+                  $"Условия:\n" +
+                  $"> если случайное число <50 первый ход делает отряд >> {_squad1.Name} <<\n" +
+                  $"> если случайное число >=50 то право первого хода отдаётся отряду >> {_squad2.Name} <<\n\n");
+
+            randomNumber = GenerateRandomNumber(minNumber, maxNumber);
+            Print($"Случайное число: [> {randomNumber} <]\n\n", ConsoleColor.Green);
 
             if (randomNumber < middleNumber)
             {
@@ -82,7 +89,7 @@
                 _squad2 = _squad1;
                 _squad1 = tempSquad;
 
-                Print($"Первый ход делает отряд: {_squad1.Name}\n");
+                Print($"Первый ход делает отряд: {_squad1.Name}\n", ConsoleColor.Yellow);
             }
 
             PrintLine();
@@ -143,28 +150,24 @@
             FillUnits(vihiclesCount, _vihicleFactory);
             Print($"> Боевая техника изготовлена\n");
 
-            _squad?.AddRange(_fighters);
-            _squad?.AddRange(_vihicles);
-
-            Print($"> Отряд сформирован!\n" +
-                  $"> В отряде {fullCount} боевых единиц\n");
+            Print($"> В отряде {fullCount} боевых единиц\n" +
+                  $"> Отряд сформирован!\n");
         }
 
         private void FillUnits(int unitCount, UnitFactory factory)
         {
             for (int i = 0; i < unitCount; i++)
             {
-                if (factory.CreateRandomUnit() is Fighter fighter)
+                object? gameUnit = factory.CreateRandomUnit();
+
+                if (gameUnit is Unit unit)
                 {
-                    _fighters?.Add(fighter);
-                }
-                else if (factory.CreateRandomUnit() is Vihicle vihicle)
-                {
-                    _vihicles?.Add(vihicle);
+                    _squad?.Add(unit);
                 }
                 else
                 {
-                    continue;
+                    throw new Exception($"\nОшибка! Объект с типом: {gameUnit?.GetType().FullName}\n" +
+                                        $"не соответствует ожидаемому объекту: {typeof(Unit).FullName}");
                 }
             }
         }
@@ -255,7 +258,11 @@
         {
             if (IsAlive == true)
             {
-                Health -= damage - Armor;
+                int damageTaken = damage - Armor;
+                Health -= damageTaken;
+
+                Print($"{ClassName}: {Name} получает > {damageTaken} < ед. урона");
+
                 return true;
             }
 
@@ -266,6 +273,8 @@
         {
             if (IsAlive == true && target.IsAlive == true)
             {
+                Print($"{Name} атакует > {target.Name} <\n");
+
                 target.TryTakeDamage(Damage);
             }
         }
@@ -533,7 +542,7 @@
         int Armor { get; }
     }
 
-    interface IDamageable
+    interface IDamageable: ICombatEntity
     {
         bool IsAlive { get; }
         bool TryTakeDamage(int damage);
