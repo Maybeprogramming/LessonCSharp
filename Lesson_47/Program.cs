@@ -57,8 +57,13 @@
         {
             Print($"Этап битвы...\n");
 
-            unit1.AttackTo(unit2);
-            unit2.AttackTo(unit1);
+            while (unit1.IsAlive == true && unit2.IsAlive == true)
+            {
+                unit1.AttackTo(unit2);
+                unit2.AttackTo(unit1);
+
+                PrintLine(ConsoleColor.DarkYellow);
+            }
 
             PrintLine();
         }
@@ -261,7 +266,7 @@
                 int damageTaken = damage - Armor;
                 Health -= damageTaken;
 
-                Print($"{ClassName}: {Name} получает > {damageTaken} < ед. урона");
+                Print($"{ClassName}: {Name} получает >{damageTaken}< ед. урона. Осталось здоровья: >{Health}<\n");
 
                 return true;
             }
@@ -273,7 +278,7 @@
         {
             if (IsAlive == true && target.IsAlive == true)
             {
-                Print($"{Name} атакует > {target.Name} <\n");
+                Print($"{ClassName}: {Name} атакует >>> {target.Name}\n");
 
                 target.TryTakeDamage(Damage);
             }
@@ -542,7 +547,7 @@
         int Armor { get; }
     }
 
-    interface IDamageable: ICombatEntity
+    interface IDamageable : ICombatEntity
     {
         bool IsAlive { get; }
         bool TryTakeDamage(int damage);
