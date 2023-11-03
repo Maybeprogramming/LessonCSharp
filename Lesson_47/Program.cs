@@ -14,7 +14,7 @@
             BattleField battleField = new BattleField();
             battleField.Work();
 
-            Print($"\n\n\n");
+            Print($"\n\n\nБой завершён.\n");
             PrintLine(ConsoleColor.Red);
 
             Console.ReadKey();
@@ -157,7 +157,6 @@
             {
                 Print($"Победитель отряд: > {_squad1.Name} <\n" +
                       $"В отряде осталось: [{_squad1.UnitsCount}] боевых единиц\n");
-
             }
             else
             {
