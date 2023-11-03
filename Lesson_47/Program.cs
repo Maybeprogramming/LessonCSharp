@@ -73,14 +73,9 @@
                     PrintLine(ConsoleColor.DarkYellow);
                 }
 
-                //Сделать другой общий метод с ветвлениями
-                //TryToChooseUnitFromSquad(ref unit1, _squad1);
-                //TryToChooseUnitFromSquad(ref unit2, _squad2);
-
                 TryToChooseNewUnit(ref unit1, ref unit2);
 
                 PrintLine(ConsoleColor.Cyan);
-
                 Task.Delay(500).Wait();
             }
         }
@@ -95,22 +90,6 @@
             {
                 _squad2.TryGetUnit(out unit2);
             }
-        }
-
-        private bool TryToChooseUnitFromSquad(ref Unit currentUnit, Squad squad)
-        {
-            if (currentUnit.IsAlive == false || currentUnit == null)
-            {
-                if (squad.TryGetUnit(out Unit unit))
-                {
-                    currentUnit = unit;
-                    return true;
-                }
-
-                return false;
-            }
-
-            return false;
         }
 
         private void DecidingWhichSquadGoesFirst()
