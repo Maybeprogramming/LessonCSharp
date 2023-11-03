@@ -50,7 +50,7 @@
 
         private void BeginWar()
         {
-            Print("Выбор бойцов для начала сражения:\n");
+            Print("Подготовка первых бойцов для начала сражения:\n");
 
             _squad1.TryGetUnit(out _unit1);
             _squad2.TryGetUnit(out _unit2);
@@ -74,15 +74,27 @@
                 }
 
                 //Сделать другой общий метод с ветвлениями
-                Print($"{TryToChooseUnitFromSquad(ref unit1, _squad1)}\n");
-                Print($"{TryToChooseUnitFromSquad(ref unit2, _squad2)}\n");
+                //TryToChooseUnitFromSquad(ref unit1, _squad1);
+                //TryToChooseUnitFromSquad(ref unit2, _squad2);
+
+                TryToChooseNewUnit(ref unit1, ref unit2);
 
                 PrintLine(ConsoleColor.Cyan);
 
                 Task.Delay(500).Wait();
             }
+        }
 
-            PrintLine(ConsoleColor.DarkMagenta);
+        private void TryToChooseNewUnit(ref Unit unit1, ref Unit unit2)
+        {
+            if (unit1.IsAlive == false || unit1 == null)
+            {
+                _squad1.TryGetUnit(out unit1);
+            }
+            else if (unit2.IsAlive == false || unit2 == null)
+            {
+                _squad2.TryGetUnit(out unit2);
+            }
         }
 
         private bool TryToChooseUnitFromSquad(ref Unit currentUnit, Squad squad)
@@ -144,7 +156,7 @@
             else if (_squad1.IsAlive == true && _squad2.IsAlive == false)
             {
                 Print($"Победитель отряд: > {_squad1.Name} <\n" +
-                      $"В отряде осталось: [{_squad1.UnitsCount}] боевых единиц");
+                      $"В отряде осталось: [{_squad1.UnitsCount}] боевых единиц\n");
 
             }
             else
