@@ -2,7 +2,6 @@
 {
     using static Display;
     using static Randomaizer;
-    using static UserInput;
 
     class Program
     {
@@ -13,9 +12,8 @@
             BattleField battleField = new BattleField();
             battleField.Work();
 
-            Print($"\n\n\nБой завершён.\n");
             PrintLine(ConsoleColor.Red);
-
+            Print($"\nБой завершён.\n");
             Console.ReadKey();
         }
     }
@@ -38,16 +36,16 @@
 
         public void Work()
         {
-            BeginWar();
+            BeginFirstFighters();
 
             DecidingWhichSquadGoesFirst();
 
-            Fight(_unit1, _unit2);
+            Fight();
 
             AnnounceVictory();
         }
 
-        private void BeginWar()
+        private void BeginFirstFighters()
         {
             Print("Подготовка первых бойцов для начала сражения:\n");
 
@@ -57,37 +55,41 @@
             PrintLine();
         }
 
-        private void Fight(Unit unit1, Unit unit2)
+        private void Fight()
         {
             Print($"Этап битвы...\n");
 
             while (_squad1.IsAlive == true && _squad2.IsAlive == true)
             {
-                while (unit1.IsAlive == true && unit2.IsAlive == true)
+                while (_unit1.IsAlive == true && _unit2.IsAlive == true)
                 {
-                    unit1.AttackTo(unit2);
-                    unit2.AttackTo(unit1);
+                    _unit1.AttackTo(_unit2);
+                    _unit2.AttackTo(_unit1);
 
-                    Task.Delay(50).Wait();
                     PrintLine(ConsoleColor.DarkYellow);
                 }
 
-                TryToChooseNewUnit(ref unit1, ref unit2);
+                _unit1 = TryToChooseNewUnit(_squad1, _unit1);
+                _unit2 = TryToChooseNewUnit(_squad2, _unit2);
 
-                PrintLine(ConsoleColor.Cyan);
-                Task.Delay(500).Wait();
+                Task.Delay(3000).Wait();
             }
         }
 
-        private void TryToChooseNewUnit(ref Unit unit1, ref Unit unit2)
+        private Unit TryToChooseNewUnit(Squad squad, Unit unit)
         {
-            if (unit1.IsAlive == false || unit1 == null)
+            if (unit.IsAlive == true)
             {
-                _squad1.TryGetUnit(out unit1);
+                return unit;
             }
-            else if (unit2.IsAlive == false || unit2 == null)
+            else
             {
-                _squad2.TryGetUnit(out unit2);
+                Print($"В отряде {squad.Name} был побежден: [{unit.ClassName}]: {unit.Name}\n", ConsoleColor.Red);
+                squad.TryGetUnit(out Unit newUnit);
+                Print($"В отряде {squad.Name} выбран новый боец для продолжения битвы: [{newUnit.ClassName}]: {newUnit.Name}\n", ConsoleColor.Green);
+                PrintLine(ConsoleColor.Cyan);
+
+                return newUnit;
             }
         }
 
@@ -125,21 +127,25 @@
 
         private void AnnounceVictory()
         {
-            Print($"Этап объявления победителя...\n");
+            Print($"Объявление отряда победителя!\n", ConsoleColor.Red);
 
-            if(_squad1.IsAlive == false && _squad2.IsAlive == false)
+            if (_squad1.IsAlive == false && _squad2.IsAlive == false)
             {
                 Print($"Победителей нет. Ничья!");
             }
             else if (_squad1.IsAlive == true && _squad2.IsAlive == false)
             {
                 Print($"Победитель отряд: > {_squad1.Name} <\n" +
-                      $"В отряде осталось: [{_squad1.UnitsCount}] боевых единиц\n");
+                      $"В отряде осталось: [{_squad1.UnitsCount}] боевых единиц:\n");
+
+                _squad1.ShowInfo();
             }
             else
             {
                 Print($"Победитель отряд: > {_squad2.Name} <\n" +
                       $"В отряде осталось: [{_squad2.UnitsCount}] боевых единиц\n");
+
+                _squad2.ShowInfo();
             }
 
             PrintLine();
@@ -152,8 +158,6 @@
         private int _fightersCount;
         private int _vihiclesCount;
         private List<Unit>? _squad;
-        private List<Fighter>? _fighters;
-        private List<Vihicle>? _vihicles;
         private UnitFactory _fighterFactory;
         private UnitFactory _vihicleFactory;
 
@@ -162,8 +166,6 @@
             _name = name;
             _fightersCount = GenerateRandomNumber(7, 10);
             _vihiclesCount = GenerateRandomNumber(2, 5);
-            _fighters = new();
-            _vihicles = new();
             _squad = new();
             _fighterFactory = new FighterFactory();
             _vihicleFactory = new VihicleFactory();
@@ -191,6 +193,16 @@
             }
         }
 
+        public void ShowInfo()
+        {
+            int index = 0;
+
+            foreach (Unit unit in _squad)
+            {
+                Print($"{++index}. [{unit.ClassName}]: {unit.Name}\n");
+            }
+        }
+
         public bool IsAlive => _squad.Count > 0;
 
         private void Create(int fighterCount, int vihiclesCount)
@@ -203,10 +215,11 @@
             Print($"> Рекруты наняты.\n");
 
             FillUnits(vihiclesCount, _vihicleFactory);
-            Print($"> Боевая техника изготовлена\n");
+            Print($"> Боевая техника изготовлена.\n");
 
-            Print($"> В отряде {fullCount} боевых единиц\n" +
-                  $"> Отряд сформирован!\n");
+            Print($"> В отряде {fullCount} боевых единиц:\n");
+            ShowInfo();
+            Print($"> Отряд сформирован!\n");
         }
 
         private void FillUnits(int unitCount, UnitFactory factory)
@@ -362,7 +375,7 @@
         public Fighter()
         {
             ClassName = "Пехотинец";
-            Name = Randomaizer.GenerateRandomName();
+            Name = GenerateRandomName();
             Damage = 10;
             Health = 100;
             Armor = 0;
@@ -385,9 +398,9 @@
         public Stormtrooper()
         {
             ClassName = "Штурмовик";
-            Damage = Randomaizer.GenerateRandomNumber(10, 20);
-            Health = Randomaizer.GenerateRandomNumber(100, 150);
-            Armor = Randomaizer.GenerateRandomNumber(0, 6);
+            Damage = GenerateRandomNumber(10, 20);
+            Health = GenerateRandomNumber(100, 150);
+            Armor = GenerateRandomNumber(0, 6);
         }
     }
 
@@ -396,9 +409,9 @@
         public Sniper()
         {
             ClassName = "Снайпер";
-            Damage = Randomaizer.GenerateRandomNumber(15, 20);
-            Health = Randomaizer.GenerateRandomNumber(80, 100);
-            Armor = Randomaizer.GenerateRandomNumber(0, 1);
+            Damage = GenerateRandomNumber(15, 20);
+            Health = GenerateRandomNumber(80, 100);
+            Armor = GenerateRandomNumber(0, 1);
         }
     }
 
@@ -407,9 +420,9 @@
         public Paratrooper()
         {
             ClassName = "Десантник";
-            Damage = Randomaizer.GenerateRandomNumber(10, 15);
-            Health = Randomaizer.GenerateRandomNumber(120, 180);
-            Armor = Randomaizer.GenerateRandomNumber(0, 6);
+            Damage = GenerateRandomNumber(10, 15);
+            Health = GenerateRandomNumber(120, 180);
+            Armor = GenerateRandomNumber(0, 6);
         }
     }
 
@@ -418,9 +431,9 @@
         public Scout()
         {
             ClassName = "Разведчик";
-            Damage = Randomaizer.GenerateRandomNumber(8, 10);
-            Health = Randomaizer.GenerateRandomNumber(60, 80);
-            Armor = Randomaizer.GenerateRandomNumber(0, 2);
+            Damage = GenerateRandomNumber(8, 10);
+            Health = GenerateRandomNumber(60, 80);
+            Armor = GenerateRandomNumber(0, 2);
         }
     }
 
@@ -429,9 +442,9 @@
         public Heavy()
         {
             ClassName = "Пулеметчик";
-            Damage = Randomaizer.GenerateRandomNumber(10, 15);
-            Health = Randomaizer.GenerateRandomNumber(150, 200);
-            Armor = Randomaizer.GenerateRandomNumber(0, 2);
+            Damage = GenerateRandomNumber(10, 15);
+            Health = GenerateRandomNumber(150, 200);
+            Armor = GenerateRandomNumber(0, 2);
         }
     }
 
@@ -444,9 +457,9 @@
         public GrenadeLauncher()
         {
             ClassName = "Гранатометчик";
-            Damage = Randomaizer.GenerateRandomNumber(20, 30);
-            Health = Randomaizer.GenerateRandomNumber(150, 200);
-            Armor = Randomaizer.GenerateRandomNumber(0, 2);
+            Damage = GenerateRandomNumber(20, 30);
+            Health = GenerateRandomNumber(150, 200);
+            Armor = GenerateRandomNumber(0, 2);
             _baseDamage = Damage;
             _criticalModifier = 2;
             _criticalDamage = _criticalModifier * Damage;
@@ -474,7 +487,7 @@
         public Engineer()
         {
             ClassName = "Инженер";
-            _repairPoints = Randomaizer.GenerateRandomNumber(20, 40);
+            _repairPoints = GenerateRandomNumber(20, 40);
         }
 
         public void Repair(Vihicle target)
@@ -503,7 +516,7 @@
         public Medic()
         {
             ClassName = "Медик";
-            _healingPoints = Randomaizer.GenerateRandomNumber(20, 40);
+            _healingPoints = GenerateRandomNumber(20, 40);
         }
 
         public void Heal(Fighter target)
@@ -554,7 +567,7 @@
     {
         public Tank()
         {
-            Damage = Randomaizer.GenerateRandomNumber(30, 50);
+            Damage = GenerateRandomNumber(30, 50);
             ClassName = "Танк";
         }
     }
@@ -563,43 +576,9 @@
     {
         public Helicopter()
         {
-            Damage = Randomaizer.GenerateRandomNumber(30, 50);
+            Damage = GenerateRandomNumber(30, 50);
             ClassName = "Вертолёт";
         }
-    }
-
-    #endregion
-
-    abstract class Ability
-    {
-        private string? _name;
-        private string? _description;
-
-        public Ability(string name, string description)
-        {
-            _name = name;
-            _description = description;
-        }
-    }
-
-    #region Enums
-
-    enum Fighters
-    {
-        Stormtrooper,
-        Sniper,
-        Paratrooper,
-        Scout,
-        Heavy,
-        GrenadeLauncher,
-        Engineer,
-        Medic
-    }
-
-    enum Vihicles
-    {
-        Tank,
-        Helicopter
     }
 
     #endregion
@@ -760,30 +739,6 @@
             }
 
             return tempArray;
-        }
-    }
-
-    static class UserInput
-    {
-        public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
-        {
-            int result;
-
-            Print(message);
-
-            while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
-            {
-                Print("Ошибка!. Попробуйте снова!\n");
-            }
-
-            return result;
-        }
-
-        public static void WaitToPressKey(string message)
-        {
-            Print(message);
-            Print($"Для продолжения нажмите любую клавишу...\n");
-            Console.ReadKey();
         }
     }
 
