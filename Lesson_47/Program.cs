@@ -522,6 +522,12 @@
             _healingPoints = GenerateRandomNumber(20, 40);
         }
 
+        public override void AttackTo(IDamageable target)
+        {
+            base.AttackTo(target);
+            Heal(this);
+        }
+
         public void Heal(Fighter target)
         {
             if (target == null && target is IHealable == false)
