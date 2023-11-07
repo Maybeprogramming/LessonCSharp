@@ -261,8 +261,6 @@
         {
             _fightersType = new()
             {
-                typeof(Engineer),
-                typeof(Medic),
                 typeof(Heavy),
                 typeof(GrenadeLauncher),
                 typeof(Paratrooper),
@@ -480,70 +478,6 @@
             }
 
             base.AttackTo(target);
-        }
-    }
-
-    class Engineer : Fighter, IRepairProvider
-    {
-        private int _repairPoints;
-
-        public Engineer()
-        {
-            ClassName = "Инженер";
-            _repairPoints = GenerateRandomNumber(20, 40);
-        }
-
-        public void Repair(Vihicle target)
-        {
-            if (target == null || target is IRepairable == false)
-            {
-                Print($"Ошибка! Цели нет, памагите! =(\n");
-                return;
-            }
-
-            if (target.TryAcceptRepair(_repairPoints) == true)
-            {
-                Print($"{ClassName}: {Name} отремотировал цель: {target.Name} на {_repairPoints} очков здоровья\n");
-            }
-            else
-            {
-                Print($"Не получилось отремонтировать цель: {target.Name}!!!\n");
-            }
-        }
-    }
-
-    class Medic : Fighter, IHeal
-    {
-        private int _healingPoints;
-
-        public Medic()
-        {
-            ClassName = "Медик";
-            _healingPoints = GenerateRandomNumber(20, 40);
-        }
-
-        public override void AttackTo(IDamageable target)
-        {
-            base.AttackTo(target);
-            Heal(this);
-        }
-
-        public void Heal(Fighter target)
-        {
-            if (target == null && target is IHealable == false)
-            {
-                Print($"Ошибка! Цели нет, памагите! =(\n");
-                return;
-            }
-
-            if (target.TryTakeHealing(_healingPoints) == true)
-            {
-                Print($"{ClassName}: {Name} вылечил цель: {target.ClassName} на {_healingPoints} очков здоровья\n");
-            }
-            else
-            {
-                Print($"Не получилось вылечить цель: {target.ClassName}!!!\n");
-            }
         }
     }
 
