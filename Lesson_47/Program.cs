@@ -130,7 +130,7 @@
 
         private void AnnounceVictory()
         {
-            Print($"Объявление отряда победителя!\n", ConsoleColor.Red);
+            Print($"Объявление победителя!\n", ConsoleColor.Red);
 
             if (_squad1.IsAlive == false && _squad2.IsAlive == false)
             {
@@ -138,14 +138,14 @@
             }
             else if (_squad1.IsAlive == true && _squad2.IsAlive == false)
             {
-                Print($"Победитель отряд: > {_squad1.Name} <\n" +
+                Print($"Победил отряд: > {_squad1.Name} <\n" +
                       $"В отряде осталось: [{_squad1.UnitsCount}] боевых единиц:\n");
 
                 _squad1.ShowInfo();
             }
             else
             {
-                Print($"Победитель отряд: > {_squad2.Name} <\n" +
+                Print($"Победил отряд: > {_squad2.Name} <\n" +
                       $"В отряде осталось: [{_squad2.UnitsCount}] боевых единиц\n");
 
                 _squad2.ShowInfo();
