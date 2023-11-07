@@ -13,7 +13,7 @@
             battleField.Work();
 
             PrintLine(ConsoleColor.Red);
-            Print($"\nБой завершён.\n");
+            Print($"Бой завершён.\n");
             Console.ReadKey();
         }
     }
@@ -60,6 +60,8 @@
 
         private void Fight()
         {
+            const int MillisecondsDelay = 1000;
+
             Print($"Война начинается...\n");
 
             while (_squad1.IsAlive == true && _squad2.IsAlive == true)
@@ -75,7 +77,7 @@
                 _unit1 = TryToChooseNewUnit(_squad1, _unit1);
                 _unit2 = TryToChooseNewUnit(_squad2, _unit2);
 
-                Task.Delay(3000).Wait();
+                Task.Delay(MillisecondsDelay).Wait();
             }
         }
 
