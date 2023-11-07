@@ -47,17 +47,20 @@
 
         private void BeginFirstFighters()
         {
-            Print("Подготовка первых бойцов для начала сражения:\n");
+            Print("Подготовка первых бойцов для начала сражения.\n", ConsoleColor.Green);
 
             _squad1.TryGetUnit(out _unit1);
             _squad2.TryGetUnit(out _unit2);
 
+            Print($"Выбранные бойцы:\n" +
+                $">в отряде: {_squad1.Name} [{_unit1.ClassName}]: {_unit1.Name}\n" +
+                $">в отряде: {_squad1.Name} [{_unit1.ClassName}]: {_unit1.Name}\n");
             PrintLine();
         }
 
         private void Fight()
         {
-            Print($"Этап битвы...\n");
+            Print($"Война начинается...\n");
 
             while (_squad1.IsAlive == true && _squad2.IsAlive == true)
             {
@@ -147,8 +150,6 @@
 
                 _squad2.ShowInfo();
             }
-
-            PrintLine();
         }
     }
 
@@ -207,7 +208,7 @@
 
         private void Create(int fighterCount, int vihiclesCount)
         {
-            Print($">>> Начинается процедура формирования отряда #{_name}\n");
+            Print($">>> Начинается процедура формирования отряда #{_name}\n", ConsoleColor.Green);
 
             int fullCount = fighterCount + vihiclesCount;
 
