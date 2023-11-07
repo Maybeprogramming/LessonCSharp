@@ -371,7 +371,7 @@
 
     #region Fighters classes
 
-    abstract class Fighter : Unit, IHealable
+    abstract class Fighter : Unit
     {
         public Fighter()
         {
@@ -485,7 +485,7 @@
 
     #region Vihicles classes
 
-    class Vihicle : Unit, IRepairable
+    class Vihicle : Unit
     {
         public Vihicle()
         {
@@ -546,27 +546,6 @@
     interface IDamageProvider
     {
         public void AttackTo(IDamageable target);
-    }
-
-    interface IHeal
-    {
-        public void Heal(Fighter target);
-    }
-
-    interface IHealable
-    {
-        public bool TryTakeHealing(int healthPoint);
-    }
-
-    interface IRepairProvider
-    {
-        public void Repair(Vihicle target);
-
-    }
-
-    interface IRepairable
-    {
-        public bool TryAcceptRepair(int healthPoint);
     }
 
     #endregion
