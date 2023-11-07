@@ -54,7 +54,7 @@
 
             Print($"Выбранные бойцы:\n" +
                 $">в отряде: {_squad1.Name} [{_unit1.ClassName}]: {_unit1.Name}\n" +
-                $">в отряде: {_squad1.Name} [{_unit1.ClassName}]: {_unit1.Name}\n");
+                $">в отряде: {_squad2.Name} [{_unit2.ClassName}]: {_unit2.Name}\n");
             PrintLine();
         }
 
@@ -104,8 +104,8 @@
             int randomNumber;
             Squad tempSquad;
 
-            Print($"Жеребьевка права на первый ход...\n" +
-                  $"Условия:\n" +
+            Print($"Жеребьевка права на первый ход...\n", ConsoleColor.Green);
+            Print($"Условия:\n" +
                   $"> если случайное число <50 первый ход делает отряд >> {_squad1.Name} <<\n" +
                   $"> если случайное число >=50 то право первого хода отдаётся отряду >> {_squad2.Name} <<\n\n");
 
@@ -114,7 +114,7 @@
 
             if (randomNumber < middleNumber)
             {
-                Print($"Первый ход делает отряд: {_squad1.Name}\n");
+                Print($"Первый ход делает отряд: {_squad1.Name}\n", ConsoleColor.Red);
             }
             else
             {
@@ -122,7 +122,7 @@
                 _squad2 = _squad1;
                 _squad1 = tempSquad;
 
-                Print($"Первый ход делает отряд: {_squad1.Name}\n", ConsoleColor.Yellow);
+                Print($"Первый ход делает отряд: {_squad1.Name}\n", ConsoleColor.Red);
             }
 
             PrintLine();
