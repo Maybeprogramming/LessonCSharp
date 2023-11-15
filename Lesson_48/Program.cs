@@ -67,14 +67,6 @@
                 }
             }
         }
-
-        private List<Fish> FillFishes()
-        {
-            return new List<Fish> 
-            { 
-                new Fish()
-            };
-        }
     }
 
     class Fish
