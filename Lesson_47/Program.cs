@@ -1,5 +1,6 @@
 ﻿namespace Lesson_47
 {
+    using System.Runtime.Intrinsics.X86;
     using static Display;
     using static Randomaizer;
 
@@ -394,12 +395,34 @@
 
     class Sniper : Fighter
     {
+        private readonly int _multiplyDamage;
+        private readonly int _critChanceDamage;
+
         public Sniper()
         {
             ClassName = "Снайпер";
             Damage = GenerateRandomNumber(15, 20);
             Health = GenerateRandomNumber(80, 100);
             Armor = GenerateRandomNumber(0, 1);
+            _multiplyDamage = 2;
+            _critChanceDamage = 50;
+        }
+
+        public override void AttackTo(IDamageable target)
+        {
+            TryToUsePreciseShot(target);
+
+            base.AttackTo(target);
+        }
+
+        private void TryToUsePreciseShot(IDamageable target)
+        {
+            if (target is Fighter && IsСhanceNow(_critChanceDamage) == true)
+            {
+                int damage = Damage * _multiplyDamage;
+                Print($"{ClassName}: {Name} произвёл точный выстрел!\n", ConsoleColor.Green);
+                target.TryTakeDamage(damage);
+            }
         }
     }
 
@@ -420,6 +443,13 @@
 
         public override bool TryTakeDamage(int damage)
         {
+            damage = TryToUseAbsorbingDamage(damage);
+
+            return base.TryTakeDamage(damage);
+        }
+
+        private int TryToUseAbsorbingDamage(int damage)
+        {
             if (IsСhanceNow(_chanceAbsorbingDamagePercent) == true & damage > _reductionDamageValue)
             {
                 damage -= _reductionDamageValue;
@@ -427,7 +457,7 @@
                 Print($"Урон уменьшился на {_reductionDamageValue} единиц.\n", ConsoleColor.Green);
             }
 
-            return base.TryTakeDamage(damage);
+            return damage;
         }
     }
 
@@ -513,6 +543,13 @@
 
         public override void AttackTo(IDamageable target)
         {
+            MultiplyDamageToAttackVihicle(target);
+
+            base.AttackTo(target);
+        }
+
+        private void MultiplyDamageToAttackVihicle(IDamageable target)
+        {
             if (target is Vihicle == true)
             {
                 Damage = _criticalDamage;
@@ -521,8 +558,6 @@
             {
                 Damage = _baseDamage;
             }
-
-            base.AttackTo(target);
         }
     }
 
@@ -535,7 +570,6 @@
         public Vihicle()
         {
             ClassName = "Техника";
-            
         }
     }
 
@@ -552,12 +586,35 @@
 
     class Helicopter : Vihicle
     {
+        private readonly int _barrageCount;
+
         public Helicopter()
         {
             ClassName = "Вертолёт";
             Name = GenerateRandomHelicopterName();
             Damage = GenerateRandomNumber(25, 40);
             Health = GenerateRandomNumber(150, 180);
+            _barrageCount = 2;
+        }
+
+        public override void AttackTo(IDamageable target)
+        {
+            if (target is Tank)
+            {
+                UseBarrageFire(target);
+            }
+
+            base.AttackTo(target);
+        }
+
+        private void UseBarrageFire(IDamageable target)
+        {
+            Print($"{ClassName}: {Name} применяет шквал огня против >{target.ClassName}: {target.Name}<");
+
+            for (int i = 0; i < _barrageCount; i++)
+            {
+                target.TryTakeDamage(Damage);
+            }
         }
     }
 
