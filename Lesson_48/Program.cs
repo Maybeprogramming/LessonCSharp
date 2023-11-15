@@ -10,7 +10,6 @@
 
             aquarium.UpdateFishesLifeCicle();
             Console.WriteLine($"\nСледующий цикл >>>\n");
-
             aquarium.GetInfoFishes();
         }
     }
