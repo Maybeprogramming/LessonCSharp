@@ -1,6 +1,5 @@
 ﻿namespace Lesson_47
 {
-    using System.Runtime.Intrinsics.X86;
     using static Display;
     using static Randomaizer;
 
@@ -609,7 +608,7 @@
 
         private void UseBarrageFire(IDamageable target)
         {
-            Print($"{ClassName}: {Name} применяет шквал огня против >{target.ClassName}: {target.Name}<");
+            Print($"{ClassName}: {Name} применяет шквал огня против >{target.ClassName}: {target.Name}<\n");
 
             for (int i = 0; i < _barrageCount; i++)
             {
