@@ -489,6 +489,7 @@
         private int ApplyGrenageDamage()
         {
             int grenageDamage = GenerateRandomNumber(30, 50);
+            Print($"{ClassName}: {Name} кидает гранату в сторону цели\n", ConsoleColor.Green);
             return grenageDamage;
         }
     }
