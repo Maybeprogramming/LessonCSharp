@@ -1,10 +1,30 @@
-﻿namespace Lesson_48
+﻿using System.Net.Cache;
+
+namespace Lesson_48
 {
-    internal class Program
+    class Program
     {
-        static void Main()
-        {
-        }
+        static void Main() { }
+    }
+
+    class Aquarium
+    {
+        public void Work() { }
+
+        private void AddFish() { }
+        private void GetFish() { }
+    }
+
+    class Fish
+    {
+        public Fish() { }
+
+        public string Name { get; }
+        public int Age { get; private set; }
+        public bool IsAlive { get => Age > 0; }
+
+        public void ShowInfo() { }
+        public void Update() { }
     }
 }
 
