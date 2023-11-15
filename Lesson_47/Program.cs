@@ -458,12 +458,38 @@
 
     class Heavy : Fighter
     {
+        private readonly int _numberShots;
+
         public Heavy()
         {
             ClassName = "Пулеметчик";
-            Damage = GenerateRandomNumber(10, 15);
+            Damage = GenerateRandomNumber(10, 12);
             Health = GenerateRandomNumber(150, 200);
             Armor = GenerateRandomNumber(0, 2);
+            _numberShots = 3;
+        }
+
+        public override void AttackTo(IDamageable target)
+        {
+            if (target is Fighter)
+            {
+                for (int i = 0; i < _numberShots; i++)
+                {
+                    base.AttackTo(target);
+                }
+            }
+            else if (target is Tank)
+            {
+                target.TryTakeDamage(ApplyGrenageDamage());
+            }
+
+            base.AttackTo(target);
+        }
+
+        private int ApplyGrenageDamage()
+        {
+            int grenageDamage = GenerateRandomNumber(30, 50);
+            return grenageDamage;
         }
     }
 
