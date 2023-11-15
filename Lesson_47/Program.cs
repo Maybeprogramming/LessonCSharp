@@ -452,7 +452,7 @@
             if (IsСhanceNow(_chanceAbsorbingDamagePercent) == true & damage > _reductionDamageValue)
             {
                 damage -= _reductionDamageValue;
-                Print($"{ClassName}: {Name} использовал способность снижения получаемого урона.\n");
+                Print($"{ClassName}: {Name} использовал способность снижения получаемого урона.\n", ConsoleColor.Green);
                 Print($"Урон уменьшился на {_reductionDamageValue} единиц.\n", ConsoleColor.Green);
             }
 
@@ -477,7 +477,7 @@
         {
             if (IsСhanceNow(_chanceDodgePercent) == true)
             {
-                Print($"{ClassName}: {Name} уклонился от урона ({damage} единиц урона).\n");
+                Print($"{ClassName}: {Name} уклонился от урона ({damage} единиц урона).\n", ConsoleColor.Green);
                 return false;
             }
 
@@ -502,6 +502,8 @@
         {
             if (target is Fighter)
             {
+                Print($"{ClassName}: {Name} стреляет очередью в сторону цели >{target.ClassName}: {target.Name}<\n", ConsoleColor.Green);
+
                 for (int i = 0; i < _numberShots; i++)
                 {
                     base.AttackTo(target);
@@ -610,7 +612,7 @@
 
         private void UseBarrageFire(IDamageable target)
         {
-            Print($"{ClassName}: {Name} применяет шквал огня против >{target.ClassName}: {target.Name}<\n");
+            Print($"{ClassName}: {Name} применяет шквал огня против >{target.ClassName}: {target.Name}<\n", ConsoleColor.Green);
 
             for (int i = 0; i < _barrageCount; i++)
             {
