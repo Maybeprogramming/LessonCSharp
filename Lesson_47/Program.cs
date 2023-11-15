@@ -601,6 +601,7 @@
             if (target is Tank)
             {
                 UseBarrageFire(target);
+                return;
             }
 
             base.AttackTo(target);
