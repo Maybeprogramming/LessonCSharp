@@ -277,7 +277,7 @@
                 new Paratrooper(),
                 new Sniper(),
                 new Scout(),
-                new Stormtrooper()
+                new Stormtrooper(),
             };
         }
 
@@ -388,7 +388,7 @@
     {
         public Fighter()
         {
-            Name = GenerateRandomName();
+            Name = GenerateRandomName(ClassNames.Fighters);
         }
     }
 
@@ -592,7 +592,7 @@
         public Tank()
         {
             ClassName = "Танк";
-            Name = GenerateRandomVihiclesName();
+            Name = GenerateRandomName(ClassNames.Tanks);
             Damage = GenerateRandomNumber(30, 50);
             Health = GenerateRandomNumber(180, 200);
         }
@@ -605,7 +605,7 @@
         public Helicopter()
         {
             ClassName = "Вертолёт";
-            Name = GenerateRandomHelicopterName();
+            Name = GenerateRandomName(ClassNames.Helicopters);
             Damage = GenerateRandomNumber(25, 40);
             Health = GenerateRandomNumber(150, 180);
             _barrageCount = 2;
@@ -632,6 +632,17 @@
                 target.TryTakeDamage(Damage);
             }
         }
+    }
+
+    #endregion
+
+    #region Enums
+
+    enum ClassNames
+    {
+        Fighters,
+        Tanks,
+        Helicopters
     }
 
     #endregion
@@ -722,6 +733,7 @@
                 "Попрыгун",
                 "Тряпкович"
             };
+
             s_vihicles_names = new string[]
             {
                 "Тигр",
@@ -741,6 +753,7 @@
                 "Челенджер",
                 "Центурион",
             };
+
             s_helicopter_names = new string[]
             {
                 "AH-64 Апач",
@@ -757,19 +770,26 @@
             };
         }
 
-        public static string GenerateRandomName()
+        public static string GenerateRandomName(ClassNames className)
         {
-            return s_names[s_random.Next(0, s_names.Length)];
-        }
+            string[]? name = null;
 
-        public static string GenerateRandomVihiclesName()
-        {
-            return s_vihicles_names[s_random.Next(0, s_vihicles_names.Length)];
-        }
+            switch (className)
+            {
+                case ClassNames.Fighters:
+                    name = s_names;
+                    break;
 
-        public static string GenerateRandomHelicopterName()
-        {
-            return s_helicopter_names[s_random.Next(0, s_helicopter_names.Length)];
+                case ClassNames.Tanks:
+                    name = s_vihicles_names;
+                    break;
+
+                case ClassNames.Helicopters:
+                    name = s_helicopter_names;
+                    break;
+            }
+
+            return GetRandomName(name);
         }
 
         public static int GenerateRandomNumber(int minValue, int maxValue)
@@ -805,6 +825,11 @@
             }
 
             return false;
+        }
+
+        private static string GetRandomName(string[] name)
+        {
+            return name[s_random.Next(0, name.Length)];
         }
     }
 
