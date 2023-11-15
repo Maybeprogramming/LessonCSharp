@@ -1,6 +1,4 @@
-﻿using System.Net.Cache;
-
-namespace Lesson_48
+﻿namespace Lesson_48
 {
     class Program
     {
@@ -9,10 +7,27 @@ namespace Lesson_48
 
     class Aquarium
     {
+        private List<Fish> _fishes;
+
+        public Aquarium() 
+        {
+            _fishes = FillFishes();
+        }
+
+        public int MaxFishesCount { get; }
+
         public void Work() { }
 
+        public void GetInfoAboutFishes() { }
         private void AddFish() { }
         private void GetFish() { }
+        private List<Fish> FillFishes()
+        {
+            return new List<Fish> 
+            { 
+                new Fish() 
+            };
+        }
     }
 
     class Fish
