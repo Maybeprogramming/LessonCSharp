@@ -238,7 +238,7 @@
                 else
                 {
                     throw new Exception($"\nОшибка! Объект с типом: {gameUnit?.GetType().FullName}\n" +
-                                        $"не соответствует ожидаемому объекту: {typeof(Unit).FullName}");
+                                        $"не соответствует ожидаемому объекту: {typeof(Unit).FullName}\n");
                 }
             }
         }
