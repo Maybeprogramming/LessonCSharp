@@ -385,12 +385,27 @@
 
     class Stormtrooper : Fighter
     {
+        private int _chanceAbsorbingDamagePercent = 30;
+        private int _reductionDamageValue = 2;
+
         public Stormtrooper()
         {
             ClassName = "Штурмовик";
             Damage = GenerateRandomNumber(10, 20);
             Health = GenerateRandomNumber(100, 150);
             Armor = GenerateRandomNumber(0, 6);
+        }
+
+        public override bool TryTakeDamage(int damage)
+        {
+            if (IsСhanceNow(_chanceAbsorbingDamagePercent) == true & damage > _reductionDamageValue)
+            {
+                damage -= _reductionDamageValue;
+                Print($"{ClassName}: {Name} использовал способность снижения получаемого урона.\n");
+                Print($"Урон уменьшился на {_reductionDamageValue} единиц.\n", ConsoleColor.Green);
+            }
+            
+            return base.TryTakeDamage(damage);
         }
     }
 
@@ -479,8 +494,7 @@
         public Vihicle()
         {
             ClassName = "Техника";
-            Name = GenerateRandomVihiclesName();
-            Health = 200;
+            
         }
     }
 
@@ -488,8 +502,10 @@
     {
         public Tank()
         {
-            Damage = GenerateRandomNumber(30, 50);
             ClassName = "Танк";
+            Name = GenerateRandomVihiclesName();
+            Damage = GenerateRandomNumber(30, 50);
+            Health = GenerateRandomNumber(180, 200);
         }
     }
 
@@ -497,8 +513,10 @@
     {
         public Helicopter()
         {
-            Damage = GenerateRandomNumber(30, 50);
             ClassName = "Вертолёт";
+            Name = GenerateRandomHelicopterName();
+            Damage = GenerateRandomNumber(25, 40);
+            Health = GenerateRandomNumber(150, 180);
         }
     }
 
@@ -535,6 +553,7 @@
         private static readonly Random s_random;
         private static readonly string[] s_names;
         private static readonly string[] s_vihicles_names;
+        private static readonly string[] s_helicopter_names;
 
         static Randomaizer()
         {
@@ -608,6 +627,21 @@
                 "Челенджер",
                 "Центурион",
             };
+            s_helicopter_names = new string[]
+            {
+                "AH-64 Апач",
+                "Вестленд Люкс",
+                "Ка-60 Касатка",
+                "Ми-24",
+                "A129 Мангуст",
+                "AH-1Z Вайпер",
+                "AH-1Z Вайпер",
+                "CH-47 Чинук",
+                "UH-1 Ирокез",
+                "Ка-52 Аллигатор",
+                "WZ-10",
+                "UH-60 Черная Акула"
+            };
         }
 
         public static string GenerateRandomName()
@@ -618,6 +652,11 @@
         public static string GenerateRandomVihiclesName()
         {
             return s_vihicles_names[s_random.Next(0, s_vihicles_names.Length)];
+        }
+
+        public static string GenerateRandomHelicopterName()
+        {
+            return s_helicopter_names[s_random.Next(0, s_helicopter_names.Length)];
         }
 
         public static int GenerateRandomNumber(int minValue, int maxValue)
@@ -639,6 +678,20 @@
             }
 
             return tempArray;
+        }
+
+        public static bool IsСhanceNow(int chancePercent)
+        {
+            int minPercent = 0;
+            int maxPercent = 100;
+            int randomValue = GenerateRandomNumber(minPercent, maxPercent);
+
+            if (randomValue < chancePercent)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 
