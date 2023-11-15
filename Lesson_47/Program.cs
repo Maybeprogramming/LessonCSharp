@@ -100,9 +100,10 @@
 
         private void DecidingWhichSquadGoesFirst()
         {
+            int squadCount = 2;
             int minNumber = 0;
             int maxNumber = 100;
-            int middleNumber = (minNumber + maxNumber) / 2;
+            int middleNumber = (minNumber + maxNumber) / squadCount;
             int randomNumber;
             Squad tempSquad;
 
@@ -138,7 +139,7 @@
             {
                 Print($"Победителей нет. Ничья!");
             }
-            else if (_squad1.IsAlive == true && _squad2.IsAlive == false)
+            else if (_squad1.IsAlive == true)
             {
                 Print($"Победил отряд: > {_squad1.Name} <\n" +
                       $"В отряде осталось: [{_squad1.UnitsCount}] боевых единиц:\n");
@@ -269,7 +270,7 @@
             //    typeof(Scout),
             //    typeof(Stormtrooper)
             //};            
-            
+
             _fightersType = new Fighter[]
             {
                 new Heavy(),
@@ -320,7 +321,7 @@
 
     abstract class Unit : ICombatEntity, IDamageable, IDamageProvider
     {
-        protected int _health;
+        private int _health;
 
         protected Unit()
         {
@@ -333,11 +334,13 @@
 
         public string ClassName { get; protected set; }
         public int Damage { get; protected set; }
+
         public int Health
         {
             get => _health;
             protected set => SetHealth(value);
         }
+
         public int Armor { get; protected set; }
         public bool IsAlive { get => Health > 0; }
         public virtual string Name { get; set; }
@@ -388,14 +391,12 @@
     {
         public Fighter()
         {
-            Name = GenerateRandomName(ClassNames.Fighters);
+            base.Name = GenerateRandomName(Lesson_47.ClassName.Fighters);
         }
     }
 
     class Stormtrooper : Fighter
     {
-        private readonly string _className = "Штурмовик";
-
         public Stormtrooper()
         {
             ClassName = "Штурмовик";
@@ -592,7 +593,7 @@
         public Tank()
         {
             ClassName = "Танк";
-            Name = GenerateRandomName(ClassNames.Tanks);
+            base.Name = GenerateRandomName(Lesson_47.ClassName.Tanks);
             Damage = GenerateRandomNumber(30, 50);
             Health = GenerateRandomNumber(180, 200);
         }
@@ -605,7 +606,7 @@
         public Helicopter()
         {
             ClassName = "Вертолёт";
-            Name = GenerateRandomName(ClassNames.Helicopters);
+            base.Name = GenerateRandomName(Lesson_47.ClassName.Helicopters);
             Damage = GenerateRandomNumber(25, 40);
             Health = GenerateRandomNumber(150, 180);
             _barrageCount = 2;
@@ -638,7 +639,7 @@
 
     #region Enums
 
-    enum ClassNames
+    enum ClassName
     {
         Fighters,
         Tanks,
@@ -770,21 +771,21 @@
             };
         }
 
-        public static string GenerateRandomName(ClassNames className)
+        public static string GenerateRandomName(ClassName className)
         {
             string[]? name = null;
 
             switch (className)
             {
-                case ClassNames.Fighters:
+                case ClassName.Fighters:
                     name = s_names;
                     break;
 
-                case ClassNames.Tanks:
+                case ClassName.Tanks:
                     name = s_vihicles_names;
                     break;
 
-                case ClassNames.Helicopters:
+                case ClassName.Helicopters:
                     name = s_helicopter_names;
                     break;
             }
@@ -819,12 +820,7 @@
             int maxPercent = 100;
             int randomValue = GenerateRandomNumber(minPercent, maxPercent);
 
-            if (randomValue < chancePercent)
-            {
-                return true;
-            }
-
-            return false;
+            return (randomValue < chancePercent);
         }
 
         private static string GetRandomName(string[] name)
