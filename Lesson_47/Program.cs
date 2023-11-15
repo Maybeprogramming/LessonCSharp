@@ -294,22 +294,31 @@
 
     class VihicleFactory : UnitFactory
     {
-        private List<Type> _vihiclesType;
+        //private List<Type> _vihiclesType;
+        private Vihicle[] _vihiclesType;
 
         public VihicleFactory()
         {
-            _vihiclesType = new()
+            //_vihiclesType = new()
+            //{
+            //    typeof(Tank),
+            //    typeof(Helicopter)
+            //};            
+            
+            _vihiclesType = new Vihicle[]
             {
-                typeof(Tank),
-                typeof(Helicopter)
+                new Tank(),
+                new Helicopter()
             };
         }
 
         public override object? CreateRandomUnit()
         {
-            int randomTypeFighterNumber = GenerateRandomNumber(0, _vihiclesType.Count);
+            //int randomTypeFighterNumber = GenerateRandomNumber(0, _vihiclesType.Count);
+            int randomTypeFighterNumber = GenerateRandomNumber(0, _vihiclesType.Length);
 
-            return Activator.CreateInstance(_vihiclesType[randomTypeFighterNumber]);
+            //return Activator.CreateInstance(_vihiclesType[randomTypeFighterNumber]);
+            return Activator.CreateInstance(_vihiclesType[randomTypeFighterNumber].GetType());
         }
     }
 
