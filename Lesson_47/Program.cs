@@ -255,26 +255,39 @@
 
     class FighterFactory : UnitFactory
     {
-        private List<Type> _fightersType;
+        //private List<Type> _fightersType;
+        private Fighter[] _fightersType;
 
         public FighterFactory()
         {
-            _fightersType = new()
+            //_fightersType = new()
+            //{
+            //    typeof(Heavy),
+            //    typeof(GrenadeLauncher),
+            //    typeof(Paratrooper),
+            //    typeof(Sniper),
+            //    typeof(Scout),
+            //    typeof(Stormtrooper)
+            //};            
+            
+            _fightersType = new Fighter[]
             {
-                typeof(Heavy),
-                typeof(GrenadeLauncher),
-                typeof(Paratrooper),
-                typeof(Sniper),
-                typeof(Scout),
-                typeof(Stormtrooper)
+                new Heavy(),
+                new GrenadeLauncher(),
+                new Paratrooper(),
+                new Sniper(),
+                new Scout(),
+                new Stormtrooper()
             };
         }
 
         public override object? CreateRandomUnit()
         {
-            int randomNumber = GenerateRandomNumber(0, _fightersType.Count);
+            //int randomNumber = GenerateRandomNumber(0, _fightersType.Count);
+            int randomNumber = GenerateRandomNumber(0, _fightersType.Length);
 
-            return Activator.CreateInstance(_fightersType[randomNumber]);
+            //return Activator.CreateInstance(_fightersType[randomNumber]);
+            return Activator.CreateInstance(_fightersType[randomNumber].GetType());
         }
     }
 
