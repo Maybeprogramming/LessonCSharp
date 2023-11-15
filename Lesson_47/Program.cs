@@ -829,7 +829,7 @@
             int maxPercent = 100;
             int randomValue = GenerateRandomNumber(minPercent, maxPercent);
 
-            return (randomValue < chancePercent);
+            return randomValue < chancePercent;
         }
 
         private static string GetRandomName(string[] name)
