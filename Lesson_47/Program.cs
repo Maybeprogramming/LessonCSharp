@@ -375,18 +375,13 @@
     {
         public Fighter()
         {
-            ClassName = "Пехотинец";
             Name = GenerateRandomName();
-            Damage = 10;
-            Health = 100;
-            Armor = 0;
         }
     }
 
     class Stormtrooper : Fighter
     {
-        private int _chanceAbsorbingDamagePercent = 30;
-        private int _reductionDamageValue = 2;
+        private readonly string _className = "Штурмовик";
 
         public Stormtrooper()
         {
@@ -394,18 +389,6 @@
             Damage = GenerateRandomNumber(10, 20);
             Health = GenerateRandomNumber(100, 150);
             Armor = GenerateRandomNumber(0, 6);
-        }
-
-        public override bool TryTakeDamage(int damage)
-        {
-            if (IsСhanceNow(_chanceAbsorbingDamagePercent) == true & damage > _reductionDamageValue)
-            {
-                damage -= _reductionDamageValue;
-                Print($"{ClassName}: {Name} использовал способность снижения получаемого урона.\n");
-                Print($"Урон уменьшился на {_reductionDamageValue} единиц.\n", ConsoleColor.Green);
-            }
-            
-            return base.TryTakeDamage(damage);
         }
     }
 
@@ -422,23 +405,54 @@
 
     class Paratrooper : Fighter
     {
+        private int _chanceAbsorbingDamagePercent;
+        private int _reductionDamageValue;
+
         public Paratrooper()
         {
             ClassName = "Десантник";
             Damage = GenerateRandomNumber(10, 15);
             Health = GenerateRandomNumber(120, 180);
             Armor = GenerateRandomNumber(0, 6);
+            _chanceAbsorbingDamagePercent = 30;
+            _reductionDamageValue = 2;
+        }
+
+        public override bool TryTakeDamage(int damage)
+        {
+            if (IsСhanceNow(_chanceAbsorbingDamagePercent) == true & damage > _reductionDamageValue)
+            {
+                damage -= _reductionDamageValue;
+                Print($"{ClassName}: {Name} использовал способность снижения получаемого урона.\n");
+                Print($"Урон уменьшился на {_reductionDamageValue} единиц.\n", ConsoleColor.Green);
+            }
+
+            return base.TryTakeDamage(damage);
         }
     }
 
     class Scout : Fighter
     {
+        private int _chanceDodgePercent;
+
         public Scout()
         {
             ClassName = "Разведчик";
             Damage = GenerateRandomNumber(8, 10);
             Health = GenerateRandomNumber(60, 80);
             Armor = GenerateRandomNumber(0, 2);
+            _chanceDodgePercent = 30;
+        }
+
+        public override bool TryTakeDamage(int damage)
+        {
+            if (IsСhanceNow(_chanceDodgePercent) == true)
+            {
+                Print($"{ClassName}: {Name} уклонился от урона ({damage} единиц урона).\n");
+                return false;
+            }
+
+            return base.TryTakeDamage(damage);
         }
     }
 
