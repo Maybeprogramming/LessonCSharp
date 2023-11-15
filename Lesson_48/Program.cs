@@ -18,6 +18,14 @@
 
         public void Work() { }
 
+        public void UpdateFishesLifeCicle()
+        {
+            foreach (Fish fish in _fishes)
+            {
+                fish.Update();
+            }
+        }
+
         public void GetInfoAboutFishes() { }
         private void AddFish() { }
         private void GetFish() { }
@@ -32,14 +40,45 @@
 
     class Fish
     {
+        private int _age;
+
         public Fish() { }
 
         public string Name { get; }
-        public int Age { get; private set; }
-        public bool IsAlive { get => Age > 0; }
+        public int Age 
+        { 
+            get => _age; 
+            private set => SetAge(value); 
+        }
+        public int DeadAge { get; private set; }
+        public bool IsAlive { get => Age == DeadAge; }
 
-        public void ShowInfo() { }
-        public void Update() { }
+        public void ShowInfo() 
+        {
+            Console.Write($"Рыба: [{Name}] возраст: [{Age}]\n");
+        }
+
+        public void Update() 
+        { 
+            if(IsAlive == true)
+            {
+                ++Age;
+            }
+        }
+
+        private int SetAge(int value)
+        {
+            if (value >= DeadAge)
+            {
+                _age = DeadAge;
+            }
+            else
+            {
+                _age = value;
+            }
+
+            return _age;
+        }
     }
 }
 
