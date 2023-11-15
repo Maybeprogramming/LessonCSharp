@@ -60,7 +60,7 @@
 
         private void Fight()
         {
-            const int MillisecondsDelay = 1000;
+            const int MillisecondsDelay = 1500;
 
             Print($"Война начинается...\n");
 
