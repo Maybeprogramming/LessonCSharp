@@ -2,7 +2,17 @@
 {
     class Program
     {
-        static void Main() { }
+        static void Main() 
+        {
+            Aquarium aquarium = new Aquarium();
+
+            aquarium.GetInfoFishes();
+
+            aquarium.UpdateFishesLifeCicle();
+            Console.WriteLine($"\nСледующий цикл >>>\n");
+
+            aquarium.GetInfoFishes();
+        }
     }
 
     class Aquarium
@@ -11,7 +21,15 @@
 
         public Aquarium() 
         {
-            _fishes = FillFishes();
+            _fishes = new List<Fish>() 
+            { 
+                new Fish(),
+                new Fish(),
+                new Fish(),
+                new Fish(),
+                new Fish(),
+                new Fish()
+            };
         }
 
         public int MaxFishesCount { get; }
@@ -26,14 +44,35 @@
             }
         }
 
-        public void GetInfoAboutFishes() { }
-        private void AddFish() { }
-        private void GetFish() { }
+        public void GetInfoFishes() 
+        {
+            for (int i = 0; i < _fishes.Count; i++)
+            {
+                Console.Write($"{i + 1}. {_fishes[i].ShowInfo()}\n");
+            }
+        }
+
+        public void AddFish() 
+        {
+            _fishes.Add(new Fish());
+        }
+
+        public void GetFish() 
+        { 
+            foreach(Fish fish in _fishes)
+            {
+                if (fish.IsAlive == false)
+                {
+                    _fishes.Remove(fish);
+                }
+            }
+        }
+
         private List<Fish> FillFishes()
         {
             return new List<Fish> 
             { 
-                new Fish() 
+                new Fish()
             };
         }
     }
@@ -42,7 +81,12 @@
     {
         private int _age;
 
-        public Fish() { }
+        public Fish() 
+        { 
+            _age = 0; 
+            DeadAge = 20;
+            Name = "Окунь";
+        }
 
         public string Name { get; }
         public int Age 
@@ -51,11 +95,11 @@
             private set => SetAge(value); 
         }
         public int DeadAge { get; private set; }
-        public bool IsAlive { get => Age == DeadAge; }
+        public bool IsAlive { get => Age < DeadAge; }
 
-        public void ShowInfo() 
+        public string ShowInfo() 
         {
-            Console.Write($"Рыба: [{Name}] возраст: [{Age}]\n");
+            return $"Рыба: [{Name}] возраст: [{Age}]";
         }
 
         public void Update() 
