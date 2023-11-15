@@ -381,17 +381,6 @@
             Health = 100;
             Armor = 0;
         }
-
-        public virtual bool TryTakeHealing(int healthPoint)
-        {
-            if (IsAlive == true)
-            {
-                Health += healthPoint;
-                return true;
-            }
-
-            return false;
-        }
     }
 
     class Stormtrooper : Fighter
@@ -492,17 +481,6 @@
             ClassName = "Техника";
             Name = GenerateRandomVihiclesName();
             Health = 200;
-        }
-
-        public virtual bool TryAcceptRepair(int healthPoint)
-        {
-            if (IsAlive == true)
-            {
-                Health += healthPoint;
-                return true;
-            }
-
-            return false;
         }
     }
 
