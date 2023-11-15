@@ -601,10 +601,11 @@
             if (target is Tank)
             {
                 UseBarrageFire(target);
-                return;
             }
-
-            base.AttackTo(target);
+            else
+            {
+                base.AttackTo(target);
+            }
         }
 
         private void UseBarrageFire(IDamageable target)
