@@ -37,13 +37,13 @@
 
         public void Work()
         {
-            //BeginFirstFighters();
+            BeginFirstFighters();
 
-            //DecidingWhichSquadGoesFirst();
+            DecidingWhichSquadGoesFirst();
 
-            //Fight();
+            Fight();
 
-            //AnnounceVictory();
+            AnnounceVictory();
         }
 
         private void BeginFirstFighters()
