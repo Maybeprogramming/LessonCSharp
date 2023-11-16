@@ -103,7 +103,7 @@
         public Fish(string name, int age, int lifespan) 
         { 
             Name = name;
-            Age = age; 
+            _age = age; 
             Lifespan = lifespan;
         }
 
