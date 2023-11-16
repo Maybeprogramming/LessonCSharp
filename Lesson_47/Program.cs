@@ -216,11 +216,9 @@
 
             int fullCount = fighterCount + vihiclesCount;
 
-            //
             FillUnits(fighterCount, vihiclesCount);
-            //Print($"> Рекруты наняты.\n");
-            //Print($"> Боевая техника изготовлена.\n");
-            //
+            Print($"> Рекруты наняты.\n");
+            Print($"> Боевая техника изготовлена.\n");
 
             Print($"> В отряде {fullCount} боевых единиц:\n");
             ShowInfo();
