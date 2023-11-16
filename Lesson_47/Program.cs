@@ -279,18 +279,18 @@
             int health = GenerateRandomNumber(100, 200);
             int armor = GenerateRandomNumber(10, 30);
 
-            List<Vihicle> vihicles = CreateVihicles(GenerateRandomName(ClassName.Tanks), damage, health, armor);
+            List<Vihicle> vihicles = CreateVihicles(damage, health, armor);
             int vihicleIndex = GenerateRandomNumber(0, vihicles.Count);
 
             return vihicles[vihicleIndex];
         }
 
-        private List<Vihicle> CreateVihicles(string name, int damage, int health, int armor)
+        private List<Vihicle> CreateVihicles(int damage, int health, int armor)
         {
             return new List<Vihicle>()
             {
-                new Tank(name, damage, health, armor),
-                new Helicopter(name, damage, health, armor)
+                new Tank(GenerateRandomName(ClassName.Tanks), damage, health, armor),
+                new Helicopter(GenerateRandomName(ClassName.Helicopters), damage, health, armor)
             };
         }
     }
@@ -718,7 +718,7 @@
 
         public static string GenerateRandomName(ClassName className)
         {
-            string[]? name = null;
+            string[] name = null;
 
             switch (className)
             {
