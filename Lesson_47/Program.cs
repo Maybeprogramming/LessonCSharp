@@ -163,8 +163,8 @@
         private int _fightersCount;
         private int _vihiclesCount;
         private List<Unit>? _squad;
-        private UnitFactory _fighterFactory;
-        private UnitFactory _vihicleFactory;
+        private FighterFactory _fighterFactory;
+        private VihicleFactory _vihicleFactory;
 
         public Squad(string name)
         {
@@ -227,7 +227,7 @@
             Print($"> Отряд сформирован!\n");
         }
 
-        private void FillUnits(int unitCount, UnitFactory factory)
+        private void FillUnits(int unitCount, FighterFactory factory)
         {
             for (int i = 0; i < unitCount; i++)
             {
