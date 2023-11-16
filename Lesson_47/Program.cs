@@ -262,6 +262,7 @@
             int damage = GenerateRandomNumber(20, 50);
             int health = GenerateRandomNumber(100, 200);
             int armor = GenerateRandomNumber(10, 30);
+
             List<Fighter> fighters = CreateFigters(GenerateRandomName(ClassName.Fighters), damage, health, armor);
             int figtherIndex = GenerateRandomNumber(0, fighters.Count);
 
@@ -272,29 +273,22 @@
         {
             return new List<Fighter>()
             {
-                  new Stormtrooper(name, damage, health , armor),
-                  new Heavy(),
-                new GrenadeLauncher(),
-                new Paratrooper(),
-                new Sniper(),
-                new Scout()
+                new Stormtrooper(name, damage, health , armor),
+                new Heavy(name, damage, health , armor),
+                new GrenadeLauncher(name, damage, health , armor),
+                new Paratrooper(name, damage, health , armor),
+                new Sniper(name, damage, health , armor),
+                new Scout(name, damage, health , armor)
             };
         }
     }
 
-    class VihicleFactory : UnitFactory
+    class VihicleFactory
     {
-        //private List<Type> _vihiclesType;
         private Vihicle[] _vihiclesType;
 
         public VihicleFactory()
         {
-            //_vihiclesType = new()
-            //{
-            //    typeof(Tank),
-            //    typeof(Helicopter)
-            //};            
-
             _vihiclesType = new Vihicle[]
             {
                 new Tank(),
@@ -302,12 +296,10 @@
             };
         }
 
-        public override object? CreateRandomUnit()
+        public Vihicle CreateRandomVihicle()
         {
-            //int randomTypeFighterNumber = GenerateRandomNumber(0, _vihiclesType.Count);
             int randomTypeFighterNumber = GenerateRandomNumber(0, _vihiclesType.Length);
 
-            //return Activator.CreateInstance(_vihiclesType[randomTypeFighterNumber]);
             return Activator.CreateInstance(_vihiclesType[randomTypeFighterNumber].GetType());
         }
     }
@@ -395,9 +387,7 @@
 
     class Stormtrooper : Fighter
     {
-        public Stormtrooper(string name, int damage, int health, int armor) : base(name, "Штурмовик", damage, health, armor)
-        {
-        }
+        public Stormtrooper(string name, int damage, int health, int armor) : base(name, "Штурмовик", damage, health, armor) { }
     }
 
     class Sniper : Fighter
@@ -405,12 +395,8 @@
         private readonly int _multiplyDamage;
         private readonly int _critChanceDamage;
 
-        public Sniper()
+        public Sniper(string name, int damage, int health, int armor) : base(name, "Снайпер", damage, health, armor)
         {
-            ClassName = "Снайпер";
-            Damage = GenerateRandomNumber(15, 20);
-            Health = GenerateRandomNumber(80, 100);
-            Armor = GenerateRandomNumber(0, 1);
             _multiplyDamage = 2;
             _critChanceDamage = 50;
         }
@@ -438,12 +424,8 @@
         private int _chanceAbsorbingDamagePercent;
         private int _reductionDamageValue;
 
-        public Paratrooper()
+        public Paratrooper(string name, int damage, int health, int armor) : base(name, "Десантник", damage, health, armor)
         {
-            ClassName = "Десантник";
-            Damage = GenerateRandomNumber(10, 15);
-            Health = GenerateRandomNumber(120, 180);
-            Armor = GenerateRandomNumber(0, 6);
             _chanceAbsorbingDamagePercent = 30;
             _reductionDamageValue = 2;
         }
@@ -472,12 +454,8 @@
     {
         private int _chanceDodgePercent;
 
-        public Scout()
+        public Scout(string name, int damage, int health, int armor) : base(name, "Разведчик", damage, health, armor)
         {
-            ClassName = "Разведчик";
-            Damage = GenerateRandomNumber(8, 10);
-            Health = GenerateRandomNumber(60, 80);
-            Armor = GenerateRandomNumber(0, 2);
             _chanceDodgePercent = 30;
         }
 
@@ -497,12 +475,8 @@
     {
         private readonly int _numberShots;
 
-        public Heavy()
+        public Heavy(string name, int damage, int health, int armor) : base(name, "Пулеметчик", damage, health, armor)
         {
-            ClassName = "Пулеметчик";
-            Damage = GenerateRandomNumber(10, 12);
-            Health = GenerateRandomNumber(150, 200);
-            Armor = GenerateRandomNumber(0, 2);
             _numberShots = 3;
         }
 
@@ -539,12 +513,8 @@
         private int _criticalDamage;
         private int _baseDamage;
 
-        public GrenadeLauncher()
+        public GrenadeLauncher(string name, int damage, int health, int armor) : base(name, "Гранатометчик", damage, health, armor)
         {
-            ClassName = "Гранатометчик";
-            Damage = GenerateRandomNumber(20, 30);
-            Health = GenerateRandomNumber(150, 200);
-            Armor = GenerateRandomNumber(0, 2);
             _baseDamage = Damage;
             _criticalModifier = 2;
             _criticalDamage = _criticalModifier * Damage;
