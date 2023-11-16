@@ -217,11 +217,9 @@
             int fullCount = fighterCount + vihiclesCount;
 
             //
-            FillUnits(fighterCount);
-            Print($"> Рекруты наняты.\n");
-
-            FillUnits(vihiclesCount);
-            Print($"> Боевая техника изготовлена.\n");
+            FillUnits(fighterCount, vihiclesCount);
+            //Print($"> Рекруты наняты.\n");
+            //Print($"> Боевая техника изготовлена.\n");
             //
 
             Print($"> В отряде {fullCount} боевых единиц:\n");
@@ -229,13 +227,18 @@
             Print($"> Отряд сформирован!\n");
         }
 
-        private void FillUnits(int unitCount)
+        private void FillUnits(int fightersCount, int vihiclesCount)
         {
-            for (int i = 0; i < unitCount; i++)
+            for (int i = 0; i < fightersCount; i++)
             {
                 Fighter fighter = _fighterFactory.CreateRandomFigther();
+                _squad.Add(fighter);
+            }
 
-                _squad?.Add(fighter);
+            for (int i = 0; i < vihiclesCount; i++)
+            {
+                Vihicle vihicle = _vihicleFactory.CreateRandomVihicle();
+                _squad.Add(vihicle);
             }
         }
     }
