@@ -1,5 +1,9 @@
 ﻿namespace Lesson_48
 {
+    using static Randomaizer;
+    using static Display;
+    using static FishNamesDictionary;
+
     class Program
     {
         static void Main() 
@@ -17,17 +21,20 @@
     class Aquarium
     {
         private List<Fish> _fishes;
+        private FishFactory _fishFactory;
 
         public Aquarium() 
         {
-            _fishes = new List<Fish>() 
-            { 
-                new Fish("Окунь", 0, 10),
-                new Fish("Щука", 0, 10),
-                new Fish("Карп", 0, 10),
-                new Fish("Лещ", 0, 10),
-                new Fish("Сом", 0, 10),
-            };
+            _fishFactory = new FishFactory();
+            _fishes = new List<Fish>();
+            _fishes.Add(_fishFactory.CreateFish());               
+            _fishes.Add(_fishFactory.CreateFish());               
+            _fishes.Add(_fishFactory.CreateFish());               
+            _fishes.Add(_fishFactory.CreateFish());               
+            _fishes.Add(_fishFactory.CreateFish());               
+            _fishes.Add(_fishFactory.CreateFish());               
+            _fishes.Add(_fishFactory.CreateFish());               
+            _fishes.Add(_fishFactory.CreateFish());             
         }
 
         public int MaxFishesCount { get; }
@@ -71,7 +78,16 @@
     {
         public Fish CreateFish()
         {
-            return new Fish("-", 0, 10);
+            string[] fishesNames = FishNamesDictionary.GetFishesNames();
+            string fishName = GenerateRandomName(fishesNames);
+            int minCurrentAge = 0;
+            int maxCurrentAge = 5;
+            int minLifespanAge = 10;
+            int maxLifespanAge = 30;
+            int currentAge = GenerateRandomNumber(minCurrentAge, maxCurrentAge);
+            int lifespanAge = GenerateRandomNumber(minLifespanAge, maxLifespanAge);
+
+            return new Fish(fishName, currentAge, lifespanAge);
         }
 
         public List<Fish> CreateFishes(int fishesCount)
@@ -193,11 +209,11 @@
         }
     }
 
-    static class FishNamesDatabase
+    static class FishNamesDictionary
     {
         private static readonly string[] s_names;
 
-        static FishNamesDatabase()
+        static FishNamesDictionary()
         {
             s_names = new string[]
             {
@@ -215,7 +231,7 @@
             };
         }
 
-        public static string[] GetNames()
+        public static string[] GetFishesNames()
         {
             return s_names;
         }
