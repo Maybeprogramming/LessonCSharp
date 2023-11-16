@@ -2,6 +2,7 @@
 {
     using static Display;
     using static Randomaizer;
+    using static NamesDatabase;
 
     class Program
     {
@@ -36,13 +37,13 @@
 
         public void Work()
         {
-            BeginFirstFighters();
+            //BeginFirstFighters();
 
-            DecidingWhichSquadGoesFirst();
+            //DecidingWhichSquadGoesFirst();
 
-            Fight();
+            //Fight();
 
-            AnnounceVictory();
+            //AnnounceVictory();
         }
 
         private void BeginFirstFighters()
@@ -211,13 +212,10 @@
 
         private void Create(int fighterCount, int vihiclesCount)
         {
-            Print($">>> Начинается процедура формирования отряда #{_name}\n", ConsoleColor.Green);
-
             int fullCount = fighterCount + vihiclesCount;
 
+            Print($">>> Начинается процедура формирования отряда #{_name}\n", ConsoleColor.Green);
             FillUnits(fighterCount, vihiclesCount);
-            Print($"> Рекруты наняты.\n");
-            Print($"> Боевая техника изготовлена.\n");
 
             Print($"> В отряде {fullCount} боевых единиц:\n");
             ShowInfo();
@@ -232,25 +230,39 @@
                 _squad.Add(fighter);
             }
 
+            Print($"> Рекруты наняты.\n");
+
             for (int i = 0; i < vihiclesCount; i++)
             {
                 Vihicle vihicle = _vihicleFactory.CreateRandomVihicle();
                 _squad.Add(vihicle);
             }
+
+            Print($"> Боевая техника изготовлена.\n");
         }
     }
 
-    #region Factory Metohds
+    #region Factory Methods
 
     class FighterFactory
     {
         public Fighter CreateRandomFigther()
         {
-            int damage = GenerateRandomNumber(20, 50);
-            int health = GenerateRandomNumber(100, 200);
-            int armor = GenerateRandomNumber(10, 30);
+            int minDamage = 15;
+            int maxDamage = 30;
+            int minHealth = 100;
+            int maxHealth = 150;
+            int minArmor = 0;
+            int maxArmor = 10;
 
-            List<Fighter> fighters = CreateFigters(GenerateRandomName(ClassName.Fighters), damage, health, armor);
+            int damage = GenerateRandomNumber(minDamage, maxDamage);
+            int health = GenerateRandomNumber(minHealth, maxHealth);
+            int armor = GenerateRandomNumber(minArmor, maxArmor);
+
+            ClassName classFighter = ClassName.Fighter;
+            string fighterName = GenerateRandomName(GetNames(classFighter));
+
+            List<Fighter> fighters = CreateFigters(fighterName, damage, health, armor);
             int figtherIndex = GenerateRandomNumber(0, fighters.Count);
 
             return fighters[figtherIndex];
@@ -272,11 +284,26 @@
 
     class VihicleFactory
     {
+        private string _tankName;
+        private string _helicopterName;
+
         public Vihicle CreateRandomVihicle()
         {
-            int damage = GenerateRandomNumber(20, 50);
-            int health = GenerateRandomNumber(100, 200);
-            int armor = GenerateRandomNumber(10, 30);
+            int minDamage = 20;
+            int maxDamage = 50;
+            int minHealth = 140;
+            int maxHealth = 200;
+            int minArmor = 10;
+            int maxArmor = 15;
+
+            int damage = GenerateRandomNumber(minDamage, maxDamage);
+            int health = GenerateRandomNumber(minHealth, maxHealth);
+            int armor = GenerateRandomNumber(minArmor, maxArmor);
+
+            ClassName classTank = ClassName.Tank;
+            _tankName = GenerateRandomName(GetNames(classTank));
+            ClassName classHelicopter = ClassName.Helicopter;
+            _helicopterName = GenerateRandomName(GetNames(classHelicopter));
 
             List<Vihicle> vihicles = CreateVihicles(damage, health, armor);
             int vihicleIndex = GenerateRandomNumber(0, vihicles.Count);
@@ -288,8 +315,8 @@
         {
             return new List<Vihicle>()
             {
-                new Tank(GenerateRandomName(ClassName.Tanks), damage, health, armor),
-                new Helicopter(GenerateRandomName(ClassName.Helicopters), damage, health, armor)
+                new Tank(_tankName, damage, health, armor),
+                new Helicopter(_helicopterName, damage, health, armor)
             };
         }
     }
@@ -483,8 +510,10 @@
             {
                 target.TryTakeDamage(ApplyGrenageDamage());
             }
-
-            base.AttackTo(target);
+            else
+            {
+                base.AttackTo(target);
+            }
         }
 
         private int ApplyGrenageDamage()
@@ -510,21 +539,20 @@
 
         public override void AttackTo(IDamageable target)
         {
-            MultiplyDamageToAttackVihicle(target);
-
-            base.AttackTo(target);
-        }
-
-        private void MultiplyDamageToAttackVihicle(IDamageable target)
-        {
-            if (target is Vihicle == true)
+            if (target is Vihicle)
             {
-                Damage = _criticalDamage;
+                target.TryTakeDamage(GetCriticalDamage());
             }
             else
             {
-                Damage = _baseDamage;
+                base.AttackTo(target);
             }
+        }
+
+        private int GetCriticalDamage()
+        {
+            Print($"{ClassName}: {Name} выпускает кумулятивный снаряд в сторону цели\n", ConsoleColor.Green);
+            return _criticalDamage;
         }
     }
 
@@ -584,9 +612,9 @@
 
     enum ClassName
     {
-        Fighters,
-        Tanks,
-        Helicopters
+        Fighter,
+        Tank,
+        Helicopter
     }
 
     #endregion
@@ -620,14 +648,74 @@
     static class Randomaizer
     {
         private static readonly Random s_random;
-        private static readonly string[] s_names;
-        private static readonly string[] s_vihicles_names;
-        private static readonly string[] s_helicopter_names;
 
         static Randomaizer()
         {
             s_random = new();
+        }
 
+        public static string GenerateRandomName(string[] names)
+        {
+            return names[s_random.Next(0, names.Length)];
+        }
+
+        public static int GenerateRandomNumber(int minValue, int maxValue)
+        {
+            return s_random.Next(minValue, maxValue);
+        }      
+        
+        public static List<T> Shuffle<T>(List<T> array)
+        {
+            int elementIndex;
+            T tempElement;
+
+            for (int i = 0; i < array.Count; i++)
+            {
+                elementIndex = GenerateRandomNumber(i, array.Count);
+
+                tempElement = array[i];
+                array[i] = array[elementIndex];
+                array[elementIndex] = tempElement;
+            }
+
+            return array;
+        }
+
+        public static bool IsСhanceNow(int chancePercent)
+        {
+            int minPercent = 0;
+            int maxPercent = 100;
+            int randomValue = GenerateRandomNumber(minPercent, maxPercent);
+
+            return randomValue < chancePercent;
+        }
+    }
+
+    static class Display
+    {
+        public static void Print(string message, ConsoleColor consoleColor = ConsoleColor.White)
+        {
+            ConsoleColor defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = consoleColor;
+            Console.Write(message);
+            Console.ForegroundColor = defaultColor;
+        }
+
+        public static void PrintLine(ConsoleColor color = ConsoleColor.White)
+        {
+            int symbolCount = Console.WindowWidth - 1;
+            Print($"{new string('-', symbolCount)}\n", color);
+        }
+    }
+
+    static class NamesDatabase
+    {
+        private static readonly string[] s_names;
+        private static readonly string[] s_vihicles_names;
+        private static readonly string[] s_helicopter_names;
+
+        static NamesDatabase()
+        {
             s_names = new string[]
             {
                 "Варвар",
@@ -715,78 +803,26 @@
             };
         }
 
-        public static string GenerateRandomName(ClassName className)
+        public static string[] GetNames(ClassName className)
         {
             string[] name = null;
 
             switch (className)
             {
-                case ClassName.Fighters:
+                case ClassName.Fighter:
                     name = s_names;
                     break;
 
-                case ClassName.Tanks:
+                case ClassName.Tank:
                     name = s_vihicles_names;
                     break;
 
-                case ClassName.Helicopters:
+                case ClassName.Helicopter:
                     name = s_helicopter_names;
                     break;
             }
 
-            return GetRandomName(name);
-        }
-
-        public static int GenerateRandomNumber(int minValue, int maxValue)
-        {
-            return s_random.Next(minValue, maxValue);
-        }
-
-        public static List<T> Shuffle<T>(List<T> array)
-        {
-            List<T> tempArray = new();
-            int elementIndex;
-            int arrayElementCount = array.Count;
-
-            for (int i = 0; i < arrayElementCount; i++)
-            {
-                elementIndex = GenerateRandomNumber(0, array.Count);
-                tempArray.Add(array[elementIndex]);
-                array.RemoveAt(elementIndex);
-            }
-
-            return tempArray;
-        }
-
-        public static bool IsСhanceNow(int chancePercent)
-        {
-            int minPercent = 0;
-            int maxPercent = 100;
-            int randomValue = GenerateRandomNumber(minPercent, maxPercent);
-
-            return randomValue < chancePercent;
-        }
-
-        private static string GetRandomName(string[] name)
-        {
-            return name[s_random.Next(0, name.Length)];
-        }
-    }
-
-    static class Display
-    {
-        public static void Print(string message, ConsoleColor consoleColor = ConsoleColor.White)
-        {
-            ConsoleColor defaultColor = Console.ForegroundColor;
-            Console.ForegroundColor = consoleColor;
-            Console.Write(message);
-            Console.ForegroundColor = defaultColor;
-        }
-
-        public static void PrintLine(ConsoleColor color = ConsoleColor.White)
-        {
-            int symbolCount = Console.WindowWidth - 1;
-            Print($"{new string('-', symbolCount)}\n", color);
+            return name;
         }
     }
 
