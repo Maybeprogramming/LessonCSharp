@@ -285,22 +285,25 @@
 
     class VihicleFactory
     {
-        private Vihicle[] _vihiclesType;
-
-        public VihicleFactory()
-        {
-            _vihiclesType = new Vihicle[]
-            {
-                new Tank(),
-                new Helicopter()
-            };
-        }
-
         public Vihicle CreateRandomVihicle()
         {
-            int randomTypeFighterNumber = GenerateRandomNumber(0, _vihiclesType.Length);
+            int damage = GenerateRandomNumber(20, 50);
+            int health = GenerateRandomNumber(100, 200);
+            int armor = GenerateRandomNumber(10, 30);
 
-            return Activator.CreateInstance(_vihiclesType[randomTypeFighterNumber].GetType());
+            List<Vihicle> vihicles = CreateVihicles(GenerateRandomName(ClassName.Tanks), damage, health, armor);
+            int vihicleIndex = GenerateRandomNumber(0, vihicles.Count);
+
+            return vihicles[vihicleIndex];
+        }
+
+        private List<Fighter> CreateVihicles(string name, int damage, int health, int armor)
+        {
+            return new List<Fighter>()
+            {
+                new Tank(name, damage, health, armor),
+                new Helicopter(name, damage, health, armor)
+            };
         }
     }
 
