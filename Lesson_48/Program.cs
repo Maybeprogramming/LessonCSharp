@@ -22,12 +22,11 @@
         {
             _fishes = new List<Fish>() 
             { 
-                new Fish(),
-                new Fish(),
-                new Fish(),
-                new Fish(),
-                new Fish(),
-                new Fish()
+                new Fish("Окунь", 0, 10),
+                new Fish("Щука", 0, 10),
+                new Fish("Карп", 0, 10),
+                new Fish("Лещ", 0, 10),
+                new Fish("Сом", 0, 10),
             };
         }
 
@@ -53,7 +52,7 @@
 
         public void AddFish() 
         {
-            _fishes.Add(new Fish());
+            _fishes.Add(new Fish("Форель", 5, 20));
         }
 
         public void GetFish() 
@@ -68,15 +67,28 @@
         }
     }
 
+    class FishFactory
+    {
+        public Fish CreateFish()
+        {
+            return new Fish("-", 0, 10);
+        }
+
+        public List<Fish> CreateFishes(int fishesCount)
+        {
+            return new List<Fish>();
+        }
+    }
+
     class Fish
     {
         private int _age;
 
-        public Fish() 
+        public Fish(string name, int age, int lifespan) 
         { 
-            _age = 0; 
-            DeadAge = 20;
-            Name = "Окунь";
+            Name = name;
+            Age = age; 
+            Lifespan = lifespan;
         }
 
         public string Name { get; }
@@ -85,8 +97,8 @@
             get => _age; 
             private set => SetAge(value); 
         }
-        public int DeadAge { get; private set; }
-        public bool IsAlive { get => Age < DeadAge; }
+        public int Lifespan { get; private set; }
+        public bool IsAlive { get => Age < Lifespan; }
 
         public string ShowInfo() 
         {
@@ -103,9 +115,9 @@
 
         private int SetAge(int value)
         {
-            if (value >= DeadAge)
+            if (value >= Lifespan)
             {
-                _age = DeadAge;
+                _age = Lifespan;
             }
             else
             {
