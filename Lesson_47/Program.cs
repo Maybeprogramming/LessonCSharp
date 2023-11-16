@@ -216,32 +216,26 @@
 
             int fullCount = fighterCount + vihiclesCount;
 
-            FillUnits(fighterCount, _fighterFactory);
+            //
+            FillUnits(fighterCount);
             Print($"> Рекруты наняты.\n");
 
-            FillUnits(vihiclesCount, _vihicleFactory);
+            FillUnits(vihiclesCount);
             Print($"> Боевая техника изготовлена.\n");
+            //
 
             Print($"> В отряде {fullCount} боевых единиц:\n");
             ShowInfo();
             Print($"> Отряд сформирован!\n");
         }
 
-        private void FillUnits(int unitCount, FighterFactory factory)
+        private void FillUnits(int unitCount)
         {
             for (int i = 0; i < unitCount; i++)
             {
-                object? gameUnit = factory.CreateRandomUnit();
+                Fighter fighter = _fighterFactory.CreateRandomFigther();
 
-                if (gameUnit is Unit unit)
-                {
-                    _squad?.Add(unit);
-                }
-                else
-                {
-                    throw new Exception($"\nОшибка! Объект с типом: {gameUnit?.GetType().FullName}\n" +
-                                        $"не соответствует ожидаемому объекту: {typeof(Unit).FullName}\n");
-                }
+                _squad?.Add(fighter);
             }
         }
     }
