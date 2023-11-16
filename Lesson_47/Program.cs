@@ -241,14 +241,7 @@
         }
     }
 
-    #region Abstract Factory
-
-    abstract class UnitFactory
-    {
-        public abstract object? CreateRandomUnit();
-    }
-
-    #region Concrete Factory
+    #region Factory Metohds
 
     class FighterFactory
     {
@@ -304,11 +297,9 @@
 
     #endregion
 
-    #endregion
-
     #region Abstract class Unit
 
-    abstract class Unit : ICombatEntity, IDamageable, IDamageProvider
+    abstract class Unit : IEntity, IDamageable, IDamageProvider
     {
         private int _health;
 
@@ -603,7 +594,7 @@
 
     #region Interfaces
 
-    interface ICombatEntity
+    interface IEntity
     {
         string Name { get; }
         string ClassName { get; }
@@ -612,7 +603,7 @@
         int Armor { get; }
     }
 
-    interface IDamageable : ICombatEntity
+    interface IDamageable : IEntity
     {
         bool IsAlive { get; }
         bool TryTakeDamage(int damage);
