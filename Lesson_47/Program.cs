@@ -1,5 +1,6 @@
 ﻿namespace Lesson_47
 {
+    using System.Reflection;
     using static Display;
     using static Randomaizer;
 
@@ -254,41 +255,30 @@
 
     #region Concrete Factory
 
-    class FighterFactory : UnitFactory
+    class FighterFactory
     {
-        //private List<Type> _fightersType;
-        private Fighter[] _fightersType;
-
-        public FighterFactory()
+        public Fighter CreateRandomFigther()
         {
-            //_fightersType = new()
-            //{
-            //    typeof(Heavy),
-            //    typeof(GrenadeLauncher),
-            //    typeof(Paratrooper),
-            //    typeof(Sniper),
-            //    typeof(Scout),
-            //    typeof(Stormtrooper)
-            //};            
+            int damage = GenerateRandomNumber(20, 50);
+            int health = GenerateRandomNumber(100, 200);
+            int armor = GenerateRandomNumber(10, 30);
+            List<Fighter> fighters = CreateFigters(GenerateRandomName(ClassName.Fighters), damage, health, armor);
+            int figtherIndex = GenerateRandomNumber(0, fighters.Count);
 
-            _fightersType = new Fighter[]
+            return fighters[figtherIndex];
+        }
+
+        private List<Fighter> CreateFigters(string name, int damage, int health, int armor)
+        {
+            return new List<Fighter>()
             {
-                new Heavy(),
+                  new Stormtrooper(name, damage, health , armor),
+                  new Heavy(),
                 new GrenadeLauncher(),
                 new Paratrooper(),
                 new Sniper(),
-                new Scout(),
-                new Stormtrooper(),
+                new Scout()
             };
-        }
-
-        public override object? CreateRandomUnit()
-        {
-            //int randomNumber = GenerateRandomNumber(0, _fightersType.Count);
-            int randomNumber = GenerateRandomNumber(0, _fightersType.Length);
-
-            //return Activator.CreateInstance(_fightersType[randomNumber]);
-            return Activator.CreateInstance(_fightersType[randomNumber].GetType());
         }
     }
 
@@ -304,7 +294,7 @@
             //    typeof(Tank),
             //    typeof(Helicopter)
             //};            
-            
+
             _vihiclesType = new Vihicle[]
             {
                 new Tank(),
@@ -332,17 +322,17 @@
     {
         private int _health;
 
-        protected Unit()
+        protected Unit(string name, string className, int damage, int health, int armor)
         {
-            ClassName = "Юнит";
-            Damage = 10;
-            Health = 100;
-            Armor = 5;
-            Name = "Юнит";
+            ClassName = className;
+            Damage = damage;
+            Health = health;
+            Armor = armor;
+            Name = name;
         }
 
-        public string ClassName { get; protected set; }
-        public int Damage { get; protected set; }
+        public string ClassName { get; }
+        public int Damage { get; }
 
         public int Health
         {
@@ -398,20 +388,15 @@
 
     abstract class Fighter : Unit
     {
-        public Fighter()
+        public Fighter(string name, string className, int damage, int health, int armor) : base(name, className, damage, health, armor)
         {
-            base.Name = GenerateRandomName(Lesson_47.ClassName.Fighters);
         }
     }
 
     class Stormtrooper : Fighter
     {
-        public Stormtrooper()
+        public Stormtrooper(string name, int damage, int health, int armor) : base(name, "Штурмовик", damage, health, armor)
         {
-            ClassName = "Штурмовик";
-            Damage = GenerateRandomNumber(10, 20);
-            Health = GenerateRandomNumber(100, 150);
-            Armor = GenerateRandomNumber(0, 6);
         }
     }
 
@@ -693,6 +678,7 @@
         static Randomaizer()
         {
             s_random = new();
+
             s_names = new string[]
             {
                 "Варвар",
