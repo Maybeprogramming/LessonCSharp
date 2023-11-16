@@ -297,9 +297,9 @@
             return vihicles[vihicleIndex];
         }
 
-        private List<Fighter> CreateVihicles(string name, int damage, int health, int armor)
+        private List<Vihicle> CreateVihicles(string name, int damage, int health, int armor)
         {
-            return new List<Fighter>()
+            return new List<Vihicle>()
             {
                 new Tank(name, damage, health, armor),
                 new Helicopter(name, damage, health, armor)
@@ -327,7 +327,7 @@
         }
 
         public string ClassName { get; }
-        public int Damage { get; }
+        public int Damage { get; protected set; }
 
         public int Health
         {
@@ -549,20 +549,15 @@
 
     class Vihicle : Unit
     {
-        public Vihicle()
+        public Vihicle(string name, string className, int damage, int health, int armor) : base(name, className, damage, health, armor)
         {
-            ClassName = "Техника";
         }
     }
 
     class Tank : Vihicle
     {
-        public Tank()
+        public Tank(string name, int damage, int health, int armor) : base(name, "Танк", damage, health, armor)
         {
-            ClassName = "Танк";
-            base.Name = GenerateRandomName(Lesson_47.ClassName.Tanks);
-            Damage = GenerateRandomNumber(30, 50);
-            Health = GenerateRandomNumber(180, 200);
         }
     }
 
@@ -570,12 +565,8 @@
     {
         private readonly int _barrageCount;
 
-        public Helicopter()
+        public Helicopter(string name, int damage, int health, int armor) : base(name, "Вертолёт", damage, health, armor)
         {
-            ClassName = "Вертолёт";
-            base.Name = GenerateRandomName(Lesson_47.ClassName.Helicopters);
-            Damage = GenerateRandomNumber(25, 40);
-            Health = GenerateRandomNumber(150, 180);
             _barrageCount = 2;
         }
 
