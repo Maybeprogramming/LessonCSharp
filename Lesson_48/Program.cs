@@ -4,7 +4,6 @@
     using static Display;
     using static UserInput;
     using System.Text;
-    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     class Program
     {
@@ -15,7 +14,7 @@
             FishFactory _fishFactory = new FishFactory();
             Aquarium aquarium = new Aquarium(initialNumberFishes: _fishFactory.CreateSomeFishes(10),
                                              maxFishesCount: 15,
-                                             initialFoodCount: 100);
+                                             initialFoodCount: 20);
             Home home = new Home(aquarium);
 
             home.Work();
@@ -111,7 +110,7 @@
         }
     }
 
-    class Aquarium: IFeederProvider
+    class Aquarium : IFeederProvider
     {
         private List<Fish> _fishes;
 
@@ -224,7 +223,7 @@
 
     #endregion
 
-    class Fish: ISuitableForFeeding
+    class Fish : ISuitableForFeeding
     {
         private int _age;
         private int _health;
@@ -234,15 +233,17 @@
             Name = name;
             _age = age;
             Lifespan = lifespan;
-            Health = 100;
+            Health = 85;
+            _criticalLevelFood = 10;
+            _currentFoodCount = 15;
         }
 
         public string Name { get; }
 
-        public int Health 
-        { 
-            get => _health; 
-            private set => SetHealth(value); 
+        public int Health
+        {
+            get => _health;
+            private set => SetHealth(value);
         }
 
         public int Age
@@ -256,8 +257,12 @@
         //Количество съедаемой еды за 1 день
         public int AmountOfFoodConsumedInOneDay { get; }
 
+        private int _currentFoodCount;
+        private int _criticalLevelFood;
+        private int _maxFoodCount;
+
         //Сытость рыбки (сытая или голодная, реализовать метод перевода статуса в троку)
-        public bool IsSatiety { get; private set; } = true;
+        public bool IsSatietyStatus { get => _currentFoodCount < _criticalLevelFood; }
 
         //Здоровье рыбки уменьшается когда она голодна (реализовать метод)
         //Сытость = голодная у рыбки когда значение количества съеденной еды опускается ниже критического уровня (определить этот уровень)
@@ -269,37 +274,25 @@
                 return true;
             }
 
+            Health = 0;
             return false;
-        }
-
-        private string? ReasonOfDeathToString()
-        {
-            if (Age >= Lifespan)
-            {
-                return $"от старости";
-            }
-            
-            if (Health <= 0 && IsSatiety == true)
-            {
-                return $"от голода";
-            }
-
-            return null;
         }
 
         public bool TryToEatingFood(int foodCount, out int foodEatenAmount)
         {
-            if (IsSatiety == false && IsAlive() == true)
+            if (IsSatietyStatus == true && IsAlive() == true)
             {
-                if(foodCount >= AmountOfFoodConsumedInOneDay)
+                if (foodCount >= AmountOfFoodConsumedInOneDay)
                 {
                     foodEatenAmount = AmountOfFoodConsumedInOneDay;
+                    _currentFoodCount += AmountOfFoodConsumedInOneDay;
                 }
                 else
                 {
                     foodEatenAmount = foodCount;
+                    _currentFoodCount += foodCount;
                 }
-                
+
                 return true;
             }
 
@@ -309,12 +302,14 @@
 
         public string ShowInfo()
         {
-            string info = $"[{Name}] возраст: [{Age}], ХР: [{Health}]. Состояние: [{IsAliveToString()}]";
+            string info = $"[{Name}] возраст: [{Age}], ХР: [{Health}]. Состояние: [{AliveStatusToString()}]";
 
             if (ReasonOfDeathToString() != null && ReasonOfDeathToString() != "")
             {
                 info += $" ({ReasonOfDeathToString()})";
             }
+
+            info += $"Еда: {_currentFoodCount}";
 
             return info;
         }
@@ -326,10 +321,16 @@
                 ++Age;
             }
 
-            if(IsSatiety == false)
+            if (IsSatietyStatus == true)
             {
-                Health -= 5;
+                Health -= 10;
             }
+            else
+            {
+                Health += 5;
+            }
+
+            _currentFoodCount -= 5;
         }
 
         private int SetAge(int value)
@@ -348,19 +349,15 @@
 
         private int SetHealth(int value)
         {
-            if (value > 0)
+            if (value > 0 && value <= 100)
             {
                 return _health = value;
-            }
-            else if (Age >= Lifespan)
-            {
-                return _health = 0;
             }
 
             return _health = 0;
         }
 
-        private string IsAliveToString()
+        private string AliveStatusToString()
         {
             if (IsAlive() == true)
             {
@@ -370,6 +367,21 @@
             {
                 return "мертвая";
             }
+        }
+
+        private string? ReasonOfDeathToString()
+        {
+            if (Age >= Lifespan)
+            {
+                return $"от старости";
+            }
+
+            if (Health <= 0 && IsSatietyStatus == true)
+            {
+                return $"от голода";
+            }
+
+            return null;
         }
     }
 
