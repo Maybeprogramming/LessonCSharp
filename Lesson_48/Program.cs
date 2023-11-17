@@ -110,7 +110,7 @@
         }
     }
 
-    class Aquarium
+    class Aquarium: IFeederProvider
     {
         private List<Fish> _fishes;
 
@@ -171,7 +171,12 @@
         }
 
         //Реализовать метод
-        internal void RemoveOneFish()
+        public void RemoveOneFish()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TryToGiveFood(ISuitableForFeeding fish)
         {
             throw new NotImplementedException();
         }
@@ -210,7 +215,7 @@
 
     #endregion
 
-    class Fish
+    class Fish: ISuitableForFeeding
     {
         private int _age;
         private int _health;
@@ -249,6 +254,11 @@
 
         //Сытость рыбки
         public bool SatietyFromFood { get; private set; }
+
+        public void TryToEat(IFeederProvider food)
+        {
+
+        }
 
         public string ShowInfo()
         {
@@ -293,6 +303,21 @@
                 return "мертвая";
             }
         }
+
+        public bool TakeFood(int foodCount)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public interface IFeederProvider
+    {
+        void TryToGiveFood(ISuitableForFeeding fish);
+    }
+
+    public interface ISuitableForFeeding
+    {
+        bool TakeFood(int foodCount);
     }
 
     #region UserUtils
