@@ -26,7 +26,7 @@
                 Print($"{aquarium.ShowInfoFishes()}");
                 aquarium.Simulate();
                 Print($"\nСледующий цикл >>> [{i + 1}]\n");
-                Task.Delay(2000).Wait();
+                Task.Delay(1000).Wait();
             }
 
             PrintLine();
@@ -234,6 +234,7 @@
             Name = name;
             _age = age;
             Lifespan = lifespan;
+            Health = 100;
         }
 
         public string Name { get; }
@@ -256,14 +257,14 @@
         public int AmountOfFoodConsumedInOneDay { get; }
 
         //Сытость рыбки (сытая или голодная, реализовать метод перевода статуса в троку)
-        public bool Satiety { get; private set; }
+        public bool IsSatiety { get; private set; } = true;
 
         //Здоровье рыбки уменьшается когда она голодна (реализовать метод)
         //Сытость = голодная у рыбки когда значение количества съеденной еды опускается ниже критического уровня (определить этот уровень)
 
         public bool IsAlive()
         {
-            if (Age < Lifespan || Health > 0)
+            if (Age < Lifespan && Health > 0)
             {
                 return true;
             }
@@ -271,9 +272,24 @@
             return false;
         }
 
+        private string? ReasonOfDeathToString()
+        {
+            if (Age >= Lifespan)
+            {
+                return $"от старости";
+            }
+            
+            if (Health <= 0 && IsSatiety == true)
+            {
+                return $"от голода";
+            }
+
+            return null;
+        }
+
         public bool TryToEatingFood(int foodCount, out int foodEatenAmount)
         {
-            if (Satiety == false && IsAlive() == true)
+            if (IsSatiety == false && IsAlive() == true)
             {
                 if(foodCount >= AmountOfFoodConsumedInOneDay)
                 {
@@ -293,7 +309,14 @@
 
         public string ShowInfo()
         {
-            return $"[{Name}] возраст: [{Age}]. Состояние: [{IsAliveToString()}]";
+            string info = $"[{Name}] возраст: [{Age}], ХР: [{Health}]. Состояние: [{IsAliveToString()}]";
+
+            if (ReasonOfDeathToString() != null && ReasonOfDeathToString() != "")
+            {
+                info += $" ({ReasonOfDeathToString()})";
+            }
+
+            return info;
         }
 
         public void Update()
@@ -301,6 +324,11 @@
             if (IsAlive() == true)
             {
                 ++Age;
+            }
+
+            if(IsSatiety == false)
+            {
+                Health -= 5;
             }
         }
 
@@ -318,16 +346,18 @@
             return _age;
         }
 
-        private void SetHealth(int value)
+        private int SetHealth(int value)
         {
             if (value > 0)
             {
-                _health = value;
+                return _health = value;
             }
-            else
+            else if (Age >= Lifespan)
             {
-                _health = 0;
+                return _health = 0;
             }
+
+            return _health = 0;
         }
 
         private string IsAliveToString()
