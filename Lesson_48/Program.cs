@@ -4,7 +4,6 @@
     using static Display;
     using static UserInput;
     using System.Text;
-    using System.Reflection.Metadata.Ecma335;
 
     class Program
     {
@@ -178,6 +177,8 @@
         }
     }
 
+    #region Fish Factory Method
+
     class FishFactory
     {
         public Fish CreateFish()
@@ -206,6 +207,8 @@
             return fishes;
         }
     }
+
+    #endregion
 
     class Fish
     {
