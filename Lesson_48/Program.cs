@@ -9,7 +9,9 @@
     {
         static void Main()
         {
-            Aquarium aquarium = new Aquarium();
+            FishFactory _fishFactory = new FishFactory();
+            Aquarium aquarium = new Aquarium(_fishFactory.CreateSomeFishes(10));
+            Home home = new Home(aquarium);
 
             for (int i = 0; i < 40; i++)
             {
@@ -25,23 +27,25 @@
         }
     }
 
+    class Home
+    {
+        private Aquarium _aquarium;
+        private FishFactory _fishFactory;
+
+        public Home(Aquarium aquarium)
+        {
+            _aquarium = aquarium;
+            _fishFactory = new FishFactory();
+        }
+    }
+
     class Aquarium
     {
         private List<Fish> _fishes;
-        private FishFactory _fishFactory;
 
-        public Aquarium()
+        public Aquarium(List<Fish> initialNumberFishes)
         {
-            _fishFactory = new FishFactory();
-            _fishes = new List<Fish>();
-            _fishes.Add(_fishFactory.CreateFish());
-            _fishes.Add(_fishFactory.CreateFish());
-            _fishes.Add(_fishFactory.CreateFish());
-            _fishes.Add(_fishFactory.CreateFish());
-            _fishes.Add(_fishFactory.CreateFish());
-            _fishes.Add(_fishFactory.CreateFish());
-            _fishes.Add(_fishFactory.CreateFish());
-            _fishes.Add(_fishFactory.CreateFish());
+            _fishes = initialNumberFishes;
         }
 
         public int MaxFishesCount { get; }
@@ -66,11 +70,11 @@
             return infoFishes.ToString();
         }
 
-        public void AddFish()
+        public void AddFish(Fish fish)
         {
             if (_fishes.Count < MaxFishesCount)
             {
-                _fishes.Add(_fishFactory.CreateFish());
+                _fishes.Add(fish);
             }
         }
 
