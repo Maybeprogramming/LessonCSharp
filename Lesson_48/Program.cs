@@ -90,9 +90,16 @@
             return new Fish(fishName, currentAge, lifespanAge);
         }
 
-        public List<Fish> CreateFishes(int fishesCount)
+        public List<Fish> CreateSomeFishes(int fishesCount)
         {
-            return new List<Fish>();
+            List<Fish> fishes = new List<Fish>();
+
+            for (int i = 0; i < fishesCount; i++)
+            {
+                fishes.Add(CreateFish());
+            }
+
+            return fishes;
         }
     }
 
