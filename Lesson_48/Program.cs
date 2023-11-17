@@ -37,6 +37,11 @@
             _aquarium = aquarium;
             _fishFactory = new FishFactory();
         }
+
+        public void Work()
+        {
+
+        }
     }
 
     class Aquarium
@@ -78,6 +83,7 @@
             }
         }
 
+        //not work
         public void RemoveDeadFish()
         {
             foreach (Fish fish in _fishes)
