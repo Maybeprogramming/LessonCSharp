@@ -344,9 +344,26 @@
         public int Health
         {
             get => _health;
-            //В данной задаче допустим тернарный оператор?
             protected set => _health = value > 0 ? _health = value : _health = 0;
         }
+
+        //public int Health
+        //{
+        //    get => _health;
+        //    protected set => SetHealth(value);
+        //}
+
+        //protected void SetHealth(int value)
+        //{
+        //    if (value > 0)
+        //    {
+        //        _health = value;
+        //    }
+        //    else
+        //    {
+        //        _health = 0;
+        //    }
+        //}
 
         public int Armor { get; protected set; }
         public bool IsAlive { get => Health > 0; }
@@ -878,5 +895,5 @@
 //поэтому отображаем в имени переменной множественное число: numbers, names
 //+ 2) class Unit public virtual string Name { get; set; }
 //-публичный set у Свойства нарушает принципы инкапсуляции
-//3) метод SetHealth() -пришло время изучить тернарный оператор
+//+3) метод SetHealth() -пришло время изучить тернарный оператор
 
