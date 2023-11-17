@@ -185,6 +185,7 @@
             }
             else
             {
+                //ответственность класса рыбки! перенести
                 Print($"Рыбка: >{fish.Name}< не смогла поесть, ей не хватило корма\n");
             }
         }
@@ -227,15 +228,19 @@
     {
         private int _age;
         private int _health;
+        private int _currentFoodCount;
+        private int _criticalLevelFood;
+        private int _maxFoodCount;
 
         public Fish(string name, int age, int lifespan)
         {
             Name = name;
             _age = age;
             Lifespan = lifespan;
+
             Health = 85;
             _criticalLevelFood = 10;
-            _currentFoodCount = 15;
+            CurrentFoodCount = 15;
             AmountOfFoodConsumedInOneDay = 20;
         }
 
@@ -253,14 +258,16 @@
             private set => SetAge(value);
         }
 
+        public int CurrentFoodCount 
+        { 
+            get => _currentFoodCount; 
+            private set => SetCurrentFoodCount(value); 
+        }
+
         public int Lifespan { get; }
 
         //Количество съедаемой еды за 1 день
         public int AmountOfFoodConsumedInOneDay { get; }
-
-        private int _currentFoodCount;
-        private int _criticalLevelFood;
-        private int _maxFoodCount;
 
         //Сытость рыбки (сытая или голодная, реализовать метод перевода статуса в троку)
         public bool IsSatietyStatus { get => _currentFoodCount < _criticalLevelFood; }
@@ -286,12 +293,12 @@
                 if (foodCount >= AmountOfFoodConsumedInOneDay)
                 {
                     foodEatenAmount = AmountOfFoodConsumedInOneDay;
-                    _currentFoodCount += AmountOfFoodConsumedInOneDay;
+                    CurrentFoodCount += AmountOfFoodConsumedInOneDay;
                 }
                 else
                 {
                     foodEatenAmount = foodCount;
-                    _currentFoodCount += foodCount;
+                    CurrentFoodCount += foodCount;
                 }
 
                 return true;
@@ -310,7 +317,7 @@
                 info += $" ({ReasonOfDeathToString()})";
             }
 
-            info += $"Еда: {_currentFoodCount}";
+            info += $" Еда: {_currentFoodCount}";
 
             return info;
         }
@@ -331,10 +338,22 @@
                 Health += 5;
             }
 
-            _currentFoodCount -= 5;
+            CurrentFoodCount -= 5;
         }
 
-        private int SetAge(int value)
+        private void SetCurrentFoodCount(int value)
+        {
+            if (value > 0)
+            {
+                _currentFoodCount = value;
+            }
+            else
+            {
+                _currentFoodCount = 0;
+            }
+        }
+
+        private void SetAge(int value)
         {
             if (value >= Lifespan)
             {
@@ -344,23 +363,21 @@
             {
                 _age = value;
             }
-
-            return _age;
         }
 
-        private int SetHealth(int value)
+        private void SetHealth(int value)
         {
-            if (value > 0)
+            if (value > 0 && value < 100)
             {
-                return _health = value;
+                _health = value;
             }
             else if (value >= 100)
             {
-                return _health = 100;
+                _health = 100;
             }
-            else 
+            else
             {
-                return _health = 0;
+                _health = 0;
             }
         }
 
