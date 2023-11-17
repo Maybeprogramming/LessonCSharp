@@ -113,12 +113,12 @@
             get => _age; 
             private set => SetAge(value); 
         }
-        public int Lifespan { get; private set; }
+        public int Lifespan { get; }
         public bool IsAlive { get => Age < Lifespan; }
 
         public string ShowInfo() 
         {
-            return $"Рыба: [{Name}] возраст: [{Age}]";
+            return $"[{Name}] возраст: [{Age}]";
         }
 
         public void Update() 
