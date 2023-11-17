@@ -14,7 +14,7 @@
             FishFactory _fishFactory = new FishFactory();
             Aquarium aquarium = new Aquarium(initialNumberFishes: _fishFactory.CreateSomeFishes(10),
                                              maxFishesCount: 15,
-                                             initialFoodCount: 20);
+                                             initialFoodCount: 500);
             Home home = new Home(aquarium);
 
             home.Work();
@@ -186,7 +186,7 @@
             else
             {
                 //ответственность класса рыбки! перенести
-                Print($"Рыбка: >{fish.Name}< не смогла поесть, ей не хватило корма\n");
+                //Print($"Рыбка: >{fish.Name}< не смогла поесть, ей не хватило корма\n");
             }
         }
     }
@@ -201,7 +201,7 @@
             string fishName = GenerateRandomName(fishesNames);
             int minCurrentAge = 0;
             int maxCurrentAge = 5;
-            int minLifespanAge = 10;
+            int minLifespanAge = 15;
             int maxLifespanAge = 30;
             int currentAge = GenerateRandomNumber(minCurrentAge, maxCurrentAge);
             int lifespanAge = GenerateRandomNumber(minLifespanAge, maxLifespanAge);
@@ -230,10 +230,11 @@
         private int _health;
         private int _currentFoodCount;
         private int _criticalLevelFood;
-        private int _maxFoodCount;
+        //private int _maxFoodCount;
 
         public Fish(string name, int age, int lifespan)
         {
+            //Подумать над передачей параметров в класс через класс конфиг.!
             Name = name;
             _age = age;
             Lifespan = lifespan;
@@ -258,6 +259,7 @@
             private set => SetAge(value);
         }
 
+        //сделать приватным. не нужно чтобы другие классы видели уровень сытости
         public int CurrentFoodCount 
         { 
             get => _currentFoodCount; 
@@ -266,14 +268,13 @@
 
         public int Lifespan { get; }
 
+        //Так же сделать приватным, перенести в поле, добавить параметр в конструктор.
         //Количество съедаемой еды за 1 день
         public int AmountOfFoodConsumedInOneDay { get; }
 
-        //Сытость рыбки (сытая или голодная, реализовать метод перевода статуса в троку)
-        public bool IsSatietyStatus { get => _currentFoodCount < _criticalLevelFood; }
-
-        //Здоровье рыбки уменьшается когда она голодна (реализовать метод)
-        //Сытость = голодная у рыбки когда значение количества съеденной еды опускается ниже критического уровня (определить этот уровень)
+        //Сделать приватным, другие классы не должны видеть сытость
+        //Сытость рыбки (сытая или голодная, реализовать метод перевода статуса в строку)
+        public bool IsSatietyStatus { get => CurrentFoodCount < _criticalLevelFood; }
 
         public bool IsAlive()
         {
@@ -310,14 +311,12 @@
 
         public string ShowInfo()
         {
-            string info = $"[{Name}] возраст: [{Age}], ХР: [{Health}]. Состояние: [{AliveStatusToString()}]";
+            string info = $"[{Name}] возраст: [{Age}] дней, ХР: [{Health}]. Уровень сытости: {_currentFoodCount}. Состояние: [{AliveStatusToString()}].";
 
             if (ReasonOfDeathToString() != null && ReasonOfDeathToString() != "")
             {
                 info += $" ({ReasonOfDeathToString()})";
             }
-
-            info += $" Еда: {_currentFoodCount}";
 
             return info;
         }
@@ -327,18 +326,17 @@
             if (IsAlive() == true)
             {
                 ++Age;
-            }
+                CurrentFoodCount -= 5;
 
-            if (IsSatietyStatus == true)
-            {
-                Health -= 10;
-            }
-            else
-            {
-                Health += 5;
-            }
-
-            CurrentFoodCount -= 5;
+                if (IsSatietyStatus == true)
+                {
+                    Health -= 10;
+                }
+                else
+                {
+                    Health += 5;
+                }
+            }         
         }
 
         private void SetCurrentFoodCount(int value)
