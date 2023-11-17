@@ -4,6 +4,7 @@
     using static Display;
     using static UserInput;
     using System.Text;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     class Program
     {
@@ -128,6 +129,7 @@
         {
             foreach (Fish fish in _fishes)
             {
+                TryToGiveFood(fish);
                 fish.Update();
             }
         }
@@ -157,7 +159,7 @@
         {
             foreach (Fish fish in _fishes)
             {
-                if (fish.IsAlive == false)
+                if (fish.IsAlive() == false)
                 {
                     _fishes.Remove(fish);
                 }
@@ -178,7 +180,14 @@
 
         public void TryToGiveFood(ISuitableForFeeding fish)
         {
-            throw new NotImplementedException();
+            if (fish.TryToEatingFood(FoodCount, out int foodEatenAmount) == true)
+            {
+                FoodCount -= foodEatenAmount;
+            }
+            else
+            {
+                Print($"Рыбка: >{fish.Name}< не смогла поесть, ей не хватило корма\n");
+            }
         }
     }
 
@@ -243,21 +252,43 @@
 
         public int Lifespan { get; }
 
-        //Убрать свойсто -> сделать метод.
-        //Умирает от старости или от здоровья = 0.
-        //Здоровье уменьшается от голода, т.е. сытость = false
-
-        public bool IsAlive { get => Age < Lifespan; }
-
         //Количество съедаемой еды за 1 день
         public int AmountOfFoodConsumedInOneDay { get; }
 
-        //Сытость рыбки
-        public bool SatietyFromFood { get; private set; }
+        //Сытость рыбки (сытая или голодная, реализовать метод перевода статуса в троку)
+        public bool Satiety { get; private set; }
 
-        public void TryToEat(IFeederProvider food)
+        //Здоровье рыбки уменьшается когда она голодна (реализовать метод)
+        //Сытость = голодная у рыбки когда значение количества съеденной еды опускается ниже критического уровня (определить этот уровень)
+
+        public bool IsAlive()
         {
+            if (Age < Lifespan || Health > 0)
+            {
+                return true;
+            }
 
+            return false;
+        }
+
+        public bool TryToEatingFood(int foodCount, out int foodEatenAmount)
+        {
+            if (Satiety == false && IsAlive() == true)
+            {
+                if(foodCount >= AmountOfFoodConsumedInOneDay)
+                {
+                    foodEatenAmount = AmountOfFoodConsumedInOneDay;
+                }
+                else
+                {
+                    foodEatenAmount = foodCount;
+                }
+                
+                return true;
+            }
+
+            foodEatenAmount = 0;
+            return false;
         }
 
         public string ShowInfo()
@@ -267,7 +298,7 @@
 
         public void Update()
         {
-            if (IsAlive == true)
+            if (IsAlive() == true)
             {
                 ++Age;
             }
@@ -289,12 +320,19 @@
 
         private void SetHealth(int value)
         {
-            throw new NotImplementedException();
+            if (value > 0)
+            {
+                _health = value;
+            }
+            else
+            {
+                _health = 0;
+            }
         }
 
         private string IsAliveToString()
         {
-            if (IsAlive == true)
+            if (IsAlive() == true)
             {
                 return "живая";
             }
@@ -302,11 +340,6 @@
             {
                 return "мертвая";
             }
-        }
-
-        public bool TakeFood(int foodCount)
-        {
-            throw new NotImplementedException();
         }
     }
 
@@ -317,7 +350,9 @@
 
     public interface ISuitableForFeeding
     {
-        bool TakeFood(int foodCount);
+        string Name { get; }
+
+        bool TryToEatingFood(int foodCount, out int foodEatenAmount);
     }
 
     #region UserUtils
