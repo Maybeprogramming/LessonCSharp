@@ -7,16 +7,21 @@
 
     class Program
     {
-        static void Main() 
+        static void Main()
         {
             Aquarium aquarium = new Aquarium();
 
-            Print($"{aquarium.ShowInfoFishes()}");
+            for (int i = 0; i < 40; i++)
+            {
+                Console.Clear();
+                Print($"{aquarium.ShowInfoFishes()}");
+                aquarium.UpdateFishesLifeCicle();
+                Print($"\nСледующий цикл >>> [{i + 1}]\n");
+                Task.Delay(2000).Wait();
+            }
 
-            aquarium.UpdateFishesLifeCicle();
-            Print($"\nСледующий цикл >>>\n");
-
-            Print($"{aquarium.ShowInfoFishes()}");
+            PrintLine();
+            Console.ReadKey();
         }
     }
 
@@ -25,18 +30,18 @@
         private List<Fish> _fishes;
         private FishFactory _fishFactory;
 
-        public Aquarium() 
+        public Aquarium()
         {
             _fishFactory = new FishFactory();
             _fishes = new List<Fish>();
-            _fishes.Add(_fishFactory.CreateFish());               
-            _fishes.Add(_fishFactory.CreateFish());               
-            _fishes.Add(_fishFactory.CreateFish());               
-            _fishes.Add(_fishFactory.CreateFish());               
-            _fishes.Add(_fishFactory.CreateFish());               
-            _fishes.Add(_fishFactory.CreateFish());               
-            _fishes.Add(_fishFactory.CreateFish());               
-            _fishes.Add(_fishFactory.CreateFish());             
+            _fishes.Add(_fishFactory.CreateFish());
+            _fishes.Add(_fishFactory.CreateFish());
+            _fishes.Add(_fishFactory.CreateFish());
+            _fishes.Add(_fishFactory.CreateFish());
+            _fishes.Add(_fishFactory.CreateFish());
+            _fishes.Add(_fishFactory.CreateFish());
+            _fishes.Add(_fishFactory.CreateFish());
+            _fishes.Add(_fishFactory.CreateFish());
         }
 
         public int MaxFishesCount { get; }
@@ -49,7 +54,7 @@
             }
         }
 
-        public string ShowInfoFishes() 
+        public string ShowInfoFishes()
         {
             StringBuilder infoFishes = new StringBuilder();
 
@@ -61,17 +66,17 @@
             return infoFishes.ToString();
         }
 
-        public void AddFish() 
+        public void AddFish()
         {
-            if(_fishes.Count < MaxFishesCount)
+            if (_fishes.Count < MaxFishesCount)
             {
                 _fishes.Add(_fishFactory.CreateFish());
             }
         }
 
-        public void RemoveFish() 
-        { 
-            foreach(Fish fish in _fishes)
+        public void RemoveDeadFish()
+        {
+            foreach (Fish fish in _fishes)
             {
                 if (fish.IsAlive == false)
                 {
@@ -114,30 +119,30 @@
     {
         private int _age;
 
-        public Fish(string name, int age, int lifespan) 
-        { 
+        public Fish(string name, int age, int lifespan)
+        {
             Name = name;
-            _age = age; 
+            _age = age;
             Lifespan = lifespan;
         }
 
         public string Name { get; }
-        public int Age 
-        { 
-            get => _age; 
-            private set => SetAge(value); 
+        public int Age
+        {
+            get => _age;
+            private set => SetAge(value);
         }
         public int Lifespan { get; }
         public bool IsAlive { get => Age < Lifespan; }
 
-        public string ShowInfo() 
+        public string ShowInfo()
         {
-            return $"[{Name}] возраст: [{Age}]";
+            return $"[{Name}] возраст: [{Age}]. Состояние: [{IsAliveToString()}]";
         }
 
-        public void Update() 
-        { 
-            if(IsAlive == true)
+        public void Update()
+        {
+            if (IsAlive == true)
             {
                 ++Age;
             }
@@ -155,6 +160,18 @@
             }
 
             return _age;
+        }
+
+        private string IsAliveToString()
+        {
+            if (IsAlive == true)
+            {
+                return "живая";
+            }
+            else
+            {
+                return "мертвая";
+            }
         }
     }
 
