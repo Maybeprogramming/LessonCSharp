@@ -41,8 +41,6 @@
 
         public int MaxFishesCount { get; }
 
-        public void Work() { }
-
         public void UpdateFishesLifeCicle()
         {
             foreach (Fish fish in _fishes)
@@ -65,7 +63,10 @@
 
         public void AddFish() 
         {
-            _fishes.Add(new Fish("Форель", 5, 20));
+            if(_fishes.Count < MaxFishesCount)
+            {
+                _fishes.Add(_fishFactory.CreateFish());
+            }
         }
 
         public void RemoveFish() 
