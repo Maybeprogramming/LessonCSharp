@@ -2,15 +2,18 @@
 {
     using static Randomaizer;
     using static Display;
-    using static FishNamesDictionary;
     using System.Text;
+    using System.Runtime.CompilerServices;
+    using static System.Net.Mime.MediaTypeNames;
 
     class Program
     {
         static void Main()
         {
             FishFactory _fishFactory = new FishFactory();
-            Aquarium aquarium = new Aquarium(_fishFactory.CreateSomeFishes(10));
+            Aquarium aquarium = new Aquarium(initialNumberFishes: _fishFactory.CreateSomeFishes(10),
+                                             maxFishesCount: 15, 
+                                             initialFoodCount: 100);
             Home home = new Home(aquarium);
 
             for (int i = 0; i < 40; i++)
@@ -42,18 +45,44 @@
         {
 
         }
+
+        private string GetCreatedMenu()
+        {
+            const string SwitchToNextDayMenu = "1";
+            const string AddFishMenu = "2";
+            const string FeedingFishMenu = "3";
+            const string RemoveDeadFishMenu = "4";
+            const string RemoveOneFishMenu = "5";
+
+            string menuTitle = "Доступные команды:";
+            string requestMessage = "Введите номер команды для продолжения: ";
+
+            string menu = $"{menuTitle}\n" +
+                $"{SwitchToNextDayMenu}. - следующий день\n" +
+                $"{AddFishMenu}. - добавить рыбку в аквариум\n" +
+                $"{FeedingFishMenu} - покормить рыбок" +
+                $"{RemoveDeadFishMenu}. - убрать неживых рыбок\n" +
+                $"{RemoveOneFishMenu} - убрать рыбку из аквариума\n" +
+                $"\n" +
+                $"{requestMessage}\n";
+
+            return menu;
+        }
     }
 
     class Aquarium
     {
         private List<Fish> _fishes;
 
-        public Aquarium(List<Fish> initialNumberFishes)
+        public Aquarium(List<Fish> initialNumberFishes, int maxFishesCount, int initialFoodCount)
         {
             _fishes = initialNumberFishes;
+            MaxFishesCount = maxFishesCount;
+            FoodCount = initialFoodCount;
         }
 
         public int MaxFishesCount { get; }
+        public int FoodCount { get; private set; }
 
         public void UpdateFishesLifeCicle()
         {
