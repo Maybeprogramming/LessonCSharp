@@ -236,6 +236,7 @@
             Health = 85;
             _criticalLevelFood = 10;
             _currentFoodCount = 15;
+            AmountOfFoodConsumedInOneDay = 20;
         }
 
         public string Name { get; }
@@ -349,12 +350,18 @@
 
         private int SetHealth(int value)
         {
-            if (value > 0 && value <= 100)
+            if (value > 0)
             {
                 return _health = value;
             }
-
-            return _health = 0;
+            else if (value >= 100)
+            {
+                return _health = 100;
+            }
+            else 
+            {
+                return _health = 0;
+            }
         }
 
         private string AliveStatusToString()
