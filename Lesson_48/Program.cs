@@ -3,6 +3,7 @@
     using static Randomaizer;
     using static Display;
     using static FishNamesDictionary;
+    using System.Text;
 
     class Program
     {
@@ -10,11 +11,12 @@
         {
             Aquarium aquarium = new Aquarium();
 
-            aquarium.GetInfoFishes();
+            Print($"{aquarium.ShowInfoFishes()}");
 
             aquarium.UpdateFishesLifeCicle();
-            Console.WriteLine($"\nСледующий цикл >>>\n");
-            aquarium.GetInfoFishes();
+            Print($"\nСледующий цикл >>>\n");
+
+            Print($"{aquarium.ShowInfoFishes()}");
         }
     }
 
@@ -49,12 +51,16 @@
             }
         }
 
-        public void GetInfoFishes() 
+        public string ShowInfoFishes() 
         {
+            StringBuilder infoFishes = new StringBuilder();
+
             for (int i = 0; i < _fishes.Count; i++)
             {
-                Console.Write($"{i + 1}. {_fishes[i].ShowInfo()}\n");
+                infoFishes.Append($"{i + 1}. {_fishes[i].ShowInfo()}\n");
             }
+
+            return infoFishes.ToString();
         }
 
         public void AddFish() 
@@ -62,7 +68,7 @@
             _fishes.Add(new Fish("Форель", 5, 20));
         }
 
-        public void GetFish() 
+        public void RemoveFish() 
         { 
             foreach(Fish fish in _fishes)
             {
