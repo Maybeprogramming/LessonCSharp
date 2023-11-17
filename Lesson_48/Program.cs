@@ -2,25 +2,28 @@
 {
     using static Randomaizer;
     using static Display;
+    using static UserInput;
     using System.Text;
-    using System.Runtime.CompilerServices;
-    using static System.Net.Mime.MediaTypeNames;
 
     class Program
     {
         static void Main()
         {
+            Console.Title = "Аквариум";
+
             FishFactory _fishFactory = new FishFactory();
             Aquarium aquarium = new Aquarium(initialNumberFishes: _fishFactory.CreateSomeFishes(10),
-                                             maxFishesCount: 15, 
+                                             maxFishesCount: 15,
                                              initialFoodCount: 100);
             Home home = new Home(aquarium);
+
+            home.Work();
 
             for (int i = 0; i < 40; i++)
             {
                 Console.Clear();
                 Print($"{aquarium.ShowInfoFishes()}");
-                aquarium.UpdateFishesLifeCicle();
+                aquarium.Simulate();
                 Print($"\nСледующий цикл >>> [{i + 1}]\n");
                 Task.Delay(2000).Wait();
             }
@@ -43,30 +46,67 @@
 
         public void Work()
         {
-
-        }
-
-        private string GetCreatedMenu()
-        {
-            const string SwitchToNextDayMenu = "1";
-            const string AddFishMenu = "2";
-            const string FeedingFishMenu = "3";
-            const string RemoveDeadFishMenu = "4";
-            const string RemoveOneFishMenu = "5";
+            const int SwitchToNextDayMenu = 1;
+            const int AddFishMenu = 2;
+            const int FeedingFishMenu = 3;
+            const int RemoveDeadFishMenu = 4;
+            const int RemoveOneFishMenu = 5;
+            const int ExitMenu = 6;
 
             string menuTitle = "Доступные команды:";
             string requestMessage = "Введите номер команды для продолжения: ";
 
             string menu = $"{menuTitle}\n" +
-                $"{SwitchToNextDayMenu}. - следующий день\n" +
+                $"{SwitchToNextDayMenu}. > симуляция следующего дня\n" +
                 $"{AddFishMenu}. - добавить рыбку в аквариум\n" +
-                $"{FeedingFishMenu} - покормить рыбок" +
+                $"{FeedingFishMenu}. - покормить рыбок\n" +
                 $"{RemoveDeadFishMenu}. - убрать неживых рыбок\n" +
-                $"{RemoveOneFishMenu} - убрать рыбку из аквариума\n" +
-                $"\n" +
-                $"{requestMessage}\n";
+                $"{RemoveOneFishMenu}. - убрать рыбку из аквариума\n" +
+                $"{ExitMenu}. - выйти из симуляции аквариума...\n\n";
 
-            return menu;
+            bool isRun = true;
+            int userInput;
+
+            while (isRun == true)
+            {
+                Console.Clear();
+
+                Print($"{menu}");
+
+                userInput = ReadInt($"{requestMessage}");
+
+                switch (userInput)
+                {
+                    case SwitchToNextDayMenu:
+                        _aquarium.Simulate();
+                        break;
+
+                    case AddFishMenu:
+                        _aquarium.AddFish(_fishFactory.CreateFish());
+                        break;
+
+                    case FeedingFishMenu:
+                        _aquarium.AddFood(300);
+                        break;
+
+                    case RemoveDeadFishMenu:
+                        _aquarium.RemoveDeadFish();
+                        break;
+
+                    case RemoveOneFishMenu:
+                        _aquarium.RemoveOneFish();
+                        break;
+
+                    case ExitMenu:
+                        isRun = false;
+                        break;
+
+                    default:
+                        break;
+                }
+
+                WaitToPressKey();
+            }
         }
     }
 
@@ -84,7 +124,7 @@
         public int MaxFishesCount { get; }
         public int FoodCount { get; private set; }
 
-        public void UpdateFishesLifeCicle()
+        public void Simulate()
         {
             foreach (Fish fish in _fishes)
             {
@@ -112,7 +152,7 @@
             }
         }
 
-        //not work
+        //not work, переделать
         public void RemoveDeadFish()
         {
             foreach (Fish fish in _fishes)
@@ -122,6 +162,18 @@
                     _fishes.Remove(fish);
                 }
             }
+        }
+
+        //Реализовать метод добавления еды
+        public void AddFood(int foodCount)
+        {
+            throw new NotImplementedException();
+        }
+
+        //Реализовать метод
+        internal void RemoveOneFish()
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -157,6 +209,7 @@
     class Fish
     {
         private int _age;
+        private int _health;
 
         public Fish(string name, int age, int lifespan)
         {
@@ -166,13 +219,32 @@
         }
 
         public string Name { get; }
+
+        public int Health 
+        { 
+            get => _health; 
+            private set => SetHealth(value); 
+        }
+
         public int Age
         {
             get => _age;
             private set => SetAge(value);
         }
+
         public int Lifespan { get; }
+
+        //Убрать свойсто -> сделать метод.
+        //Умирает от старости или от здоровья = 0.
+        //Здоровье уменьшается от голода, т.е. сытость = false
+
         public bool IsAlive { get => Age < Lifespan; }
+
+        //Количество съедаемой еды за 1 день
+        public int AmountOfFoodConsumedInOneDay { get; }
+
+        //Сытость рыбки
+        public bool SatietyFromFood { get; private set; }
 
         public string ShowInfo()
         {
@@ -199,6 +271,11 @@
             }
 
             return _age;
+        }
+
+        private void SetHealth(int value)
+        {
+            throw new NotImplementedException();
         }
 
         private string IsAliveToString()
@@ -259,6 +336,30 @@
             int randomValue = GenerateRandomNumber(minPercent, maxPercent);
 
             return randomValue < chancePercent;
+        }
+    }
+
+    static class UserInput
+    {
+        public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
+        {
+            int result;
+
+            Console.Write(message);
+
+            while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
+            {
+                Console.Error.WriteLine("Ошибка!. Попробуйте снова!");
+            }
+
+            return result;
+        }
+
+        public static void WaitToPressKey(string message = "")
+        {
+            Print(message);
+            Print($"Для продолжения нажмите любую клавишу...\n");
+            Console.ReadKey();
         }
     }
 
