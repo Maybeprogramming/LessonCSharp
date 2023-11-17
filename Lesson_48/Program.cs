@@ -17,7 +17,7 @@
                                              initialFoodCount: 500);
             Home home = new Home(aquarium);
 
-            home.Work();
+            //home.Work();
 
             for (int i = 0; i < 40; i++)
             {
@@ -230,7 +230,7 @@
         private int _health;
         private int _currentFoodCount;
         private int _criticalLevelFood;
-        //private int _maxFoodCount;
+        private int _maxFoodCount;
 
         public Fish(string name, int age, int lifespan)
         {
@@ -240,8 +240,9 @@
             Lifespan = lifespan;
 
             Health = 85;
-            _criticalLevelFood = 10;
-            CurrentFoodCount = 15;
+            _criticalLevelFood = 0;
+            _currentFoodCount = 15;
+            _maxFoodCount = 50;
             AmountOfFoodConsumedInOneDay = 20;
         }
 
@@ -274,7 +275,7 @@
 
         //Сделать приватным, другие классы не должны видеть сытость
         //Сытость рыбки (сытая или голодная, реализовать метод перевода статуса в строку)
-        public bool IsSatietyStatus { get => CurrentFoodCount < _criticalLevelFood; }
+        public bool IsSatietyStatus { get => CurrentFoodCount >= _criticalLevelFood; }
 
         public bool IsAlive()
         {
@@ -289,7 +290,7 @@
 
         public bool TryToEatingFood(int foodCount, out int foodEatenAmount)
         {
-            if (IsSatietyStatus == true && IsAlive() == true)
+            if (IsAlive() == true && IsSatietyStatus == true)
             {
                 if (foodCount >= AmountOfFoodConsumedInOneDay)
                 {
@@ -311,7 +312,7 @@
 
         public string ShowInfo()
         {
-            string info = $"[{Name}] возраст: [{Age}] дней, ХР: [{Health}]. Уровень сытости: {_currentFoodCount}. Состояние: [{AliveStatusToString()}].";
+            string info = $"[{Name}] возраст: [{Age}] дней, ХР: [{Health}]. Уровень сытости: {CurrentFoodCount}. Состояние: [{AliveStatusToString()}].";
 
             if (ReasonOfDeathToString() != null && ReasonOfDeathToString() != "")
             {
@@ -328,7 +329,7 @@
                 ++Age;
                 CurrentFoodCount -= 5;
 
-                if (IsSatietyStatus == true)
+                if (CurrentFoodCount <= _criticalLevelFood)
                 {
                     Health -= 10;
                 }
@@ -341,9 +342,13 @@
 
         private void SetCurrentFoodCount(int value)
         {
-            if (value > 0)
+            if (value > 0 && value <= _maxFoodCount)
             {
                 _currentFoodCount = value;
+            }
+            else if(value >= _maxFoodCount)
+            {
+                _currentFoodCount = _maxFoodCount;
             }
             else
             {

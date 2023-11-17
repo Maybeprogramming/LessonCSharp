@@ -344,12 +344,13 @@
         public int Health
         {
             get => _health;
-            protected set => SetHealth(value);
+            //В данной задаче допустим тернарный оператор?
+            protected set => _health = value > 0 ? _health = value : _health = 0;
         }
 
         public int Armor { get; protected set; }
         public bool IsAlive { get => Health > 0; }
-        public virtual string Name { get; set; }
+        public virtual string Name { get; }
 
         public virtual bool TryTakeDamage(int damage)
         {
@@ -373,18 +374,6 @@
                 Print($"{ClassName}: {Name} атакует >>> {target.Name}\n");
 
                 target.TryTakeDamage(Damage);
-            }
-        }
-
-        protected void SetHealth(int value)
-        {
-            if (value > 0)
-            {
-                _health = value;
-            }
-            else
-            {
-                _health = 0;
             }
         }
     }
@@ -662,8 +651,8 @@
         public static int GenerateRandomNumber(int minValue, int maxValue)
         {
             return s_random.Next(minValue, maxValue);
-        }      
-        
+        }
+
         public static List<T> Shuffle<T>(List<T> array)
         {
             int elementIndex;
@@ -805,24 +794,24 @@
 
         public static string[] GetNames(ClassName className)
         {
-            string[] name = null;
+            string[] names = null;
 
             switch (className)
             {
                 case ClassName.Fighter:
-                    name = s_names;
+                    names = s_names;
                     break;
 
                 case ClassName.Tank:
-                    name = s_vihicles_names;
+                    names = s_vihicles_names;
                     break;
 
                 case ClassName.Helicopter:
-                    name = s_helicopter_names;
+                    names = s_helicopter_names;
                     break;
             }
 
-            return name;
+            return names;
         }
     }
 
@@ -882,4 +871,12 @@
 //13) Рекомендую обратится за более подробным разбором кода
 //к ментору Напильника - Алексею Кононову.
 //Он предупрежден и ждет Вас с 20.00 по мск в будние дни на голосовом канале дискорда
+
+
+//Александр Михновец
+//+ 1) string[] name - массив это всегда множество чего-то,
+//поэтому отображаем в имени переменной множественное число: numbers, names
+//+ 2) class Unit public virtual string Name { get; set; }
+//-публичный set у Свойства нарушает принципы инкапсуляции
+//3) метод SetHealth() -пришло время изучить тернарный оператор
 
