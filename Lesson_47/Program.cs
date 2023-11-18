@@ -340,15 +340,15 @@
         }
 
         public string ClassName { get; }
-        public int Damage { get; protected set; }
+        public int Damage { get; }
 
         public int Health
         {
             get => _health;
-            protected set => _health = value > 0 ? _health = value : _health = 0;
+            private set => _health = value > 0 ? _health = value : _health = 0;
         }
 
-        public int Armor { get; protected set; }
+        public int Armor { get; }
         public bool IsAlive { get => Health > 0; }
         public virtual string Name { get; }
 
@@ -517,11 +517,9 @@
     {
         private int _criticalModifier;
         private int _criticalDamage;
-        private int _baseDamage;
 
         public GrenadeLauncher(string name, int damage, int health, int armor) : base(name, "Гранатометчик", damage, health, armor)
         {
-            _baseDamage = Damage;
             _criticalModifier = 2;
             _criticalDamage = _criticalModifier * Damage;
         }
