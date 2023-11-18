@@ -17,7 +17,7 @@
                                              initialFoodCount: 500);
             Home home = new Home(aquarium);
 
-            //home.Work();
+            home.Work();
 
             for (int i = 0; i < 40; i++)
             {
@@ -25,7 +25,7 @@
                 Print($"{aquarium.ShowInfoFishes()}");
                 aquarium.Simulate();
                 Print($"\nСледующий цикл >>> [{i + 1}]\n");
-                Task.Delay(1000).Wait();
+                Task.Delay(3000).Wait();
             }
 
             PrintLine();
@@ -386,14 +386,7 @@
 
         private string AliveStatusToString()
         {
-            if (IsAlive() == true)
-            {
-                return "живая";
-            }
-            else
-            {
-                return "мертвая";
-            }
+            return IsAlive() == true ? "живая" : "мертвая";
         }
 
         private string? ReasonOfDeathToString()
