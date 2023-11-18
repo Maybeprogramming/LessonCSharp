@@ -56,6 +56,7 @@
             Print($"Выбранные бойцы:\n" +
                 $">в отряде: {_squad1.Name} [{_unit1.ClassName}]: {_unit1.Name}\n" +
                 $">в отряде: {_squad2.Name} [{_unit2.ClassName}]: {_unit2.Name}\n");
+
             PrintLine();
         }
 
@@ -346,24 +347,6 @@
             get => _health;
             protected set => _health = value > 0 ? _health = value : _health = 0;
         }
-
-        //public int Health
-        //{
-        //    get => _health;
-        //    protected set => SetHealth(value);
-        //}
-
-        //protected void SetHealth(int value)
-        //{
-        //    if (value > 0)
-        //    {
-        //        _health = value;
-        //    }
-        //    else
-        //    {
-        //        _health = 0;
-        //    }
-        //}
 
         public int Armor { get; protected set; }
         public bool IsAlive { get => Health > 0; }
