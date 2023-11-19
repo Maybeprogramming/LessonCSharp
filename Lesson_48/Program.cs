@@ -53,10 +53,10 @@
 
             string menu =
                 $"{SwitchToNextDayMenu}. > симуляция следующего дня\n" +
-                $"{AddFishMenu}. - добавить рыбку в аквариум\n" +
-                $"{FeedingFishMenu}. - покормить рыбок\n" +
-                $"{RemoveDeadFishMenu}. - убрать неживых рыбок\n" +
-                $"{RemoveOneFishMenu}. - убрать рыбку из аквариума\n" +
+                $"{AddFishMenu}. - добавить случайную рыбку в аквариум\n" +
+                $"{FeedingFishMenu}. - добавить корма в аквариум\n" +
+                $"{RemoveDeadFishMenu}. - убрать мёртвых рыбок\n" +
+                $"{RemoveOneFishMenu}. - убрать конкретную рыбку из аквариума\n" +
                 $"{ExitMenu}. - выйти из симуляции аквариума...\n\n";
 
             bool isRun = true;
@@ -66,9 +66,9 @@
             {
                 Console.Clear();
 
-                Print ($"Корма в аквариуме: {_aquarium.FoodCount} единиц.\n\n", ConsoleColor.Yellow);
-                Print ($"Рыбки в аквариуме:\n", ConsoleColor.Green);
-                Print ($"{_aquarium.GetInfoFishes()}\n");
+                Print($"Корма в аквариуме: {_aquarium.FoodCount} единиц. Количество рыбок: {_aquarium.CurrentFishesCount}/{_aquarium.MaxFishesCount}\n\n", ConsoleColor.Yellow);
+                Print($"Рыбки в аквариуме:\n", ConsoleColor.Green);
+                Print($"{_aquarium.GetInfoFishes()}\n");
                 Print($"{menuTitle}\n", ConsoleColor.Green);
                 Print($"{menu}");
 
@@ -89,7 +89,6 @@
                         break;
 
                     case RemoveDeadFishMenu:
-                        //не работает!
                         _aquarium.RemoveDeadFish();
                         break;
 
@@ -123,6 +122,7 @@
 
         public int MaxFishesCount { get; }
         public int FoodCount { get; private set; }
+        public int CurrentFishesCount { get => _fishes.Count; }
 
         public void Simulate()
         {
@@ -159,15 +159,19 @@
             }
         }
 
-        //not work, переделать
         public void RemoveDeadFish()
         {
-            foreach (Fish fish in _fishes)
+            List<Fish> deadFishes = _fishes.Where(fishes => fishes.IsAlive() == false).ToList();
+            List<Fish> aliveFishes = _fishes.Where(fishes => fishes.IsAlive() == true).ToList();
+
+            if (deadFishes.Count > 0)
             {
-                if (fish.IsAlive() == false)
-                {
-                    _fishes.Remove(fish);
-                }
+                _fishes = aliveFishes;
+                Print($"Мёртвые рыбки из аквариуму убраны! ({deadFishes.Count} рыбок)\n", ConsoleColor.Green);
+            }
+            else
+            {
+                Print($"В аквариуме все рыбки живые!\n", ConsoleColor.Green);
             }
         }
 
@@ -179,7 +183,7 @@
 
             Print($"Добавить корма в аквариум. Максимум {maxFoodCount} единиц корма.\n");
 
-            foodCount = ReadInt($"Введите количество корма: ", minFoodCount, maxFoodCount);
+            foodCount = ReadInt($"Введите количество корма: ", minFoodCount, maxFoodCount + 1);
             FoodCount += foodCount;
 
             Print($"Успешно добавлено {foodCount} единиц корма в аквариум.\n");
@@ -311,7 +315,7 @@
 
         public bool TryToEatingFood(int foodCount, out int foodEatenAmount)
         {
-            if (IsAlive() == true && IsSatietyStatus == true)
+            if (IsAlive() == true)
             {
                 if (foodCount >= _maxAmountFoodEatenAtDay)
                 {
