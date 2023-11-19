@@ -12,14 +12,18 @@
             Console.Title = "Аквариум";
 
             FishFactory _fishFactory = new FishFactory();
-            Aquarium aquarium = new Aquarium(initialNumberFishes: _fishFactory.CreateSomeFishes(10),
-                                             maxFishesCount: 15,
-                                             initialFoodCount: 500);
+            int fishesCountOnStart = 10;
+            int maxFishesCountOnAquarium = 15;
+            int foodCountOnStart = 500;
+            List<Fish> fishesOnStart = _fishFactory.CreateSomeFishes(fishesCountOnStart);
+
+            Aquarium aquarium = new Aquarium(fishesOnStart, maxFishesCountOnAquarium, foodCountOnStart);
             Home home = new Home(aquarium);
 
             home.Work();
 
             PrintLine();
+            Print($"Программа завершена", ConsoleColor.Green);
             Console.ReadKey();
         }
     }
