@@ -261,13 +261,12 @@
 
         public Fish(string name, int age, int lifespan, int health)
         {
-            //Подумать над передачей параметров в класс через класс конфиг.!
             Name = name;
             _age = age;
             Lifespan = lifespan;
-
             _maxHealth = health;
             Health = health;
+
             _criticalLevelFood = 0;
             _currentFoodCount = 15;
             _maxFoodCount = 50;
@@ -292,7 +291,6 @@
             private set => SetAge(value);
         }
 
-        //сделать приватным. не нужно чтобы другие классы не видели уровень сытости
         public int CurrentFoodCount
         {
             get => _currentFoodCount;
