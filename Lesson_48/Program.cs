@@ -15,7 +15,7 @@
             int fishesCountOnStart = 10;
             int maxFishesCountOnAquarium = 15;
             int foodCountOnStart = 500;
-            List<Fish> fishesOnStart = _fishFactory.CreateSomeFishes(fishesCountOnStart);
+            List<Fish> fishesOnStart = _fishFactory.CreateSomeRandomFishes(fishesCountOnStart);
 
             Aquarium aquarium = new Aquarium(fishesOnStart, maxFishesCountOnAquarium, foodCountOnStart);
             Home home = new Home(aquarium);
@@ -81,7 +81,7 @@
                         break;
 
                     case AddFishMenu:
-                        _aquarium.AddFish(_fishFactory.CreateFish());
+                        _aquarium.AddFish(_fishFactory.CreateRandomFish());
                         break;
 
                     case FeedingFishMenu:
@@ -210,7 +210,7 @@
 
     class FishFactory
     {
-        public Fish CreateFish()
+        public Fish CreateRandomFish()
         {
             string[] fishesNames = FishNamesDictionary.GetFishesNames();
             string fishName = GenerateRandomName(fishesNames);
@@ -227,13 +227,13 @@
             return new Fish(fishName, currentAge, lifespanAge, health);
         }
 
-        public List<Fish> CreateSomeFishes(int fishesCount)
+        public List<Fish> CreateSomeRandomFishes(int fishesCount)
         {
             List<Fish> fishes = new List<Fish>();
 
             for (int i = 0; i < fishesCount; i++)
             {
-                fishes.Add(CreateFish());
+                fishes.Add(CreateRandomFish());
             }
 
             return fishes;
