@@ -51,7 +51,7 @@
             string menuTitle = "Доступные команды:";
             string requestMessage = "Введите номер команды для продолжения: ";
 
-            string menu = $"{menuTitle}\n" +
+            string menu =
                 $"{SwitchToNextDayMenu}. > симуляция следующего дня\n" +
                 $"{AddFishMenu}. - добавить рыбку в аквариум\n" +
                 $"{FeedingFishMenu}. - покормить рыбок\n" +
@@ -65,9 +65,11 @@
             while (isRun == true)
             {
                 Console.Clear();
-                
-                Print ($"Рыбки в аквариуме:\n");
+
+                Print ($"Корма в аквариуме: {_aquarium.FoodCount} единиц.\n\n", ConsoleColor.Yellow);
+                Print ($"Рыбки в аквариуме:\n", ConsoleColor.Green);
                 Print ($"{_aquarium.GetInfoFishes()}\n");
+                Print($"{menuTitle}\n", ConsoleColor.Green);
                 Print($"{menu}");
 
                 userInput = ReadInt($"{requestMessage}");
