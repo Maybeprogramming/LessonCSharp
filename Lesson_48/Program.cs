@@ -83,6 +83,7 @@
                         break;
 
                     case RemoveDeadFishMenu:
+                        //не работает!
                         _aquarium.RemoveDeadFish();
                         break;
 
@@ -428,6 +429,8 @@
         }
     }
 
+    #region Interfaces
+
     public interface IFeederProvider
     {
         void TryToGiveFood(ISuitableForFeeding fish);
@@ -439,6 +442,8 @@
 
         bool TryToEatingFood(int foodCount, out int foodEatenAmount);
     }
+
+    #endregion
 
     #region UserUtils
 
