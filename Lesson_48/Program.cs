@@ -89,7 +89,7 @@
                         break;
 
                     case RemoveDeadFishMenu:
-                        _aquarium.RemoveDeadFish();
+                        _aquarium.TryRemoveDeadFish();
                         break;
 
                     case RemoveOneFishMenu:
@@ -159,7 +159,7 @@
             }
         }
 
-        public void RemoveDeadFish()
+        public void TryRemoveDeadFish()
         {
             List<Fish> deadFishes = _fishes.Where(fishes => fishes.IsAlive() == false).ToList();
             List<Fish> aliveFishes = _fishes.Where(fishes => fishes.IsAlive() == true).ToList();
