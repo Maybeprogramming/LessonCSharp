@@ -338,7 +338,7 @@
 
         public string ShowInfo()
         {
-            string info = $"[{Name}] возраст: [{Age}] дней, ХР: [{Health}]. Состояние: [{SatietyStatusToString()}] - ({CurrentFoodCount}). [{AliveStatusToString()}].";
+            string info = $"[{Name}] возраст: [{Age}] дней, ХР: [{Health}]. Состояние: [{SatietyToString()}] - ({CurrentFoodCount}). [{AliveToString()}].";
 
             if (ReasonOfDeathToString() != null && ReasonOfDeathToString() != "")
             {
@@ -410,12 +410,12 @@
             }
         }
 
-        private string AliveStatusToString()
+        private string AliveToString()
         {
             return IsAlive() == true ? "живая" : "мертвая";
         }
 
-        private string SatietyStatusToString()
+        private string SatietyToString()
         {
             return IsSatietyStatus == true ? "сытая" : "голодная";
         }
