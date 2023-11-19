@@ -203,10 +203,13 @@
             int maxCurrentAge = 5;
             int minLifespanAge = 15;
             int maxLifespanAge = 30;
+            int minHealth = 80;
+            int maxHealth = 150;
             int currentAge = GenerateRandomNumber(minCurrentAge, maxCurrentAge);
             int lifespanAge = GenerateRandomNumber(minLifespanAge, maxLifespanAge);
+            int health = GenerateRandomNumber(minHealth, maxHealth);
 
-            return new Fish(fishName, currentAge, lifespanAge);
+            return new Fish(fishName, currentAge, lifespanAge, health);
         }
 
         public List<Fish> CreateSomeFishes(int fishesCount)
@@ -228,22 +231,31 @@
     {
         private int _age;
         private int _health;
+        private int _maxHealth;
         private int _currentFoodCount;
         private int _criticalLevelFood;
         private int _maxFoodCount;
+        private int _dailyFoodIntake;
+        private int _decreasedHealthWhenHungry;
+        private int _increasedHealthWhenSatiety;
 
-        public Fish(string name, int age, int lifespan)
+        public Fish(string name, int age, int lifespan, int health)
         {
             //Подумать над передачей параметров в класс через класс конфиг.!
             Name = name;
             _age = age;
             Lifespan = lifespan;
 
-            Health = 85;
+            _maxHealth = health;
+            Health = health;
             _criticalLevelFood = 0;
             _currentFoodCount = 15;
             _maxFoodCount = 50;
-            AmountOfFoodConsumedInOneDay = 20;
+
+            MaxAmountFoodEatenAtDay = 20;
+            _dailyFoodIntake = 5;
+            _decreasedHealthWhenHungry = 10;
+            _increasedHealthWhenSatiety = 5;
         }
 
         public string Name { get; }
@@ -271,7 +283,7 @@
 
         //Так же сделать приватным, перенести в поле, добавить параметр в конструктор.
         //Количество съедаемой еды за 1 день
-        public int AmountOfFoodConsumedInOneDay { get; }
+        public int MaxAmountFoodEatenAtDay { get; }
 
         //Сделать приватным, другие классы не должны видеть сытость
         //Сытость рыбки (сытая или голодная, реализовать метод перевода статуса в строку)
@@ -292,10 +304,10 @@
         {
             if (IsAlive() == true && IsSatietyStatus == true)
             {
-                if (foodCount >= AmountOfFoodConsumedInOneDay)
+                if (foodCount >= MaxAmountFoodEatenAtDay)
                 {
-                    foodEatenAmount = AmountOfFoodConsumedInOneDay;
-                    CurrentFoodCount += AmountOfFoodConsumedInOneDay;
+                    foodEatenAmount = MaxAmountFoodEatenAtDay;
+                    CurrentFoodCount += MaxAmountFoodEatenAtDay;
                 }
                 else
                 {
@@ -327,15 +339,15 @@
             if (IsAlive() == true)
             {
                 ++Age;
-                CurrentFoodCount -= 5;
+                CurrentFoodCount -= _dailyFoodIntake;
 
                 if (CurrentFoodCount <= _criticalLevelFood)
                 {
-                    Health -= 10;
+                    Health -= _decreasedHealthWhenHungry;
                 }
                 else
                 {
-                    Health += 5;
+                    Health += _increasedHealthWhenSatiety;
                 }
             }         
         }
@@ -370,13 +382,13 @@
 
         private void SetHealth(int value)
         {
-            if (value > 0 && value < 100)
+            if (value > 0 && value < _maxHealth)
             {
                 _health = value;
             }
-            else if (value >= 100)
+            else if (value >= _maxHealth)
             {
-                _health = 100;
+                _health = _maxHealth;
             }
             else
             {
@@ -394,9 +406,7 @@
             if (Age >= Lifespan)
             {
                 return $"от старости";
-            }
-
-            if (Health <= 0 && IsSatietyStatus == true)
+            } else if (Health <= 0 && IsSatietyStatus == true)
             {
                 return $"от голода";
             }
