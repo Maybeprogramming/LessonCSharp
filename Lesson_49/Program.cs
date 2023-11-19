@@ -1,10 +1,17 @@
 ﻿namespace Lesson_49
 {
+    using static Randomaizer;
+    using static Display;
+    using static UserInput;
+
     class Program
     {
         static void Main()
         {
             Console.Title = "Зоопарк";
+
+            Zoo zoo = new Zoo();
+            zoo.Work();
         }
     }
 
@@ -25,18 +32,18 @@
         private Gender _gender;
         private Sound _sound;
 
-        public Animal(string name, Gender gender, Sound sound)
+        public Animal(string typeName, Gender gender, Sound sound)
         { 
-            Name = name;
+            TypeName = typeName;
             _gender = gender;
             _sound = sound;
         }
 
-        public string Name { get; }
+        public string TypeName { get; }
 
         public virtual void MakeSound()
         {
-
+            Print($"[{TypeName}] издаёт звук: {_sound.Name}.\n");
         }
 
         public string GetGender()
@@ -52,7 +59,7 @@
             Name = name;
         }
 
-        string Name { get; }
+        public string Name { get; }
     }
 
     #region Interfaces
@@ -147,6 +154,30 @@
         {
             int symbolCount = Console.WindowWidth - 1;
             Print($"{new string('-', symbolCount)}\n", color);
+        }
+    }
+
+    static class UserInput
+    {
+        public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
+        {
+            int result;
+
+            Console.Write(message);
+
+            while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
+            {
+                Console.Error.WriteLine("Ошибка!. Попробуйте снова!");
+            }
+
+            return result;
+        }
+
+        public static void WaitToPressKey(string message = "")
+        {
+            Print(message);
+            Print($"Для продолжения нажмите любую клавишу...\n");
+            Console.ReadKey();
         }
     }
 
