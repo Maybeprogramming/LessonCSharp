@@ -61,7 +61,9 @@
             while (isRun == true)
             {
                 Console.Clear();
-
+                
+                Print ($"Рыбки в аквариуме:\n");
+                Print ($"{_aquarium.GetInfoFishes()}\n");
                 Print($"{menu}");
 
                 userInput = ReadInt($"{requestMessage}");
@@ -117,26 +119,14 @@
 
         public void Simulate()
         {
-            //Временное решение!!!
-            for (int i = 0; i < 40; i++)
+            foreach (Fish fish in _fishes)
             {
-                Console.Clear();
-
-                Print($"Количество еды в аквариуме: {FoodCount}\n\n");
-                Print($"{ShowInfoFishes()}");
-
-                foreach (Fish fish in _fishes)
-                {
-                    TryToGiveFood(fish);
-                    fish.Update();
-                }
-
-                Print($"\n>>> Прошло [{i + 1}] дней\n");
-                Task.Delay(1000).Wait();
+                TryToGiveFood(fish);
+                fish.Update();
             }
         }
 
-        public string ShowInfoFishes()
+        public string GetInfoFishes()
         {
             StringBuilder infoFishes = new StringBuilder();
 
@@ -188,10 +178,16 @@
             Print($"Успешно добавлено {foodCount} единиц корма в аквариум.\n");
         }
 
-        //Реализовать метод
         public void RemoveOneFish()
         {
-            throw new NotImplementedException();
+            Fish fish;
+            int fishIndex;
+
+            fishIndex = ReadInt("\nВведите номер удаляемой рыбки: ", 1, _fishes.Count + 1);
+            fish = _fishes[fishIndex - 1];
+
+            _fishes.Remove(fish);
+            Print($"Рыбка: {fish.Name}. Здоровье: {fish.Health} успешно убрана из аквариума!\n", ConsoleColor.Green);
         }
 
         public void TryToGiveFood(ISuitableForFeeding fish)
