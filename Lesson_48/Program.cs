@@ -22,9 +22,10 @@
             for (int i = 0; i < 40; i++)
             {
                 Console.Clear();
+                Print($"Количество еды в аквариуме: {aquarium.FoodCount}\n\n");
                 Print($"{aquarium.ShowInfoFishes()}");
                 aquarium.Simulate();
-                Print($"\nСледующий цикл >>> [{i + 1}]\n");
+                Print($"\n>>> Прошло [{i + 1}] дней\n");
                 Task.Delay(3000).Wait();
             }
 
@@ -86,7 +87,7 @@
                         break;
 
                     case FeedingFishMenu:
-                        _aquarium.AddFood(300);
+                        _aquarium.AddFood();
                         break;
 
                     case RemoveDeadFishMenu:
@@ -150,6 +151,12 @@
             if (_fishes.Count < MaxFishesCount)
             {
                 _fishes.Add(fish);
+
+                Print($"В аквариум добавлена рыбка: [{fish.Name}], здоровье [{fish.Health}]\n");
+            }
+            else
+            {
+                Print($"Достигнута максимальная вместимость аквариума!\n", ConsoleColor.Red);
             }
         }
 
@@ -165,10 +172,18 @@
             }
         }
 
-        //Реализовать метод добавления еды
-        public void AddFood(int foodCount)
+        public void AddFood()
         {
-            throw new NotImplementedException();
+            int foodCount;
+            int minFoodCount = 0;
+            int maxFoodCount = 1000;
+
+            Print($"Добавить корма в аквариум. Максимум {maxFoodCount} единиц корма.\n");
+
+            foodCount = ReadInt($"Введите количество корма: ", minFoodCount, maxFoodCount);
+            FoodCount += foodCount;
+
+            Print($"Успешно добавлено {foodCount} единиц корма в аквариум.\n");
         }
 
         //Реализовать метод
@@ -273,10 +288,10 @@
         }
 
         //сделать приватным. не нужно чтобы другие классы видели уровень сытости
-        public int CurrentFoodCount 
-        { 
-            get => _currentFoodCount; 
-            private set => SetCurrentFoodCount(value); 
+        public int CurrentFoodCount
+        {
+            get => _currentFoodCount;
+            private set => SetCurrentFoodCount(value);
         }
 
         public int Lifespan { get; }
@@ -349,7 +364,7 @@
                 {
                     Health += _increasedHealthWhenSatiety;
                 }
-            }         
+            }
         }
 
         private void SetCurrentFoodCount(int value)
@@ -358,7 +373,7 @@
             {
                 _currentFoodCount = value;
             }
-            else if(value >= _maxFoodCount)
+            else if (value >= _maxFoodCount)
             {
                 _currentFoodCount = _maxFoodCount;
             }
@@ -406,7 +421,8 @@
             if (Age >= Lifespan)
             {
                 return $"от старости";
-            } else if (Health <= 0 && IsSatietyStatus == true)
+            }
+            else if (Health <= 0 && IsSatietyStatus == true)
             {
                 return $"от голода";
             }
