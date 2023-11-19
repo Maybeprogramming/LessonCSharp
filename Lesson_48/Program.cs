@@ -255,6 +255,7 @@
         private int _dailyFoodIntake;
         private int _decreasedHealthWhenHungry;
         private int _increasedHealthWhenSatiety;
+        private int _maxAmountFoodEatenAtDay;
 
         public Fish(string name, int age, int lifespan, int health)
         {
@@ -269,10 +270,10 @@
             _currentFoodCount = 15;
             _maxFoodCount = 50;
 
-            MaxAmountFoodEatenAtDay = 20;
             _dailyFoodIntake = 5;
             _decreasedHealthWhenHungry = 10;
             _increasedHealthWhenSatiety = 5;
+            _maxAmountFoodEatenAtDay = 20;
         }
 
         public string Name { get; }
@@ -289,7 +290,7 @@
             private set => SetAge(value);
         }
 
-        //сделать приватным. не нужно чтобы другие классы видели уровень сытости
+        //сделать приватным. не нужно чтобы другие классы не видели уровень сытости
         public int CurrentFoodCount
         {
             get => _currentFoodCount;
@@ -297,13 +298,6 @@
         }
 
         public int Lifespan { get; }
-
-        //Так же сделать приватным, перенести в поле, добавить параметр в конструктор.
-        //Количество съедаемой еды за 1 день
-        public int MaxAmountFoodEatenAtDay { get; }
-
-        //Сделать приватным, другие классы не должны видеть сытость
-        //Сытость рыбки (сытая или голодная, реализовать метод перевода статуса в строку)
         public bool IsSatietyStatus { get => CurrentFoodCount > _criticalLevelFood; }
 
         public bool IsAlive()
@@ -321,10 +315,10 @@
         {
             if (IsAlive() == true && IsSatietyStatus == true)
             {
-                if (foodCount >= MaxAmountFoodEatenAtDay)
+                if (foodCount >= _maxAmountFoodEatenAtDay)
                 {
-                    foodEatenAmount = MaxAmountFoodEatenAtDay;
-                    CurrentFoodCount += MaxAmountFoodEatenAtDay;
+                    foodEatenAmount = _maxAmountFoodEatenAtDay;
+                    CurrentFoodCount += _maxAmountFoodEatenAtDay;
                 }
                 else
                 {
