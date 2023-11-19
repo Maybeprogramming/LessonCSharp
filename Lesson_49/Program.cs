@@ -8,6 +8,11 @@
         }
     }
 
+    class Zoo
+    {
+        public void Work() { }
+    }
+
     class Aviary
     {
         private List<Animal> _animals;
