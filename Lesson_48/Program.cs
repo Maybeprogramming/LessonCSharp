@@ -468,32 +468,6 @@
         {
             return s_random.Next(minValue, maxValue);
         }
-
-        public static List<T> Shuffle<T>(List<T> array)
-        {
-            int elementIndex;
-            T tempElement;
-
-            for (int i = 0; i < array.Count; i++)
-            {
-                elementIndex = GenerateRandomNumber(i, array.Count);
-
-                tempElement = array[i];
-                array[i] = array[elementIndex];
-                array[elementIndex] = tempElement;
-            }
-
-            return array;
-        }
-
-        public static bool IsСhanceNow(int chancePercent)
-        {
-            int minPercent = 0;
-            int maxPercent = 100;
-            int randomValue = GenerateRandomNumber(minPercent, maxPercent);
-
-            return randomValue < chancePercent;
-        }
     }
 
     static class UserInput
