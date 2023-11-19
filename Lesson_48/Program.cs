@@ -19,16 +19,6 @@
 
             home.Work();
 
-            for (int i = 0; i < 40; i++)
-            {
-                Console.Clear();
-                Print($"Количество еды в аквариуме: {aquarium.FoodCount}\n\n");
-                Print($"{aquarium.ShowInfoFishes()}");
-                aquarium.Simulate();
-                Print($"\n>>> Прошло [{i + 1}] дней\n");
-                Task.Delay(3000).Wait();
-            }
-
             PrintLine();
             Console.ReadKey();
         }
@@ -127,10 +117,22 @@
 
         public void Simulate()
         {
-            foreach (Fish fish in _fishes)
+            //Временное решение!!!
+            for (int i = 0; i < 40; i++)
             {
-                TryToGiveFood(fish);
-                fish.Update();
+                Console.Clear();
+
+                Print($"Количество еды в аквариуме: {FoodCount}\n\n");
+                Print($"{ShowInfoFishes()}");
+
+                foreach (Fish fish in _fishes)
+                {
+                    TryToGiveFood(fish);
+                    fish.Update();
+                }
+
+                Print($"\n>>> Прошло [{i + 1}] дней\n");
+                Task.Delay(1000).Wait();
             }
         }
 
@@ -302,7 +304,7 @@
 
         //Сделать приватным, другие классы не должны видеть сытость
         //Сытость рыбки (сытая или голодная, реализовать метод перевода статуса в строку)
-        public bool IsSatietyStatus { get => CurrentFoodCount >= _criticalLevelFood; }
+        public bool IsSatietyStatus { get => CurrentFoodCount > _criticalLevelFood; }
 
         public bool IsAlive()
         {
@@ -339,7 +341,7 @@
 
         public string ShowInfo()
         {
-            string info = $"[{Name}] возраст: [{Age}] дней, ХР: [{Health}]. Уровень сытости: {CurrentFoodCount}. Состояние: [{AliveStatusToString()}].";
+            string info = $"[{Name}] возраст: [{Age}] дней, ХР: [{Health}]. Состояние: [{SatietyStatusToString()}] - ({CurrentFoodCount}). [{AliveStatusToString()}].";
 
             if (ReasonOfDeathToString() != null && ReasonOfDeathToString() != "")
             {
@@ -416,13 +418,18 @@
             return IsAlive() == true ? "живая" : "мертвая";
         }
 
+        private string SatietyStatusToString()
+        {
+            return IsSatietyStatus == true ? "сытая" : "голодная";
+        }
+
         private string? ReasonOfDeathToString()
         {
             if (Age >= Lifespan)
             {
                 return $"от старости";
             }
-            else if (Health <= 0 && IsSatietyStatus == true)
+            else if (Health <= 0 && IsSatietyStatus == false)
             {
                 return $"от голода";
             }
