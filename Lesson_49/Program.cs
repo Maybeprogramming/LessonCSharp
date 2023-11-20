@@ -29,46 +29,75 @@
         public Aviary() { }
     }
 
+    class AnimalFactory
+    {
+
+    }
+
     abstract class Animal : ISoundProvider
     {
-        private GenderType _gender;
-
-        public Animal(string typeName, GenderType gender)
+        public Animal(string speciesName, GenderType gender)
         {
-            TypeName = typeName;
-            _gender = gender;
+            SpeciesName = speciesName;
+            GenderType = gender;
         }
 
-        public virtual string TypeName { get; }
-        public string Gender { get => _gender == GenderType.Male ? "мужской" : "женский"; }
+        public GenderType GenderType { get; }
+        public string SpeciesName { get; }
+        public abstract string Gender { get; }
 
         public abstract void MakeSound();
+
+        public abstract Animal Clone(GenderType gender);
     }
 
     class Giraffe : Animal
     {
-        public Giraffe(GenderType gender) : base("Жираф", gender) { }
+
+        public Giraffe(GenderType gender) : base("Жирафы", gender) { }
+
+        public override string Gender => GenderType == GenderType.Male ? "Жираф" : "Жирафиха";
 
         public override void MakeSound()
         {
+        }
+
+        public override Animal Clone(GenderType gender)
+        {
+            return new Giraffe(gender);
         }
     }
 
     class Tiger : Animal
     {
-        public Tiger(GenderType gender) : base("Тигр", gender)
+
+        public Tiger(GenderType gender) : base("Тигры", gender)
         {
         }
 
+        public override string Gender => GenderType == GenderType.Male ? "Тигр" : "Тигрица";
+
         public override void MakeSound()
         {
+        }
+
+        public override Animal Clone(GenderType gender)
+        {
+            return new Tiger(gender);
         }
     }
 
     class Wolf : Animal
     {
-        public Wolf(GenderType gender) : base("Волк", gender)
+        public Wolf(GenderType gender) : base("Волки", gender)
         {
+        }
+
+        public override string Gender => GenderType == GenderType.Male ? "Волк" : "Волчица";
+
+        public override Animal Clone(GenderType gender)
+        {
+            return new Wolf(gender);
         }
 
         public override void MakeSound()
@@ -78,19 +107,33 @@
 
     class Elephant : Animal
     {
-        public Elephant(GenderType gender) : base("Слон", gender)
+
+        public Elephant(GenderType gender) : base("Слоны", gender)
         {
         }
+        public override string Gender => GenderType == GenderType.Male ? "Слон" : "Слониха";
 
         public override void MakeSound()
         {
+        }
+
+        public override Animal Clone(GenderType gender)
+        {
+            return new Elephant(gender);
         }
     }
 
     class Parrot : Animal
     {
-        public Parrot(GenderType gender) : base("Попугай", gender)
+        public Parrot(GenderType gender) : base("Попугаи", gender)
         {
+        }
+
+        public override string Gender => GenderType == GenderType.Male ? "Попугай самец": "Попугай самка";
+
+        public override Animal Clone(GenderType gender)
+        {
+            return new Parrot(gender);
         }
 
         public override void MakeSound()
@@ -100,12 +143,20 @@
 
     class Gorrilla : Animal
     {
-        public Gorrilla(GenderType gender) : base("Горилла", gender)
+
+        public Gorrilla(GenderType gender) : base("Гориллы", gender)
         {
         }
 
+        public override string Gender => GenderType == GenderType.Male ? "Самец гориллы": "Самка гориллы";
+
         public override void MakeSound()
         {
+        }
+
+        public override Animal Clone(GenderType gender)
+        {
+            return new Gorrilla(gender);
         }
     }
 
@@ -115,8 +166,15 @@
         {
         }
 
+        public override string Gender => GenderType == GenderType.Male ? "Медведь": "Медведица";
+
         public override void MakeSound()
         {
+        }
+
+        public override Animal Clone(GenderType gender)
+        {
+            return new Bear(gender);
         }
     }
 
@@ -275,3 +333,11 @@
 //сколько животных там обитает,
 //их пол и какой звук издает животное.
 //Вольеров в зоопарке может быть много, в решении нужно создать минимум 4 вольера.
+
+//волк - волчица
+//медведь - медведица
+//тигр - тигрица
+//слон - слониха
+//жираф - жирафиха
+//горилла - горилла
+//попугай
