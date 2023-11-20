@@ -36,14 +36,14 @@
 
     abstract class Animal : ISoundProvider
     {
-        public Animal(string speciesName, GenderType gender)
+        public Animal(AnimalType animalType, GenderType genderType)
         {
-            SpeciesName = speciesName;
-            GenderType = gender;
+            AnimalType = animalType;
+            GenderType = genderType;
         }
-
+        public AnimalType AnimalType { get; }
         public GenderType GenderType { get; }
-        public string SpeciesName { get; }
+        public string Name { get; }
         public abstract string Gender { get; }
 
         public abstract void MakeSound();
