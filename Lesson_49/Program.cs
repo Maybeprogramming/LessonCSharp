@@ -66,8 +66,6 @@
         {
             _animalType = animalType;
         }
-
-
     }
 
     abstract class Animal : ISoundProvider
