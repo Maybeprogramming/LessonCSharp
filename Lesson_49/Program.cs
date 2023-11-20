@@ -10,6 +10,13 @@
         {
             Console.Title = "Зоопарк";
 
+            Giraffe giraffe = new Giraffe(GenderType.Male);
+            Tiger tiger = new Tiger(GenderType.Female);
+
+            Print($"{giraffe.AnimalType}, {giraffe.Gender}\n");
+            Print($"{tiger.AnimalType}, {tiger.Gender}\n");
+            WaitToPressKey("\n");
+
             Zoo zoo = new Zoo();
             zoo.Work();
         }
@@ -26,12 +33,18 @@
     {
         private List<Animal> _animals;
 
-        public Aviary() { }
+        public Aviary(List<Animal> animals) => _animals = animals;
     }
 
-    class AnimalFactory
+    class ZooFactory
     {
+        private int _minAnimalCountOnAviary;
+        private int _maxAnimalCountOnAviary;
 
+        public ZooFactory()
+        {
+
+        }
     }
 
     abstract class Animal : ISoundProvider
@@ -39,6 +52,7 @@
         public Animal(GenderType genderType)
         {
             GenderType = genderType;
+            AnimalType = AnimalDictionary.TryGetAnimalType(this.GetType());
         }
 
         public AnimalType AnimalType { get; }
@@ -88,7 +102,7 @@
 
     class Wolf : Animal
     {
-        public Wolf(GenderType gender) : base( gender)
+        public Wolf(GenderType gender) : base(gender)
         {
         }
 
@@ -143,7 +157,7 @@
     class Gorrilla : Animal
     {
 
-        public Gorrilla(GenderType gender) : base( gender)
+        public Gorrilla(GenderType gender) : base(gender)
         {
         }
 
@@ -177,24 +191,29 @@
         }
     }
 
-    class AnimalDictionary
+    static class AnimalDictionary
     {
-        private Dictionary<Animal, AnimalType> _animalsTypes;
+        private static Dictionary<Type, AnimalType> s_animalsTypes;
 
-        public AnimalDictionary()
+        static AnimalDictionary()
         {
-            _animalsTypes = new Dictionary<Animal, AnimalType>()
+            s_animalsTypes = new Dictionary<Type, AnimalType>()
             {
-                {new Giraffe(GenderType.Male), AnimalType.Giraffes},
-                {new Tiger(GenderType.Male), AnimalType.Tigers},
-                {new Wolf(GenderType.Male), AnimalType.Wolves },
-                {new Elephant(GenderType.Male), AnimalType.Elephants },
-                {new Parrot(GenderType.Male), AnimalType.Parrots },
-                {new Bear (GenderType.Male), AnimalType.Bears }
+                {typeof(Giraffe), AnimalType.Giraffes},
+                {typeof(Tiger), AnimalType.Tigers},
+                {typeof(Wolf), AnimalType.Wolves },
+                {typeof(Elephant), AnimalType.Elephants },
+                {typeof(Parrot), AnimalType.Parrots },
+                {typeof(Bear), AnimalType.Bears }
             };
         }
 
-        public Dictionary<Animal, AnimalType> GetAnimalsTypes() => new Dictionary<Animal, AnimalType>(_animalsTypes);
+        public static AnimalType TryGetAnimalType(Type animal)
+        {
+            s_animalsTypes.TryGetValue(animal, out AnimalType animalType);
+
+            return animalType;
+        }
     }
 
     #region Interfaces
@@ -274,6 +293,8 @@
             return randomValue < chancePercent;
         }
     }
+
+
 
     static class Display
     {
