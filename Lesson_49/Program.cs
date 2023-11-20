@@ -41,6 +41,7 @@
             AnimalType = animalType;
             GenderType = genderType;
         }
+
         public AnimalType AnimalType { get; }
         public GenderType GenderType { get; }
         public string Name { get; }
@@ -53,7 +54,6 @@
 
     class Giraffe : Animal
     {
-
         public Giraffe(GenderType gender) : base("Жирафы", gender) { }
 
         public override string Gender => GenderType == GenderType.Male ? "Жираф" : "Жирафиха";
@@ -129,7 +129,7 @@
         {
         }
 
-        public override string Gender => GenderType == GenderType.Male ? "Попугай самец": "Попугай самка";
+        public override string Gender => GenderType == GenderType.Male ? "Попугай самец" : "Попугай самка";
 
         public override Animal Clone(GenderType gender)
         {
@@ -148,7 +148,7 @@
         {
         }
 
-        public override string Gender => GenderType == GenderType.Male ? "Самец гориллы": "Самка гориллы";
+        public override string Gender => GenderType == GenderType.Male ? "Самец гориллы" : "Самка гориллы";
 
         public override void MakeSound()
         {
@@ -166,7 +166,7 @@
         {
         }
 
-        public override string Gender => GenderType == GenderType.Male ? "Медведь": "Медведица";
+        public override string Gender => GenderType == GenderType.Male ? "Медведь" : "Медведица";
 
         public override void MakeSound()
         {
@@ -176,6 +176,26 @@
         {
             return new Bear(gender);
         }
+    }
+
+    class AnimalDictionary
+    {
+        private Dictionary<Animal, AnimalType> _animalsTypes;
+
+        public AnimalDictionary()
+        {
+            _animalsTypes = new Dictionary<Animal, AnimalType>()
+            {
+                {new Giraffe(GenderType.Male), AnimalType.Giraffes},
+                {new Tiger(GenderType.Male), AnimalType.Tigers},
+                {new Wolf(GenderType.Male), AnimalType.Wolves },
+                {new Elephant(GenderType.Male), AnimalType.Elephants },
+                {new Parrot(GenderType.Male), AnimalType.Parrots },
+                {new Bear (GenderType.Male), AnimalType.Bears }
+            };
+        }
+
+        public Dictionary<Animal, AnimalType> GetAnimalsTypes() => new Dictionary<Animal, AnimalType>(_animalsTypes);
     }
 
     #region Interfaces
