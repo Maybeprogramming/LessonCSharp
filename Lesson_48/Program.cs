@@ -72,7 +72,7 @@
                 Print($"{menuTitle}\n", ConsoleColor.Green);
                 Print($"{menu}");
 
-                userInput = ReadInt($"{requestMessage}");
+                userInput = ReadIntRange($"{requestMessage}");
 
                 switch (userInput)
                 {
@@ -129,7 +129,7 @@
             foreach (Fish fish in _fishes)
             {
                 TryToGiveFood(fish);
-                fish.Update();
+                fish.SkipTime();
             }
         }
 
@@ -183,7 +183,7 @@
 
             Print($"Добавить корма в аквариум. Максимум {maxFoodCount} единиц корма.\n");
 
-            foodCount = ReadInt($"Введите количество корма: ", minFoodCount, maxFoodCount + 1);
+            foodCount = ReadIntRange($"Введите количество корма: ", minFoodCount, maxFoodCount + 1);
             FoodCount += foodCount;
 
             Print($"Успешно добавлено {foodCount} единиц корма в аквариум.\n");
@@ -194,7 +194,7 @@
             Fish fish;
             int fishIndex;
 
-            fishIndex = ReadInt("\nВведите номер удаляемой рыбки: ", 1, _fishes.Count + 1);
+            fishIndex = ReadIntRange("\nВведите номер удаляемой рыбки: ", 1, _fishes.Count + 1);
             fish = _fishes[fishIndex - 1];
 
             _fishes.Remove(fish);
@@ -214,10 +214,29 @@
 
     class FishFactory
     {
+        private readonly string[] _fishesNames;
+
+        public FishFactory()
+        {
+            _fishesNames = new string[]
+            {
+                "Окунь",
+                "Лещ",
+                "Осётр",
+                "Форель",
+                "Щука",
+                "Сом",
+                "Анчоус",
+                "Сельдь",
+                "Лосось",
+                "Камбала",
+                "Карп",
+            };
+        }
+
         public Fish CreateRandomFish()
         {
-            string[] fishesNames = FishNamesDictionary.GetFishesNames();
-            string fishName = GenerateRandomName(fishesNames);
+            string fishName = GenerateRandomName(_fishesNames);
             int minCurrentAge = 0;
             int maxCurrentAge = 5;
             int minLifespanAge = 15;
@@ -300,6 +319,9 @@
         public int Lifespan { get; }
         public bool IsSatietyStatus { get => CurrentFoodCount > _criticalLevelFood; }
 
+        public string AliveToString { get => IsAlive() == true ? "живая" : "мертвая"; }
+        public string SatietyToString { get => IsSatietyStatus == true ? "сытая" : "голодная"; }
+
         public bool IsAlive()
         {
             if (Age < Lifespan && Health > 0)
@@ -335,17 +357,17 @@
 
         public string ShowInfo()
         {
-            string info = $"[{Name}] возраст: [{Age}] дней, ХР: [{Health}]. Состояние: [{SatietyToString()}] - ({CurrentFoodCount}). [{AliveToString()}].";
+            string info = $"[{Name}] возраст: [{Age}] дней, ХР: [{Health}]. Состояние: [{SatietyToString}] - ({CurrentFoodCount}). [{AliveToString}].";
 
-            if (ReasonOfDeathToString() != null && ReasonOfDeathToString() != "")
+            if (GetReasonOfDeathToString() != null && GetReasonOfDeathToString() != "")
             {
-                info += $" ({ReasonOfDeathToString()})";
+                info += $" ({GetReasonOfDeathToString()})";
             }
 
             return info;
         }
 
-        public void Update()
+        public void SkipTime()
         {
             if (IsAlive() == true)
             {
@@ -407,17 +429,9 @@
             }
         }
 
-        private string AliveToString()
-        {
-            return IsAlive() == true ? "живая" : "мертвая";
-        }
 
-        private string SatietyToString()
-        {
-            return IsSatietyStatus == true ? "сытая" : "голодная";
-        }
 
-        private string? ReasonOfDeathToString()
+        private string? GetReasonOfDeathToString()
         {
             if (Age >= Lifespan)
             {
@@ -472,7 +486,7 @@
 
     static class UserInput
     {
-        public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
+        public static int ReadIntRange(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
         {
             int result;
 
@@ -511,34 +525,6 @@
         }
     }
 
-    static class FishNamesDictionary
-    {
-        private static readonly string[] s_names;
-
-        static FishNamesDictionary()
-        {
-            s_names = new string[]
-            {
-                "Окунь",
-                "Лещ",
-                "Осётр",
-                "Форель",
-                "Щука",
-                "Сом",
-                "Анчоус",
-                "Сельдь",
-                "Лосось",
-                "Камбала",
-                "Карп",
-            };
-        }
-
-        public static string[] GetFishesNames()
-        {
-            return s_names;
-        }
-    }
-
     #endregion
 }
 
@@ -552,17 +538,8 @@
 //За 1 итерацию рыбы стареют на определенное кол-во жизней и могут умереть.
 //Рыб также вывести в консоль, чтобы можно было мониторить показатели.
 
-
-//Чаво ещё:
-//1. Добавить меню с:
-//  - добавить случайную рыбу;
-//  - добавить пользовательскую рыбу (ввести тип, возраст);
-//  - убрать мёртвую рыбу;
-//  - убрать 1 рыбу на выбор;
-//  - следующий цикл (Обновить возраст рыбы в аквариуме)
-
 //Александр Михновец
-//1) class FishNamesDictionary -статические методы есть,
+//+1) class FishNamesDictionary -статические методы есть,
 //а тем более классы есть смысл делать,
 //когда этот метод вызывается в 2-х и более классах.
 //Таким образом стараются избежать дублирования кода,
@@ -571,10 +548,10 @@
 //вызывается только один раз во всем коде и
 //вполне может быть объявлен как объект в классе,
 //где используется. Т.о. статика ему не нужна.
-//2) AliveToString(), SatietyToString(), ReasonOfDeathToString()
+//+2) AliveToString(), SatietyToString(), ReasonOfDeathToString()
 //- методам нужен глагол в названии.
 //Часть этих методов, могут стать свойствами, если не придумаете глагол.
-//3) Update() - методу больше подходит название SkipTime()
+//+3) Update() - методу больше подходит название SkipTime()
 //(рекомендация, а не требование исправить).
 //4) ReadInt() если метод считывает число в определенном диапазоне,
 //то лучше его так и назвать ReadIntInRange()
