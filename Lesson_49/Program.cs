@@ -36,14 +36,22 @@
         public Aviary(List<Animal> animals) => _animals = animals;
     }
 
-    class ZooFactory
+    class AviaryFactory
     {
-        private int _minAnimalCountOnAviary;
-        private int _maxAnimalCountOnAviary;
+        private int _minAnimalCount;
+        private int _maxAnimalCount;
+        private int _animalCount;
 
-        public ZooFactory()
+        public AviaryFactory()
         {
+            _minAnimalCount = 3;
+            _maxAnimalCount = 10;
+            _animalCount = GenerateRandomNumber(_minAnimalCount, _maxAnimalCount + 1);
+        }
 
+        public Aviary CreateAviary()
+        {
+            return new Aviary(new List<Animal>());
         }
     }
 
