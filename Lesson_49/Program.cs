@@ -17,6 +17,8 @@
 
     class Zoo
     {
+        private List<Aviary> _aviaries;
+
         public void Work() { }
     }
 
@@ -29,37 +31,93 @@
 
     abstract class Animal : ISoundProvider
     {
-        private Gender _gender;
-        private Sound _sound;
+        private GenderType _gender;
 
-        public Animal(string typeName, Gender gender, Sound sound)
-        { 
+        public Animal(string typeName, GenderType gender)
+        {
             TypeName = typeName;
             _gender = gender;
-            _sound = sound;
         }
 
-        public string TypeName { get; }
+        public virtual string TypeName { get; }
+        public string Gender { get => _gender == GenderType.Male ? "мужской" : "женский"; }
 
-        public virtual void MakeSound()
-        {
-            Print($"[{TypeName}] издаёт звук: {_sound.Name}.\n");
-        }
+        public abstract void MakeSound();
+    }
 
-        public string GetGender()
+    class Giraffe : Animal
+    {
+        public Giraffe(GenderType gender) : base("Жираф", gender) { }
+
+        public override void MakeSound()
         {
-            return _gender == Gender.Male ? "мужской" : "женский";
         }
     }
 
-    class Sound
+    class Tiger : Animal
     {
-        public Sound(string name)
+        public Tiger(GenderType gender) : base("Тигр", gender)
         {
-            Name = name;
         }
 
-        public string Name { get; }
+        public override void MakeSound()
+        {
+        }
+    }
+
+    class Wolf : Animal
+    {
+        public Wolf(GenderType gender) : base("Волк", gender)
+        {
+        }
+
+        public override void MakeSound()
+        {
+        }
+    }
+
+    class Elephant : Animal
+    {
+        public Elephant(GenderType gender) : base("Слон", gender)
+        {
+        }
+
+        public override void MakeSound()
+        {
+        }
+    }
+
+    class Parrot : Animal
+    {
+        public Parrot(GenderType gender) : base("Попугай", gender)
+        {
+        }
+
+        public override void MakeSound()
+        {
+        }
+    }
+
+    class Gorrilla : Animal
+    {
+        public Gorrilla(GenderType gender) : base("Горилла", gender)
+        {
+        }
+
+        public override void MakeSound()
+        {
+        }
+    }
+
+    class Bear : Animal
+    {
+        public Bear(GenderType gender) : base("Медведь", gender)
+        {
+        }
+
+        public override void MakeSound()
+        {
+        }
     }
 
     #region Interfaces
@@ -73,7 +131,7 @@
 
     #region Enums
 
-    enum Gender
+    enum GenderType
     {
         Male,
         Female
