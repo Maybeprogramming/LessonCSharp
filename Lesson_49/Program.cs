@@ -36,9 +36,8 @@
 
     abstract class Animal : ISoundProvider
     {
-        public Animal(AnimalType animalType, GenderType genderType)
+        public Animal(GenderType genderType)
         {
-            AnimalType = animalType;
             GenderType = genderType;
         }
 
@@ -54,7 +53,7 @@
 
     class Giraffe : Animal
     {
-        public Giraffe(GenderType gender) : base("Жирафы", gender) { }
+        public Giraffe(GenderType gender) : base(gender) { }
 
         public override string Gender => GenderType == GenderType.Male ? "Жираф" : "Жирафиха";
 
@@ -71,7 +70,7 @@
     class Tiger : Animal
     {
 
-        public Tiger(GenderType gender) : base("Тигры", gender)
+        public Tiger(GenderType gender) : base(gender)
         {
         }
 
@@ -89,7 +88,7 @@
 
     class Wolf : Animal
     {
-        public Wolf(GenderType gender) : base("Волки", gender)
+        public Wolf(GenderType gender) : base( gender)
         {
         }
 
@@ -108,7 +107,7 @@
     class Elephant : Animal
     {
 
-        public Elephant(GenderType gender) : base("Слоны", gender)
+        public Elephant(GenderType gender) : base(gender)
         {
         }
         public override string Gender => GenderType == GenderType.Male ? "Слон" : "Слониха";
@@ -125,7 +124,7 @@
 
     class Parrot : Animal
     {
-        public Parrot(GenderType gender) : base("Попугаи", gender)
+        public Parrot(GenderType gender) : base(gender)
         {
         }
 
@@ -144,7 +143,7 @@
     class Gorrilla : Animal
     {
 
-        public Gorrilla(GenderType gender) : base("Гориллы", gender)
+        public Gorrilla(GenderType gender) : base( gender)
         {
         }
 
@@ -162,7 +161,7 @@
 
     class Bear : Animal
     {
-        public Bear(GenderType gender) : base("Медведь", gender)
+        public Bear(GenderType gender) : base(gender)
         {
         }
 
