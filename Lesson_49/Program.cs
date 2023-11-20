@@ -55,6 +55,21 @@
         }
     }
 
+    class AnimalFactory
+    {
+        private List<AnimalType> _animalsTypes;
+        private List<GenderType> _gendersTypes;
+
+        private AnimalType _animalType;
+
+        public AnimalFactory(AnimalType animalType)
+        {
+            _animalType = animalType;
+        }
+
+
+    }
+
     abstract class Animal : ISoundProvider
     {
         public Animal(GenderType genderType)
