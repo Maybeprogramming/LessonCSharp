@@ -10,8 +10,28 @@
         {
             Console.Title = "Зоопарк";
 
-            Zoo zoo = new Zoo();
-            zoo.Work();
+
+            for (int i = 0; i < 50; i++)
+            {
+                AnimalFactory animalFactory = new AnimalFactory(AnimalTypeName.Giraffes);
+                Giraffe giraffe = (Giraffe)animalFactory.Create();
+                Print($"{i + 1}. {giraffe.GenderToString}\n");                
+            }
+
+            PrintLine();            
+            
+            for (int i = 0; i < 50; i++)
+            {
+                AnimalFactory animalFactory = new AnimalFactory(AnimalTypeName.Tigers);
+                Tiger tiger = (Tiger)animalFactory.Create();
+                Print($"{i + 1}. {tiger.GenderToString}\n");                
+            }
+
+            PrintLine();
+
+
+            //Zoo zoo = new Zoo();
+            //zoo.Work();
         }
     }
 
@@ -144,9 +164,6 @@
         {
             int genderIndex = GenerateRandomNumber(0, _gendersTypes.Count);
             GenderType genderType = _gendersTypes[genderIndex];
-
-            Print($"{_animal.Clone(genderType).ShowInfo()}\n");
-            Task.Delay(1000).Wait();
 
             return _animal.Clone(genderType);
         }
