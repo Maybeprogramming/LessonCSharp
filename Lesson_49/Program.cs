@@ -10,13 +10,6 @@
         {
             Console.Title = "Зоопарк";
 
-            Giraffe giraffe = new Giraffe(GenderType.Male);
-            Tiger tiger = new Tiger(GenderType.Female);
-
-            Print($"{giraffe.AnimalTypeName}, {giraffe.GenderToString}\n");
-            Print($"{tiger.AnimalTypeName}, {tiger.GenderToString}\n");
-            WaitToPressKey("\n");
-
             Zoo zoo = new Zoo();
             zoo.Work();
         }
@@ -30,7 +23,7 @@
         public Zoo()
         {
             _animalTypeNames = new List<AnimalTypeName>()
-            { 
+            {
                 AnimalTypeName.Gorrillas,
                 AnimalTypeName.Giraffes,
                 AnimalTypeName.Elephants,
@@ -39,10 +32,26 @@
                 AnimalTypeName.Parrots
             };
 
+            _aviaries = new List<Aviary>();
+
             FillAviaries();
         }
 
-        public void Work() { }
+        public void Work()
+        {
+            ShowMenu();
+            WaitToPressKey();
+        }
+
+        private void ShowMenu()
+        {
+            Print($"Вам доступны следующие вальеры:");
+
+            for (int i = 0; i < _aviaries.Count; i++)
+            {
+                Print($"{i + 1}. Вальер с животными вида: [{_aviaries[i].TitleName}]");
+            }
+        }
 
         private void FillAviaries()
         {
@@ -64,15 +73,19 @@
     {
         private List<Animal> _animals;
 
-        public Aviary(List<Animal> animals) => _animals = animals;
+        public Aviary(List<Animal> animals)
+        {
+            _animals = animals;
+        }
 
-        public string TitleName { get; }
+        public string TitleName => AnimalsDictionary.TryGetAnimalTypeToString(_animals.First().AnimalTypeName);
 
         public void ShowInfo()
         {
             int animalFirstIndex = 0;
 
-            Print($"");
+            PrintLine();
+            Print($"В вальере {_animals.Count} животных вида: [{TitleName}]:\n");
 
             for (int i = 0; i < _animals.Count; i++)
             {
@@ -81,6 +94,7 @@
 
             Print($"Из вальера издаётся звук:");
             _animals[animalFirstIndex].MakeSound();
+            PrintLine();
         }
     }
 
@@ -94,6 +108,7 @@
 
         public AviaryFactory(AnimalFactory animalFactory, int minAnimalCount, int maxAnimalCount)
         {
+            _animals = new List<Animal>();
             _animalFactory = animalFactory;
             _animalCount = GenerateRandomNumber(minAnimalCount, maxAnimalCount + 1);
         }
@@ -130,6 +145,9 @@
             int genderIndex = GenerateRandomNumber(0, _gendersTypes.Count);
             GenderType genderType = _gendersTypes[genderIndex];
 
+            Print($"{_animal.Clone(genderType).ShowInfo()}\n");
+            Task.Delay(1000).Wait();
+
             return _animal.Clone(genderType);
         }
     }
@@ -142,13 +160,11 @@
         public Animal(GenderType genderType)
         {
             GenderType = genderType;
-            AnimalTypeName = AnimalsDictionary.TryGetAnimalType(this.GetType());
-            Name = AnimalsDictionary.TryGetAnimalTypeToString(AnimalTypeName);
         }
 
-        public AnimalTypeName AnimalTypeName { get; }
+        public AnimalTypeName AnimalTypeName { get => AnimalsDictionary.TryGetAnimalType(this.GetType()); }
         public GenderType GenderType { get; }
-        public string Name { get; }
+        public string Name { get => AnimalsDictionary.TryGetAnimalTypeToString(AnimalTypeName); }
         public abstract string GenderToString { get; }
 
         public abstract void MakeSound();
