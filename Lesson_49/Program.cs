@@ -118,7 +118,7 @@
                 Print($"{i + 1}. {_animals[i].ShowInfo()}\n");
             }
 
-            Print($"Из вальера издаётся звук:");
+            Print($"\nИз вальера доносятся звуки:\n");
             _animals[animalFirstIndex].MakeSound();
             PrintLine();
         }
@@ -207,7 +207,7 @@
 
         public override void MakeSound()
         {
-            Print($"Я {GenderToString}!!! Да да я оруууу с высока!\n");
+            Print($"{Name} [{GenderToString}]. Издаёт тихие мычащие звуки!!!!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -223,7 +223,7 @@
 
         public override void MakeSound()
         {
-            Print($"Я {GenderToString}!! Мууур - мяууу, Рррррр!\n");
+            Print($"{Name} [{GenderToString}]. Издаёт звуки Мууур - мяууу, Рррррр!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -243,7 +243,7 @@
 
         public override void MakeSound()
         {
-            Print($"Я {GenderToString}!!! Гаф - фав - фав!!! Ррррр!!!\n");
+            Print($"{Name} [{GenderToString}]. Издаёт звуки: Гаф - фав - фав!!! Ррррр!!!\n");
         }
     }
 
@@ -254,7 +254,7 @@
 
         public override void MakeSound()
         {
-            Print($"Я {GenderToString}!!! Трубит в свой длинный хобот!!!\n");
+            Print($"{Name} [{GenderToString}]! Трубит в свой длинный хобот!!!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -274,7 +274,7 @@
 
         public override void MakeSound()
         {
-            Print($"Я {GenderToString}!!! Поёт свою музыкальную песенку!!!\n");
+            Print($"{Name} [{GenderToString}]! Поёт свою музыкальную песенку!!!\n");
         }
     }
 
@@ -284,7 +284,7 @@
 
         public override void MakeSound()
         {
-            Print($"Я {GenderToString}!!! У - у - у, А - а -а , уух - ух - ух!!!\n");
+            Print($"{Name} [{GenderToString}]! Издаёт звуки: У - у - у, А - а -а , уух - ух - ух!!!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -300,7 +300,7 @@
         public override void MakeSound()
         {
 
-            Print($"Я {GenderToString}!!! Арррррррыыыыырррр !!!\n");
+            Print($"{Name} [{GenderToString}]! Рычит: Арррррррыыыыырррр !!!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -310,6 +310,38 @@
     }
 
     #endregion
+
+    #region Interfaces
+
+    interface ISoundProvider
+    {
+        void MakeSound();
+    }
+
+    #endregion
+
+    #region Enums
+
+    enum GenderType
+    {
+        Male,
+        Female
+    }
+
+    enum AnimalTypeName
+    {
+        Giraffes,
+        Tigers,
+        Wolves,
+        Elephants,
+        Parrots,
+        Gorrillas,
+        Bears
+    }
+
+    #endregion
+
+    #region UserUtils
 
     static class AnimalsDictionary
     {
@@ -375,38 +407,6 @@
         }
     }
 
-    #region Interfaces
-
-    interface ISoundProvider
-    {
-        void MakeSound();
-    }
-
-    #endregion
-
-    #region Enums
-
-    enum GenderType
-    {
-        Male,
-        Female
-    }
-
-    enum AnimalTypeName
-    {
-        Giraffes,
-        Tigers,
-        Wolves,
-        Elephants,
-        Parrots,
-        Gorrillas,
-        Bears
-    }
-
-    #endregion
-
-    #region UserUtils
-
     static class Randomaizer
     {
         private static readonly Random s_random;
@@ -453,8 +453,6 @@
         }
     }
 
-
-
     static class Display
     {
         public static void Print(string message, ConsoleColor consoleColor = ConsoleColor.White)
@@ -493,30 +491,6 @@
             Print(message);
             Print($"Для продолжения нажмите любую клавишу...\n");
             Console.ReadKey();
-        }
-    }
-
-    static class NamesDatabase
-    {
-        private static readonly string[] s_names;
-
-        static NamesDatabase()
-        {
-            s_names = new string[]
-            {
-                "Жирафы",
-                "Тигры",
-                "Волки",
-                "Слоны",
-                "Попугаи",
-                "Горилы",
-                "Медведи",
-            };
-        }
-
-        public static string[] GetNames()
-        {
-            return s_names;
         }
     }
 
