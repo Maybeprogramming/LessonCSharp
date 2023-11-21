@@ -3,7 +3,6 @@
     using static Randomaizer;
     using static Display;
     using static UserInput;
-    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     class Program
     {
