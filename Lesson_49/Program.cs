@@ -3,7 +3,6 @@
     using static Randomaizer;
     using static Display;
     using static UserInput;
-    using System.ComponentModel;
 
     class Program
     {
@@ -14,8 +13,8 @@
             Giraffe giraffe = new Giraffe(GenderType.Male);
             Tiger tiger = new Tiger(GenderType.Female);
 
-            Print($"{giraffe.AnimalType}, {giraffe.Gender}\n");
-            Print($"{tiger.AnimalType}, {tiger.Gender}\n");
+            Print($"{giraffe.AnimalType}, {giraffe.GenderToString}\n");
+            Print($"{tiger.AnimalType}, {tiger.GenderToString}\n");
             WaitToPressKey("\n");
 
             Zoo zoo = new Zoo();
@@ -95,13 +94,6 @@
 
             return _animal.Clone(genderType);
         }
-
-        public AnimalType TryGetAnimalType(Type animal)
-        {
-            _animals.TryGetValue(animal, out AnimalType animalType);
-
-            return animalType;
-        }
     }
 
     abstract class Animal : ISoundProvider
@@ -115,7 +107,7 @@
         public AnimalType AnimalType { get; }
         public GenderType GenderType { get; }
         public string Name { get; }
-        public abstract string Gender { get; }
+        public abstract string GenderToString { get; }
 
         public abstract void MakeSound();
 
@@ -126,10 +118,11 @@
     {
         public Giraffe(GenderType gender) : base(gender) { }
 
-        public override string Gender => GenderType == GenderType.Male ? "Жираф" : "Жирафиха";
+        public override string GenderToString => GenderType == GenderType.Male ? "Жираф" : "Жирафиха";
 
         public override void MakeSound()
         {
+            Print($"Я {GenderToString}!!! Да да я оруууу с высока!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -145,10 +138,11 @@
         {
         }
 
-        public override string Gender => GenderType == GenderType.Male ? "Тигр" : "Тигрица";
+        public override string GenderToString => GenderType == GenderType.Male ? "Тигр" : "Тигрица";
 
         public override void MakeSound()
         {
+            Print($"Я {GenderToString}!! Мууур - мяууу, Рррррр!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -163,7 +157,7 @@
         {
         }
 
-        public override string Gender => GenderType == GenderType.Male ? "Волк" : "Волчица";
+        public override string GenderToString => GenderType == GenderType.Male ? "Волк" : "Волчица";
 
         public override Animal Clone(GenderType gender)
         {
@@ -172,6 +166,7 @@
 
         public override void MakeSound()
         {
+            Print($"Я {GenderToString}!!! Гаф - фав - фав!!! Ррррр!!!\n");
         }
     }
 
@@ -181,10 +176,11 @@
         public Elephant(GenderType gender) : base(gender)
         {
         }
-        public override string Gender => GenderType == GenderType.Male ? "Слон" : "Слониха";
+        public override string GenderToString => GenderType == GenderType.Male ? "Слон" : "Слониха";
 
         public override void MakeSound()
         {
+            Print($"Я {GenderToString}!!! Трубит в свой длинный хобот!!!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -199,7 +195,7 @@
         {
         }
 
-        public override string Gender => GenderType == GenderType.Male ? "Попугай самец" : "Попугай самка";
+        public override string GenderToString => GenderType == GenderType.Male ? "Попугай самец" : "Попугай самка";
 
         public override Animal Clone(GenderType gender)
         {
@@ -208,6 +204,7 @@
 
         public override void MakeSound()
         {
+            Print($"Я {GenderToString}!!! Поёт свою музыкальную песенку!!!\n");
         }
     }
 
@@ -218,10 +215,11 @@
         {
         }
 
-        public override string Gender => GenderType == GenderType.Male ? "Самец гориллы" : "Самка гориллы";
+        public override string GenderToString => GenderType == GenderType.Male ? "Самец гориллы" : "Самка гориллы";
 
         public override void MakeSound()
         {
+            Print($"Я {GenderToString}!!! У - у - у, А - а -а , уух - ух - ух!!!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -236,10 +234,12 @@
         {
         }
 
-        public override string Gender => GenderType == GenderType.Male ? "Медведь" : "Медведица";
+        public override string GenderToString => GenderType == GenderType.Male ? "Медведь" : "Медведица";
 
         public override void MakeSound()
         {
+
+            Print($"Я {GenderToString}!!! Арррррррыыыыырррр !!!\n");
         }
 
         public override Animal Clone(GenderType gender)
