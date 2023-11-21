@@ -45,7 +45,7 @@
             int exitCommand = _aviaries.Count + 1;
             int additionalNumber = 2;
             int minInputNumber = 0;
-            int maxInputNumber = _aviaries.Count + additionalNumber
+            int maxInputNumber = _aviaries.Count + additionalNumber;
 
             while (isWork == true)
             {
