@@ -38,9 +38,26 @@
                 AnimalTypeName.Tigers,
                 AnimalTypeName.Parrots
             };
+
+            FillAviaries();
         }
 
         public void Work() { }
+
+        private void FillAviaries()
+        {
+            int minAnimalCount = 2;
+            int maxAnimalCount = 10;
+
+            for (int i = 0; i < _animalTypeNames.Count; i++)
+            {
+                AnimalFactory animalFactory = new AnimalFactory(_animalTypeNames[i]);
+                AviaryFactory aviaryFactory = new AviaryFactory(animalFactory, minAnimalCount, maxAnimalCount);
+                Aviary aviary = aviaryFactory.CreateAviary();
+
+                _aviaries.Add(aviary);
+            }
+        }
     }
 
     class Aviary
@@ -48,6 +65,8 @@
         private List<Animal> _animals;
 
         public Aviary(List<Animal> animals) => _animals = animals;
+
+        public string TitleName { get; }
 
         public void ShowInfo()
         {
@@ -65,7 +84,7 @@
         }
     }
 
-    #region Aviary and Animal Factory Method
+    #region Aviary and Animal Factory Methods
 
     class AviaryFactory
     {
@@ -103,7 +122,7 @@
                 GenderType.Female
             };
 
-            _animal = AnimalDictionary.TryGetAnimal(animalTypeName);
+            _animal = AnimalsDictionary.TryGetAnimal(animalTypeName);
         }
 
         public Animal Create()
@@ -123,8 +142,8 @@
         public Animal(GenderType genderType)
         {
             GenderType = genderType;
-            AnimalTypeName = AnimalDictionary.TryGetAnimalType(this.GetType());
-            Name = AnimalDictionary.TryGetAnimalTypeToString(AnimalTypeName);
+            AnimalTypeName = AnimalsDictionary.TryGetAnimalType(this.GetType());
+            Name = AnimalsDictionary.TryGetAnimalTypeToString(AnimalTypeName);
         }
 
         public AnimalTypeName AnimalTypeName { get; }
@@ -266,13 +285,13 @@
 
     #endregion
 
-    static class AnimalDictionary
+    static class AnimalsDictionary
     {
         private static Dictionary<Type, AnimalTypeName> s_animalsTypes;
         private static Dictionary<AnimalTypeName, string> s_animalTypesToString;
         private static Dictionary<AnimalTypeName, Animal> s_animals;
 
-        static AnimalDictionary()
+        static AnimalsDictionary()
         {
             s_animalsTypes = new Dictionary<Type, AnimalTypeName>()
             {
