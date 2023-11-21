@@ -42,9 +42,11 @@
         private int _minAnimalCount;
         private int _maxAnimalCount;
         private int _animalCount;
+        private AnimalFactory _animalFactory;
 
-        public AviaryFactory()
+        public AviaryFactory(AnimalFactory animalFactory)
         {
+            _animalFactory = animalFactory;
             _minAnimalCount = 3;
             _maxAnimalCount = 10;
             _animalCount = GenerateRandomNumber(_minAnimalCount, _maxAnimalCount + 1);
