@@ -49,11 +49,11 @@
                 Console.Clear();
                 ShowMenu();
 
-                userInput = ReadIntRange("Введите номер вальера для перехода: ", 0, _aviaries.Count + 1);
+                userInput = ReadIntRange("Введите номер вальера для перехода: ", 0, _aviaries.Count + 2);
 
                 if (userInput == exitCommand)
                 {
-                    Print($"Вы покинули зоопарк! Приходите к нам ещё!\n", ConsoleColor.Green);
+                    Print($"\nВы покинули зоопарк! Приходите к нам ещё!\n", ConsoleColor.Green);
                     isWork = false;
                     return;
                 };
@@ -76,7 +76,7 @@
                 Print($"{i + 1}. Вальер с животными вида: [{_aviaries[i].TitleName}]\n");
             }
 
-            Print($"{_aviaries.Count + 1} - Выйти из зоопарка.\n");
+            Print($"{_aviaries.Count + 1} - Выйти из зоопарка.\n", ConsoleColor.Red);
         }
 
         private void FillAviaries()
@@ -189,7 +189,7 @@
         public AnimalTypeName AnimalTypeName { get => AnimalsDictionary.TryGetAnimalType(this.GetType()); }
         public GenderType GenderType { get; }
         public string Name { get => AnimalsDictionary.TryGetAnimalTypeToString(AnimalTypeName); }
-        public abstract string GenderToString { get; }
+        public string GenderToString => GenderType == GenderType.Male ? "Самец" : "Самка";
 
         public abstract void MakeSound();
 
@@ -197,15 +197,13 @@
 
         public string ShowInfo()
         {
-            return $"{Name}";
+            return $"{Name} [{GenderToString}]";
         }
     }
 
     class Giraffe : Animal
     {
         public Giraffe(GenderType gender) : base(gender) { }
-
-        public override string GenderToString => GenderType == GenderType.Male ? "Жираф" : "Жирафиха";
 
         public override void MakeSound()
         {
@@ -223,8 +221,6 @@
 
         public Tiger(GenderType gender) : base(gender) { }
 
-        public override string GenderToString => GenderType == GenderType.Male ? "Тигр" : "Тигрица";
-
         public override void MakeSound()
         {
             Print($"Я {GenderToString}!! Мууур - мяууу, Рррррр!\n");
@@ -239,8 +235,6 @@
     class Wolf : Animal
     {
         public Wolf(GenderType gender) : base(gender) { }
-
-        public override string GenderToString => GenderType == GenderType.Male ? "Волк" : "Волчица";
 
         public override Animal Clone(GenderType gender)
         {
@@ -258,8 +252,6 @@
 
         public Elephant(GenderType gender) : base(gender) { }
 
-        public override string GenderToString => GenderType == GenderType.Male ? "Слон" : "Слониха";
-
         public override void MakeSound()
         {
             Print($"Я {GenderToString}!!! Трубит в свой длинный хобот!!!\n");
@@ -274,8 +266,6 @@
     class Parrot : Animal
     {
         public Parrot(GenderType gender) : base(gender) { }
-
-        public override string GenderToString => GenderType == GenderType.Male ? "Попугай самец" : "Попугай самка";
 
         public override Animal Clone(GenderType gender)
         {
@@ -292,8 +282,6 @@
     {
         public Gorrilla(GenderType gender) : base(gender) { }
 
-        public override string GenderToString => GenderType == GenderType.Male ? "Самец гориллы" : "Самка гориллы";
-
         public override void MakeSound()
         {
             Print($"Я {GenderToString}!!! У - у - у, А - а -а , уух - ух - ух!!!\n");
@@ -308,8 +296,6 @@
     class Bear : Animal
     {
         public Bear(GenderType gender) : base(gender) { }
-
-        public override string GenderToString => GenderType == GenderType.Male ? "Медведь" : "Медведица";
 
         public override void MakeSound()
         {
