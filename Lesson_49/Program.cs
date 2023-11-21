@@ -3,6 +3,7 @@
     using static Randomaizer;
     using static Display;
     using static UserInput;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     class Program
     {
@@ -43,13 +44,16 @@
             int userInput;
             bool isWork = true;
             int exitCommand = _aviaries.Count + 1;
+            int additionalNumber = 2;
+            int minInputNumber = 0;
+            int maxInputNumber = _aviaries.Count + additionalNumber
 
             while (isWork == true)
             {
                 Console.Clear();
                 ShowMenu();
 
-                userInput = ReadIntRange("Введите номер вальера для перехода: ", 0, _aviaries.Count + 2);
+                userInput = ReadIntRange("Введите номер вальера для перехода: ", minInputNumber, maxInputNumber);
 
                 if (userInput == exitCommand)
                 {
@@ -63,7 +67,7 @@
                     _aviaries[userInput - 1].ShowInfo();
                 }
 
-                WaitToPressKey();
+                WaitToPressKey("\n");
             }
         }
 
@@ -81,8 +85,8 @@
 
         private void FillAviaries()
         {
-            int minAnimalCount = 2;
-            int maxAnimalCount = 10;
+            int minAnimalCount = 3;
+            int maxAnimalCount = 8;
 
             for (int i = 0; i < _animalTypeNames.Count; i++)
             {
@@ -99,10 +103,7 @@
     {
         private List<Animal> _animals;
 
-        public Aviary(List<Animal> animals)
-        {
-            _animals = animals;
-        }
+        public Aviary(List<Animal> animals) => _animals = animals;
 
         public string TitleName => AnimalsDictionary.TryGetAnimalTypeToString(_animals.First().AnimalTypeName);
 
@@ -188,7 +189,7 @@
 
         public AnimalTypeName AnimalTypeName { get => AnimalsDictionary.TryGetAnimalType(this.GetType()); }
         public GenderType GenderType { get; }
-        public string Name { get => AnimalsDictionary.TryGetAnimalTypeToString(AnimalTypeName); }
+        public string TypeName { get => AnimalsDictionary.TryGetAnimalTypeToString(AnimalTypeName); }
         public string GenderToString => GenderType == GenderType.Male ? "Самец" : "Самка";
 
         public abstract void MakeSound();
@@ -197,7 +198,7 @@
 
         public string ShowInfo()
         {
-            return $"{Name} [{GenderToString}]";
+            return $"{TypeName} [{GenderToString}]";
         }
     }
 
@@ -207,7 +208,7 @@
 
         public override void MakeSound()
         {
-            Print($"{Name} [{GenderToString}]. Издаёт тихие мычащие звуки!!!!\n");
+            Print($"{TypeName} [{GenderToString}]. Издаёт тихие мычащие звуки!!!!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -223,7 +224,7 @@
 
         public override void MakeSound()
         {
-            Print($"{Name} [{GenderToString}]. Издаёт звуки Мууур - мяууу, Рррррр!\n");
+            Print($"{TypeName} [{GenderToString}]. Издаёт звуки Мууур - мяууу, Рррррр!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -243,7 +244,7 @@
 
         public override void MakeSound()
         {
-            Print($"{Name} [{GenderToString}]. Издаёт звуки: Гаф - фав - фав!!! Ррррр!!!\n");
+            Print($"{TypeName} [{GenderToString}]. Издаёт звуки: Гаф - фав - фав!!! Ррррр!!!\n");
         }
     }
 
@@ -254,7 +255,7 @@
 
         public override void MakeSound()
         {
-            Print($"{Name} [{GenderToString}]! Трубит в свой длинный хобот!!!\n");
+            Print($"{TypeName} [{GenderToString}]! Трубит в свой длинный хобот!!!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -274,7 +275,7 @@
 
         public override void MakeSound()
         {
-            Print($"{Name} [{GenderToString}]! Поёт свою музыкальную песенку!!!\n");
+            Print($"{TypeName} [{GenderToString}]! Поёт свою музыкальную песенку!!!\n");
         }
     }
 
@@ -284,7 +285,7 @@
 
         public override void MakeSound()
         {
-            Print($"{Name} [{GenderToString}]! Издаёт звуки: У - у - у, А - а -а , уух - ух - ух!!!\n");
+            Print($"{TypeName} [{GenderToString}]! Издаёт звуки: У - у - у, А - а -а , уух - ух - ух!!!\n");
         }
 
         public override Animal Clone(GenderType gender)
@@ -300,7 +301,7 @@
         public override void MakeSound()
         {
 
-            Print($"{Name} [{GenderToString}]! Рычит: Арррррррыыыыырррр !!!\n");
+            Print($"{TypeName} [{GenderToString}]! Рычит: Арррррррыыыыырррр !!!\n");
         }
 
         public override Animal Clone(GenderType gender)
