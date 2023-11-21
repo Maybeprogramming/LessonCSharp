@@ -10,28 +10,8 @@
         {
             Console.Title = "Зоопарк";
 
-
-            for (int i = 0; i < 50; i++)
-            {
-                AnimalFactory animalFactory = new AnimalFactory(AnimalTypeName.Giraffes);
-                Giraffe giraffe = (Giraffe)animalFactory.Create();
-                Print($"{i + 1}. {giraffe.GenderToString}\n");                
-            }
-
-            PrintLine();            
-            
-            for (int i = 0; i < 50; i++)
-            {
-                AnimalFactory animalFactory = new AnimalFactory(AnimalTypeName.Tigers);
-                Tiger tiger = (Tiger)animalFactory.Create();
-                Print($"{i + 1}. {tiger.GenderToString}\n");                
-            }
-
-            PrintLine();
-
-
-            //Zoo zoo = new Zoo();
-            //zoo.Work();
+            Zoo zoo = new Zoo();
+            zoo.Work();
         }
     }
 
@@ -49,7 +29,8 @@
                 AnimalTypeName.Elephants,
                 AnimalTypeName.Bears,
                 AnimalTypeName.Tigers,
-                AnimalTypeName.Parrots
+                AnimalTypeName.Parrots,
+                AnimalTypeName.Wolves
             };
 
             _aviaries = new List<Aviary>();
@@ -59,18 +40,43 @@
 
         public void Work()
         {
-            ShowMenu();
-            WaitToPressKey();
+            int userInput;
+            bool isWork = true;
+            int exitCommand = _aviaries.Count + 1;
+
+            while (isWork == true)
+            {
+                Console.Clear();
+                ShowMenu();
+
+                userInput = ReadIntRange("Введите номер вальера для перехода: ", 0, _aviaries.Count + 1);
+
+                if (userInput == exitCommand)
+                {
+                    Print($"Вы покинули зоопарк! Приходите к нам ещё!\n", ConsoleColor.Green);
+                    isWork = false;
+                    return;
+                };
+
+                if (userInput > 0 && userInput <= _aviaries.Count)
+                {
+                    _aviaries[userInput - 1].ShowInfo();
+                }
+
+                WaitToPressKey();
+            }
         }
 
         private void ShowMenu()
         {
-            Print($"Вам доступны следующие вальеры:");
+            Print($"Вам доступны следующие вальеры:\n", ConsoleColor.Green);
 
             for (int i = 0; i < _aviaries.Count; i++)
             {
-                Print($"{i + 1}. Вальер с животными вида: [{_aviaries[i].TitleName}]");
+                Print($"{i + 1}. Вальер с животными вида: [{_aviaries[i].TitleName}]\n");
             }
+
+            Print($"{_aviaries.Count + 1} - Выйти из зоопарка.\n");
         }
 
         private void FillAviaries()
@@ -162,7 +168,7 @@
 
         public Animal Create()
         {
-            
+
             int genderIndex = GenerateRandomNumber(0, _gendersTypes.Count);
             GenderType genderType = _gendersTypes[genderIndex];
 
@@ -334,7 +340,8 @@
                 {typeof(Wolf), AnimalTypeName.Wolves },
                 {typeof(Elephant), AnimalTypeName.Elephants },
                 {typeof(Parrot), AnimalTypeName.Parrots },
-                {typeof(Bear), AnimalTypeName.Bears }
+                {typeof(Bear), AnimalTypeName.Bears },
+                {typeof(Gorrilla), AnimalTypeName.Gorrillas }
             };
 
             s_animalTypesToString = new Dictionary<AnimalTypeName, string>()
@@ -344,7 +351,8 @@
                 {AnimalTypeName.Gorrillas, "Горилла"},
                 {AnimalTypeName.Elephants, "Слон"},
                 {AnimalTypeName.Parrots, "Попугай"},
-                {AnimalTypeName.Wolves, "Волк"}
+                {AnimalTypeName.Wolves, "Волк"},
+                {AnimalTypeName.Tigers, "Тигр"}
             };
 
             s_animals = new Dictionary<AnimalTypeName, Animal>()
@@ -354,7 +362,8 @@
                 {AnimalTypeName.Bears, new Bear(GenderType.Male)},
                 {AnimalTypeName.Elephants, new Elephant(GenderType.Male)},
                 {AnimalTypeName.Parrots, new Parrot(GenderType.Male)},
-                {AnimalTypeName.Wolves, new Wolf(GenderType.Male)}
+                {AnimalTypeName.Wolves, new Wolf(GenderType.Male)},
+                {AnimalTypeName.Tigers, new Tiger(GenderType.Male)}
             };
         }
 
@@ -479,7 +488,7 @@
 
     static class UserInput
     {
-        public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
+        public static int ReadIntRange(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
         {
             int result;
 
