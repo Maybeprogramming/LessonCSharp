@@ -13,8 +13,8 @@
             Giraffe giraffe = new Giraffe(GenderType.Male);
             Tiger tiger = new Tiger(GenderType.Female);
 
-            Print($"{giraffe.AnimalType}, {giraffe.GenderToString}\n");
-            Print($"{tiger.AnimalType}, {tiger.GenderToString}\n");
+            Print($"{giraffe.AnimalTypeName}, {giraffe.GenderToString}\n");
+            Print($"{tiger.AnimalTypeName}, {tiger.GenderToString}\n");
             WaitToPressKey("\n");
 
             Zoo zoo = new Zoo();
@@ -25,6 +25,20 @@
     class Zoo
     {
         private List<Aviary> _aviaries;
+        private List<AnimalTypeName> _animalTypeNames;
+
+        public Zoo()
+        {
+            _animalTypeNames = new List<AnimalTypeName>()
+            { 
+                AnimalTypeName.Gorrillas,
+                AnimalTypeName.Giraffes,
+                AnimalTypeName.Elephants,
+                AnimalTypeName.Bears,
+                AnimalTypeName.Tigers,
+                AnimalTypeName.Parrots
+            };
+        }
 
         public void Work() { }
     }
@@ -34,26 +48,45 @@
         private List<Animal> _animals;
 
         public Aviary(List<Animal> animals) => _animals = animals;
+
+        public void ShowInfo()
+        {
+            int animalFirstIndex = 0;
+
+            Print($"");
+
+            for (int i = 0; i < _animals.Count; i++)
+            {
+                Print($"{i + 1}. {_animals[i].ShowInfo()}\n");
+            }
+
+            Print($"Из вальера издаётся звук:");
+            _animals[animalFirstIndex].MakeSound();
+        }
     }
+
+    #region Aviary and Animal Factory Method
 
     class AviaryFactory
     {
-        private int _minAnimalCount;
-        private int _maxAnimalCount;
         private int _animalCount;
         private AnimalFactory _animalFactory;
+        private List<Animal> _animals;
 
-        public AviaryFactory(AnimalFactory animalFactory)
+        public AviaryFactory(AnimalFactory animalFactory, int minAnimalCount, int maxAnimalCount)
         {
             _animalFactory = animalFactory;
-            _minAnimalCount = 3;
-            _maxAnimalCount = 10;
-            _animalCount = GenerateRandomNumber(_minAnimalCount, _maxAnimalCount + 1);
+            _animalCount = GenerateRandomNumber(minAnimalCount, maxAnimalCount + 1);
         }
 
         public Aviary CreateAviary()
         {
-            return new Aviary(new List<Animal>());
+            for (int i = 0; i < _animalCount; i++)
+            {
+                _animals.Add(_animalFactory.Create());
+            }
+
+            return new Aviary(new List<Animal>(_animals));
         }
     }
 
@@ -61,10 +94,8 @@
     {
         private List<GenderType> _gendersTypes;
         private Animal _animal;
-        private Dictionary<AnimalType, Animal> _animals;
-        private GenderType _gender;
 
-        public AnimalFactory(AnimalType animalType)
+        public AnimalFactory(AnimalTypeName animalTypeName)
         {
             _gendersTypes = new List<GenderType>()
             {
@@ -72,19 +103,7 @@
                 GenderType.Female
             };
 
-            _gender = GenderType.Male;
-
-            _animals = new Dictionary<AnimalType, Animal>()
-            {
-                {AnimalType.Giraffes, new Giraffe(_gender)},
-                {AnimalType.Gorrillas, new Gorrilla(_gender)},
-                {AnimalType.Bears, new Bear(_gender)},
-                {AnimalType.Elephants, new Elephant(_gender)},
-                {AnimalType.Parrots, new Parrot(_gender)},
-                {AnimalType.Wolves, new Wolf(_gender)}
-            };
-
-            _animals.TryGetValue(animalType, out _animal);
+            _animal = AnimalDictionary.TryGetAnimal(animalTypeName);
         }
 
         public Animal Create()
@@ -96,15 +115,19 @@
         }
     }
 
+    #endregion
+
+    #region Animals classes
     abstract class Animal : ISoundProvider
     {
         public Animal(GenderType genderType)
         {
             GenderType = genderType;
-            AnimalType = AnimalDictionary.TryGetAnimalType(this.GetType());
+            AnimalTypeName = AnimalDictionary.TryGetAnimalType(this.GetType());
+            Name = AnimalDictionary.TryGetAnimalTypeToString(AnimalTypeName);
         }
 
-        public AnimalType AnimalType { get; }
+        public AnimalTypeName AnimalTypeName { get; }
         public GenderType GenderType { get; }
         public string Name { get; }
         public abstract string GenderToString { get; }
@@ -112,6 +135,11 @@
         public abstract void MakeSound();
 
         public abstract Animal Clone(GenderType gender);
+
+        public string ShowInfo()
+        {
+            return $"{Name}";
+        }
     }
 
     class Giraffe : Animal
@@ -134,9 +162,7 @@
     class Tiger : Animal
     {
 
-        public Tiger(GenderType gender) : base(gender)
-        {
-        }
+        public Tiger(GenderType gender) : base(gender) { }
 
         public override string GenderToString => GenderType == GenderType.Male ? "Тигр" : "Тигрица";
 
@@ -153,9 +179,7 @@
 
     class Wolf : Animal
     {
-        public Wolf(GenderType gender) : base(gender)
-        {
-        }
+        public Wolf(GenderType gender) : base(gender) { }
 
         public override string GenderToString => GenderType == GenderType.Male ? "Волк" : "Волчица";
 
@@ -173,9 +197,8 @@
     class Elephant : Animal
     {
 
-        public Elephant(GenderType gender) : base(gender)
-        {
-        }
+        public Elephant(GenderType gender) : base(gender) { }
+
         public override string GenderToString => GenderType == GenderType.Male ? "Слон" : "Слониха";
 
         public override void MakeSound()
@@ -191,9 +214,7 @@
 
     class Parrot : Animal
     {
-        public Parrot(GenderType gender) : base(gender)
-        {
-        }
+        public Parrot(GenderType gender) : base(gender) { }
 
         public override string GenderToString => GenderType == GenderType.Male ? "Попугай самец" : "Попугай самка";
 
@@ -210,10 +231,7 @@
 
     class Gorrilla : Animal
     {
-
-        public Gorrilla(GenderType gender) : base(gender)
-        {
-        }
+        public Gorrilla(GenderType gender) : base(gender) { }
 
         public override string GenderToString => GenderType == GenderType.Male ? "Самец гориллы" : "Самка гориллы";
 
@@ -230,9 +248,7 @@
 
     class Bear : Animal
     {
-        public Bear(GenderType gender) : base(gender)
-        {
-        }
+        public Bear(GenderType gender) : base(gender) { }
 
         public override string GenderToString => GenderType == GenderType.Male ? "Медведь" : "Медведица";
 
@@ -248,28 +264,66 @@
         }
     }
 
+    #endregion
+
     static class AnimalDictionary
     {
-        private static Dictionary<Type, AnimalType> s_animalsTypes;
+        private static Dictionary<Type, AnimalTypeName> s_animalsTypes;
+        private static Dictionary<AnimalTypeName, string> s_animalTypesToString;
+        private static Dictionary<AnimalTypeName, Animal> s_animals;
 
         static AnimalDictionary()
         {
-            s_animalsTypes = new Dictionary<Type, AnimalType>()
+            s_animalsTypes = new Dictionary<Type, AnimalTypeName>()
             {
-                {typeof(Giraffe), AnimalType.Giraffes},
-                {typeof(Tiger), AnimalType.Tigers},
-                {typeof(Wolf), AnimalType.Wolves },
-                {typeof(Elephant), AnimalType.Elephants },
-                {typeof(Parrot), AnimalType.Parrots },
-                {typeof(Bear), AnimalType.Bears }
+                {typeof(Giraffe), AnimalTypeName.Giraffes},
+                {typeof(Tiger), AnimalTypeName.Tigers},
+                {typeof(Wolf), AnimalTypeName.Wolves },
+                {typeof(Elephant), AnimalTypeName.Elephants },
+                {typeof(Parrot), AnimalTypeName.Parrots },
+                {typeof(Bear), AnimalTypeName.Bears }
+            };
+
+            s_animalTypesToString = new Dictionary<AnimalTypeName, string>()
+            {
+                {AnimalTypeName.Giraffes, "Жираф"},
+                {AnimalTypeName.Bears, "Медведь"},
+                {AnimalTypeName.Gorrillas, "Горилла"},
+                {AnimalTypeName.Elephants, "Слон"},
+                {AnimalTypeName.Parrots, "Попугай"},
+                {AnimalTypeName.Wolves, "Волк"}
+            };
+
+            s_animals = new Dictionary<AnimalTypeName, Animal>()
+            {
+                {AnimalTypeName.Giraffes, new Giraffe(GenderType.Male)},
+                {AnimalTypeName.Gorrillas, new Gorrilla(GenderType.Male)},
+                {AnimalTypeName.Bears, new Bear(GenderType.Male)},
+                {AnimalTypeName.Elephants, new Elephant(GenderType.Male)},
+                {AnimalTypeName.Parrots, new Parrot(GenderType.Male)},
+                {AnimalTypeName.Wolves, new Wolf(GenderType.Male)}
             };
         }
 
-        public static AnimalType TryGetAnimalType(Type animal)
+        public static AnimalTypeName TryGetAnimalType(Type animal)
         {
-            s_animalsTypes.TryGetValue(animal, out AnimalType animalType);
+            s_animalsTypes.TryGetValue(animal, out AnimalTypeName animalType);
 
             return animalType;
+        }
+
+        public static string TryGetAnimalTypeToString(AnimalTypeName animalTypeName)
+        {
+            s_animalTypesToString.TryGetValue(animalTypeName, out string animalTypeNameToString);
+
+            return animalTypeNameToString;
+        }
+
+        public static Animal TryGetAnimal(AnimalTypeName animalTypeName)
+        {
+            s_animals.TryGetValue(animalTypeName, out Animal animal);
+
+            return animal;
         }
     }
 
@@ -290,7 +344,7 @@
         Female
     }
 
-    enum AnimalType
+    enum AnimalTypeName
     {
         Giraffes,
         Tigers,
