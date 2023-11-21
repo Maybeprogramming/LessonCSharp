@@ -3,6 +3,7 @@
     using static Randomaizer;
     using static Display;
     using static UserInput;
+    using System.ComponentModel;
 
     class Program
     {
@@ -57,14 +58,47 @@
 
     class AnimalFactory
     {
-        private List<AnimalType> _animalsTypes;
         private List<GenderType> _gendersTypes;
-
-        private AnimalType _animalType;
+        private Animal _animal;
+        private Dictionary<AnimalType, Animal> _animals;
+        private GenderType _gender;
 
         public AnimalFactory(AnimalType animalType)
         {
-            _animalType = animalType;
+            _gendersTypes = new List<GenderType>()
+            {
+                GenderType.Male,
+                GenderType.Female
+            };
+
+            _gender = GenderType.Male;
+
+            _animals = new Dictionary<AnimalType, Animal>()
+            {
+                {AnimalType.Giraffes, new Giraffe(_gender)},
+                {AnimalType.Gorrillas, new Gorrilla(_gender)},
+                {AnimalType.Bears, new Bear(_gender)},
+                {AnimalType.Elephants, new Elephant(_gender)},
+                {AnimalType.Parrots, new Parrot(_gender)},
+                {AnimalType.Wolves, new Wolf(_gender)}
+            };
+
+            _animals.TryGetValue(animalType, out _animal);
+        }
+
+        public Animal Create()
+        {
+            int genderIndex = GenerateRandomNumber(0, _gendersTypes.Count);
+            GenderType genderType = _gendersTypes[genderIndex];
+
+            return _animal.Clone(genderType);
+        }
+
+        public AnimalType TryGetAnimalType(Type animal)
+        {
+            _animals.TryGetValue(animal, out AnimalType animalType);
+
+            return animalType;
         }
     }
 
