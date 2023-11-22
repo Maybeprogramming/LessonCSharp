@@ -11,6 +11,7 @@
         }
     }
 
+    //Автосервис
     class CarService
     {
 
@@ -26,12 +27,20 @@
 
     }
 
-    class Stock
+    //склад
+    class PartsWarhouse
     {
 
     }
 
+    //деталь
     class Detail
+    {
+        public string Name { get; }
+        public bool IsBroken { get; }
+    }
+
+    class DetailsDictionary
     {
 
     }
