@@ -86,12 +86,12 @@
         {
             int minAnimalCount = 3;
             int maxAnimalCount = 8;
+            AviaryFactory aviaryFactory = new AviaryFactory(minAnimalCount, maxAnimalCount);
 
             for (int i = 0; i < _animalTypeNames.Count; i++)
             {
                 AnimalFactory animalFactory = new AnimalFactory(_animalTypeNames[i]);
-                AviaryFactory aviaryFactory = new AviaryFactory(animalFactory, minAnimalCount, maxAnimalCount);
-                Aviary aviary = aviaryFactory.CreateAviary();
+                Aviary aviary = aviaryFactory.CreateAviary(animalFactory);
 
                 _aviaries.Add(aviary);
             }
@@ -129,21 +129,26 @@
     class AviaryFactory
     {
         private int _animalCount;
+        private int _minAnimalCount;
+        private int _maxAnimalCount;
         private AnimalFactory _animalFactory;
         private List<Animal> _animals;
 
-        public AviaryFactory(AnimalFactory animalFactory, int minAnimalCount, int maxAnimalCount)
+        public AviaryFactory(int minAnimalCount, int maxAnimalCount)
         {
             _animals = new List<Animal>();
-            _animalFactory = animalFactory;
-            _animalCount = GenerateRandomNumber(minAnimalCount, maxAnimalCount + 1);
+            _minAnimalCount = minAnimalCount;
+            _maxAnimalCount = maxAnimalCount;            
         }
 
-        public Aviary CreateAviary()
+        public Aviary CreateAviary(AnimalFactory animalFactory)
         {
+            _animals.Clear();
+            _animalCount = GenerateRandomNumber(_minAnimalCount, _maxAnimalCount + 1);
+
             for (int i = 0; i < _animalCount; i++)
             {
-                _animals.Add(_animalFactory.Create());
+                _animals.Add(animalFactory.Create());
             }
 
             return new Aviary(new List<Animal>(_animals));
