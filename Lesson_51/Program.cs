@@ -46,7 +46,7 @@
             return new List<Criminal>();
         }
 
-        private Criminal CreateCriminal()
+        public Criminal CreateCriminal()
         {
             return new Criminal("", false, 180, 60, "Якут");
         }
