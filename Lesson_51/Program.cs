@@ -1,10 +1,28 @@
 ﻿namespace Lesson_51
 {
-    internal class Program
+    class Program
     {
         static void Main()
         {
         }
+    }
+
+    class Criminal
+    {
+        public Criminal(string name, bool isImprisoned, int height, int weight, string nationaly)
+        {
+            Name = name;
+            IsImprisoned = isImprisoned;
+            Height = height;
+            Weight = weight;
+            Nationaly = nationaly;
+        }
+
+        public string Name { get; }
+        public bool IsImprisoned { get; }
+        public int Height { get; }
+        public int Weight { get; }
+        public string Nationaly { get; }
     }
 }
 
