@@ -7,6 +7,51 @@
         }
     }
 
+    class DetectiveOffice
+    {
+        private List<Criminal> _criminals;
+
+        public DetectiveOffice()
+        {
+            _criminals= new List<Criminal>() 
+            {
+                new Criminal("", false, 180, 60, "Русский"),
+                new Criminal("", false, 180, 60, "Русский"),
+                new Criminal("", false, 180, 60, "Дагестанец"),
+                new Criminal("", false, 180, 60, "Дагестанец"),
+                new Criminal("", false, 180, 60, "Азейбарджанец"),
+                new Criminal("", false, 180, 60, "Азейбарджанец"),
+                new Criminal("", false, 180, 60, "Татарин"),
+                new Criminal("", false, 180, 60, "Татарин"),
+                new Criminal("", false, 180, 60, "Узбек"),
+                new Criminal("", false, 180, 60, "Узбек"),
+                new Criminal("", false, 180, 60, "Турок"),
+                new Criminal("", false, 180, 60, "Турок"),
+                new Criminal("", false, 180, 60, "Француз"),
+                new Criminal("", false, 180, 60, "Француз"),
+                new Criminal("", false, 180, 60, "Белорус"),
+                new Criminal("", false, 180, 60, "Белорус"),
+                new Criminal("", false, 180, 60, "Поляк"),
+                new Criminal("", false, 180, 60, "Поляк"),
+                new Criminal("", false, 180, 60, "Якут"),
+                new Criminal("", false, 180, 60, "Якут"),
+            };
+        }
+    }
+
+    class CrimanalFactory
+    {
+        public List<Criminal> CreateSomeCriminals(int criminalsCount)
+        {
+            return new List<Criminal>();
+        }
+
+        private Criminal CreateCriminal()
+        {
+            return new Criminal("", false, 180, 60, "Якут");
+        }
+    }
+
     class Criminal
     {
         public Criminal(string name, bool isImprisoned, int height, int weight, string nationaly)
@@ -20,9 +65,15 @@
 
         public string Name { get; }
         public bool IsImprisoned { get; }
+        public string IsImprisonedToString { get => IsImprisoned == true ? "да": "нет"; }
         public int Height { get; }
         public int Weight { get; }
         public string Nationaly { get; }
+
+        public string ShowInfo()
+        {
+            return $"{Name}. Рост [{Height}], Вес [{Weight}], Национальность: [{Nationaly}]. Заключение под стражу: [{IsImprisonedToString}].";
+        }
     }
 }
 
