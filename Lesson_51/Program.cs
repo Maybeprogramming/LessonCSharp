@@ -34,7 +34,7 @@
                 new Criminal("Анджей Любанский", false, 180, 60, "Поляк"),
                 new Criminal("Бартоломей Невядомский", false, 180, 60, "Поляк"),
                 new Criminal("Айан Галев", false, 180, 60, "Якут"),
-                new Criminal("Дохсун Жданов", false, 180, 60, "Якут"),
+                new Criminal("Дохсун Жданов", false, 180, 60, "Якут")
             };
         }
     }
@@ -72,7 +72,7 @@
 
         public string ShowInfo()
         {
-            return $"{Name}. Рост [{Height}], Вес [{Weight}], Национальность: [{Nationaly}]. Заключение под стражу: [{IsImprisonedToString}].";
+            return $"{Name}. Рост [{Height}], Вес [{Weight}], Национальность: [{Nationaly}]. Заключение под стражей: [{IsImprisonedToString}].";
         }
     }
 }
