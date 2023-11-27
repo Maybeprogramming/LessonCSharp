@@ -46,8 +46,6 @@ namespace Lesson_51
 
         public List<Criminal> TryGetCriminals(string[] nationaly, bool isImprisoned, int heigth, int weigth)
         {
-
-
             return new List<Criminal>(_criminals.Where(crimainal => crimainal.Height == heigth &&
                                                                     crimainal.Weight == weigth &&
                                                                     (crimainal.Nationaly.Equals(nationaly[0]) || crimainal.Nationaly.Equals(nationaly[1])) &&
