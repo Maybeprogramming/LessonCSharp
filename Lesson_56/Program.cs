@@ -7,6 +7,7 @@
     {
         static void Main()
         {
+            Console.Title = "Отчет о вооружении";
         }
     }
 
