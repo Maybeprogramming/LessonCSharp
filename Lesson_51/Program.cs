@@ -8,11 +8,12 @@
         static void Main()
         {
             Console.Title = "Поиск преступника";
+            Console.WindowWidth = 120;
 
             DetectiveOffice detectiveOffice = new DetectiveOffice();
             detectiveOffice.Work();
 
-            Console.ReadKey();
+            WaitToPressKey("Работа программы завершена.\n");
         }
     }
 
@@ -24,26 +25,33 @@
         {
             _criminals = new List<Criminal>()
             {
-                new Criminal("Алексей Соколов", false, 170, 60, "Русский"),
-                new Criminal("Евгений Иванов", true, 170, 60, "Русский"),
-                new Criminal("Магомед Долганов", false, 170, 60, "Дагестанец"),
-                new Criminal("Рамзан Чимиков", false, 180, 60, "Дагестанец"),
-                new Criminal("Узун Абдула", false, 180, 60, "Азейбарджанец"),
-                new Criminal("Келач Рашид", false, 180, 60, "Азейбарджанец"),
+                new Criminal("Алексей Соколов", false, 170, 65, "Русский"),
+                new Criminal("Евгений Иванов", true, 170, 65, "Русский"),
+                new Criminal("Александр Милохин", false, 170, 70, "Русский"),
+                new Criminal("Петр Волков", false, 170, 70, "Русский"),
+                new Criminal("Михаил Швецов", false, 180, 60, "Русский"),
+                new Criminal("Павел Корягин", false, 180, 95, "Русский"),
+                new Criminal("Сергей Жуков", true, 180, 95, "Русский"),
+                new Criminal("Олег Простов", false, 170, 60, "Русский"),
+                new Criminal("Валерий Михаленков", false, 170, 60, "Русский"),
                 new Criminal("Ибрагим Насыбуллин", false, 185, 60, "Татарин"),
                 new Criminal("Казим Замалиев", false, 185, 60, "Татарин"),
-                new Criminal("Эльнар Атаев", false, 185, 60, "Узбек"),
-                new Criminal("Багымбай Бердиев", false, 160, 60, "Узбек"),
+                new Criminal("Айан Галев", false, 175, 60, "Татарин"),
+                new Criminal("Дохсун Жданов", true, 160, 60, "Татарин"),
                 new Criminal("Заман Гаттаулин", false, 160, 60, "Татарин"),
                 new Criminal("Ильдар Касимов", false, 160, 60, "Татарин"),
+                new Criminal("Келач Рашид", false, 180, 60, "Азейбарджанец"),
+                new Criminal("Узун Абдула", false, 180, 60, "Азейбарджанец"),
+                new Criminal("Рамзан Чимиков", false, 180, 60, "Дагестанец"),
+                new Criminal("Магомед Долганов", false, 170, 60, "Дагестанец"),
+                new Criminal("Эльнар Атаев", false, 185, 60, "Узбек"),
+                new Criminal("Багымбай Бердиев", false, 160, 60, "Узбек"),
                 new Criminal("Армель Бюжо", false, 175, 60, "Француз"),
                 new Criminal("Гастон Дебюсси", false, 175, 60, "Француз"),
                 new Criminal("Микола Радчук", false, 175, 60, "Белорус"),
                 new Criminal("Тимур Савич", false, 170, 60, "Белорус"),
                 new Criminal("Анджей Любанский", false, 180, 60, "Поляк"),
                 new Criminal("Бартоломей Невядомский", false, 185, 60, "Поляк"),
-                new Criminal("Айан Галев", false, 175, 60, "Татарин"),
-                new Criminal("Дохсун Жданов", false, 160, 60, "Татарин")
             };
         }
 
@@ -65,10 +73,10 @@
             int userInput;
 
             string titleMenu = "Список доступных команд:\n";
-            string menu = $"{FindCriminalsByParametrsCommand} - Найти преступника\n" +
+            string menu = $"{FindCriminalsByParametrsCommand} - Найти преступника по параметрам\n" +
                           $"{ShowAllCrimanalsInfoCommand} - Показать всех преступников\n" +
                           $"{ExitCommand} - Выйти из программы.\n";
-            string requestMessage = "Введите номер команды:";
+            string requestMessage = "Введите номер команды: ";
 
             while (isWork == true)
             {
@@ -86,7 +94,7 @@
                         break;
 
                     case ShowAllCrimanalsInfoCommand:
-                        ShowCriminalsInfo("Список всех преступников в базе:\n", _criminals);
+                        ShowCriminalsInfo("\nСписок всех преступников в базе:\n", _criminals);
                         break;
 
                     case ExitCommand:
@@ -97,10 +105,8 @@
                         break;
                 }
 
-                WaitToPressKey();
+                WaitToPressKey("\n");
             }
-
-            WaitToPressKey("Работа программы завершена.\n");
         }
 
         private void FindCrimrnalsByParametrs()
@@ -120,7 +126,13 @@
 
             criminals = TryGetCriminals(height, weight, nationaly);
 
-            ShowCriminalsInfo("Список найденных преступников по запросу:\n", criminals);
+            if(criminals.Count == 0)
+            {
+                Print($"\nПо запросу ничего не найдено!!!\n", ConsoleColor.Red);
+                return;
+            }
+
+            ShowCriminalsInfo("\nСписок найденных преступников по запросу:\n", criminals);
         }
 
         private void ShowCriminalsInfo(string message, List<Criminal> criminals)
@@ -154,7 +166,7 @@
 
         public string ShowInfo()
         {
-            return $"{Name}. Рост [{Height}] см, Вес [{Weight}] кг, Национальность: [{Nationaly}]. Заключение под стражей: [{IsImprisonedToString}].";
+            return $"{Name}. Рост {Height} см, Вес {Weight} кг, Национальность: {Nationaly}. Под стражей? [{IsImprisonedToString}].";
         }
     }
 
