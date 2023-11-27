@@ -1,9 +1,15 @@
-﻿namespace Lesson_51
+﻿using System.Text;
+
+namespace Lesson_51
 {
     class Program
     {
         static void Main()
         {
+            DetectiveOffice detectiveOffice = new DetectiveOffice();
+            detectiveOffice.Work();
+
+            Console.ReadKey();
         }
     }
 
@@ -13,29 +19,57 @@
 
         public DetectiveOffice()
         {
-            _criminals= new List<Criminal>() 
+            _criminals = new List<Criminal>()
             {
-                new Criminal("Алексей Соколов", false, 180, 60, "Русский"),
-                new Criminal("Евгений Иванов", false, 180, 60, "Русский"),
-                new Criminal("Магомед Долганов", false, 180, 60, "Дагестанец"),
+                new Criminal("Алексей Соколов", false, 170, 60, "Русский"),
+                new Criminal("Евгений Иванов", true, 170, 60, "Русский"),
+                new Criminal("Магомед Долганов", false, 170, 60, "Дагестанец"),
                 new Criminal("Рамзан Чимиков", false, 180, 60, "Дагестанец"),
                 new Criminal("Узун Абдула", false, 180, 60, "Азейбарджанец"),
                 new Criminal("Келач Рашид", false, 180, 60, "Азейбарджанец"),
-                new Criminal("Ибрагим Насыбуллин", false, 180, 60, "Татарин"),
-                new Criminal("Казим Замалиев", false, 180, 60, "Татарин"),
-                new Criminal("Эльнар Атаев", false, 180, 60, "Узбек"),
-                new Criminal("Багымбай Бердиев", false, 180, 60, "Узбек"),
-                new Criminal("Заман Гаттаулин", false, 180, 60, "Турок"),
-                new Criminal("Ильдар Касимов", false, 180, 60, "Турок"),
-                new Criminal("Армель Бюжо", false, 180, 60, "Француз"),
-                new Criminal("Гастон Дебюсси", false, 180, 60, "Француз"),
-                new Criminal("Микола Радчук", false, 180, 60, "Белорус"),
-                new Criminal("Тимур Савич", false, 180, 60, "Белорус"),
+                new Criminal("Ибрагим Насыбуллин", false, 185, 60, "Татарин"),
+                new Criminal("Казим Замалиев", false, 185, 60, "Татарин"),
+                new Criminal("Эльнар Атаев", false, 185, 60, "Узбек"),
+                new Criminal("Багымбай Бердиев", false, 160, 60, "Узбек"),
+                new Criminal("Заман Гаттаулин", false, 160, 60, "Турок"),
+                new Criminal("Ильдар Касимов", false, 160, 60, "Турок"),
+                new Criminal("Армель Бюжо", false, 175, 60, "Француз"),
+                new Criminal("Гастон Дебюсси", false, 175, 60, "Француз"),
+                new Criminal("Микола Радчук", false, 175, 60, "Белорус"),
+                new Criminal("Тимур Савич", false, 170, 60, "Белорус"),
                 new Criminal("Анджей Любанский", false, 180, 60, "Поляк"),
-                new Criminal("Бартоломей Невядомский", false, 180, 60, "Поляк"),
-                new Criminal("Айан Галев", false, 180, 60, "Якут"),
-                new Criminal("Дохсун Жданов", false, 180, 60, "Якут")
+                new Criminal("Бартоломей Невядомский", false, 185, 60, "Поляк"),
+                new Criminal("Айан Галев", false, 175, 60, "Якут"),
+                new Criminal("Дохсун Жданов", false, 160, 60, "Якут")
             };
+        }
+
+        public List<Criminal> TryGetCriminals(int heigth, int weigth, string[] nationaly, bool isImprisoned)
+        {
+
+
+            return new List<Criminal>(_criminals.Where(crimainal => crimainal.Height == heigth &&
+                                                                    crimainal.Weight == weigth &&
+                                                                    (crimainal.Nationaly.Equals(nationaly[0]) || crimainal.Nationaly.Equals(nationaly[1])) &&
+                                                                    crimainal.IsImprisoned != isImprisoned));
+        }
+
+        public string TryGetCriminalsInfo()
+        {
+            StringBuilder criminalsInfo = new StringBuilder();
+            List<Criminal> criminals = TryGetCriminals(170, 60, new string[2] { "Русский", "Белорус" }, true);
+
+            foreach (var criminal in criminals)
+            {
+                criminalsInfo.Append($"{criminal.ShowInfo()}\n");
+            }
+
+            return criminalsInfo.ToString();
+        }
+
+        public void Work()
+        {
+            Console.WriteLine($"{TryGetCriminalsInfo()}");
         }
     }
 
@@ -65,7 +99,7 @@
 
         public string Name { get; }
         public bool IsImprisoned { get; }
-        public string IsImprisonedToString { get => IsImprisoned == true ? "да": "нет"; }
+        public string IsImprisonedToString { get => IsImprisoned == true ? "да" : "нет"; }
         public int Height { get; }
         public int Weight { get; }
         public string Nationaly { get; }
