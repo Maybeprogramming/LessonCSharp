@@ -11,6 +11,38 @@
         }
     }
 
+    class Prison
+    {
+        List<Prisoner> _prisoners;
+
+        public Prison()
+        {
+            _prisoners = new List<Prisoner>()
+            {
+                new Prisoner("", ""),
+                new Prisoner("", ""),
+                new Prisoner("", ""),
+            };
+        }
+    }
+
+    class Prisoner
+    {
+        public Prisoner(string name, string crime)
+        {
+            Name = name;
+            Crime = crime;
+        }
+
+        string Name { get; }
+        string Crime { get; }
+    }
+
+    enum Crimes
+    {
+
+    }
+
     #region UserUtils
 
     static class UserInput
