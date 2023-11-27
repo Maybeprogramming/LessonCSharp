@@ -67,9 +67,6 @@ namespace Lesson_51
 
         public void Work()
         {
-
-
-
             Console.WriteLine($"{TryGetCriminalsInfo()}");
         }
     }
