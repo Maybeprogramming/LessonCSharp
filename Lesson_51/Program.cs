@@ -44,7 +44,7 @@ namespace Lesson_51
             };
         }
 
-        public List<Criminal> TryGetCriminals(int heigth, int weigth, string[] nationaly, bool isImprisoned)
+        public List<Criminal> TryGetCriminals(string[] nationaly, bool isImprisoned, int heigth, int weigth)
         {
 
 
@@ -57,7 +57,7 @@ namespace Lesson_51
         public string TryGetCriminalsInfo()
         {
             StringBuilder criminalsInfo = new StringBuilder();
-            List<Criminal> criminals = TryGetCriminals(170, 60, new string[2] { "Русский", "Белорус" }, true);
+            List<Criminal> criminals = TryGetCriminals(new string[2] { "Русский", "Белорус" }, true, 170, 60);
 
             foreach (var criminal in criminals)
             {
@@ -69,6 +69,9 @@ namespace Lesson_51
 
         public void Work()
         {
+
+
+
             Console.WriteLine($"{TryGetCriminalsInfo()}");
         }
     }
