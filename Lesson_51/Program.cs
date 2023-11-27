@@ -13,6 +13,7 @@
             DetectiveOffice detectiveOffice = new DetectiveOffice();
             detectiveOffice.Work();
 
+            PrintLine();
             WaitToPressKey("Работа программы завершена.\n");
         }
     }
@@ -128,10 +129,13 @@
 
             if(criminals.Count == 0)
             {
+                PrintLine();
                 Print($"\nПо запросу ничего не найдено!!!\n", ConsoleColor.Red);
+
                 return;
             }
 
+            PrintLine();
             ShowCriminalsInfo("\nСписок найденных преступников по запросу:\n", criminals);
         }
 
