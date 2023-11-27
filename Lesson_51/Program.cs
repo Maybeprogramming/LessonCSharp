@@ -2,12 +2,13 @@
 {
     using static Display;
     using static UserInput;
-    using System.Text;
 
     class Program
     {
         static void Main()
         {
+            Console.Title = "Поиск преступника";
+
             DetectiveOffice detectiveOffice = new DetectiveOffice();
             detectiveOffice.Work();
 
@@ -50,49 +51,86 @@
         {
             return new List<Criminal>(_criminals.Where(crimainal => crimainal.Height == heigth &&
                                                                     crimainal.Weight == weigth &&
-                                                                    crimainal.Nationaly.Equals(nationaly) &&
+                                                                    crimainal.Nationaly.ToLower().Equals(nationaly.ToLower()) &&
                                                                     crimainal.IsImprisoned != true));
-        }
-
-        public string TryGetCriminalsInfo()
-        {
-            StringBuilder criminalsInfo = new StringBuilder();
-            List<Criminal> criminals = TryGetCriminals(170, 60, "Русский");
-
-            foreach (var criminal in criminals)
-            {
-                criminalsInfo.Append($"{criminal.ShowInfo()}\n");
-            }
-
-            return criminalsInfo.ToString();
         }
 
         public void Work()
         {
-            Print($"{TryGetCriminalsInfo()}\n");
-        }
+            const int FindCriminalsByParametrsCommand = 1;
+            const int ShowAllCrimanalsInfoCommand = 2;
+            const int ExitCommand = 3;
 
-        private void ShowAllCriminalsInfo()
-        {
-            Print($"Список всех преступников:\n");
+            bool isWork = true;
+            int userInput;
 
-            for (int i = 0; i < _criminals.Count; i++)
+            string titleMenu = "Список доступных команд:\n";
+            string menu = $"{FindCriminalsByParametrsCommand} - Найти преступника\n" +
+                          $"{ShowAllCrimanalsInfoCommand} - Показать всех преступников\n" +
+                          $"{ExitCommand} - Выйти из программы.\n";
+            string requestMessage = "Введите номер команды:";
+
+            while (isWork == true)
             {
-                Print($"{i + 1}. {_criminals[i].ShowInfo()}\n");
+                Console.Clear();
+
+                Print(titleMenu, ConsoleColor.Green);
+                Print(menu);
+
+                userInput = ReadInt(requestMessage);
+
+                switch (userInput)
+                {
+                    case FindCriminalsByParametrsCommand:
+                        FindCrimrnalsByParametrs();
+                        break;
+
+                    case ShowAllCrimanalsInfoCommand:
+                        ShowCriminalsInfo("Список всех преступников в базе:\n", _criminals);
+                        break;
+
+                    case ExitCommand:
+                        isWork = false;
+                        break;
+
+                    default:
+                        break;
+                }
+
+                WaitToPressKey();
             }
-        }
-    }
 
-    class CrimanalFactory
-    {
-        public List<Criminal> CreateSomeCriminals(int criminalsCount)
-        {
-            return new List<Criminal>();
+            WaitToPressKey("Работа программы завершена.\n");
         }
 
-        public Criminal CreateCriminal()
+        private void FindCrimrnalsByParametrs()
         {
-            return new Criminal("", false, 180, 60, "Якут");
+            int height;
+            int weight;
+            string nationaly;
+            List<Criminal> criminals;
+
+            string requestHeightText = "Введите рост (в см): ";
+            string requestWeightText = "Введите вес (в кг): ";
+            string requestNationalyText = "Введите национальность: ";
+
+            height = ReadInt(requestHeightText);
+            weight = ReadInt(requestWeightText);
+            nationaly = ReadString(requestNationalyText);
+
+            criminals = TryGetCriminals(height, weight, nationaly);
+
+            ShowCriminalsInfo("Список найденных преступников по запросу:\n", criminals);
+        }
+
+        private void ShowCriminalsInfo(string message, List<Criminal> criminals)
+        {
+            Print(message);
+
+            for (int i = 0; i < criminals.Count; i++)
+            {
+                Print($"{i + 1}. {criminals[i].ShowInfo()}\n");
+            }
         }
     }
 
@@ -144,7 +182,7 @@
 
     static class UserInput
     {
-        public static int ReadIntRange(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
+        public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
         {
             int result;
 
@@ -156,6 +194,13 @@
             }
 
             return result;
+        }
+
+        public static string ReadString(string message)
+        {
+            Console.Write(message);
+
+            return Console.ReadLine();
         }
 
         public static void WaitToPressKey(string message = "")
