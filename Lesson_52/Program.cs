@@ -36,6 +36,11 @@
 
         string Name { get; }
         string Crime { get; }
+
+        public string ShowInfo()
+        {
+            return $"{Name}. Статья: {Crime}";
+        }
     }
 
     enum Crimes
