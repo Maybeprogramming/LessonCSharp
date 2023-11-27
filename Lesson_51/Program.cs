@@ -176,26 +176,6 @@
 
     #region UserUtils
 
-    static class Randomaizer
-    {
-        private static readonly Random s_random;
-
-        static Randomaizer()
-        {
-            s_random = new();
-        }
-
-        public static string GenerateRandomName(string[] names)
-        {
-            return names[s_random.Next(0, names.Length)];
-        }
-
-        public static int GenerateRandomNumber(int minValue, int maxValue)
-        {
-            return s_random.Next(minValue, maxValue);
-        }
-    }
-
     static class UserInput
     {
         public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
