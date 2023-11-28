@@ -71,8 +71,6 @@
         {
             string userInput;
             userInput = ReadString($"Введите название заболевания для поиска пациентов:\n");
-
-            Print("Введите номер заболевания для вывода списка: ");
         }
 
         private void ShowAllSickPacients(string message, List<SickPacient> sickPacients)
