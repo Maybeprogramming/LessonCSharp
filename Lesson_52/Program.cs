@@ -14,6 +14,7 @@
             Prison prison = new Prison(prisonersCount);
             prison.Work();
 
+            PrintLine();
             WaitToPressKey("\nРабота программы завершена.\n");
         }
     }
@@ -33,7 +34,7 @@
             const string ExitCommand = "2";
 
             string crimeToAmnesty = "Антиправительственное";
-            string quastionText = $"\nВы хотите амнистировать преступников за {crimeToAmnesty}?\n";
+            string quastionText = $"\nВы хотите амнистировать преступников за \"{crimeToAmnesty}\" преступление?\n";
             string menu = $"{HoldAnAmnestyCommand} - Аминистировать\n" +
                           $"{ExitCommand} - Не делать ничего и выйти из программы\n";
             string requestMessage = "Введите номер команды: ";
@@ -57,6 +58,7 @@
                         break;
 
                     case ExitCommand:
+                        Print("Вы решили не амнистировать преступников.\n", ConsoleColor.Green);
                         isRun = false;
                         break;
 
@@ -69,7 +71,10 @@
 
         private void ToHoldAnAmnesty(List<Prisoner> prisoners, string crimeToAmnesty)
         {
+            _prisoners = new List<Prisoner>(_prisoners.Where(prisoner => prisoner.Crime != crimeToAmnesty));
 
+            PrintLine();
+            ShowPrisonersInfo("Список преступников после амнестирования:\n",_prisoners);
         }
 
         private List<Prisoner> FillPrisoners(int prisonersCount)
@@ -127,8 +132,8 @@
             Crime = crime;
         }
 
-        string Name { get; }
-        string Crime { get; }
+        public string Name { get; }
+        public string Crime { get; }
 
         public string ShowInfo()
         {
@@ -140,20 +145,6 @@
 
     static class UserInput
     {
-        public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
-        {
-            int result;
-
-            Console.Write(message);
-
-            while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
-            {
-                Console.Error.WriteLine("Ошибка!. Попробуйте снова!");
-            }
-
-            return result;
-        }
-
         public static string ReadString(string message)
         {
             Console.Write(message);
