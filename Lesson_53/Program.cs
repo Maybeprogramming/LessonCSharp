@@ -59,18 +59,20 @@
 
         private void SickPacientsSortByAge(List<SickPacient> sickPacients)
         {
-            _sickPacients.OrderBy(pacient => pacient.Age);
+            _sickPacients = _sickPacients.OrderBy(pacient => pacient.Age).ToList();
         }
 
         private void SickPacientsSortByName(List<SickPacient> sickPacients)
         {
-            _sickPacients.OrderBy(pacient => pacient.Name);
+            _sickPacients = _sickPacients.OrderBy(pacient => pacient.Name).ToList();
         }
 
         private void FindPacientsByConcretSickness(List<SickPacient> sickPacients)
         {
             string userInput;
             userInput = ReadString($"Введите название заболевания для поиска пациентов:\n");
+
+            Print("Введите номер заболевания для вывода списка: ");
 
         }
 
