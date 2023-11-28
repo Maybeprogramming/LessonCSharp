@@ -1,8 +1,8 @@
 ﻿namespace Lesson_53
 {
-    using System.Linq;
     using static Display;
     using static UserInput;
+    using static Randomaizer;
 
     class Program
     {
@@ -10,7 +10,7 @@
         {
             Console.Title = "Анархия в больнице";
 
-            int sickPacientCount = 10;
+            int sickPacientCount = 50;
             Hospital hospital = new Hospital(sickPacientCount);
             hospital.Work();
 
@@ -21,9 +21,15 @@
     class Hospital
     {
         private List<SickPacient> _sickPacients;
+        private string[] _sicknesses;
 
         public Hospital(int sickPacientCount)
         {
+            _sicknesses = new string[]
+            {
+                "Язва", "Мигрень", "Анемия", "Гастрит", "Пневмония", "Тонзилит", "Фарингит"
+            };
+
             _sickPacients = FillSickPacient(sickPacientCount);
         }
 
@@ -36,6 +42,19 @@
 
             bool isRun = true;
 
+            ShowAllSickPacients("Список всех пациентов:\n",_sickPacients);
+
+            WaitToPressKey("\n\n");
+
+            SickPacientsSortByAge(_sickPacients);
+
+            ShowAllSickPacients("Сортировка по году:\n", _sickPacients);
+
+            WaitToPressKey("\n\n");
+
+            SickPacientsSortByName(_sickPacients);
+
+            ShowAllSickPacients("Сортировка по имени:\n", _sickPacients);
         }
 
         private void SickPacientsSortByAge(List<SickPacient> sickPacients)
@@ -50,17 +69,54 @@
 
         private void FindPacientsByConcretSickness(List<SickPacient> sickPacients)
         {
+            string userInput;
+            userInput = ReadString($"Введите название заболевания для поиска пациентов:\n");
 
         }
 
-        private void ShowAllSickPacients(List<SickPacient> sickPacients)
+        private void ShowAllSickPacients(string message, List<SickPacient> sickPacients)
         {
+            Print(message);
 
+            for (int i = 0; i < sickPacients.Count; i++)
+            {
+                Print($"{i + 1}. {sickPacients[i]}\n");
+            }
         }
 
         private List<SickPacient>? FillSickPacient(int sickPacientCount)
         {
-            return new List<SickPacient>();
+            List<SickPacient> sickPacients = new List<SickPacient>();
+            int minAgePacient = 1;
+            int maxAgePacient = 100;
+
+            string[] firstNames =
+{
+                "Алексей", "Александр", "Вячеслав", "Всеволод", "Геннадий", "Григорий", "Дмитрий", "Даниил", "Демьян", "Михаил",
+                "Леонид", "Николай", "Валерий", "Сергей", "Иван", "Олег", "Владислав", "Игорь", "Юрий", "Павел", "Пётр", "Андрей"
+            };
+
+            string[] lastNames =
+            {
+                "Алексеев", "Иванов", "Петров", "Павлов", "Жуков", "Михаленков", "Прудков", "Жабин", "Плотниченко", "Зайцев", "Сидоров",
+                "Володченко", "Сергеев", "Бубликов", "Пирожков", "Карченко", "Пухалёв", "Рожков", "Сабельников", "Пыжиков", "Стародубцев"
+            };
+
+            string fullName;
+            string sickness;
+            int age;
+
+            for (int i = 0; i < sickPacientCount; i++)
+            {
+                fullName = firstNames[GenerateRandomNumber(0, firstNames.Length)] + " " + lastNames[GenerateRandomNumber(0, lastNames.Length)];
+                sickness = _sicknesses[GenerateRandomNumber(0, _sicknesses.Length)];
+                age = GenerateRandomNumber(minAgePacient, maxAgePacient);
+                SickPacient sickPacient = new SickPacient(fullName, sickness, age);
+
+                sickPacients.Add(sickPacient);
+            }
+
+            return sickPacients;
         }
     }
 
@@ -130,6 +186,21 @@
         {
             int symbolCount = Console.WindowWidth - 1;
             Print($"{new string('-', symbolCount)}\n", color);
+        }
+    }
+
+    static class Randomaizer
+    {
+        private static readonly Random s_random;
+
+        static Randomaizer()
+        {
+            s_random = new();
+        }
+
+        public static int GenerateRandomNumber(int minValue, int maxValue)
+        {
+            return s_random.Next(minValue, maxValue);
         }
     }
 
