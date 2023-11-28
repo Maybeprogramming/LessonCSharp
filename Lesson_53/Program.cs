@@ -1,5 +1,6 @@
 ﻿namespace Lesson_53
 {
+    using System.Linq;
     using static Display;
     using static UserInput;
 
@@ -27,6 +28,21 @@
         }
 
         public void Work()
+        {
+
+        }
+
+        private void SickPacientsSortByAge(List<SickPacient> sickPacients)
+        {
+            _sickPacients.OrderBy(pacient => pacient.Age);
+        }
+
+        private void SickPacientsSortByName(List<SickPacient> sickPacients)
+        {
+            _sickPacients.OrderBy(pacient => pacient.Name);
+        }
+
+        private void FindPacientsByConcretSickness(List<SickPacient> sickPacients)
         {
 
         }
