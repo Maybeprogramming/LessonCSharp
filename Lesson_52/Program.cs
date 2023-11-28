@@ -101,7 +101,6 @@
             string fullName;
             string crime;
 
-
             for (int i = 0; i < prisonersCount; i++)
             {
                 fullName = firstNames[GenerateRandomNumber(0, firstNames.Length)] + " " + lastNames[GenerateRandomNumber(0, lastNames.Length)];
