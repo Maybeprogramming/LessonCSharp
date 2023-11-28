@@ -8,6 +8,51 @@
         static void Main()
         {
             Console.Title = "Анархия в больнице";
+
+            int sickPacientCount = 10;
+            Hospital hospital = new Hospital(sickPacientCount);
+            hospital.Work();
+
+            WaitToPressKey($"\nРабота программы завершена!\n");
+        }
+    }
+
+    class Hospital
+    {
+        private List<SickPacient> _sickPacients;
+
+        public Hospital(int sickPacientCount)
+        {
+            _sickPacients = FillSickPacient(sickPacientCount);
+        }
+
+        public void Work()
+        {
+
+        }
+
+        private List<SickPacient>? FillSickPacient(int sickPacientCount)
+        {
+            return new List<SickPacient>();
+        }
+    }
+
+    class SickPacient
+    {
+        public SickPacient(string name, string sickness, int age)
+        {
+            Name = name;
+            Sickness = sickness;
+            Age = age;
+        }
+
+        public string Name { get; }
+        public string Sickness { get; }
+        public int Age { get; }
+
+        public override string ToString()
+        {
+            return $"{Name}, возраст: {Age}, заболевание: \"{Sickness}\"";
         }
     }
 
