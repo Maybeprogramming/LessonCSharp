@@ -52,7 +52,7 @@
                 switch (userInput)
                 {
                     case HoldAnAmnestyCommand:
-                        ToHoldAnAmnesty(_prisoners);
+                        ToHoldAnAmnesty(_prisoners, crimeToAmnesty);
                         isRun = false;
                         break;
 
@@ -67,7 +67,7 @@
             }
         }
 
-        private void ToHoldAnAmnesty(List<Prisoner> prisoners)
+        private void ToHoldAnAmnesty(List<Prisoner> prisoners, string crimeToAmnesty)
         {
 
         }
