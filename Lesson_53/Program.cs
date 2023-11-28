@@ -29,6 +29,12 @@
 
         public void Work()
         {
+            const string PacientsSortByAgeCommand = "1";
+            const string PacientsSortByNameCommand = "2";
+            const string FindPacientsByConcretSicknessCommand = "3";
+            const string ExitProgrammCommand = "4";
+
+            bool isRun = true;
 
         }
 
@@ -43,6 +49,11 @@
         }
 
         private void FindPacientsByConcretSickness(List<SickPacient> sickPacients)
+        {
+
+        }
+
+        private void ShowAllSickPacients(List<SickPacient> sickPacients)
         {
 
         }
