@@ -55,12 +55,23 @@
 
         public void Work()
         {
+            string symbolNameForTransfer = "Б";
+
             ShowFighters("Список бойцов из первого отряда\n", _fightersSquad1);
             PrintLine();
+
             ShowFighters("Список бойцов из второго отряда\n", _fightersSquad2);
             PrintLine();
 
+            TransferFighters(_fightersSquad1, _fightersSquad2, symbolNameForTransfer);
+            PrintLine();
+
             WaitToPressKey("\n");
+        }
+
+        private void TransferFighters(List<Fighter> squad1, List<Fighter> squad2, string symbol)
+        {
+
         }
 
         private void ShowFighters(string message, List<Fighter> fighters)
