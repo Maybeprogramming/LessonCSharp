@@ -24,8 +24,33 @@
 
         public Barraks()
         {
-            _fightersSquad1 = new List<Fighter>();
-            _fightersSquad2 = new List<Fighter>();
+            _fightersSquad1 = new List<Fighter>()
+            {
+                new Fighter("Соколов"),
+                new Fighter("Башлаев"),
+                new Fighter("Иванов"),
+                new Fighter("Петров"),
+                new Fighter("Сидоров"),
+                new Fighter("Коваленко"),
+                new Fighter("Беляев"),
+                new Fighter("Чижов"),
+                new Fighter("Бирюков"),
+                new Fighter("Чичков"),
+            };
+
+            _fightersSquad2 = new List<Fighter>()
+            {
+                new Fighter("Королев"),
+                new Fighter("Бондаренко"),
+                new Fighter("Митяев"),
+                new Fighter("Назаров"),
+                new Fighter("Пухалёв"),
+                new Fighter("Гришин"),
+                new Fighter("Рашкин"),
+                new Fighter("Данилов"),
+                new Fighter("Баландин"),
+                new Fighter("Воронин")
+            };
         }
 
         public void Work()
