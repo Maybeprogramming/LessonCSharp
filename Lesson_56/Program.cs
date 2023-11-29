@@ -2,6 +2,7 @@
 {
     using static Display;
     using static UserInput;
+    using static Randomaizer;
 
     class Program
     {
@@ -9,6 +10,95 @@
         {
             Console.Title = "Отчет о вооружении";
         }
+    }
+
+    class Report
+    {
+        private List<Soldier> _soldiers;
+
+        public Report()
+        {
+            _soldiers = FillSoldiers();
+        }
+
+        public void Work()
+        {
+
+        }
+
+        private List<Soldier> FillSoldiers()
+        {
+            List<string> names = new List<string>() 
+            { 
+                "Иванов",
+                "Соколов",
+                "Петров",
+                "Сидоров",
+                "Шевчук",
+                "Шапенков",
+                "Простаков",
+                "Монахов",
+                "Михайлин",
+                "Ротнов",
+                "Бирюков",
+                "Мищеряков",
+                "Коваленко"
+            };
+
+            List<string> weapons = new List<string>() 
+            { 
+                "Пистолет", 
+                "Автомат", 
+                "Пулемет", 
+                "Винтовка", 
+                "Кинжал" 
+            };
+
+            List<string> ranks = new List<string>() 
+            { 
+                "Рядовой", 
+                "Сержант", 
+                "Лейтенант", 
+                "Генерал" 
+            };
+
+            int minDate = 1;
+            int maxDate = 60;
+            string name;
+            string weapon;
+            string rank;
+            int date;
+            List<Soldier> soldiers = new List<Soldier>();
+
+            for (int i = 0; i < names.Count; i++)
+            {
+                name = names[i];
+                weapon = weapons[GenerateRandomNumber(0, weapons.Count)];
+                rank = ranks[GenerateRandomNumber(0, ranks.Count)];
+                date = GenerateRandomNumber(minDate, maxDate);
+                Soldier soldier = new Soldier(name, weapon, rank, date);
+
+                soldiers.Add(soldier);
+            }
+
+            return new List<Soldier>();
+        }
+    }
+
+    class Soldier
+    {
+        public Soldier(string name, string weapon, string rank, int date)
+        {
+            Name = name;
+            Weapon = weapon;
+            Rank = rank;
+            Date = date;
+        }
+
+        public string Name { get; }
+        public string Weapon { get; }
+        public string Rank { get; }
+        public int Date { get; }
     }
 
     #region UserUtils
