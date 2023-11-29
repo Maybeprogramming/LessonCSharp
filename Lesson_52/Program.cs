@@ -53,7 +53,7 @@
                 switch (userInput)
                 {
                     case HoldAnAmnestyCommand:
-                        ToHoldAnAmnesty(_prisoners, crimeToAmnesty);
+                        HoldAnAmnesty(_prisoners, crimeToAmnesty);
                         isRun = false;
                         break;
 
@@ -69,7 +69,7 @@
             }
         }
 
-        private void ToHoldAnAmnesty(List<Prisoner> prisoners, string crimeToAmnesty)
+        private void HoldAnAmnesty(List<Prisoner> prisoners, string crimeToAmnesty)
         {
             _prisoners = new List<Prisoner>(_prisoners.Where(prisoner => prisoner.Crime != crimeToAmnesty));
 
