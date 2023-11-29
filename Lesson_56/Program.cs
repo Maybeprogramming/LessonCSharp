@@ -61,6 +61,21 @@
         }
     }
 
+    static class Randomaizer
+    {
+        private static readonly Random s_random;
+
+        static Randomaizer()
+        {
+            s_random = new();
+        }
+
+        public static int GenerateRandomNumber(int minValue, int maxValue)
+        {
+            return s_random.Next(minValue, maxValue);
+        }
+    }
+
     #endregion
 }
 
