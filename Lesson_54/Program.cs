@@ -20,31 +20,29 @@
     class LeaderBoard
     {
         private List<Player> _players;
-        private List<Player> _topPlayersByLevel;
-        private List<Player> _topPlayersByStrength;
 
         public LeaderBoard(int playersCount)
         {
             _players = FillPlayers(playersCount);
-            _topPlayersByLevel = new List<Player>();
-            _topPlayersByStrength = new List<Player>();
         }
 
         public void Work()
         {
             int topPlayersByLevelCount = 3;
             int topPlayersByStranght = 3;
+            List<Player> topPlayersByLevel = new List<Player>(); ;
+            List<Player> topPlayersByStrength = new List<Player>();
 
-            _topPlayersByLevel = _players.OrderByDescending(p => p.Level).Take(topPlayersByLevelCount).ToList();
-            _topPlayersByStrength = _players.OrderByDescending(p => p.Strength).Take(topPlayersByStranght).ToList();
+            topPlayersByLevel = _players.OrderByDescending(player => player.Level).Take(topPlayersByLevelCount).ToList();
+            topPlayersByStrength = _players.OrderByDescending(player => player.Strength).Take(topPlayersByStranght).ToList();
 
             ShowPlayers("Список всех игроков на сервере:\n", _players);
             PrintLine();
 
-            ShowPlayers("Топ 3 игрока по уровню:\n",_topPlayersByLevel);
+            ShowPlayers($"Топ {topPlayersByLevelCount} игрока по уровню:\n", topPlayersByLevel);
             PrintLine();
 
-            ShowPlayers("Топ 3 игрока по силе:\n", _topPlayersByStrength);
+            ShowPlayers($"Топ {topPlayersByStranght} игрока по силе:\n", topPlayersByStrength);
             PrintLine();
         }
 
@@ -123,7 +121,7 @@
     }
 
     #region UserUtils
-    
+
     static class Display
     {
         public static void Print(string message, ConsoleColor consoleColor = ConsoleColor.White)
