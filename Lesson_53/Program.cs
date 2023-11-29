@@ -79,7 +79,7 @@
                         break;
 
                     case FindPacientsByConcretSicknessCommand:
-                        FindPacientsByConcretSickness(_pacients);
+                        FindPacientsByConcretSickness();
                         break;
 
                     case ExitProgrammCommand:
@@ -116,10 +116,49 @@
             PrintLine();
         }
 
-        private void FindPacientsByConcretSickness(List<Pacient> pacients)
+        private void FindPacientsByConcretSickness()
         {
             string userInput;
-            userInput = ReadString($"Введите название заболевания для поиска пациентов:\n");
+            List<Pacient> pacientsFaund = new List<Pacient>();
+
+            ShowAllSikness();
+
+            userInput = ReadString($"Введите \"название\" заболевания для поиска пациентов: ");
+
+            if (_sicknesses.Contains(userInput))
+            {
+                pacientsFaund = _pacients.Where(pacient => pacient.Sickness.Equals(userInput)).ToList();
+
+                if (pacientsFaund.Count > 0)
+                {
+                    PrintLine();
+                    ShowAllPacients("Найденные пациенты по запрашиваемому заболеванию:\n", pacientsFaund);
+                    PrintLine();
+                }
+                else
+                {
+                    PrintLine();
+                    Print("С таким заболеванием пациенты в больницу не поступали.\n", ConsoleColor.Yellow);
+                    PrintLine();
+                }
+            }
+            else
+            {
+                PrintLine();
+                Print($"Вы ввели неверное заболевание. Попробуйте снова.\n", ConsoleColor.Red);
+                PrintLine();
+            }
+
+        }
+
+        private void ShowAllSikness()
+        {
+            Print("\nСписок заболеваний:\n", ConsoleColor.Green);
+
+            for (int i = 0; i < _sicknesses.Count; i++)
+            {
+                Print($"{i + 1}. {_sicknesses[i]}\n");
+            }
         }
 
         private void ShowAllPacients(string message, List<Pacient> pacients)
