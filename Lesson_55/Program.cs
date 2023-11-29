@@ -11,6 +11,43 @@
         }
     }
 
+    class Stock
+    {
+        List<Product> _products;
+
+        public Stock(int productsCount)
+        {
+            _products = FillProducts(productsCount);
+        }
+
+        public void Work()
+        {
+
+        }
+
+        private void ShowProducts()
+        {
+
+        }
+
+        private List<Product> FillProducts(int productsCount)
+        {
+            return new List<Product>();
+        }
+    }
+
+    class Product
+    {
+        public string Name { get; }
+        public int ProductionDate { get; }
+        public int ExpirationDate { get; }
+
+        public override string ToString()
+        {
+            return $"\"{Name}\". Дата производства: {ProductionDate}. Срок годности: {ExpirationDate} лет.";
+        }
+    }
+
     #region UserUtils
 
     static class UserInput
