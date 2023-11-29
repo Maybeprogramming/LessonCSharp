@@ -10,7 +10,7 @@
         {
             Console.Title = "Определение просрочки";
 
-            int productsCount = 15;
+            int productsCount = 20;
             Stock stock = new Stock(productsCount);
             stock.Work();
 
