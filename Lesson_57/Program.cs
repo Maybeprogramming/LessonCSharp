@@ -2,7 +2,6 @@
 {
     using static Display;
     using static UserInput;
-    using static Randomaizer;
 
     class Program
     {
@@ -56,22 +55,33 @@
         public void Work()
         {
             string symbolNameForTransfer = "Б";
+            string messageFirstSquad = "Список бойцов из первого отряда:\n";
+            string messageSecondSquad = "Список бойцов из второго отряда:\n";
 
-            ShowFighters("Список бойцов из первого отряда\n", _fightersSquad1);
+            Print($"Списки бойцов >>> до перевода бойцов из отряда 1 в отряда 2.\n", ConsoleColor.Green);
+            ShowFighters(messageFirstSquad, _fightersSquad1);
             PrintLine();
 
-            ShowFighters("Список бойцов из второго отряда\n", _fightersSquad2);
+            ShowFighters(messageSecondSquad, _fightersSquad2);
             PrintLine();
 
-            TransferFighters(_fightersSquad1, _fightersSquad2, symbolNameForTransfer);
+            TransferFighters(symbolNameForTransfer);
+
+            Print($"Списки бойцов >>> после перевода бойцов из отряда 1 в отряда 2.\n", ConsoleColor.Red);
+            ShowFighters(messageFirstSquad, _fightersSquad1);
+            PrintLine();
+
+            ShowFighters(messageSecondSquad, _fightersSquad2);
             PrintLine();
 
             WaitToPressKey("\n");
         }
 
-        private void TransferFighters(List<Fighter> squad1, List<Fighter> squad2, string symbol)
+        private void TransferFighters(string symbol)
         {
-
+            List<Fighter> tranferFighters = _fightersSquad1.Where(fighter => fighter.Name.StartsWith(symbol)).ToList();
+            _fightersSquad2 = _fightersSquad2.Union(tranferFighters).ToList();
+            _fightersSquad1 = _fightersSquad1.Except(tranferFighters).ToList();
         }
 
         private void ShowFighters(string message, List<Fighter> fighters)
@@ -104,27 +114,6 @@
 
     static class UserInput
     {
-        public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
-        {
-            int result;
-
-            Console.Write(message);
-
-            while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
-            {
-                Console.Error.WriteLine("Ошибка!. Попробуйте снова!");
-            }
-
-            return result;
-        }
-
-        public static string ReadString(string message)
-        {
-            Console.Write(message);
-
-            return Console.ReadLine();
-        }
-
         public static void WaitToPressKey(string message = "")
         {
             Print(message);
@@ -147,21 +136,6 @@
         {
             int symbolCount = Console.WindowWidth - 1;
             Print($"{new string('-', symbolCount)}\n", color);
-        }
-    }
-
-    static class Randomaizer
-    {
-        private static readonly Random s_random;
-
-        static Randomaizer()
-        {
-            s_random = new();
-        }
-
-        public static int GenerateRandomNumber(int minValue, int maxValue)
-        {
-            return s_random.Next(minValue, maxValue);
         }
     }
 
