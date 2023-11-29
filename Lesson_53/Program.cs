@@ -10,8 +10,8 @@
         {
             Console.Title = "Анархия в больнице";
 
-            int sickPacientCount = 10;
-            Hospital hospital = new Hospital(sickPacientCount);
+            int pacientCount = 10;
+            Hospital hospital = new Hospital(pacientCount);
             hospital.Work();
 
             Print($"\nРабота программы завершена!\n", ConsoleColor.Green);
@@ -23,14 +23,14 @@
         private List<Pacient> _pacients;
         private List<string> _sicknesses;
 
-        public Hospital(int sickPacientCount)
+        public Hospital(int pacientCount)
         {
             _sicknesses = new List<string>()
             {
                 "Язва", "Мигрень", "Анемия", "Гастрит", "Пневмония", "Тонзилит", "Фарингит"
             };
 
-            _pacients = FillPacients(sickPacientCount);
+            _pacients = FillPacients(pacientCount);
         }
 
         public void Work()
@@ -125,30 +125,44 @@
 
             userInput = ReadString($"Введите \"название\" заболевания для поиска пациентов: ");
 
-            if (_sicknesses.Contains(userInput))
-            {
-                pacientsFaund = _pacients.Where(pacient => pacient.Sickness.Equals(userInput)).ToList();
+            pacientsFaund = _sicknesses.Contains(userInput) == true ? pacientsFaund = _pacients.Where(p => p.Sickness.Equals(userInput)).ToList() : null;
 
-                if (pacientsFaund.Count > 0)
-                {
-                    PrintLine();
-                    ShowAllPacients("Найденные пациенты по запрашиваемому заболеванию:\n", pacientsFaund);
-                    PrintLine();
-                }
-                else
-                {
-                    PrintLine();
-                    Print("С таким заболеванием пациенты в больницу не поступали.\n", ConsoleColor.Yellow);
-                    PrintLine();
-                }
+            if (pacientsFaund != null && pacientsFaund.Count > 0)
+            {
+                PrintLine();
+                ShowAllPacients("Найденные пациенты по запрашиваемому заболеванию:\n", pacientsFaund);
+                PrintLine();
             }
             else
             {
                 PrintLine();
-                Print($"Вы ввели неверное заболевание. Попробуйте снова.\n", ConsoleColor.Red);
+                Print("С таким заболеванием пациенты в больницу не поступали.\n", ConsoleColor.Yellow);
                 PrintLine();
             }
 
+            //if (_sicknesses.Contains(userInput))
+            //{
+            //    pacientsFaund = _pacients.Where(pacient => pacient.Sickness.Equals(userInput)).ToList();
+
+            //    if (pacientsFaund.Count > 0)
+            //    {
+            //        PrintLine();
+            //        ShowAllPacients("Найденные пациенты по запрашиваемому заболеванию:\n", pacientsFaund);
+            //        PrintLine();
+            //    }
+            //    else
+            //    {
+            //        PrintLine();
+            //        Print("С таким заболеванием пациенты в больницу не поступали.\n", ConsoleColor.Yellow);
+            //        PrintLine();
+            //    }
+            //}
+            //else
+            //{
+            //    PrintLine();
+            //    Print($"Вы ввели неверное заболевание. Попробуйте снова.\n", ConsoleColor.Red);
+            //    PrintLine();
+            //}
         }
 
         private void ShowAllSikness()
