@@ -80,8 +80,8 @@
         private void TransferFighters(string symbol)
         {
             List<Fighter> tranferFighters = _fightersSquad1.Where(fighter => fighter.Name.StartsWith(symbol)).ToList();
-            _fightersSquad2 = _fightersSquad2.Union(tranferFighters).ToList();
             _fightersSquad1 = _fightersSquad1.Except(tranferFighters).ToList();
+            _fightersSquad2 = _fightersSquad2.Union(tranferFighters).ToList();
         }
 
         private void ShowFighters(string message, List<Fighter> fighters)
