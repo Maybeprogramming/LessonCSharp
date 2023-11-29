@@ -21,8 +21,7 @@
 
     class Stock
     {
-        List<Product> _products;
-        
+        List<Product> _products;        
 
         public Stock(int productsCount)
         {
@@ -46,12 +45,12 @@
         {
             List<Product> expiredProducts = new List<Product>();
 
-            expiredProducts = products.Where(product => GetExpiredDateProduct(product, currentDate) != null).ToList();
+            expiredProducts = products.Where(product => GetProductByExpiredDate(product, currentDate) != null).ToList();
 
             ShowProducts("Список просроченных банок тушенки:\n", expiredProducts);
         }
 
-        private Product GetExpiredDateProduct(Product product, int currentDate)
+        private Product GetProductByExpiredDate(Product product, int currentDate)
         {
             int storagePeriod = currentDate - product.ProductionDate;
             int remainingStorageTime = product.ExpirationDate - storagePeriod;
