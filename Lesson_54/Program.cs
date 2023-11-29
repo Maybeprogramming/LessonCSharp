@@ -1,10 +1,7 @@
 ﻿namespace Lesson_54
 {
     using static Display;
-    using static UserInput;
     using static Randomaizer;
-    using System.Linq;
-    using System.Numerics;
 
     class Program
     {
@@ -53,7 +50,7 @@
 
         private void ShowPlayers(string message, List<Player> players)
         {
-            Print(message);
+            Print(message, ConsoleColor.Green);
 
             for (int i = 0; i < players.Count; i++)
             {
@@ -126,37 +123,7 @@
     }
 
     #region UserUtils
-    static class UserInput
-    {
-        public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
-        {
-            int result;
-
-            Console.Write(message);
-
-            while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
-            {
-                Console.Error.WriteLine("Ошибка!. Попробуйте снова!");
-            }
-
-            return result;
-        }
-
-        public static string ReadString(string message)
-        {
-            Console.Write(message);
-
-            return Console.ReadLine();
-        }
-
-        public static void WaitToPressKey(string message = "")
-        {
-            Print(message);
-            Print($"Для продолжения нажмите любую клавишу...\n");
-            Console.ReadKey();
-        }
-    }
-
+    
     static class Display
     {
         public static void Print(string message, ConsoleColor consoleColor = ConsoleColor.White)
