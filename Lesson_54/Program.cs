@@ -8,6 +8,49 @@
         static void Main()
         {
             Console.Title = "Топ игроков сервера";
+
+            LeaderBoard leaderBoard = new LeaderBoard();
+            leaderBoard.Work();
+
+            Print($"\nРабота программы завершена.\n", ConsoleColor.Green);
+        }
+    }
+
+    class LeaderBoard
+    {
+        private List<Player> _players;
+        private List<Player> _topPlayersByLevel;
+        private List<Player> _topPlayersByStrength;
+
+        public LeaderBoard()
+        {
+            _players = new List<Player>();
+            _topPlayersByLevel = new List<Player>();
+            _topPlayersByStrength = new List<Player>();
+        }
+
+        public void Work()
+        {
+
+        }
+    }
+
+    class Player
+    {
+        public Player(string name, int level, int strength)
+        {
+            Name = name;
+            Level = level;
+            Strength = strength;
+        }
+
+        public string Name { get; }
+        public int Level { get; }
+        public int Strength { get; }
+
+        public override string ToString()
+        {
+            return $"{Name}. Уровень: {Level}. Сила {Strength}";
         }
     }
 
@@ -57,6 +100,21 @@
         {
             int symbolCount = Console.WindowWidth - 1;
             Print($"{new string('-', symbolCount)}\n", color);
+        }
+    }
+
+    static class Randomaizer
+    {
+        private static readonly Random s_random;
+
+        static Randomaizer()
+        {
+            s_random = new();
+        }
+
+        public static int GenerateRandomNumber(int minValue, int maxValue)
+        {
+            return s_random.Next(minValue, maxValue);
         }
     }
 
