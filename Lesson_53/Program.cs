@@ -10,82 +10,131 @@
         {
             Console.Title = "Анархия в больнице";
 
-            int sickPacientCount = 50;
+            int sickPacientCount = 10;
             Hospital hospital = new Hospital(sickPacientCount);
             hospital.Work();
 
-            WaitToPressKey($"\nРабота программы завершена!\n");
+            Print($"\nРабота программы завершена!\n", ConsoleColor.Green);
         }
     }
 
     class Hospital
     {
-        private List<SickPacient> _sickPacients;
-        private string[] _sicknesses;
+        private List<Pacient> _pacients;
+        private List<string> _sicknesses;
 
         public Hospital(int sickPacientCount)
         {
-            _sicknesses = new string[]
+            _sicknesses = new List<string>()
             {
                 "Язва", "Мигрень", "Анемия", "Гастрит", "Пневмония", "Тонзилит", "Фарингит"
             };
 
-            _sickPacients = FillSickPacient(sickPacientCount);
+            _pacients = FillPacients(sickPacientCount);
         }
 
         public void Work()
         {
-            const string PacientsSortByAgeCommand = "1";
-            const string PacientsSortByNameCommand = "2";
-            const string FindPacientsByConcretSicknessCommand = "3";
-            const string ExitProgrammCommand = "4";
+            const string PacientsSortBySickness = "1";
+            const string PacientsSortByAgeCommand = "2";
+            const string PacientsSortByNameCommand = "3";
+            const string FindPacientsByConcretSicknessCommand = "4";
+            const string ExitProgrammCommand = "5";
 
             bool isRun = true;
+            string userInput;
+            string requestMessage = "Введите номер команды: ";
+            string titleMenu = "Доступные команды:\n";
+            string menu = $"{PacientsSortBySickness}. - Отсортировать пациентов по заболеваниям.\n" +
+                          $"{PacientsSortByAgeCommand}. - Отсортировать пациентов по годам.\n" +
+                          $"{PacientsSortByNameCommand}. - Отсортировать пациентов по ФИО.\n" +
+                          $"{FindPacientsByConcretSicknessCommand}. - Найти пациентов по заболеванию.\n" +
+                          $"{ExitProgrammCommand}. - Выйти из программы.\n";
 
-            ShowAllSickPacients("Список всех пациентов:\n",_sickPacients);
+            while (isRun == true)
+            {
+                Console.Clear();
 
-            WaitToPressKey("\n\n");
+                ShowAllPacients("Список всех пациентов в больнице:\n", _pacients);
 
-            SickPacientsSortByAge(_sickPacients);
+                PrintLine();
+                Print(titleMenu, ConsoleColor.Green);
+                Print(menu);
+                PrintLine();
 
-            ShowAllSickPacients("Сортировка по году:\n", _sickPacients);
+                userInput = ReadString(requestMessage);
 
-            WaitToPressKey("\n\n");
+                switch (userInput)
+                {
+                    case PacientsSortBySickness:
+                        SortBySicknessPacients();
+                        break;
 
-            SickPacientsSortByName(_sickPacients);
+                    case PacientsSortByAgeCommand:
+                        SortByAgePacients();
+                        break;
 
-            ShowAllSickPacients("Сортировка по имени:\n", _sickPacients);
+                    case PacientsSortByNameCommand:
+                        SortByNamePacients();
+                        break;
+
+                    case FindPacientsByConcretSicknessCommand:
+                        FindPacientsByConcretSickness(_pacients);
+                        break;
+
+                    case ExitProgrammCommand:
+                        isRun = false;
+                        break;
+                }
+
+                WaitToPressKey("\n");
+                PrintLine();
+            }
         }
 
-        private void SickPacientsSortByAge(List<SickPacient> sickPacients)
+        private void SortByAgePacients()
         {
-            _sickPacients = _sickPacients.OrderBy(pacient => pacient.Age).ToList();
+            _pacients = _pacients.OrderBy(pacient => pacient.Age).ToList();
+
+            ShowAllPacients("Пациенты отсортированы по годам:\n", _pacients);
+            PrintLine();
         }
 
-        private void SickPacientsSortByName(List<SickPacient> sickPacients)
+        private void SortByNamePacients()
         {
-            _sickPacients = _sickPacients.OrderBy(pacient => pacient.Name).ToList();
+            _pacients = _pacients.OrderBy(pacient => pacient.Name).ToList();
+
+            ShowAllPacients("Пациенты отсортированы по имени:\n", _pacients);
+            PrintLine();
         }
 
-        private void FindPacientsByConcretSickness(List<SickPacient> sickPacients)
+        private void SortBySicknessPacients()
+        {
+            _pacients = _pacients.OrderBy(pacient => pacient.Sickness).ToList();
+
+            ShowAllPacients("Пациенты отсортированы по заболеваниям:\n", _pacients);
+            PrintLine();
+        }
+
+        private void FindPacientsByConcretSickness(List<Pacient> pacients)
         {
             string userInput;
             userInput = ReadString($"Введите название заболевания для поиска пациентов:\n");
         }
 
-        private void ShowAllSickPacients(string message, List<SickPacient> sickPacients)
+        private void ShowAllPacients(string message, List<Pacient> pacients)
         {
             Print(message);
 
-            for (int i = 0; i < sickPacients.Count; i++)
+            for (int i = 0; i < pacients.Count; i++)
             {
-                Print($"{i + 1}. {sickPacients[i]}\n");
+                Print($"{i + 1}. {pacients[i]}\n");
             }
         }
 
-        private List<SickPacient>? FillSickPacient(int sickPacientCount)
+        private List<Pacient>? FillPacients(int sickPacientCount)
         {
-            List<SickPacient> sickPacients = new List<SickPacient>();
+            List<Pacient> pacients = new List<Pacient>();
             int minAgePacient = 1;
             int maxAgePacient = 100;
 
@@ -108,20 +157,20 @@
             for (int i = 0; i < sickPacientCount; i++)
             {
                 fullName = firstNames[GenerateRandomNumber(0, firstNames.Length)] + " " + lastNames[GenerateRandomNumber(0, lastNames.Length)];
-                sickness = _sicknesses[GenerateRandomNumber(0, _sicknesses.Length)];
+                sickness = _sicknesses[GenerateRandomNumber(0, _sicknesses.Count)];
                 age = GenerateRandomNumber(minAgePacient, maxAgePacient);
-                SickPacient sickPacient = new SickPacient(fullName, sickness, age);
+                Pacient pacient = new Pacient(fullName, sickness, age);
 
-                sickPacients.Add(sickPacient);
+                pacients.Add(pacient);
             }
 
-            return sickPacients;
+            return pacients;
         }
     }
 
-    class SickPacient
+    class Pacient
     {
-        public SickPacient(string name, string sickness, int age)
+        public Pacient(string name, string sickness, int age)
         {
             Name = name;
             Sickness = sickness;
