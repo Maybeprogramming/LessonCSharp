@@ -2,6 +2,9 @@
 {
     using static Display;
     using static UserInput;
+    using static Randomaizer;
+    using System.Linq;
+    using System.Numerics;
 
     class Program
     {
@@ -9,7 +12,8 @@
         {
             Console.Title = "Топ игроков сервера";
 
-            LeaderBoard leaderBoard = new LeaderBoard();
+            int playersCount = 15;
+            LeaderBoard leaderBoard = new LeaderBoard(playersCount);
             leaderBoard.Work();
 
             Print($"\nРабота программы завершена.\n", ConsoleColor.Green);
@@ -22,16 +26,83 @@
         private List<Player> _topPlayersByLevel;
         private List<Player> _topPlayersByStrength;
 
-        public LeaderBoard()
+        public LeaderBoard(int playersCount)
         {
-            _players = new List<Player>();
+            _players = FillPlayers(playersCount);
             _topPlayersByLevel = new List<Player>();
             _topPlayersByStrength = new List<Player>();
         }
 
         public void Work()
         {
+            int topPlayersByLevelCount = 3;
+            int topPlayersByStranght = 3;
 
+            _topPlayersByLevel = _players.OrderByDescending(p => p.Level).Take(topPlayersByLevelCount).ToList();
+            _topPlayersByStrength = _players.OrderByDescending(p => p.Strength).Take(topPlayersByStranght).ToList();
+
+            ShowPlayers("Список всех игроков на сервере:\n", _players);
+            PrintLine();
+
+            ShowPlayers("Топ 3 игрока по уровню:\n",_topPlayersByLevel);
+            PrintLine();
+
+            ShowPlayers("Топ 3 игрока по силе:\n", _topPlayersByStrength);
+            PrintLine();
+        }
+
+        private void ShowPlayers(string message, List<Player> players)
+        {
+            Print(message);
+
+            for (int i = 0; i < players.Count; i++)
+            {
+                Print($"{i + 1}. {players[i]}\n");
+            }
+        }
+
+        private List<Player> FillPlayers(int playersCount)
+        {
+            List<string> names = new List<string>()
+            {
+                "Limon4IK", "FireBlast", "MegaTrone", "AnGeL", "XrIsT", "Blade", "Vazelin", "RamPager", "VitaminC", "GreenLighter", "Vertuxan",
+                "Prizma", "Shavel", "Jonatan", "FreeDomer", "EgZa", "Frezerovshik", "Kopatel", "Zoomer", "KillFisher", "Amazonka", "Jaguar4IK",
+                "Vermishel", "Jumper", "TopWarrior", "Gorrilaz", "LordWaine", "Romenar", "Pivasik", "Wazgen", "LadaPriora", "JungleMen",
+                "QualityMaster", "Yogist", "UmbaTumba", "Iskatel", "TurboMen", "Winstonist", "Kurilshik", "Driverist", "Pizama", "LuckyLord",
+                "Azgardez", "TatuMaster", "HidroGEL", "Сrack", "ForceWood", "Virusolog", "Marmarist", "TeleGruver", "Mashinist", "Tracktorist",
+                "Melonholick", "Alcoholic", "MetaFox", "GrenageForce", "Killer", "WhoAmI", "Anonymus", "TVMaker", "UnderReserver", "Frucktis"
+            };
+
+            List<Player> players = new List<Player>();
+
+            int counter = 0;
+            string postFixSymbol = "_";
+            int minLevel = 0;
+            int maxLevel = 121;
+            int minStranght = 200;
+            int maxStranght = 501;
+            string name;
+            int level;
+            int stranght;
+
+            for (int i = 0; i < playersCount; i++)
+            {
+                name = names[GenerateRandomNumber(0, names.Count)];
+                Player faundPlayer = players.Find(p => p.Name.Equals(name) == true);
+
+                if (players.Contains(faundPlayer) == true)
+                {
+                    name += postFixSymbol + ++counter;
+                }
+
+                level = GenerateRandomNumber(minLevel, maxLevel);
+                stranght = GenerateRandomNumber(minStranght, maxStranght);
+                Player player = new Player(name, level, stranght);
+
+                players.Add(player);
+            }
+
+            return players;
         }
     }
 
@@ -50,7 +121,7 @@
 
         public override string ToString()
         {
-            return $"{Name}. Уровень: {Level}. Сила {Strength}";
+            return $">> {Name} << Уровень: {Level}. Сила {Strength}";
         }
     }
 
