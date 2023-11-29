@@ -29,12 +29,12 @@
         public void Work()
         {
             int topPlayersByLevelCount = 3;
-            int topPlayersByStranght = 3;
+            int topPlayersByStranghtCount = 3;
             List<Player> topPlayersByLevel = new List<Player>(); ;
             List<Player> topPlayersByStrength = new List<Player>();
 
             topPlayersByLevel = _players.OrderByDescending(player => player.Level).Take(topPlayersByLevelCount).ToList();
-            topPlayersByStrength = _players.OrderByDescending(player => player.Strength).Take(topPlayersByStranght).ToList();
+            topPlayersByStrength = _players.OrderByDescending(player => player.Strength).Take(topPlayersByStranghtCount).ToList();
 
             ShowPlayers("Список всех игроков на сервере:\n", _players);
             PrintLine();
@@ -42,7 +42,7 @@
             ShowPlayers($"Топ {topPlayersByLevelCount} игрока по уровню:\n", topPlayersByLevel);
             PrintLine();
 
-            ShowPlayers($"Топ {topPlayersByStranght} игрока по силе:\n", topPlayersByStrength);
+            ShowPlayers($"Топ {topPlayersByStranghtCount} игрока по силе:\n", topPlayersByStrength);
             PrintLine();
         }
 
@@ -83,7 +83,7 @@
             for (int i = 0; i < playersCount; i++)
             {
                 name = names[GenerateRandomNumber(0, names.Count)];
-                Player faundPlayer = players.Find(p => p.Name.Equals(name) == true);
+                Player faundPlayer = players.Find(player => player.Name.Equals(name) == true);
 
                 if (players.Contains(faundPlayer) == true)
                 {
