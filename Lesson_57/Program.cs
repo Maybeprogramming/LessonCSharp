@@ -2,12 +2,65 @@
 {
     using static Display;
     using static UserInput;
+    using static Randomaizer;
 
     class Program
     {
         static void Main()
         {
             Console.Title = "Объединение войск";
+
+            Barraks barraks = new Barraks();
+            barraks.Work();
+
+            Print($"\nРабота программы завершена!", ConsoleColor.Green);
+        }
+    }
+
+    class Barraks
+    {
+        private List<Fighter> _fightersSquad1;
+        private List<Fighter> _fightersSquad2;
+
+        public Barraks()
+        {
+            _fightersSquad1 = new List<Fighter>();
+            _fightersSquad2 = new List<Fighter>();
+        }
+
+        public void Work()
+        {
+            ShowFighters("Список бойцов из первого отряда\n", _fightersSquad1);
+            PrintLine();
+            ShowFighters("Список бойцов из второго отряда\n", _fightersSquad2);
+            PrintLine();
+
+            WaitToPressKey("\n");
+        }
+
+        private void ShowFighters(string message, List<Fighter> fighters)
+        {
+            Print(message);
+
+            for (int i = 0; i < fighters.Count; i++)
+            {
+                Print($"{i + 1}. Боец: {fighters[i]}\n");
+            }
+        }
+    }
+
+    class Fighter
+    {
+        public Fighter(string name)
+        {
+            Name = name;
+        }
+
+        public string Name { get; }
+
+        public override string ToString()
+        {
+            return $"{Name}";
         }
     }
 
