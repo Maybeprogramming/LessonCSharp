@@ -148,20 +148,6 @@
 
     static class UserInput
     {
-        public static int ReadInt(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
-        {
-            int result;
-
-            Console.Write(message);
-
-            while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
-            {
-                Console.Error.WriteLine("Ошибка!. Попробуйте снова!");
-            }
-
-            return result;
-        }
-
         public static string ReadString(string message)
         {
             Console.Write(message);
