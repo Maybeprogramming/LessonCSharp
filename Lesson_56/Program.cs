@@ -9,6 +9,10 @@
         static void Main()
         {
             Console.Title = "Отчет о вооружении";
+            Report report = new Report();
+            report.Work();
+
+            Print($"Программа завершена!", ConsoleColor.Green);
         }
     }
 
@@ -23,13 +27,36 @@
 
         public void Work()
         {
+            ShowSoldiersInfo($"Список солдат:\n", _soldiers);
+            PrintLine();
 
+            Print("Формируем отчет...\n", ConsoleColor.Green);
+
+            List<string> reportAboutSoldiers = _soldiers.Select(soldier => $"{soldier.Name}. Звание: {soldier.Rank}").ToList();
+
+            foreach (var report in reportAboutSoldiers)
+            {
+                Print($"{report}\n");
+            }
+
+            PrintLine();
+            WaitToPressKey();
+        }
+
+        private void ShowSoldiersInfo(string message, List<Soldier> soldiers)
+        {
+            Print(message, ConsoleColor.Green);
+
+            for (int i = 0; i < soldiers.Count; i++)
+            {
+                Print($"{i + 1}. {soldiers[i]}\n");
+            }
         }
 
         private List<Soldier> FillSoldiers()
         {
-            List<string> names = new List<string>() 
-            { 
+            List<string> names = new List<string>()
+            {
                 "Иванов",
                 "Соколов",
                 "Петров",
@@ -45,21 +72,21 @@
                 "Коваленко"
             };
 
-            List<string> weapons = new List<string>() 
-            { 
-                "Пистолет", 
-                "Автомат", 
-                "Пулемет", 
-                "Винтовка", 
-                "Кинжал" 
+            List<string> weapons = new List<string>()
+            {
+                "Пистолет",
+                "Автомат",
+                "Пулемет",
+                "Винтовка",
+                "Кинжал"
             };
 
-            List<string> ranks = new List<string>() 
-            { 
-                "Рядовой", 
-                "Сержант", 
-                "Лейтенант", 
-                "Генерал" 
+            List<string> ranks = new List<string>()
+            {
+                "Рядовой",
+                "Сержант",
+                "Лейтенант",
+                "Генерал"
             };
 
             int minDate = 1;
@@ -81,7 +108,7 @@
                 soldiers.Add(soldier);
             }
 
-            return new List<Soldier>();
+            return soldiers;
         }
     }
 
@@ -99,6 +126,11 @@
         public string Weapon { get; }
         public string Rank { get; }
         public int Date { get; }
+
+        public override string ToString()
+        {
+            return $"{Name}. Звание: {Rank}. Оружие: {Weapon}. Срок службы: {Date} месяцев.";
+        }
     }
 
     #region UserUtils
