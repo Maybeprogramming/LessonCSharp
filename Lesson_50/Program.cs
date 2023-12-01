@@ -17,7 +17,7 @@
 
     }
 
-    class CarOwner
+    class Client
     {
 
     }
