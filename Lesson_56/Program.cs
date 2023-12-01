@@ -12,16 +12,26 @@
             Report report = new Report();
             report.Work();
 
-            Print($"Программа завершена!", ConsoleColor.Green);
+            PrintLine();
+            Print($"\nПрограмма завершена!\n", ConsoleColor.Green);
         }
     }
 
     class Report
     {
         private List<Soldier> _soldiers;
+        private List<string> _ranks;
 
         public Report()
         {
+            _ranks = new List<string>()
+            {
+                "Рядовой",
+                "Сержант",
+                "Лейтенант",
+                "Генерал"
+            };
+
             _soldiers = FillSoldiers();
         }
 
@@ -30,17 +40,44 @@
             ShowSoldiersInfo($"Список солдат:\n", _soldiers);
             PrintLine();
 
-            Print("Формируем отчет...\n", ConsoleColor.Green);
-
-            List<string> reportAboutSoldiers = _soldiers.Select(soldier => $"{soldier.Name}. Звание: {soldier.Rank}").ToList();
-
-            foreach (var report in reportAboutSoldiers)
-            {
-                Print($"{report}\n");
-            }
-
+            CreateReport();
             PrintLine();
+
             WaitToPressKey();
+        }
+
+        private void CreateReport()
+        {
+            string requestRank;
+            bool isRun = true;
+
+            while (isRun == true)
+            {
+                requestRank = ReadString("Введите звание для формирования отчёта: ");
+
+                if (_ranks.Contains(requestRank) == true)
+                {
+                    Print("Формируем новый отчет...\n", ConsoleColor.Green);
+
+                    var soldiers = _soldiers.Where(soldier => soldier.Rank.ToLower().Equals(requestRank.ToLower()) == true)
+                                            .Select(soldier => new
+                                            {
+                                                soldier.Name,
+                                                soldier.Rank
+                                            }).ToList();
+
+                    for (int i = 0; i < soldiers.Count; i++)
+                    {
+                        Print($"{i + 1}. {soldiers[i].Name}. Звание: {soldiers[i].Rank}\n");
+                    }
+
+                    isRun = false;
+                }
+                else
+                {
+                    Print("Таких данных нет! Попробуйте снова!\n", ConsoleColor.Red);
+                }
+            }
         }
 
         private void ShowSoldiersInfo(string message, List<Soldier> soldiers)
@@ -69,7 +106,14 @@
                 "Ротнов",
                 "Бирюков",
                 "Мищеряков",
-                "Коваленко"
+                "Коваленко",
+                "Курников",
+                "Ковалеров",
+                "Иванчкнко",
+                "Прокаев",
+                "Обувалов",
+                "Федотов",
+                "Николаев"
             };
 
             List<string> weapons = new List<string>()
@@ -79,14 +123,6 @@
                 "Пулемет",
                 "Винтовка",
                 "Кинжал"
-            };
-
-            List<string> ranks = new List<string>()
-            {
-                "Рядовой",
-                "Сержант",
-                "Лейтенант",
-                "Генерал"
             };
 
             int minDate = 1;
@@ -101,7 +137,7 @@
             {
                 name = names[i];
                 weapon = weapons[GenerateRandomNumber(0, weapons.Count)];
-                rank = ranks[GenerateRandomNumber(0, ranks.Count)];
+                rank = _ranks[GenerateRandomNumber(0, _ranks.Count)];
                 date = GenerateRandomNumber(minDate, maxDate);
                 Soldier soldier = new Soldier(name, weapon, rank, date);
 
