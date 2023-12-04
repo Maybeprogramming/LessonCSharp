@@ -71,7 +71,7 @@
 
     }
 
-    #region классы деталей
+    #region Классы деталей
 
     abstract class Detail : ICloneable
     {
@@ -464,6 +464,8 @@
 
     #endregion
 
+    #region Interfaces
+
     interface IRepairable
     {
 
@@ -478,6 +480,8 @@
     {
         abstract Detail Clone(bool isBroken);
     }
+
+    #endregion
 
     #region UserUtils
 
