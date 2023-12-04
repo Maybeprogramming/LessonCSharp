@@ -57,9 +57,9 @@
 
         }
 
-        private void PerformDiagnosis(IRepairable vihicle)
+        private List<Detail> GetBrokenDetails(IRepairable vihicle)
         {
-
+            return new List<Detail>();
         }
 
         public void Work()
@@ -72,11 +72,19 @@
     {
         private int _money;
         private Car _car;
+
+        public IRepairable GiveCarForRepair()
+        {
+            return _car;
+        }
     }
 
     class Car : IRepairable
     {
-
+        public List<Detail> GetDetails()
+        {
+            return new List<Detail>();
+        }
     }
 
     //склад
@@ -482,7 +490,7 @@
 
     interface IRepairable
     {
-
+        List<Detail> GetDetails();
     }
 
     interface IRepairProvider
