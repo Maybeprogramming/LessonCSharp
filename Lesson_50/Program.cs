@@ -49,7 +49,12 @@
     //Автосервис
     class CarService : IRepairProvider
     {
-        public void TryRepair(IRepairable vihicle)
+        private void TryRepair(IRepairable vihicle)
+        {
+
+        }
+
+        public void Work()
         {
 
         }
