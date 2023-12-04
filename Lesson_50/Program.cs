@@ -3,6 +3,9 @@
     using static Randomaizer;
     using static Display;
     using static UserInput;
+    using System.Security.Cryptography;
+    using System.Threading.Tasks;
+    using System;
 
     class Program
     {
@@ -12,9 +15,12 @@
     }
 
     //Автосервис
-    class CarService
+    class CarService : IRepairProvider
     {
+        public void TryRepair(IRepairable vihicle)
+        {
 
+        }
     }
 
     class Client
@@ -22,7 +28,7 @@
 
     }
 
-    class Car
+    class Car : IRepairable
     {
 
     }
@@ -34,13 +40,61 @@
     }
 
     //деталь
-    class Detail
+    abstract class Detail
     {
         public string Name { get; }
         public bool IsBroken { get; }
     }
 
+    class Engine : Detail
+    {
+
+    }
+
+    class Transmission : Detail
+    {
+
+    }
+
+
+    #region Словарь деталей
+
     class DetailsDictionary
+    {
+        // Колесо               Wheel
+        // Стекло               Glass
+        // Глушитель            Muffler
+        // Тормоз               Brake
+        // Подвеска             Suspension
+        // Трансмиссия          Transmission
+        // Двигатель            Engine
+        // Генератор            Generator
+        // Кондиционер          Air conditioner
+        // Стартер              Starter
+        // ГРМ                  timing belt
+        // Помпа                water pump
+        // Бензобак             Gas tank
+        // Руль                 Steering wheel
+        // Рулевая рейка        Steering rack
+        // Усилитель руля       Power steering
+        // Приборная панель     Dashboard
+        // Электропроводка      Wiring
+        // Аккумулятор          Battery
+        // Свеча зажигания      Spark plug
+        // Топливный насос      Fuel pump
+        // Масляный фильтр      Oil filter
+        // Коленвал             Crankshaft
+        // Катализатор          Catalyst
+    }
+
+    #endregion
+
+    interface IRepairable
+    {
+
+    }
+
+    interface IRepairProvider
     {
 
     }
