@@ -49,7 +49,15 @@
     //Автосервис
     class CarService : IRepairProvider
     {
-        private void TryRepair(IRepairable vihicle)
+        private PartsWarhouse _partsWarhouse;
+        private int _moneyBalance;
+
+        private void TryRepair(List<Detail> brokenDetails)
+        {
+
+        }
+
+        private void PerformDiagnosis(IRepairable vihicle)
         {
 
         }
@@ -62,7 +70,8 @@
 
     class Client
     {
-
+        private int _money;
+        private Car _car;
     }
 
     class Car : IRepairable
