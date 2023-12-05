@@ -81,9 +81,11 @@
 
     class Car : IRepairable
     {
+        private List<Detail> _details;
+
         public List<Detail> GetDetails()
         {
-            return new List<Detail>();
+            return new List<Detail>(_details);
         }
     }
 
@@ -106,11 +108,11 @@
         public bool IsBroken { get; }
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
 
-        public abstract Detail Clone(bool isBroken);
+        public abstract Detail Clone();
 
         public string ShowInfo()
         {
-            return $"{Name}. Состояние: {IsBrokenToString}";
+            return $"{Name}: [{IsBrokenToString}]";
         }
     }
 
@@ -120,9 +122,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Engine(isBroken);
+            return new Engine(IsBroken);
         }
     }
 
@@ -132,9 +134,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Transmission(isBroken);
+            return new Transmission(IsBroken);
         }
     }
 
@@ -144,9 +146,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Wheel(isBroken);
+            return new Wheel(IsBroken);
         }
     }
 
@@ -156,9 +158,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Glass(isBroken);
+            return new Glass(IsBroken);
         }
     }
 
@@ -168,9 +170,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Muffler(isBroken);
+            return new Muffler(IsBroken);
         }
     }
 
@@ -180,9 +182,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Brake(isBroken);
+            return new Brake(IsBroken);
         }
     }
 
@@ -192,9 +194,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Suspension(isBroken);
+            return new Suspension(IsBroken);
         }
     }
 
@@ -204,9 +206,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Generator(isBroken);
+            return new Generator(IsBroken);
         }
     }
 
@@ -216,9 +218,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new AirConditioner(isBroken);
+            return new AirConditioner(IsBroken);
         }
     }
 
@@ -228,9 +230,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Starter(isBroken);
+            return new Starter(IsBroken);
         }
     }
 
@@ -240,9 +242,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new TimingBelt(isBroken);
+            return new TimingBelt(IsBroken);
         }
     }
 
@@ -252,9 +254,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new WaterPump(isBroken);
+            return new WaterPump(IsBroken);
         }
     }
 
@@ -264,9 +266,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new GasTank(isBroken);
+            return new GasTank(IsBroken);
         }
     }
 
@@ -276,9 +278,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new SteeringWheel(isBroken);
+            return new SteeringWheel(IsBroken);
         }
     }
 
@@ -288,9 +290,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new SteeringRack(isBroken);
+            return new SteeringRack(IsBroken);
         }
     }
 
@@ -300,9 +302,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new PowerSteering(isBroken);
+            return new PowerSteering(IsBroken);
         }
     }
 
@@ -312,9 +314,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Dashboard(isBroken);
+            return new Dashboard(IsBroken);
         }
     }
 
@@ -324,9 +326,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Wiring(isBroken);
+            return new Wiring(IsBroken);
         }
     }
 
@@ -336,9 +338,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Battery(isBroken);
+            return new Battery(IsBroken);
         }
     }
 
@@ -348,9 +350,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new SparkPlug(isBroken);
+            return new SparkPlug(IsBroken);
         }
     }
 
@@ -360,9 +362,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new FuelPump(isBroken);
+            return new FuelPump(IsBroken);
         }
     }
 
@@ -372,9 +374,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new OilFilter(isBroken);
+            return new OilFilter(IsBroken);
         }
     }
 
@@ -384,9 +386,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Crankshaft(isBroken);
+            return new Crankshaft(IsBroken);
         }
     }
 
@@ -396,9 +398,9 @@
         {
         }
 
-        public override Detail Clone(bool isBroken)
+        public override Detail Clone()
         {
-            return new Catalyst(isBroken);
+            return new Catalyst(IsBroken);
         }
     }
 
@@ -500,7 +502,7 @@
 
     interface ICloneable
     {
-        abstract Detail Clone(bool isBroken);
+        abstract Detail Clone();
     }
 
     #endregion
