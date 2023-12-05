@@ -474,7 +474,6 @@
 
         public static string TryGetName(Type detail)
         {
-
             if (s_Details.TryGetValue(detail, out string name) == true)
             {
                 return name;
