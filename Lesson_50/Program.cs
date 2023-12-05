@@ -92,7 +92,7 @@
     //склад
     class PartsWarhouse
     {
-
+        private Dictionary<Detail, int> _priceListDetails;
     }
 
     #region Классы деталей
@@ -382,6 +382,38 @@
     interface ICloneable
     {
         abstract Detail Clone();
+    }
+
+    #endregion
+
+    #region Enums
+
+    enum Details
+    {
+        Engine,
+        Transmission,
+        Wheel,
+        Glass,
+        Muffler,
+        Brake,
+        Suspension,
+        Generator,
+        AirConditioner,
+        Starter,
+        TimingBelt,
+        WaterPump,
+        GasTank,
+        SteeringWheel,
+        SteeringRack,
+        PowerSteering,
+        Dashboard,
+        Wiring,
+        Battery,
+        SparkPlug,
+        FuelPump,
+        OilFilter,
+        Crankshaft,
+        Catalyst
     }
 
     #endregion
