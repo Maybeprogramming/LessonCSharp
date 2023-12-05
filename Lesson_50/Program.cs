@@ -118,290 +118,170 @@
 
     class Engine : Detail
     {
-        public Engine(bool isBroken) : base(isBroken)
-        {
-        }
+        public Engine(bool isBroken) : base(isBroken){}
 
-        public override Detail Clone()
-        {
-            return new Engine(IsBroken);
-        }
+        public override Detail Clone() => new Engine(IsBroken);
     }
 
     class Transmission : Detail
     {
-        public Transmission(bool isBroken) : base(isBroken)
-        {
-        }
+        public Transmission(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Transmission(IsBroken);
-        }
+        public override Detail Clone() => new Transmission(IsBroken);
     }
 
     class Wheel : Detail
     {
-        public Wheel(bool isBroken) : base(isBroken)
-        {
-        }
+        public Wheel(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Wheel(IsBroken);
-        }
+        public override Detail Clone() => new Wheel(IsBroken);
     }
 
     class Glass : Detail
     {
-        public Glass(bool isBroken) : base(isBroken)
-        {
-        }
+        public Glass(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Glass(IsBroken);
-        }
+        public override Detail Clone() => new Glass(IsBroken);
     }
 
     class Muffler : Detail
     {
-        public Muffler(bool isBroken) : base(isBroken)
-        {
-        }
+        public Muffler(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Muffler(IsBroken);
-        }
+        public override Detail Clone() => new Muffler(IsBroken);
     }
 
     class Brake : Detail
     {
-        public Brake(bool isBroken) : base(isBroken)
-        {
-        }
+        public Brake(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Brake(IsBroken);
-        }
+        public override Detail Clone() => new Brake(IsBroken);
     }
 
     class Suspension : Detail
     {
-        public Suspension(bool isBroken) : base(isBroken)
-        {
-        }
+        public Suspension(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Suspension(IsBroken);
-        }
+        public override Detail Clone() => new Suspension(IsBroken);
     }
 
     class Generator : Detail
     {
-        public Generator(bool isBroken) : base(isBroken)
-        {
-        }
+        public Generator(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Generator(IsBroken);
-        }
+        public override Detail Clone() => new Generator(IsBroken);
     }
 
     class AirConditioner : Detail
     {
-        public AirConditioner(bool isBroken) : base(isBroken)
-        {
-        }
+        public AirConditioner(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new AirConditioner(IsBroken);
-        }
+        public override Detail Clone() => new AirConditioner(IsBroken);
     }
 
     class Starter : Detail
     {
-        public Starter(bool isBroken) : base(isBroken)
-        {
-        }
+        public Starter(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Starter(IsBroken);
-        }
+        public override Detail Clone() => new Starter(IsBroken);
     }
 
     class TimingBelt : Detail
     {
-        public TimingBelt(bool isBroken) : base(isBroken)
-        {
-        }
+        public TimingBelt(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new TimingBelt(IsBroken);
-        }
+        public override Detail Clone() => new TimingBelt(IsBroken);
     }
 
     class WaterPump : Detail
     {
-        public WaterPump(bool isBroken) : base(isBroken)
-        {
-        }
+        public WaterPump(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new WaterPump(IsBroken);
-        }
+        public override Detail Clone()=> new WaterPump(IsBroken);
     }
 
     class GasTank : Detail
     {
-        public GasTank(bool isBroken) : base(isBroken)
-        {
-        }
+        public GasTank(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new GasTank(IsBroken);
-        }
+        public override Detail Clone() => new GasTank(IsBroken);
     }
 
     class SteeringWheel : Detail
     {
-        public SteeringWheel(bool isBroken) : base(isBroken)
-        {
-        }
+        public SteeringWheel(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new SteeringWheel(IsBroken);
-        }
+        public override Detail Clone() => new SteeringWheel(IsBroken);
     }
 
     class SteeringRack : Detail
     {
-        public SteeringRack(bool isBroken) : base(isBroken)
-        {
-        }
+        public SteeringRack(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new SteeringRack(IsBroken);
-        }
+        public override Detail Clone() => new SteeringRack(IsBroken);
     }
 
     class PowerSteering : Detail
     {
-        public PowerSteering(bool isBroken) : base(isBroken)
-        {
-        }
+        public PowerSteering(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new PowerSteering(IsBroken);
-        }
+        public override Detail Clone() => new PowerSteering(IsBroken);
     }
 
     class Dashboard : Detail
     {
-        public Dashboard(bool isBroken) : base(isBroken)
-        {
-        }
+        public Dashboard(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Dashboard(IsBroken);
-        }
+        public override Detail Clone() => new Dashboard(IsBroken);
     }
 
     class Wiring : Detail
     {
-        public Wiring(bool isBroken) : base(isBroken)
-        {
-        }
+        public Wiring(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Wiring(IsBroken);
-        }
+        public override Detail Clone() => new Wiring(IsBroken);
     }
 
     class Battery : Detail
     {
-        public Battery(bool isBroken) : base(isBroken)
-        {
-        }
+        public Battery(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Battery(IsBroken);
-        }
+        public override Detail Clone() => new Battery(IsBroken);
     }
 
     class SparkPlug : Detail
     {
-        public SparkPlug(bool isBroken) : base(isBroken)
-        {
-        }
+        public SparkPlug(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new SparkPlug(IsBroken);
-        }
+        public override Detail Clone() => new SparkPlug(IsBroken);
     }
 
     class FuelPump : Detail
     {
-        public FuelPump(bool isBroken) : base(isBroken)
-        {
-        }
+        public FuelPump(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new FuelPump(IsBroken);
-        }
+        public override Detail Clone() => new FuelPump(IsBroken);
     }
 
     class OilFilter : Detail
     {
-        public OilFilter(bool isBroken) : base(isBroken)
-        {
-        }
+        public OilFilter(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new OilFilter(IsBroken);
-        }
+        public override Detail Clone() => new OilFilter(IsBroken);
     }
 
     class Crankshaft : Detail
     {
-        public Crankshaft(bool isBroken) : base(isBroken)
-        {
-        }
+        public Crankshaft(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Crankshaft(IsBroken);
-        }
+        public override Detail Clone() => new Crankshaft(IsBroken);
     }
 
     class Catalyst : Detail
     {
-        public Catalyst(bool isBroken) : base(isBroken)
-        {
-        }
+        public Catalyst(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()
-        {
-            return new Catalyst(IsBroken);
-        }
+        public override Detail Clone() => new Catalyst(IsBroken);
     }
 
     #endregion
