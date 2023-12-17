@@ -33,7 +33,7 @@
                 new FuelPump(false),
                 new OilFilter(false),
                 new Crankshaft(false),
-                new Catalyst(false)
+                new Catalyst(false),
             };
 
 
