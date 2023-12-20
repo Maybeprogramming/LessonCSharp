@@ -10,7 +10,7 @@
         {
             List<Detail> details = new List<Detail>()
             {
-                new Engine(false),
+                new Engine(true),
                 new Transmission(false),
                 new Wheel(false),
                 new Glass(false),
