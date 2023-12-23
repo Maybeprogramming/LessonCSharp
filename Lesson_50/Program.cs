@@ -47,12 +47,12 @@
     }
 
     //Автосервис
-    class CarService : IRepairProvider
+    class CarService
     {
         private PartsWarhouse _partsWarhouse;
         private int _moneyBalance;
 
-        private void TryRepair(List<Detail> brokenDetails)
+        private void TryRepair(IRepairable car)
         {
 
         }
@@ -83,16 +83,78 @@
     {
         private List<Detail> _details;
 
-        public List<Detail> GetDetails()
+        public bool IsNeedRepair { get => _details.Contains(_details.First(detail => detail.IsBroken == true)) == true; }
+
+        public string GetNameBrokenDetail()
         {
-            return new List<Detail>(_details);
+            return _details.First(detail => detail.IsBroken == true).Name;
+        }
+
+        public bool TryAcceptRepair(Detail detail)
+        {
+            if (_details.Contains(detail) == true)
+            {
+                int index = _details.IndexOf(detail);
+                _details[index] = detail;
+
+                return true;
+            }
+
+            return false;
         }
     }
 
     //склад
     class PartsWarhouse
     {
-        private Dictionary<Detail, int> _priceListDetails;
+        private Dictionary<Type, int> _pricesOfDetails;
+
+        public PartsWarhouse()
+        {
+            _pricesOfDetails = new Dictionary<Type, int>()
+            {
+                {typeof(Engine), 1000},
+                {typeof(Transmission), 850},
+                {typeof(Wheel), 200},
+                {typeof(Glass), 150},
+                {typeof(Muffler),  100},
+                {typeof(Brake),  100},
+                {typeof(Suspension),  100},
+                {typeof(Generator),  150},
+                {typeof(AirConditioner),  300},
+                {typeof(Starter),  200},
+                {typeof(TimingBelt),  250},
+                {typeof(WaterPump),  230},
+                {typeof(GasTank),  350},
+                {typeof(SteeringWheel),  450},
+                {typeof(SteeringRack),  650},
+                {typeof(PowerSteering),  500},
+                {typeof(Dashboard),  700},
+                {typeof(Wiring),  550},
+                {typeof(Battery),  250},
+                {typeof(SparkPlug),  100},
+                {typeof(FuelPump),  300},
+                {typeof(OilFilter),  180},
+                {typeof(Crankshaft),  400},
+                {typeof(Catalyst),  900},
+            };
+        }
+
+        public bool TryGetPrice(Type detail, out int priceOfDetail)
+        {
+            if (_pricesOfDetails.TryGetValue(detail, out int price) == true)
+            {
+                priceOfDetail = price;
+
+                return true;
+            }
+            else
+            {
+                priceOfDetail = 0;
+
+                return false;
+            }
+        }
     }
 
     #region Классы деталей
@@ -118,7 +180,7 @@
 
     class Engine : Detail
     {
-        public Engine(bool isBroken) : base(isBroken){}
+        public Engine(bool isBroken) : base(isBroken) { }
 
         public override Detail Clone() => new Engine(IsBroken);
     }
@@ -197,7 +259,7 @@
     {
         public WaterPump(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone()=> new WaterPump(IsBroken);
+        public override Detail Clone() => new WaterPump(IsBroken);
     }
 
     class GasTank : Detail
@@ -318,7 +380,7 @@
     #endregion
 
     static class DetailsDictionary
-    {  
+    {
         private static Dictionary<Type, string> s_Details;
 
         static DetailsDictionary()
@@ -371,12 +433,11 @@
 
     interface IRepairable
     {
-        List<Detail> GetDetails();
-    }
+        bool IsNeedRepair { get; }
 
-    interface IRepairProvider
-    {
+        string GetNameBrokenDetail();
 
+        bool TryAcceptRepair(Detail detail);
     }
 
     interface ICloneable
