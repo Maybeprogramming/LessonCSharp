@@ -70,7 +70,7 @@
     class Client
     {
         private int _money;
-        private Car _car;
+        private IRepairable _car;
 
         public IRepairable GiveCarForRepair()
         {
