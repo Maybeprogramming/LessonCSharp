@@ -36,7 +36,6 @@
                 new Catalyst(false),
             };
 
-
             for (int i = 0; i < details.Count; i++)
             {
                 Print($"{i + 1}. {details[i].ShowInfo()}\n");
