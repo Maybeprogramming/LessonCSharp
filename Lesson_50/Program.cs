@@ -1,8 +1,7 @@
 ﻿namespace Lesson_50
 {
-    using static Randomaizer;
     using static Display;
-    using static UserInput;
+    using static Randomaizer;
 
     class Program
     {
@@ -70,7 +69,7 @@
         private int _money;
         private Car _car;
 
-        public IRepairable GiveCarForRepair()
+        public IRepairable GiveCar()
         {
             return _car;
         }
@@ -93,11 +92,11 @@
 
     class DetailsFactory
     {
-        private int _wheelCount = 4;
-        private int _glassCount = 4;
-        private int _minSparkPlug = 4;
-        private int _maxSparkPlug = 12;
-        private int _stepSparkPlug = 2;
+        private int _wheelsCount = 4;
+        private int _glassesCount = 4;
+        private int _minSparkesPlug = 4;
+        private int _maxSparkesPlug = 12;
+        private int _stepSparkesPlug = 2;
 
         public List<Detail> CreateSomeDetails()
         {
