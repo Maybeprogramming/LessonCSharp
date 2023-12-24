@@ -8,38 +8,41 @@
     {
         static void Main()
         {
-            List<Detail> details = new List<Detail>()
-            {
-                new Engine(true),
-                new Transmission(false),
-                new Wheel(false),
-                new Glass(false),
-                new Muffler(false),
-                new Brake(false),
-                new Suspension(false),
-                new Generator(false),
-                new AirConditioner(false),
-                new Starter(false),
-                new TimingBelt(false),
-                new WaterPump(false),
-                new GasTank(false),
-                new SteeringWheel(false),
-                new SteeringRack(false),
-                new PowerSteering(false),
-                new Dashboard(false),
-                new Wiring(false),
-                new Battery(false),
-                new SparkPlug(false),
-                new FuelPump(false),
-                new OilFilter(false),
-                new Crankshaft(false),
-                new Catalyst(false),
-            };
+            //List<Detail> details = new List<Detail>()
+            //{
+            //    new Engine(true),
+            //    new Transmission(false),
+            //    new Wheel(false),
+            //    new Glass(false),
+            //    new Muffler(false),
+            //    new Brake(false),
+            //    new Suspension(false),
+            //    new Generator(false),
+            //    new AirConditioner(false),
+            //    new Starter(false),
+            //    new TimingBelt(false),
+            //    new WaterPump(false),
+            //    new GasTank(false),
+            //    new SteeringWheel(false),
+            //    new SteeringRack(false),
+            //    new PowerSteering(false),
+            //    new Dashboard(false),
+            //    new Wiring(false),
+            //    new Battery(false),
+            //    new SparkPlug(false),
+            //    new FuelPump(false),
+            //    new OilFilter(false),
+            //    new Crankshaft(false),
+            //    new Catalyst(false),
+            //};
 
-            for (int i = 0; i < details.Count; i++)
-            {
-                Print($"{i + 1}. {details[i].ShowInfo()}\n");
-            }
+            //for (int i = 0; i < details.Count; i++)
+            //{
+            //    Print($"{i + 1}. {details[i].ShowInfo()}\n");
+            //}
+
+            PartsStock partsStock = new PartsStock();
+            partsStock.ShowInfo();
 
             Console.ReadKey();
         }
@@ -75,11 +78,16 @@
 
     class CarFactory
     {
-        private Car _car;
+        private DetailsFactory _detailsFactory;
 
-        public CarFactory()
+        public CarFactory(DetailsFactory detailsFactory)
         {
+            _detailsFactory = detailsFactory;
+        }
 
+        public Car Create()
+        {
+            return new Car(_detailsFactory.CreateSomeDetails());
         }
     }
 
@@ -91,17 +99,9 @@
         private int _maxSparkPlug = 12;
         private int _stepSparkPlug = 2;
 
-        public List<Detail> CreateSomeDetails(int detailCount, DetailsTypes detailsType)
+        public List<Detail> CreateSomeDetails()
         {
             List<Detail> details = new List<Detail>();
-
-            if (detailsType == DetailsTypes.Wheel)
-            {
-                for (int i = 0; i < detailCount; i++)
-                {
-                    details.Add(new Wheel(false));
-                }
-            }
 
             return details;
         }
@@ -202,7 +202,7 @@
                 DetailsTypes.Catalyst,
             };
 
-            FillDetails();
+            _detailsCounts = FillDetails();
         }
 
         public bool TryGetPrice(DetailsTypes detail, out int priceOfDetail)
@@ -221,7 +221,15 @@
             }
         }
 
-        private void FillDetails()
+        public void ShowInfo()
+        {
+            foreach (var detail in _detailsCounts)
+            {
+                Console.WriteLine($"{detail.Key.ToString()} - {detail.Value}");
+            }
+        }
+
+        private Dictionary<DetailsTypes, int> FillDetails()
         {
             Dictionary<DetailsTypes, int> detailsCounts = new Dictionary<DetailsTypes, int>();
             int minDetailCount = 0;
@@ -231,6 +239,8 @@
             {
                 detailsCounts.Add(_detailsTypes[i], GenerateRandomNumber(minDetailCount, maxDetailCount + 1));
             }
+
+            return detailsCounts;
         }
     }
 
