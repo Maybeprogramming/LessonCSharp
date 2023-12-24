@@ -104,6 +104,11 @@
         }
     }
 
+    class DetailsFactory
+    {
+
+    }
+
     class Car : IRepairable
     {
         private List<Detail> _details;
