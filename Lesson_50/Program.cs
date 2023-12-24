@@ -48,7 +48,7 @@
     //Автосервис
     class CarService
     {
-        private PartsWarhouse _partsWarhouse;
+        private PartsStock _partsWarhouse;
         private int _moneyBalance;
 
         private void TryRepair(IRepairable car)
@@ -138,42 +138,74 @@
     }
 
     //склад
-    class PartsWarhouse
+    class PartsStock
     {
-        private Dictionary<Type, int> _pricesOfDetails;
+        private Dictionary<DetailsTypes, int> _pricesOfDetails;
+        private Dictionary<DetailsTypes, int> _detailsCounts;
+        private List<DetailsTypes> _detailsTypes;
 
-        public PartsWarhouse()
+        public PartsStock()
         {
-            _pricesOfDetails = new Dictionary<Type, int>()
+            _pricesOfDetails = new Dictionary<DetailsTypes, int>()
             {
-                {typeof(Engine), 1000},
-                {typeof(Transmission), 850},
-                {typeof(Wheel), 200},
-                {typeof(Glass), 150},
-                {typeof(Muffler),  100},
-                {typeof(Brake),  100},
-                {typeof(Suspension),  100},
-                {typeof(Generator),  150},
-                {typeof(AirConditioner),  300},
-                {typeof(Starter),  200},
-                {typeof(TimingBelt),  250},
-                {typeof(WaterPump),  230},
-                {typeof(GasTank),  350},
-                {typeof(SteeringWheel),  450},
-                {typeof(SteeringRack),  650},
-                {typeof(PowerSteering),  500},
-                {typeof(Dashboard),  700},
-                {typeof(Wiring),  550},
-                {typeof(Battery),  250},
-                {typeof(SparkPlug),  100},
-                {typeof(FuelPump),  300},
-                {typeof(OilFilter),  180},
-                {typeof(Crankshaft),  400},
-                {typeof(Catalyst),  900},
+                {DetailsTypes.Engine, 1000},
+                {DetailsTypes.Transmission, 850},
+                {DetailsTypes.Wheel, 200},
+                {DetailsTypes.Glass, 150},
+                {DetailsTypes.Muffler,  100},
+                {DetailsTypes.Brake,  100},
+                {DetailsTypes.Suspension,  100},
+                {DetailsTypes.Generator,  150},
+                {DetailsTypes.AirConditioner,  300},
+                {DetailsTypes.Starter,  200},
+                {DetailsTypes.TimingBelt,  250},
+                {DetailsTypes.WaterPump,  230},
+                {DetailsTypes.GasTank,  350},
+                {DetailsTypes.SteeringWheel,  450},
+                {DetailsTypes.SteeringRack,  650},
+                {DetailsTypes.PowerSteering,  500},
+                {DetailsTypes.Dashboard,  700},
+                {DetailsTypes.Wiring,  550},
+                {DetailsTypes.Battery,  250},
+                {DetailsTypes.SparkPlug,  100},
+                {DetailsTypes.FuelPump,  300},
+                {DetailsTypes.OilFilter,  180},
+                {DetailsTypes.Crankshaft,  400},
+                {DetailsTypes.Catalyst,  900},
             };
+
+            _detailsTypes = new List<DetailsTypes>()
+            {
+                DetailsTypes.Engine,
+                DetailsTypes.Transmission,
+                DetailsTypes.Wheel,
+                DetailsTypes.Glass,
+                DetailsTypes.Muffler,
+                DetailsTypes.Brake,
+                DetailsTypes.Suspension,
+                DetailsTypes.Generator,
+                DetailsTypes.AirConditioner,
+                DetailsTypes.Starter,
+                DetailsTypes.TimingBelt,
+                DetailsTypes.WaterPump,
+                DetailsTypes.GasTank,
+                DetailsTypes.SteeringWheel,
+                DetailsTypes.SteeringRack,
+                DetailsTypes.PowerSteering,
+                DetailsTypes.Dashboard,
+                DetailsTypes.Wiring,
+                DetailsTypes.Battery,
+                DetailsTypes.SparkPlug,
+                DetailsTypes.FuelPump,
+                DetailsTypes.OilFilter,
+                DetailsTypes.Crankshaft,
+                DetailsTypes.Catalyst,
+            };
+
+            FillDetails();
         }
 
-        public bool TryGetPrice(Type detail, out int priceOfDetail)
+        public bool TryGetPrice(DetailsTypes detail, out int priceOfDetail)
         {
             if (_pricesOfDetails.TryGetValue(detail, out int price) == true)
             {
@@ -186,6 +218,18 @@
                 priceOfDetail = 0;
 
                 return false;
+            }
+        }
+
+        private void FillDetails()
+        {
+            Dictionary<DetailsTypes, int> detailsCounts = new Dictionary<DetailsTypes, int>();
+            int minDetailCount = 0;
+            int maxDetailCount = 10;
+
+            for (int i = 0; i < _detailsTypes.Count; i++)
+            {
+                detailsCounts.Add(_detailsTypes[i], GenerateRandomNumber(minDetailCount, maxDetailCount + 1));
             }
         }
     }
