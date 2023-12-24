@@ -76,17 +76,20 @@
     class CarFactory
     {
         private Car _car;
-        private int _wheelCount = 4;
-        private int _glassCount = 4;
-        private int _minSparkPlug = 4;
-        private int _maxSparkPlug = 12;
-        private int _stepSparkPlug = 2;
-
 
         public CarFactory()
         {
 
         }
+    }
+
+    class DetailsFactory
+    {
+        private int _wheelCount = 4;
+        private int _glassCount = 4;
+        private int _minSparkPlug = 4;
+        private int _maxSparkPlug = 12;
+        private int _stepSparkPlug = 2;
 
         public List<Detail> CreateSomeDetails(int detailCount, DetailsTypes detailsType)
         {
@@ -104,14 +107,14 @@
         }
     }
 
-    class DetailsFactory
-    {
-
-    }
-
     class Car : IRepairable
     {
         private List<Detail> _details;
+
+        public Car(List<Detail> details)
+        {
+            _details = details;
+        }
 
         public bool IsNeedRepair { get => _details.Contains(_details.First(detail => detail.IsBroken == true)) == true; }
 
