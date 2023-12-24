@@ -57,11 +57,6 @@
 
         }
 
-        private List<Detail> GetBrokenDetails(IRepairable vihicle)
-        {
-            return new List<Detail>();
-        }
-
         public void Work()
         {
 
