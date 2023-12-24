@@ -3,6 +3,7 @@
     using static Randomaizer;
     using static Display;
     using static UserInput;
+    using System.Net.Http.Headers;
 
     class Program
     {
@@ -75,6 +76,37 @@
         public IRepairable GiveCarForRepair()
         {
             return _car;
+        }
+    }
+
+    class CarFactory
+    {
+        private Car _car;
+        private int _wheelCount = 4;
+        private int _glassCount = 4;
+        private int _minSparkPlug = 4;
+        private int _maxSparkPlug = 12;
+        private int _stepSparkPlug = 2;
+
+
+        public CarFactory()
+        {
+
+        }
+
+        public List<Detail> CreateSomeDetails(int detailCount, DetailsTypes detailsType)
+        {
+            List<Detail> details = new List<Detail>();
+
+            if (detailsType == DetailsTypes.Wheel)
+            {
+                for (int i = 0; i < detailCount; i++)
+                {
+                    details.Add(new Wheel(false));
+                }
+            }
+
+            return details;
         }
     }
 
@@ -413,6 +445,8 @@
             };
         }
 
+        public static int DetailsCount => s_Details.Count;
+
         public static string TryGetName(Type detail)
         {
             if (s_Details.TryGetValue(detail, out string name) == true)
@@ -448,7 +482,7 @@
 
     #region Enums
 
-    enum Details
+    enum DetailsTypes
     {
         Engine,
         Transmission,
