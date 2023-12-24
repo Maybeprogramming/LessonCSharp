@@ -3,7 +3,6 @@
     using static Randomaizer;
     using static Display;
     using static UserInput;
-    using System.Net.Http.Headers;
 
     class Program
     {
