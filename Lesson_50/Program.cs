@@ -11,7 +11,7 @@
             List<Detail> details = new List<Detail>()
             {
                 new Engine(false),
-                new Transmission(true),
+                new Transmission(false),
                 new Wheel(false),
                 new Glass(false),
                 new Muffler(false),
@@ -38,7 +38,7 @@
 
             Car car = new Car(details);
             Console.WriteLine($"{car.IsNeedRepair}");
-            Console.WriteLine($"{car.GetNameBrokenDetail()}");
+            Console.WriteLine($"{car.TryGetNameBrokenDetail()}");
             Console.WriteLine($"----------------------------------");
 
             //for (int i = 0; i < details.Count; i++)
@@ -120,14 +120,18 @@
         public Car(List<Detail> details)
         {
             _details = details;
-            _brokenDetail = _details.FirstOrDefault(detail => detail.IsBroken == true);
         }
 
         public bool IsNeedRepair { get => _details.Contains(GetBrokenDetail()); }
 
-        public string GetNameBrokenDetail()
+        public string TryGetNameBrokenDetail()
         {
-            return _brokenDetail.Name;
+            if (_brokenDetail != null)
+            {
+                return _brokenDetail.Name;
+            }
+
+            return "Нет неисправных элементов в машине";
         }
 
         public bool TryAcceptRepair(Detail detail)
@@ -145,6 +149,8 @@
 
         private Detail GetBrokenDetail()
         {
+            _brokenDetail = _details.FirstOrDefault(detail => detail.IsBroken == true);
+
             return _brokenDetail;
         }
     }
@@ -536,7 +542,7 @@
     {
         bool IsNeedRepair { get; }
 
-        string GetNameBrokenDetail();
+        string TryGetNameBrokenDetail();
 
         bool TryAcceptRepair(Detail detail);
     }
