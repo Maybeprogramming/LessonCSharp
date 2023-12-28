@@ -115,7 +115,7 @@
             _details = details;
         }
 
-        public bool IsNeedRepair { get => _details.Contains(_details.First(detail => detail.IsBroken == true)) == true; }
+        public bool IsNeedRepair { get => _details.Contains(_details.First(detail => detail.IsBroken == true)) }
 
         public string GetNameBrokenDetail()
         {
@@ -133,6 +133,11 @@
             }
 
             return false;
+        }
+
+        private Detail GetBrokenDetail()
+        {
+            return _details.First(detail => detail.IsBroken == true);
         }
     }
 
