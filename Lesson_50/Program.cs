@@ -46,9 +46,11 @@
                 Print($"{i + 1}. {details[i].ShowInfo()}\n");
             }
 
-            Console.WriteLine($"\n----------------------------------\n");
+            Console.WriteLine($"\n----------------------------------");
 
             PartsStock partsStock = new PartsStock();
+
+            Console.WriteLine($"Запчастей на складе:\n");
             partsStock.ShowInfo();
 
             Console.ReadKey();
@@ -161,7 +163,7 @@
     class PartsStock
     {
         private Dictionary<DetailsTypes, int> _pricesOfDetails;
-        private Dictionary<DetailsTypes, int> _detailsCounts;
+        private Dictionary<DetailsTypes, int> _detailsAmounts;
         private List<DetailsTypes> _detailsTypes;
 
         public PartsStock()
@@ -194,6 +196,7 @@
                 {DetailsTypes.Catalyst,  900},
             };
 
+            //Получать список типов из Словаря
             _detailsTypes = new List<DetailsTypes>()
             {
                 DetailsTypes.Engine,
@@ -222,7 +225,7 @@
                 DetailsTypes.Catalyst,
             };
 
-            _detailsCounts = FillDetails();
+            _detailsAmounts = FillDetails();
         }
 
         public bool TryGetPrice(DetailsTypes detail, out int priceOfDetail)
@@ -243,9 +246,15 @@
 
         public void ShowInfo()
         {
-            foreach (var detail in _detailsCounts)
+            int index = 0;
+
+            foreach (var detail in _detailsAmounts)
             {
-                Console.WriteLine($"{detail.Key.ToString()} - {detail.Value}");
+                int priceValue;
+                string detailName = DetailsDictionary.TryGetName(detail.Key);
+                _pricesOfDetails.TryGetValue(detail.Key, out priceValue);
+
+                Console.WriteLine($"{++index}. {detailName} - {detail.Value} штук. Цена: {priceValue} руб. за 1 деталь.");
             }
         }
 
@@ -273,8 +282,8 @@
             IsBroken = isBroken;
         }
 
-        public DetailsTypes detailType { get; }
-        public string Name { get => DetailsDictionary.TryGetName(this); }
+        public DetailsTypes detailType { get => DetailsDictionary.TryGetDetailType(GetType()); }
+        public string Name { get => DetailsDictionary.TryGetName(detailType); }
         public bool IsBroken { get; }
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
 
@@ -490,7 +499,10 @@
     static class DetailsDictionary
     {
         private static Dictionary<Detail, string> s_Details;
+        private static Dictionary<DetailsTypes, string> s_DetailsNames;
+        private static Dictionary<Type, DetailsTypes> s_DetailsTypes;
 
+        //Сделать методы для заполнения словарей -> облегчит добавление новых деталей в словари.
         static DetailsDictionary()
         {
             s_Details = new Dictionary<Detail, string>()
@@ -518,15 +530,78 @@
                 {new FuelPump(false), "Топливный насос" },
                 {new OilFilter(false), "Масляный фильтр" },
                 {new Crankshaft(false), "Коленвал" },
-                {new Catalyst(false), "Катализатор" },
+                {new Catalyst(false), "Катализатор" }
+            };
+
+            s_DetailsNames = new Dictionary<DetailsTypes, string>()
+            {
+                {DetailsTypes.Engine, "Двигатель"},
+                {DetailsTypes.Transmission, "Трансмиссия" },
+                {DetailsTypes.Wheel, "Колесо" },
+                {DetailsTypes.Glass, "Стекло" },
+                {DetailsTypes.Muffler, "Глушитель" },
+                {DetailsTypes.Brake, "Тормоз" },
+                {DetailsTypes.Suspension, "Подвеска" },
+                {DetailsTypes.Generator, "Генератор" },
+                {DetailsTypes.AirConditioner, "Кондиционер" },
+                {DetailsTypes.Starter, "Стартер" },
+                {DetailsTypes.TimingBelt, "ГРМ" },
+                {DetailsTypes.WaterPump, "Водяная помпа" },
+                {DetailsTypes.GasTank, "Бензобак" },
+                {DetailsTypes.SteeringWheel, "Руль" },
+                {DetailsTypes.SteeringRack, "Рулевая рейка" },
+                {DetailsTypes.PowerSteering, "Усилитель руля" },
+                {DetailsTypes.Dashboard, "Приборная панель" },
+                {DetailsTypes.Wiring, "Электропроводка" },
+                {DetailsTypes.Battery, "Аккумулятор" },
+                {DetailsTypes.SparkPlug, "Свеча зажигания" },
+                {DetailsTypes.FuelPump, "Топливный насос" },
+                {DetailsTypes.OilFilter, "Масляный фильтр" },
+                {DetailsTypes.Crankshaft, "Коленвал" },
+                {DetailsTypes.Catalyst, "Катализатор" }
+            };
+
+            s_DetailsTypes = new Dictionary<Type, DetailsTypes>()
+            {
+                {typeof(Engine), DetailsTypes.Engine},
+                {typeof(Transmission), DetailsTypes.Transmission },
+                {typeof(Wheel), DetailsTypes.Wheel },
+                {typeof(Glass), DetailsTypes.Glass },
+                {typeof(Muffler), DetailsTypes.Muffler },
+                {typeof(Brake), DetailsTypes.Brake },
+                {typeof(Suspension), DetailsTypes.Suspension },
+                {typeof(Generator), DetailsTypes.Generator },
+                {typeof(AirConditioner), DetailsTypes.AirConditioner },
+                {typeof(Starter), DetailsTypes.Starter },
+                {typeof(TimingBelt), DetailsTypes.TimingBelt },
+                {typeof(WaterPump), DetailsTypes.WaterPump },
+                {typeof(GasTank), DetailsTypes.GasTank },
+                {typeof(SteeringWheel), DetailsTypes.SteeringWheel },
+                {typeof(SteeringRack), DetailsTypes.SteeringRack},
+                {typeof(PowerSteering), DetailsTypes.PowerSteering },
+                {typeof(Dashboard), DetailsTypes.Dashboard },
+                {typeof(Wiring), DetailsTypes.Wiring },
+                {typeof(Battery), DetailsTypes.Battery },
+                {typeof(SparkPlug), DetailsTypes.SparkPlug },
+                {typeof(FuelPump), DetailsTypes.FuelPump },
+                {typeof(OilFilter), DetailsTypes.OilFilter },
+                {typeof(Crankshaft), DetailsTypes.Crankshaft },
+                {typeof(Catalyst), DetailsTypes.Catalyst }
             };
         }
 
         public static int DetailsCount => s_Details.Count;
 
-        public static string TryGetName(Detail detail)
+        internal static DetailsTypes TryGetDetailType(Type detail)
         {
-            if (s_Details.TryGetValue(detail, out string name) == true)
+            s_DetailsTypes.TryGetValue(detail, out DetailsTypes detailsTypes);
+
+            return detailsTypes;
+        }
+
+        internal static string TryGetName(DetailsTypes detailType)
+        {
+            if (s_DetailsNames.TryGetValue(detailType, out string name) == true)
             {
                 return name;
             }
