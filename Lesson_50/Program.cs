@@ -1,5 +1,6 @@
 ﻿namespace Lesson_50
 {
+    using System.Linq;
     using static Display;
     using static Randomaizer;
 
@@ -7,33 +8,38 @@
     {
         static void Main()
         {
-            //List<Detail> details = new List<Detail>()
-            //{
-            //    new Engine(true),
-            //    new Transmission(false),
-            //    new Wheel(false),
-            //    new Glass(false),
-            //    new Muffler(false),
-            //    new Brake(false),
-            //    new Suspension(false),
-            //    new Generator(false),
-            //    new AirConditioner(false),
-            //    new Starter(false),
-            //    new TimingBelt(false),
-            //    new WaterPump(false),
-            //    new GasTank(false),
-            //    new SteeringWheel(false),
-            //    new SteeringRack(false),
-            //    new PowerSteering(false),
-            //    new Dashboard(false),
-            //    new Wiring(false),
-            //    new Battery(false),
-            //    new SparkPlug(false),
-            //    new FuelPump(false),
-            //    new OilFilter(false),
-            //    new Crankshaft(false),
-            //    new Catalyst(false),
-            //};
+            List<Detail> details = new List<Detail>()
+            {
+                new Engine(false),
+                new Transmission(true),
+                new Wheel(false),
+                new Glass(false),
+                new Muffler(false),
+                new Brake(false),
+                new Suspension(false),
+                new Generator(false),
+                new AirConditioner(false),
+                new Starter(false),
+                new TimingBelt(false),
+                new WaterPump(false),
+                new GasTank(false),
+                new SteeringWheel(false),
+                new SteeringRack(false),
+                new PowerSteering(false),
+                new Dashboard(false),
+                new Wiring(false),
+                new Battery(false),
+                new SparkPlug(false),
+                new FuelPump(false),
+                new OilFilter(false),
+                new Crankshaft(false),
+                new Catalyst(false),
+            };
+
+            Car car = new Car(details);
+            Console.WriteLine($"{car.IsNeedRepair}");
+            Console.WriteLine($"{car.GetNameBrokenDetail()}");
+            Console.WriteLine($"----------------------------------");
 
             //for (int i = 0; i < details.Count; i++)
             //{
@@ -109,17 +115,19 @@
     class Car : IRepairable
     {
         private List<Detail> _details;
+        private Detail _brokenDetail;
 
         public Car(List<Detail> details)
         {
             _details = details;
+            _brokenDetail = _details.FirstOrDefault(detail => detail.IsBroken == true);
         }
 
-        public bool IsNeedRepair { get => _details.Contains(_details.First(detail => detail.IsBroken == true)); }
+        public bool IsNeedRepair { get => _details.Contains(GetBrokenDetail()); }
 
         public string GetNameBrokenDetail()
         {
-            return _details.First(detail => detail.IsBroken == true).Name;
+            return _brokenDetail.Name;
         }
 
         public bool TryAcceptRepair(Detail detail)
@@ -137,7 +145,7 @@
 
         private Detail GetBrokenDetail()
         {
-            return _details.First(detail => detail.IsBroken == true);
+            return _brokenDetail;
         }
     }
 
