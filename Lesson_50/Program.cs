@@ -131,7 +131,7 @@
                 return _brokenDetail.Name;
             }
 
-            return "Нет неисправных элементов в машине";
+            return "Нет неисправных деталей в машине";
         }
 
         public bool TryAcceptRepair(Detail detail)
