@@ -115,7 +115,7 @@
             _details = details;
         }
 
-        public bool IsNeedRepair { get => _details.Contains(_details.First(detail => detail.IsBroken == true)) }
+        public bool IsNeedRepair { get => _details.Contains(_details.First(detail => detail.IsBroken == true)); }
 
         public string GetNameBrokenDetail()
         {
