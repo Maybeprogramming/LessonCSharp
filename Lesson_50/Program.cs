@@ -273,6 +273,7 @@
             IsBroken = isBroken;
         }
 
+        public DetailsTypes detailType { get; }
         public string Name { get => DetailsDictionary.TryGetName(this); }
         public bool IsBroken { get; }
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
