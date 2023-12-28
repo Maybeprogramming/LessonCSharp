@@ -10,7 +10,7 @@
         {
             List<Detail> details = new List<Detail>()
             {
-                new Engine(false),
+                new Engine(true),
                 new Transmission(false),
                 new Wheel(false),
                 new Glass(false),
@@ -39,12 +39,14 @@
             Car car = new Car(details);
             Console.WriteLine($"{car.IsNeedRepair}");
             Console.WriteLine($"{car.TryGetNameBrokenDetail()}");
-            Console.WriteLine($"----------------------------------");
+            Console.WriteLine($"\n----------------------------------\n");
 
-            //for (int i = 0; i < details.Count; i++)
-            //{
-            //    Print($"{i + 1}. {details[i].ShowInfo()}\n");
-            //}
+            for (int i = 0; i < details.Count; i++)
+            {
+                Print($"{i + 1}. {details[i].ShowInfo()}\n");
+            }
+
+            Console.WriteLine($"\n----------------------------------\n");
 
             PartsStock partsStock = new PartsStock();
             partsStock.ShowInfo();
@@ -271,7 +273,7 @@
             IsBroken = isBroken;
         }
 
-        public string Name { get => DetailsDictionary.TryGetName(GetType()); }
+        public string Name { get => DetailsDictionary.TryGetName(this); }
         public bool IsBroken { get; }
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
 
@@ -486,42 +488,42 @@
 
     static class DetailsDictionary
     {
-        private static Dictionary<Type, string> s_Details;
+        private static Dictionary<Detail, string> s_Details;
 
         static DetailsDictionary()
         {
-            s_Details = new Dictionary<Type, string>()
+            s_Details = new Dictionary<Detail, string>()
             {
-                {typeof(Engine), "Двигатель"},
-                {typeof(Transmission), "Трансмиссия" },
-                {typeof(Wheel), "Колесо" },
-                {typeof(Glass), "Стекло" },
-                {typeof(Muffler), "Глушитель" },
-                {typeof(Brake), "Тормоз" },
-                {typeof(Suspension), "Подвеска" },
-                {typeof(Generator), "Генератор" },
-                {typeof(AirConditioner), "Кондиционер" },
-                {typeof(Starter), "Стартер" },
-                {typeof(TimingBelt), "ГРМ" },
-                {typeof(WaterPump), "Водяная помпа" },
-                {typeof(GasTank), "Бензобак" },
-                {typeof(SteeringWheel), "Руль" },
-                {typeof(SteeringRack), "Рулевая рейка" },
-                {typeof(PowerSteering), "Усилитель руля" },
-                {typeof(Dashboard), "Приборная панель" },
-                {typeof(Wiring), "Электропроводка" },
-                {typeof(Battery), "Аккумулятор" },
-                {typeof(SparkPlug), "Свеча зажигания" },
-                {typeof(FuelPump), "Топливный насос" },
-                {typeof(OilFilter), "Масляный фильтр" },
-                {typeof(Crankshaft), "Коленвал" },
-                {typeof(Catalyst), "Катализатор" },
+                {new Engine(false), "Двигатель"},
+                {new Transmission(false), "Трансмиссия" },
+                {new Wheel(false), "Колесо" },
+                {new Glass(false), "Стекло" },
+                {new Muffler(false), "Глушитель" },
+                {new Brake(false), "Тормоз" },
+                {new Suspension(false), "Подвеска" },
+                {new Generator(false), "Генератор" },
+                {new AirConditioner(false), "Кондиционер" },
+                {new Starter(false), "Стартер" },
+                {new TimingBelt(false), "ГРМ" },
+                {new WaterPump(false), "Водяная помпа" },
+                {new GasTank(false), "Бензобак" },
+                {new SteeringWheel(false), "Руль" },
+                {new SteeringRack(false), "Рулевая рейка" },
+                {new PowerSteering(false), "Усилитель руля" },
+                {new Dashboard(false), "Приборная панель" },
+                {new Wiring(false), "Электропроводка" },
+                {new Battery(false), "Аккумулятор" },
+                {new SparkPlug(false), "Свеча зажигания" },
+                {new FuelPump(false), "Топливный насос" },
+                {new OilFilter(false), "Масляный фильтр" },
+                {new Crankshaft(false), "Коленвал" },
+                {new Catalyst(false), "Катализатор" },
             };
         }
 
         public static int DetailsCount => s_Details.Count;
 
-        public static string TryGetName(Type detail)
+        public static string TryGetName(Detail detail)
         {
             if (s_Details.TryGetValue(detail, out string name) == true)
             {
