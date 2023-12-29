@@ -37,6 +37,7 @@
             };
 
             //Проверка класса - машина!
+            #region Машина
             Car car = new Car(parts);
             Console.WriteLine($"Применить деталь: {car.TryAcceptRepair(null)}");
             Console.WriteLine($"Нужна ли починка? - {car.IsNeedRepair(out string brokenPartName)}");
@@ -49,9 +50,10 @@
             }
 
             Console.WriteLine($"\n----------------------------------");
-
+            #endregion
 
             //Проверка класса склад!
+            #region Склад
             PartsStock partsStock = new PartsStock();
 
             Console.WriteLine($"Запчастей на складе:\n");
@@ -93,6 +95,7 @@
             Console.WriteLine($"Запчастей на складе:\n");
             partsStock.ShowInfo();
             Console.WriteLine($"\n----------------------------------\n");
+            #endregion
 
             //Проверка классов фабрик
 
