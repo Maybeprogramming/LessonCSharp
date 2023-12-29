@@ -466,36 +466,7 @@
 
     #endregion
 
-    #region Словарь деталей
-
-    #region Названия деталей
-
-    // Двигатель            Engine              +
-    // Трансмиссия          Transmission        +
-    // Колесо               Wheel               +
-    // Стекло               Glass               +
-    // Глушитель            Muffler             +
-    // Тормоз               Brake               +
-    // Подвеска             Suspension          +
-    // Генератор            Generator           +
-    // Кондиционер          AirConditioner      +
-    // Стартер              Starter             +
-    // ГРМ                  TimingBelt          +
-    // Водяная помпа        WaterPump           +
-    // Бензобак             GasTank             +
-    // Руль                 SteeringWheel       +
-    // Рулевая рейка        SteeringRack        +
-    // Усилитель руля       PowerSteering       +
-    // Приборная панель     Dashboard           +
-    // Электропроводка      Wiring              +
-    // Аккумулятор          Battery             +
-    // Свеча зажигания      SparkPlug           +
-    // Топливный насос      FuelPump            +
-    // Масляный фильтр      OilFilter           +
-    // Коленвал             Crankshaft          +
-    // Катализатор          Catalyst            +
-
-    #endregion
+    #region Словарь деталей 
 
     static class DetailsDictionary
     {
