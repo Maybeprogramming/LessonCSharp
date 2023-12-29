@@ -1,7 +1,6 @@
 ﻿namespace Lesson_50
 {
     using System.Linq;
-    using System.Net.NetworkInformation;
     using static Display;
     using static Randomaizer;
     using static UserInput;
