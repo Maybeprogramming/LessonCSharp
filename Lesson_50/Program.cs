@@ -200,9 +200,27 @@
             _partsCountsAvailable = FillParts();
         }
 
-        public bool TryGetPrice(PartsTypes part, out int priceOfPart)
+        public bool TryGetPart(PartsTypes partType, out Part part)
         {
-            if (_pricesOfParts.TryGetValue(part, out int price) == true)
+            _partsCountsAvailable.TryGetValue(partType, out int partCountAvailale);
+            string partName = PartsDictionary.TryGetPartName(partType);
+
+            if (partCountAvailale > 0)
+            {
+                part = PartsDictionary.TryGetPart(partName);
+
+                return true;
+            }
+            else
+            {
+                part = null;
+                return false;
+            }
+        }
+
+        public bool TryGetPrice(PartsTypes partType, out int priceOfPart)
+        {
+            if (_pricesOfParts.TryGetValue(partType, out int price) == true)
             {
                 priceOfPart = price;
 
@@ -223,7 +241,7 @@
             foreach (var part in _partsCountsAvailable)
             {
                 int price;
-                string partName = PartsDictionary.TryGetName(part.Key);
+                string partName = PartsDictionary.TryGetPartName(part.Key);
                 _pricesOfParts.TryGetValue(part.Key, out price);
 
                 Console.WriteLine($"{++index}. {partName} - {part.Value} штук. Цена: {price} руб. за 1 деталь.");
@@ -254,8 +272,8 @@
             IsBroken = isBroken;
         }
 
-        public PartsTypes partType { get => PartsDictionary.TryGetDetailType(GetType()); }
-        public string Name { get => PartsDictionary.TryGetName(partType); }
+        public PartsTypes partType { get => PartsDictionary.TryGetPartType(GetType()); }
+        public string Name { get => PartsDictionary.TryGetPartName(partType); }
         public bool IsBroken { get; }
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
 
@@ -566,16 +584,14 @@
             s_PartsTypesList.AddRange(s_PartsTypesNames.Keys);
         }
 
-        public static int PartsCount => s_PartsTypesNames.Count;
-
-        public static PartsTypes TryGetDetailType(Type part)
+        public static PartsTypes TryGetPartType(Type part)
         {
             s_PartsTypes.TryGetValue(part, out PartsTypes detailsTypes);
 
             return detailsTypes;
         }
 
-        public static string TryGetName(PartsTypes partType)
+        public static string TryGetPartName(PartsTypes partType)
         {
             if (s_PartsTypesNames.TryGetValue(partType, out string name) == true)
             {
@@ -588,6 +604,12 @@
         }
 
         public static List<PartsTypes> GetPartsTypesList() => s_PartsTypesList;
+
+        public static Part TryGetPart(string partName)
+        {
+            s_Part.TryGetValue(partName, out Part part);
+            return part;
+        }
     }
 
     #endregion
