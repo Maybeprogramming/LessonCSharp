@@ -159,6 +159,7 @@
         }
     }
 
+    //Машина
     class Car : IRepairable
     {
         private List<Part> _parts;
