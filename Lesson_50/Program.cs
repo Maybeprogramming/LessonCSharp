@@ -1,6 +1,7 @@
 ﻿namespace Lesson_50
 {
     using System.Linq;
+    using System.Net.NetworkInformation;
     using static Display;
     using static Randomaizer;
     using static UserInput;
@@ -11,7 +12,7 @@
         {
             List<Part> parts = new List<Part>()
             {
-                new Engine(true),
+                new Engine(false),
                 new Transmission(false),
                 new Wheel(false),
                 new Glass(false),
@@ -34,12 +35,12 @@
                 new FuelPump(false),
                 new OilFilter(false),
                 new Crankshaft(false),
-                new Catalyst(false),
+                new Catalyst(true)
             };
 
             Car car = new Car(parts);
-            Console.WriteLine($"{car.IsNeedRepair}");
-            Console.WriteLine($"{car.BrokenPartName}");
+            Console.WriteLine($"{car.IsNeedRepair(out string brokenPartName)}");
+            Console.WriteLine($"{brokenPartName}");
             Console.WriteLine($"\n----------------------------------\n");
 
             for (int i = 0; i < parts.Count; i++)
@@ -126,9 +127,19 @@
             _parts = parts;
         }
 
-        public bool IsNeedRepair { get => _parts.Contains(BrokenPart); }
-        public Part BrokenPart { get => _parts.FirstOrDefault(part => part.IsBroken == true); }
-        public string BrokenPartName { get => BrokenPart?.Name; }
+        public bool IsNeedRepair (out string brokenPartName)
+        {
+            Part brokenPart = GetBrokenPart();
+
+            if (brokenPart != null)
+            {
+                brokenPartName = brokenPart.Name;
+                return true;
+            }
+
+            brokenPartName = String.Empty;
+            return false;
+        }
 
         public bool TryAcceptRepair(Part part)
         {
@@ -141,6 +152,11 @@
             }
 
             return false;
+        }
+
+        private Part GetBrokenPart()
+        {
+            return _parts.FirstOrDefault(part => part.IsBroken == true);
         }
     }
 
@@ -455,14 +471,43 @@
 
     static class PartsDictionary
     {
-        private static Dictionary<Part, string> s_Parts;
-        private static Dictionary<PartsTypes, string> s_PartsNames;
+        private static Dictionary<string, Part> s_Part;
+        private static Dictionary<Part, string> s_PartsNames;
+        private static Dictionary<PartsTypes, string> s_PartsTypesNames;
         private static Dictionary<Type, PartsTypes> s_PartsTypes;
 
         //Сделать методы для заполнения словарей -> облегчит добавление новых деталей в словари.
         static PartsDictionary()
         {
-            s_Parts = new Dictionary<Part, string>()
+            s_Part = new Dictionary<string, Part>() 
+            {
+                { "Двигатель", new Engine(false)},
+                {"Трансмиссия" , new Transmission(false) },
+                {"Колесо" , new Wheel(false) },
+                {"Стекло" , new Glass(false) },
+                {"Глушитель" , new Muffler(false) },
+                {"Тормоз" , new Brake(false) },
+                {"Подвеска" , new Suspension(false) },
+                {"Генератор" , new Generator(false) },
+                {"Кондиционер" , new AirConditioner(false) },
+                {"Стартер" , new Starter(false) },
+                {"ГРМ" , new TimingBelt(false) },
+                {"Водяная помпа" , new WaterPump(false) },
+                {"Бензобак" , new GasTank(false) },
+                {"Руль" , new SteeringWheel(false) },
+                {"Рулевая рейка" , new SteeringRack(false) },
+                {"Усилитель руля" , new PowerSteering(false) },
+                {"Приборная панель" , new Dashboard(false) },
+                {"Электропроводка" , new Wiring(false) },
+                {"Аккумулятор" , new Battery(false) },
+                {"Свеча зажигания" , new SparkPlug(false) },
+                {"Топливный насос" , new FuelPump(false) },
+                {"Масляный фильтр" , new OilFilter(false) },
+                {"Коленвал" , new Crankshaft(false) },
+                {"Катализатор" , new Catalyst(false) }
+            };
+
+            s_PartsNames = new Dictionary<Part, string>()
             {
                 {new Engine(false), "Двигатель"},
                 {new Transmission(false), "Трансмиссия" },
@@ -490,7 +535,7 @@
                 {new Catalyst(false), "Катализатор" }
             };
 
-            s_PartsNames = new Dictionary<PartsTypes, string>()
+            s_PartsTypesNames = new Dictionary<PartsTypes, string>()
             {
                 {PartsTypes.Engine, "Двигатель"},
                 {PartsTypes.Transmission, "Трансмиссия" },
@@ -547,7 +592,7 @@
             };
         }
 
-        public static int PartsCount => s_Parts.Count;
+        public static int PartsCount => s_PartsTypesNames.Count;
 
         internal static PartsTypes TryGetDetailType(Type part)
         {
@@ -558,7 +603,7 @@
 
         internal static string TryGetName(PartsTypes partType)
         {
-            if (s_PartsNames.TryGetValue(partType, out string name) == true)
+            if (s_PartsTypesNames.TryGetValue(partType, out string name) == true)
             {
                 return name;
             }
@@ -575,9 +620,7 @@
 
     interface IRepairable
     {
-        bool IsNeedRepair { get; }
-        string BrokenPartName { get; }
-
+        bool IsNeedRepair(out string brokenPartName);
         bool TryAcceptRepair(Part detail);
     }
 
