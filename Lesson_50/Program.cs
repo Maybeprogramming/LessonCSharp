@@ -162,7 +162,7 @@
     class PartsStock
     {
         private Dictionary<PartsTypes, int> _pricesOfParts;
-        private Dictionary<PartsTypes, int> _partsAvailable;
+        private Dictionary<PartsTypes, int> _partsCountsAvailable;
         private List<PartsTypes> _partsTypes;
 
         public PartsStock()
@@ -197,7 +197,7 @@
 
             _partsTypes = PartsDictionary.GetPartsTypesList();
 
-            _partsAvailable = FillParts();
+            _partsCountsAvailable = FillParts();
         }
 
         public bool TryGetPrice(PartsTypes part, out int priceOfPart)
@@ -220,7 +220,7 @@
         {
             int index = 0;
 
-            foreach (var part in _partsAvailable)
+            foreach (var part in _partsCountsAvailable)
             {
                 int price;
                 string partName = PartsDictionary.TryGetName(part.Key);
