@@ -39,7 +39,7 @@
 
             Car car = new Car(parts);
             Console.WriteLine($"{car.IsNeedRepair}");
-            Console.WriteLine($"{car.TryGetNameBrokenPart()}");
+            Console.WriteLine($"{car.BrokenPartName}");
             Console.WriteLine($"\n----------------------------------\n");
 
             for (int i = 0; i < parts.Count; i++)
@@ -126,19 +126,9 @@
             _parts = parts;
         }
 
-        public bool IsNeedRepair { get => _parts.Contains(TryGetBrokenPart()); }
-
-        public string TryGetNameBrokenPart()
-        {
-            Part part = TryGetBrokenPart();
-
-            if (part != null)
-            {
-                return part.Name;
-            }
-
-            return "Нет неисправных деталей в машине";
-        }
+        public bool IsNeedRepair { get => _parts.Contains(BrokenPart); }
+        public Part BrokenPart { get => _parts.FirstOrDefault(part => part.IsBroken == true); }
+        public string BrokenPartName { get => BrokenPart?.Name; }
 
         public bool TryAcceptRepair(Part part)
         {
@@ -151,11 +141,6 @@
             }
 
             return false;
-        }
-
-        private Part TryGetBrokenPart()
-        {
-            return _parts.FirstOrDefault(part => part.IsBroken == true);
         }
     }
 
@@ -591,8 +576,7 @@
     interface IRepairable
     {
         bool IsNeedRepair { get; }
-
-        string TryGetNameBrokenPart();
+        string BrokenPartName { get; }
 
         bool TryAcceptRepair(Part detail);
     }
