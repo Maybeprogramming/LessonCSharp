@@ -3,7 +3,6 @@
     using System.Linq;
     using static Display;
     using static Randomaizer;
-    using static UserInput;
 
     class Program
     {
@@ -126,7 +125,7 @@
             _parts = parts;
         }
 
-        public bool IsNeedRepair (out string brokenPartName)
+        public bool IsNeedRepair(out string brokenPartName)
         {
             Part brokenPart = GetBrokenPart();
 
@@ -478,7 +477,7 @@
         //Сделать методы для заполнения словарей -> облегчит добавление новых деталей в словари.
         static PartsDictionary()
         {
-            s_Part = new Dictionary<string, Part>() 
+            s_Part = new Dictionary<string, Part>()
             {
                 { "Двигатель", new Engine(false)},
                 {"Трансмиссия" , new Transmission(false) },
