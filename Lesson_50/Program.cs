@@ -251,7 +251,7 @@
             if (partCountAvailale > 0)
             {
                 part = PartsDictionary.TryGetPart(partName);
-                AcceptToChangePartsValue(partType);
+                AcceptToChangePartValue(partType);
 
                 return true;
             }
@@ -306,12 +306,12 @@
             return partsCountsAvailable;
         }
 
-        private void AcceptToChangePartsValue(PartType partType)
+        private void AcceptToChangePartValue(PartType partType)
         {
-            _partsCountsAvailable.TryGetValue(partType, out int count);
-            count--;
+            _partsCountsAvailable.TryGetValue(partType, out int PartCount);
+            PartCount--;
             _partsCountsAvailable.Remove(partType);
-            _partsCountsAvailable.Add(partType, count);
+            _partsCountsAvailable.Add(partType, PartCount);
         }
     }
 
