@@ -8,7 +8,7 @@
     {
         static void Main()
         {
-            List<Detail> details = new List<Detail>()
+            List<Part> parts = new List<Part>()
             {
                 new Engine(true),
                 new Transmission(false),
@@ -36,14 +36,14 @@
                 new Catalyst(false),
             };
 
-            Car car = new Car(details);
+            Car car = new Car(parts);
             Console.WriteLine($"{car.IsNeedRepair}");
             Console.WriteLine($"{car.TryGetNameBrokenDetail()}");
             Console.WriteLine($"\n----------------------------------\n");
 
-            for (int i = 0; i < details.Count; i++)
+            for (int i = 0; i < parts.Count; i++)
             {
-                Print($"{i + 1}. {details[i].ShowInfo()}\n");
+                Print($"{i + 1}. {parts[i].ShowInfo()}\n");
             }
 
             Console.WriteLine($"\n----------------------------------");
@@ -60,7 +60,7 @@
     //Автосервис
     class CarService
     {
-        private PartsStock _partsWarhouse;
+        private PartsStock _partsStock;
         private int _moneyBalance;
 
         private void TryRepair(IRepairable car)
@@ -87,20 +87,20 @@
 
     class CarFactory
     {
-        private DetailsFactory _detailsFactory;
+        private PartsFactory _partsFactory;
 
-        public CarFactory(DetailsFactory detailsFactory)
+        public CarFactory(PartsFactory partsFactory)
         {
-            _detailsFactory = detailsFactory;
+            _partsFactory = partsFactory;
         }
 
         public Car Create()
         {
-            return new Car(_detailsFactory.CreateSomeDetails());
+            return new Car(_partsFactory.CreateSomeDetails());
         }
     }
 
-    class DetailsFactory
+    class PartsFactory
     {
         private int _wheelsCount = 4;
         private int _glassesCount = 4;
@@ -108,42 +108,42 @@
         private int _maxSparkesPlug = 12;
         private int _stepSparkesPlug = 2;
 
-        public List<Detail> CreateSomeDetails()
+        public List<Part> CreateSomeDetails()
         {
-            List<Detail> details = new List<Detail>();
+            List<Part> parts = new List<Part>();
 
-            return details;
+            return parts;
         }
     }
 
     class Car : IRepairable
     {
-        private List<Detail> _details;
-        private Detail _brokenDetail;
+        private List<Part> _parts;
+        private Part _brokenPart;
 
-        public Car(List<Detail> details)
+        public Car(List<Part> parts)
         {
-            _details = details;
+            _parts = parts;
         }
 
-        public bool IsNeedRepair { get => _details.Contains(GetBrokenDetail()); }
+        public bool IsNeedRepair { get => _parts.Contains(GetBrokenDetail()); }
 
         public string TryGetNameBrokenDetail()
         {
-            if (_brokenDetail != null)
+            if (_brokenPart != null)
             {
-                return _brokenDetail.Name;
+                return _brokenPart.Name;
             }
 
             return "Нет неисправных деталей в машине";
         }
 
-        public bool TryAcceptRepair(Detail detail)
+        public bool TryAcceptRepair(Part part)
         {
-            if (_details.Contains(detail) == true)
+            if (_parts.Contains(part) == true)
             {
-                int index = _details.IndexOf(detail);
-                _details[index] = detail;
+                int index = _parts.IndexOf(part);
+                _parts[index] = part;
 
                 return true;
             }
@@ -151,94 +151,94 @@
             return false;
         }
 
-        private Detail GetBrokenDetail()
+        private Part GetBrokenDetail()
         {
-            _brokenDetail = _details.FirstOrDefault(detail => detail.IsBroken == true);
+            _brokenPart = _parts.FirstOrDefault(part => part.IsBroken == true);
 
-            return _brokenDetail;
+            return _brokenPart;
         }
     }
 
     //склад
     class PartsStock
     {
-        private Dictionary<DetailsTypes, int> _pricesOfDetails;
-        private Dictionary<DetailsTypes, int> _detailsAmounts;
-        private List<DetailsTypes> _detailsTypes;
+        private Dictionary<PartsTypes, int> _pricesOfParts;
+        private Dictionary<PartsTypes, int> _partsAvailable;
+        private List<PartsTypes> _partsTypes;
 
         public PartsStock()
         {
-            _pricesOfDetails = new Dictionary<DetailsTypes, int>()
+            _pricesOfParts = new Dictionary<PartsTypes, int>()
             {
-                {DetailsTypes.Engine, 1000},
-                {DetailsTypes.Transmission, 850},
-                {DetailsTypes.Wheel, 200},
-                {DetailsTypes.Glass, 150},
-                {DetailsTypes.Muffler,  100},
-                {DetailsTypes.Brake,  100},
-                {DetailsTypes.Suspension,  100},
-                {DetailsTypes.Generator,  150},
-                {DetailsTypes.AirConditioner,  300},
-                {DetailsTypes.Starter,  200},
-                {DetailsTypes.TimingBelt,  250},
-                {DetailsTypes.WaterPump,  230},
-                {DetailsTypes.GasTank,  350},
-                {DetailsTypes.SteeringWheel,  450},
-                {DetailsTypes.SteeringRack,  650},
-                {DetailsTypes.PowerSteering,  500},
-                {DetailsTypes.Dashboard,  700},
-                {DetailsTypes.Wiring,  550},
-                {DetailsTypes.Battery,  250},
-                {DetailsTypes.SparkPlug,  100},
-                {DetailsTypes.FuelPump,  300},
-                {DetailsTypes.OilFilter,  180},
-                {DetailsTypes.Crankshaft,  400},
-                {DetailsTypes.Catalyst,  900},
+                {PartsTypes.Engine, 1000},
+                {PartsTypes.Transmission, 850},
+                {PartsTypes.Wheel, 200},
+                {PartsTypes.Glass, 150},
+                {PartsTypes.Muffler,  100},
+                {PartsTypes.Brake,  100},
+                {PartsTypes.Suspension,  100},
+                {PartsTypes.Generator,  150},
+                {PartsTypes.AirConditioner,  300},
+                {PartsTypes.Starter,  200},
+                {PartsTypes.TimingBelt,  250},
+                {PartsTypes.WaterPump,  230},
+                {PartsTypes.GasTank,  350},
+                {PartsTypes.SteeringWheel,  450},
+                {PartsTypes.SteeringRack,  650},
+                {PartsTypes.PowerSteering,  500},
+                {PartsTypes.Dashboard,  700},
+                {PartsTypes.Wiring,  550},
+                {PartsTypes.Battery,  250},
+                {PartsTypes.SparkPlug,  100},
+                {PartsTypes.FuelPump,  300},
+                {PartsTypes.OilFilter,  180},
+                {PartsTypes.Crankshaft,  400},
+                {PartsTypes.Catalyst,  900},
             };
 
             //Получать список типов из Словаря
-            _detailsTypes = new List<DetailsTypes>()
+            _partsTypes = new List<PartsTypes>()
             {
-                DetailsTypes.Engine,
-                DetailsTypes.Transmission,
-                DetailsTypes.Wheel,
-                DetailsTypes.Glass,
-                DetailsTypes.Muffler,
-                DetailsTypes.Brake,
-                DetailsTypes.Suspension,
-                DetailsTypes.Generator,
-                DetailsTypes.AirConditioner,
-                DetailsTypes.Starter,
-                DetailsTypes.TimingBelt,
-                DetailsTypes.WaterPump,
-                DetailsTypes.GasTank,
-                DetailsTypes.SteeringWheel,
-                DetailsTypes.SteeringRack,
-                DetailsTypes.PowerSteering,
-                DetailsTypes.Dashboard,
-                DetailsTypes.Wiring,
-                DetailsTypes.Battery,
-                DetailsTypes.SparkPlug,
-                DetailsTypes.FuelPump,
-                DetailsTypes.OilFilter,
-                DetailsTypes.Crankshaft,
-                DetailsTypes.Catalyst,
+                PartsTypes.Engine,
+                PartsTypes.Transmission,
+                PartsTypes.Wheel,
+                PartsTypes.Glass,
+                PartsTypes.Muffler,
+                PartsTypes.Brake,
+                PartsTypes.Suspension,
+                PartsTypes.Generator,
+                PartsTypes.AirConditioner,
+                PartsTypes.Starter,
+                PartsTypes.TimingBelt,
+                PartsTypes.WaterPump,
+                PartsTypes.GasTank,
+                PartsTypes.SteeringWheel,
+                PartsTypes.SteeringRack,
+                PartsTypes.PowerSteering,
+                PartsTypes.Dashboard,
+                PartsTypes.Wiring,
+                PartsTypes.Battery,
+                PartsTypes.SparkPlug,
+                PartsTypes.FuelPump,
+                PartsTypes.OilFilter,
+                PartsTypes.Crankshaft,
+                PartsTypes.Catalyst,
             };
 
-            _detailsAmounts = FillDetails();
+            _partsAvailable = FillDetails();
         }
 
-        public bool TryGetPrice(DetailsTypes detail, out int priceOfDetail)
+        public bool TryGetPrice(PartsTypes part, out int priceOfPart)
         {
-            if (_pricesOfDetails.TryGetValue(detail, out int price) == true)
+            if (_pricesOfParts.TryGetValue(part, out int price) == true)
             {
-                priceOfDetail = price;
+                priceOfPart = price;
 
                 return true;
             }
             else
             {
-                priceOfDetail = 0;
+                priceOfPart = 0;
 
                 return false;
             }
@@ -249,46 +249,46 @@
         {
             int index = 0;
 
-            foreach (var detail in _detailsAmounts)
+            foreach (var part in _partsAvailable)
             {
-                int priceValue;
-                string detailName = DetailsDictionary.TryGetName(detail.Key);
-                _pricesOfDetails.TryGetValue(detail.Key, out priceValue);
+                int price;
+                string partName = PartsDictionary.TryGetName(part.Key);
+                _pricesOfParts.TryGetValue(part.Key, out price);
 
-                Console.WriteLine($"{++index}. {detailName} - {detail.Value} штук. Цена: {priceValue} руб. за 1 деталь.");
+                Console.WriteLine($"{++index}. {partName} - {part.Value} штук. Цена: {price} руб. за 1 деталь.");
             }
         }
 
-        private Dictionary<DetailsTypes, int> FillDetails()
+        private Dictionary<PartsTypes, int> FillDetails()
         {
-            Dictionary<DetailsTypes, int> detailsCounts = new Dictionary<DetailsTypes, int>();
-            int minDetailCount = 0;
-            int maxDetailCount = 10;
+            Dictionary<PartsTypes, int> partsCounts = new Dictionary<PartsTypes, int>();
+            int minPartsCount = 0;
+            int maxPartsCount = 10;
 
-            for (int i = 0; i < _detailsTypes.Count; i++)
+            for (int i = 0; i < _partsTypes.Count; i++)
             {
-                detailsCounts.Add(_detailsTypes[i], GenerateRandomNumber(minDetailCount, maxDetailCount + 1));
+                partsCounts.Add(_partsTypes[i], GenerateRandomNumber(minPartsCount, maxPartsCount + 1));
             }
 
-            return detailsCounts;
+            return partsCounts;
         }
     }
 
     #region Классы деталей
 
-    abstract class Detail : ICloneable
+    abstract class Part : ICloneable
     {
-        public Detail(bool isBroken)
+        public Part(bool isBroken)
         {
             IsBroken = isBroken;
         }
 
-        public DetailsTypes detailType { get => DetailsDictionary.TryGetDetailType(GetType()); }
-        public string Name { get => DetailsDictionary.TryGetName(detailType); }
+        public PartsTypes partType { get => PartsDictionary.TryGetDetailType(GetType()); }
+        public string Name { get => PartsDictionary.TryGetName(partType); }
         public bool IsBroken { get; }
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
 
-        public abstract Detail Clone();
+        public abstract Part Clone();
 
         public string ShowInfo()
         {
@@ -296,188 +296,188 @@
         }
     }
 
-    class Engine : Detail
+    class Engine : Part
     {
         public Engine(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Engine(IsBroken);
+        public override Part Clone() => new Engine(IsBroken);
     }
 
-    class Transmission : Detail
+    class Transmission : Part
     {
         public Transmission(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Transmission(IsBroken);
+        public override Part Clone() => new Transmission(IsBroken);
     }
 
-    class Wheel : Detail
+    class Wheel : Part
     {
         public Wheel(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Wheel(IsBroken);
+        public override Part Clone() => new Wheel(IsBroken);
     }
 
-    class Glass : Detail
+    class Glass : Part
     {
         public Glass(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Glass(IsBroken);
+        public override Part Clone() => new Glass(IsBroken);
     }
 
-    class Muffler : Detail
+    class Muffler : Part
     {
         public Muffler(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Muffler(IsBroken);
+        public override Part Clone() => new Muffler(IsBroken);
     }
 
-    class Brake : Detail
+    class Brake : Part
     {
         public Brake(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Brake(IsBroken);
+        public override Part Clone() => new Brake(IsBroken);
     }
 
-    class Suspension : Detail
+    class Suspension : Part
     {
         public Suspension(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Suspension(IsBroken);
+        public override Part Clone() => new Suspension(IsBroken);
     }
 
-    class Generator : Detail
+    class Generator : Part
     {
         public Generator(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Generator(IsBroken);
+        public override Part Clone() => new Generator(IsBroken);
     }
 
-    class AirConditioner : Detail
+    class AirConditioner : Part
     {
         public AirConditioner(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new AirConditioner(IsBroken);
+        public override Part Clone() => new AirConditioner(IsBroken);
     }
 
-    class Starter : Detail
+    class Starter : Part
     {
         public Starter(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Starter(IsBroken);
+        public override Part Clone() => new Starter(IsBroken);
     }
 
-    class TimingBelt : Detail
+    class TimingBelt : Part
     {
         public TimingBelt(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new TimingBelt(IsBroken);
+        public override Part Clone() => new TimingBelt(IsBroken);
     }
 
-    class WaterPump : Detail
+    class WaterPump : Part
     {
         public WaterPump(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new WaterPump(IsBroken);
+        public override Part Clone() => new WaterPump(IsBroken);
     }
 
-    class GasTank : Detail
+    class GasTank : Part
     {
         public GasTank(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new GasTank(IsBroken);
+        public override Part Clone() => new GasTank(IsBroken);
     }
 
-    class SteeringWheel : Detail
+    class SteeringWheel : Part
     {
         public SteeringWheel(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new SteeringWheel(IsBroken);
+        public override Part Clone() => new SteeringWheel(IsBroken);
     }
 
-    class SteeringRack : Detail
+    class SteeringRack : Part
     {
         public SteeringRack(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new SteeringRack(IsBroken);
+        public override Part Clone() => new SteeringRack(IsBroken);
     }
 
-    class PowerSteering : Detail
+    class PowerSteering : Part
     {
         public PowerSteering(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new PowerSteering(IsBroken);
+        public override Part Clone() => new PowerSteering(IsBroken);
     }
 
-    class Dashboard : Detail
+    class Dashboard : Part
     {
         public Dashboard(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Dashboard(IsBroken);
+        public override Part Clone() => new Dashboard(IsBroken);
     }
 
-    class Wiring : Detail
+    class Wiring : Part
     {
         public Wiring(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Wiring(IsBroken);
+        public override Part Clone() => new Wiring(IsBroken);
     }
 
-    class Battery : Detail
+    class Battery : Part
     {
         public Battery(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Battery(IsBroken);
+        public override Part Clone() => new Battery(IsBroken);
     }
 
-    class SparkPlug : Detail
+    class SparkPlug : Part
     {
         public SparkPlug(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new SparkPlug(IsBroken);
+        public override Part Clone() => new SparkPlug(IsBroken);
     }
 
-    class FuelPump : Detail
+    class FuelPump : Part
     {
         public FuelPump(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new FuelPump(IsBroken);
+        public override Part Clone() => new FuelPump(IsBroken);
     }
 
-    class OilFilter : Detail
+    class OilFilter : Part
     {
         public OilFilter(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new OilFilter(IsBroken);
+        public override Part Clone() => new OilFilter(IsBroken);
     }
 
-    class Crankshaft : Detail
+    class Crankshaft : Part
     {
         public Crankshaft(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Crankshaft(IsBroken);
+        public override Part Clone() => new Crankshaft(IsBroken);
     }
 
-    class Catalyst : Detail
+    class Catalyst : Part
     {
         public Catalyst(bool isBroken) : base(isBroken) { }
 
-        public override Detail Clone() => new Catalyst(IsBroken);
+        public override Part Clone() => new Catalyst(IsBroken);
     }
 
     #endregion
 
     #region Словарь деталей 
 
-    static class DetailsDictionary
+    static class PartsDictionary
     {
-        private static Dictionary<Detail, string> s_Details;
-        private static Dictionary<DetailsTypes, string> s_DetailsNames;
-        private static Dictionary<Type, DetailsTypes> s_DetailsTypes;
+        private static Dictionary<Part, string> s_Parts;
+        private static Dictionary<PartsTypes, string> s_PartsNames;
+        private static Dictionary<Type, PartsTypes> s_PartsTypes;
 
         //Сделать методы для заполнения словарей -> облегчит добавление новых деталей в словари.
-        static DetailsDictionary()
+        static PartsDictionary()
         {
-            s_Details = new Dictionary<Detail, string>()
+            s_Parts = new Dictionary<Part, string>()
             {
                 {new Engine(false), "Двигатель"},
                 {new Transmission(false), "Трансмиссия" },
@@ -505,75 +505,75 @@
                 {new Catalyst(false), "Катализатор" }
             };
 
-            s_DetailsNames = new Dictionary<DetailsTypes, string>()
+            s_PartsNames = new Dictionary<PartsTypes, string>()
             {
-                {DetailsTypes.Engine, "Двигатель"},
-                {DetailsTypes.Transmission, "Трансмиссия" },
-                {DetailsTypes.Wheel, "Колесо" },
-                {DetailsTypes.Glass, "Стекло" },
-                {DetailsTypes.Muffler, "Глушитель" },
-                {DetailsTypes.Brake, "Тормоз" },
-                {DetailsTypes.Suspension, "Подвеска" },
-                {DetailsTypes.Generator, "Генератор" },
-                {DetailsTypes.AirConditioner, "Кондиционер" },
-                {DetailsTypes.Starter, "Стартер" },
-                {DetailsTypes.TimingBelt, "ГРМ" },
-                {DetailsTypes.WaterPump, "Водяная помпа" },
-                {DetailsTypes.GasTank, "Бензобак" },
-                {DetailsTypes.SteeringWheel, "Руль" },
-                {DetailsTypes.SteeringRack, "Рулевая рейка" },
-                {DetailsTypes.PowerSteering, "Усилитель руля" },
-                {DetailsTypes.Dashboard, "Приборная панель" },
-                {DetailsTypes.Wiring, "Электропроводка" },
-                {DetailsTypes.Battery, "Аккумулятор" },
-                {DetailsTypes.SparkPlug, "Свеча зажигания" },
-                {DetailsTypes.FuelPump, "Топливный насос" },
-                {DetailsTypes.OilFilter, "Масляный фильтр" },
-                {DetailsTypes.Crankshaft, "Коленвал" },
-                {DetailsTypes.Catalyst, "Катализатор" }
+                {PartsTypes.Engine, "Двигатель"},
+                {PartsTypes.Transmission, "Трансмиссия" },
+                {PartsTypes.Wheel, "Колесо" },
+                {PartsTypes.Glass, "Стекло" },
+                {PartsTypes.Muffler, "Глушитель" },
+                {PartsTypes.Brake, "Тормоз" },
+                {PartsTypes.Suspension, "Подвеска" },
+                {PartsTypes.Generator, "Генератор" },
+                {PartsTypes.AirConditioner, "Кондиционер" },
+                {PartsTypes.Starter, "Стартер" },
+                {PartsTypes.TimingBelt, "ГРМ" },
+                {PartsTypes.WaterPump, "Водяная помпа" },
+                {PartsTypes.GasTank, "Бензобак" },
+                {PartsTypes.SteeringWheel, "Руль" },
+                {PartsTypes.SteeringRack, "Рулевая рейка" },
+                {PartsTypes.PowerSteering, "Усилитель руля" },
+                {PartsTypes.Dashboard, "Приборная панель" },
+                {PartsTypes.Wiring, "Электропроводка" },
+                {PartsTypes.Battery, "Аккумулятор" },
+                {PartsTypes.SparkPlug, "Свеча зажигания" },
+                {PartsTypes.FuelPump, "Топливный насос" },
+                {PartsTypes.OilFilter, "Масляный фильтр" },
+                {PartsTypes.Crankshaft, "Коленвал" },
+                {PartsTypes.Catalyst, "Катализатор" }
             };
 
-            s_DetailsTypes = new Dictionary<Type, DetailsTypes>()
+            s_PartsTypes = new Dictionary<Type, PartsTypes>()
             {
-                {typeof(Engine), DetailsTypes.Engine},
-                {typeof(Transmission), DetailsTypes.Transmission },
-                {typeof(Wheel), DetailsTypes.Wheel },
-                {typeof(Glass), DetailsTypes.Glass },
-                {typeof(Muffler), DetailsTypes.Muffler },
-                {typeof(Brake), DetailsTypes.Brake },
-                {typeof(Suspension), DetailsTypes.Suspension },
-                {typeof(Generator), DetailsTypes.Generator },
-                {typeof(AirConditioner), DetailsTypes.AirConditioner },
-                {typeof(Starter), DetailsTypes.Starter },
-                {typeof(TimingBelt), DetailsTypes.TimingBelt },
-                {typeof(WaterPump), DetailsTypes.WaterPump },
-                {typeof(GasTank), DetailsTypes.GasTank },
-                {typeof(SteeringWheel), DetailsTypes.SteeringWheel },
-                {typeof(SteeringRack), DetailsTypes.SteeringRack},
-                {typeof(PowerSteering), DetailsTypes.PowerSteering },
-                {typeof(Dashboard), DetailsTypes.Dashboard },
-                {typeof(Wiring), DetailsTypes.Wiring },
-                {typeof(Battery), DetailsTypes.Battery },
-                {typeof(SparkPlug), DetailsTypes.SparkPlug },
-                {typeof(FuelPump), DetailsTypes.FuelPump },
-                {typeof(OilFilter), DetailsTypes.OilFilter },
-                {typeof(Crankshaft), DetailsTypes.Crankshaft },
-                {typeof(Catalyst), DetailsTypes.Catalyst }
+                {typeof(Engine), PartsTypes.Engine},
+                {typeof(Transmission), PartsTypes.Transmission },
+                {typeof(Wheel), PartsTypes.Wheel },
+                {typeof(Glass), PartsTypes.Glass },
+                {typeof(Muffler), PartsTypes.Muffler },
+                {typeof(Brake), PartsTypes.Brake },
+                {typeof(Suspension), PartsTypes.Suspension },
+                {typeof(Generator), PartsTypes.Generator },
+                {typeof(AirConditioner), PartsTypes.AirConditioner },
+                {typeof(Starter), PartsTypes.Starter },
+                {typeof(TimingBelt), PartsTypes.TimingBelt },
+                {typeof(WaterPump), PartsTypes.WaterPump },
+                {typeof(GasTank), PartsTypes.GasTank },
+                {typeof(SteeringWheel), PartsTypes.SteeringWheel },
+                {typeof(SteeringRack), PartsTypes.SteeringRack},
+                {typeof(PowerSteering), PartsTypes.PowerSteering },
+                {typeof(Dashboard), PartsTypes.Dashboard },
+                {typeof(Wiring), PartsTypes.Wiring },
+                {typeof(Battery), PartsTypes.Battery },
+                {typeof(SparkPlug), PartsTypes.SparkPlug },
+                {typeof(FuelPump), PartsTypes.FuelPump },
+                {typeof(OilFilter), PartsTypes.OilFilter },
+                {typeof(Crankshaft), PartsTypes.Crankshaft },
+                {typeof(Catalyst), PartsTypes.Catalyst }
             };
         }
 
-        public static int DetailsCount => s_Details.Count;
+        public static int PartsCount => s_Parts.Count;
 
-        internal static DetailsTypes TryGetDetailType(Type detail)
+        internal static PartsTypes TryGetDetailType(Type part)
         {
-            s_DetailsTypes.TryGetValue(detail, out DetailsTypes detailsTypes);
+            s_PartsTypes.TryGetValue(part, out PartsTypes detailsTypes);
 
             return detailsTypes;
         }
 
-        internal static string TryGetName(DetailsTypes detailType)
+        internal static string TryGetName(PartsTypes partType)
         {
-            if (s_DetailsNames.TryGetValue(detailType, out string name) == true)
+            if (s_PartsNames.TryGetValue(partType, out string name) == true)
             {
                 return name;
             }
@@ -594,19 +594,19 @@
 
         string TryGetNameBrokenDetail();
 
-        bool TryAcceptRepair(Detail detail);
+        bool TryAcceptRepair(Part detail);
     }
 
     interface ICloneable
     {
-        abstract Detail Clone();
+        abstract Part Clone();
     }
 
     #endregion
 
     #region Enums
 
-    enum DetailsTypes
+    enum PartsTypes
     {
         Engine,
         Transmission,
