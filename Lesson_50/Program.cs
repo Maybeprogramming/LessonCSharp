@@ -8,6 +8,8 @@
     {
         static void Main()
         {
+            Console.Title = "Автосервис";
+
             List<Part> parts = new List<Part>()
             {
                 new Engine(false),
