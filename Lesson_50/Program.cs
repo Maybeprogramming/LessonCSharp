@@ -195,36 +195,9 @@
                 {PartsTypes.Catalyst,  900},
             };
 
-            //Получать список типов из Словаря
-            _partsTypes = new List<PartsTypes>()
-            {
-                PartsTypes.Engine,
-                PartsTypes.Transmission,
-                PartsTypes.Wheel,
-                PartsTypes.Glass,
-                PartsTypes.Muffler,
-                PartsTypes.Brake,
-                PartsTypes.Suspension,
-                PartsTypes.Generator,
-                PartsTypes.AirConditioner,
-                PartsTypes.Starter,
-                PartsTypes.TimingBelt,
-                PartsTypes.WaterPump,
-                PartsTypes.GasTank,
-                PartsTypes.SteeringWheel,
-                PartsTypes.SteeringRack,
-                PartsTypes.PowerSteering,
-                PartsTypes.Dashboard,
-                PartsTypes.Wiring,
-                PartsTypes.Battery,
-                PartsTypes.SparkPlug,
-                PartsTypes.FuelPump,
-                PartsTypes.OilFilter,
-                PartsTypes.Crankshaft,
-                PartsTypes.Catalyst,
-            };
+            _partsTypes = PartsDictionary.GetPartsTypesList();
 
-            _partsAvailable = FillDetails();
+            _partsAvailable = FillParts();
         }
 
         public bool TryGetPrice(PartsTypes part, out int priceOfPart)
@@ -243,7 +216,6 @@
             }
         }
 
-        //Подумать как сделать по другому, пока не нравится
         public void ShowInfo()
         {
             int index = 0;
@@ -258,18 +230,18 @@
             }
         }
 
-        private Dictionary<PartsTypes, int> FillDetails()
+        private Dictionary<PartsTypes, int> FillParts()
         {
-            Dictionary<PartsTypes, int> partsCounts = new Dictionary<PartsTypes, int>();
+            Dictionary<PartsTypes, int> partsCountsAvailable = new Dictionary<PartsTypes, int>();
             int minPartsCount = 0;
             int maxPartsCount = 10;
 
             for (int i = 0; i < _partsTypes.Count; i++)
             {
-                partsCounts.Add(_partsTypes[i], GenerateRandomNumber(minPartsCount, maxPartsCount + 1));
+                partsCountsAvailable.Add(_partsTypes[i], GenerateRandomNumber(minPartsCount, maxPartsCount + 1));
             }
 
-            return partsCounts;
+            return partsCountsAvailable;
         }
     }
 
@@ -473,6 +445,7 @@
         private static Dictionary<Part, string> s_PartsNames;
         private static Dictionary<PartsTypes, string> s_PartsTypesNames;
         private static Dictionary<Type, PartsTypes> s_PartsTypes;
+        private static List<PartsTypes> s_PartsTypesList;
 
         //Сделать методы для заполнения словарей -> облегчит добавление новых деталей в словари.
         static PartsDictionary()
@@ -588,18 +561,21 @@
                 {typeof(Crankshaft), PartsTypes.Crankshaft },
                 {typeof(Catalyst), PartsTypes.Catalyst }
             };
+
+            s_PartsTypesList = new List<PartsTypes>();
+            s_PartsTypesList.AddRange(s_PartsTypesNames.Keys);
         }
 
         public static int PartsCount => s_PartsTypesNames.Count;
 
-        internal static PartsTypes TryGetDetailType(Type part)
+        public static PartsTypes TryGetDetailType(Type part)
         {
             s_PartsTypes.TryGetValue(part, out PartsTypes detailsTypes);
 
             return detailsTypes;
         }
 
-        internal static string TryGetName(PartsTypes partType)
+        public static string TryGetName(PartsTypes partType)
         {
             if (s_PartsTypesNames.TryGetValue(partType, out string name) == true)
             {
@@ -610,6 +586,8 @@
                 return "Деталь";
             }
         }
+
+        public static List<PartsTypes> GetPartsTypesList() => s_PartsTypesList;
     }
 
     #endregion
