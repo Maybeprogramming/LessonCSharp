@@ -3,6 +3,7 @@
     using System.Linq;
     using static Display;
     using static Randomaizer;
+    using static UserInput;
 
     class Program
     {
