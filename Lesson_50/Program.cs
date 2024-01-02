@@ -1,5 +1,6 @@
 ﻿namespace Lesson_50
 {
+    using System.Collections.Generic;
     using System.Linq;
     using static Display;
     using static Randomaizer;
@@ -100,6 +101,23 @@
             #endregion
 
             //Проверка классов фабрик
+            #region Фабрика Деталей
+
+            Console.WriteLine($"\n---------- Фабрика создания деталей --------\n");
+            List<Part> partsForTest1 = new List<Part>();
+            PartsFactory partsFactory = new PartsFactory(new PartsConfiguration());
+
+            partsForTest1 = partsFactory.CreateSomeParts(); 
+            int index = 0;
+
+            foreach (var part in partsForTest1)
+            {
+                Console.WriteLine($"{++index}. {part.ShowInfo()}");
+            }
+
+            Console.WriteLine($"\n----------------------------------\n");
+
+            #endregion
 
             Console.ReadKey();
         }
@@ -148,9 +166,9 @@
         }
     }
 
+    //Готово! Проверить!
     class PartsFactory
     {
-        List<PartType> _partsTypes;
         List<PartType> _somePartsTypes;
         private int _wheelsCount;
         private int _glassesCount;
@@ -161,31 +179,60 @@
             _wheelsCount = partsConfiguration.WheelCount;
             _glassesCount = partsConfiguration.GlassesCount;
             _sparkesPlugCount = partsConfiguration.SparkPlugCount;
-
-            _partsTypes = PartsDictionary.GetPartsTypesList();
         }
 
         //Создать список деталей
         public List<Part> CreateSomeParts()
         {
             List<Part> parts = new List<Part>();
+            _somePartsTypes = CreateSomePartsTypes();
+            int somePartCount = _somePartsTypes.Count;            
+            int brokenPartIndex = GenerateRandomNumber(0, somePartCount);
+            Part part;
+            PartType partType;
 
+            for (int i = 0; i < somePartCount; i++)
+            {
+                //Этот участок пиздец, надо поменять!
+                //Сделать 1 операцию! Вместо 2!!!
+                bool isBrokenPart;
+                partType = _somePartsTypes[i];
+                string partTypeName = PartsDictionary.TryGetPartName(partType);
 
+                if (i == brokenPartIndex)
+                {
+                    isBrokenPart = true;
+                    part = PartsDictionary.TryGetPart(partTypeName).Clone(isBrokenPart);
+                }
+                else
+                {
+                    isBrokenPart = false;
+                    part = PartsDictionary.TryGetPart(partTypeName).Clone(isBrokenPart);
+                }
+
+                parts.Add(part);
+            }
 
             return parts;
         }
 
         //Сделать список типов деталей для генерации деталей
-        private void CreateSomePartsTypes()
+        private List<PartType> CreateSomePartsTypes(int minPartsTypesCount = 5, int maxPartsTypesCount = 10)
         {
-            int minPartsCount = 5;
-            int maxPartsCount = 10;
-            int somePartsCount = GenerateRandomNumber(minPartsCount, maxPartsCount + 1);
+            List<PartType> partsTypes = PartsDictionary.GetPartsTypesList();
+            List<PartType> somePartsTypes = new List<PartType>();
+            int somePartsTypesCount = GenerateRandomNumber(minPartsTypesCount, maxPartsTypesCount + 1);
+            PartType partType;
 
-            for (int i = 0; i < somePartsCount; i++)
+            for (int i = 0; i < somePartsTypesCount; i++)
             {
-
+                int indexNumber = GenerateRandomNumber(0, partsTypes.Count);
+                partType = partsTypes[indexNumber];
+                somePartsTypes.Add(partType);
+                partsTypes.Remove(partType);
             }
+
+            return somePartsTypes;
         }
     }
 
@@ -388,7 +435,7 @@
         public bool IsBroken { get; }
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
 
-        public abstract Part Clone();
+        public abstract Part Clone(bool isBroken);
 
         public string ShowInfo()
         {
@@ -400,168 +447,168 @@
     {
         public Engine(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Engine(IsBroken);
+        public override Part Clone(bool isBroken) => new Engine(isBroken);
     }
 
     class Transmission : Part
     {
         public Transmission(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Transmission(IsBroken);
+        public override Part Clone(bool isBroken) => new Transmission(isBroken);
     }
 
     class Wheel : Part
     {
         public Wheel(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Wheel(IsBroken);
+        public override Part Clone(bool isBroken) => new Wheel(isBroken);
     }
 
     class Glass : Part
     {
         public Glass(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Glass(IsBroken);
+        public override Part Clone(bool isBroken) => new Glass(isBroken);
     }
 
     class Muffler : Part
     {
         public Muffler(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Muffler(IsBroken);
+        public override Part Clone(bool isBroken) => new Muffler(isBroken);
     }
 
     class Brake : Part
     {
         public Brake(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Brake(IsBroken);
+        public override Part Clone(bool isBroken) => new Brake(isBroken);
     }
 
     class Suspension : Part
     {
         public Suspension(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Suspension(IsBroken);
+        public override Part Clone(bool isBroken) => new Suspension(isBroken);
     }
 
     class Generator : Part
     {
         public Generator(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Generator(IsBroken);
+        public override Part Clone(bool isBroken) => new Generator(isBroken);
     }
 
     class AirConditioner : Part
     {
         public AirConditioner(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new AirConditioner(IsBroken);
+        public override Part Clone(bool isBroken) => new AirConditioner(isBroken);
     }
 
     class Starter : Part
     {
         public Starter(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Starter(IsBroken);
+        public override Part Clone(bool isBroken) => new Starter(isBroken);
     }
 
     class TimingBelt : Part
     {
         public TimingBelt(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new TimingBelt(IsBroken);
+        public override Part Clone(bool isBroken) => new TimingBelt(isBroken);
     }
 
     class WaterPump : Part
     {
         public WaterPump(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new WaterPump(IsBroken);
+        public override Part Clone(bool isBroken) => new WaterPump(isBroken);
     }
 
     class GasTank : Part
     {
         public GasTank(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new GasTank(IsBroken);
+        public override Part Clone(bool isBroken) => new GasTank(isBroken);
     }
 
     class SteeringWheel : Part
     {
         public SteeringWheel(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new SteeringWheel(IsBroken);
+        public override Part Clone(bool isBroken) => new SteeringWheel(isBroken);
     }
 
     class SteeringRack : Part
     {
         public SteeringRack(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new SteeringRack(IsBroken);
+        public override Part Clone(bool isBroken) => new SteeringRack(isBroken);
     }
 
     class PowerSteering : Part
     {
         public PowerSteering(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new PowerSteering(IsBroken);
+        public override Part Clone(bool isBroken) => new PowerSteering(isBroken);
     }
 
     class Dashboard : Part
     {
         public Dashboard(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Dashboard(IsBroken);
+        public override Part Clone(bool isBroken) => new Dashboard(isBroken);
     }
 
     class Wiring : Part
     {
         public Wiring(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Wiring(IsBroken);
+        public override Part Clone(bool isBroken) => new Wiring(isBroken);
     }
 
     class Battery : Part
     {
         public Battery(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Battery(IsBroken);
+        public override Part Clone(bool isBroken) => new Battery(isBroken);
     }
 
     class SparkPlug : Part
     {
         public SparkPlug(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new SparkPlug(IsBroken);
+        public override Part Clone(bool isBroken) => new SparkPlug(isBroken);
     }
 
     class FuelPump : Part
     {
         public FuelPump(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new FuelPump(IsBroken);
+        public override Part Clone(bool isBroken) => new FuelPump(isBroken);
     }
 
     class OilFilter : Part
     {
         public OilFilter(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new OilFilter(IsBroken);
+        public override Part Clone(bool isBroken) => new OilFilter(isBroken);
     }
 
     class Crankshaft : Part
     {
         public Crankshaft(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Crankshaft(IsBroken);
+        public override Part Clone(bool isBroken) => new Crankshaft(isBroken);
     }
 
     class Catalyst : Part
     {
         public Catalyst(bool isBroken) : base(isBroken) { }
 
-        public override Part Clone() => new Catalyst(IsBroken);
+        public override Part Clone(bool isBroken) => new Catalyst(isBroken);
     }
 
     #endregion
@@ -735,7 +782,7 @@
 
     interface ICloneable
     {
-        abstract Part Clone();
+        abstract Part Clone(bool isBroken);
     }
 
     #endregion
