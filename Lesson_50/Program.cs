@@ -144,32 +144,31 @@
 
         public Car Create()
         {
-            return new Car(_partsFactory.CreateSomeDetails());
+            return new Car(_partsFactory.CreateSomeParts());
         }
     }
 
     class PartsFactory
     {
         List<PartType> _partsTypes;
-
         private int _wheelsCount;
         private int _glassesCount;
-        private int _minSparkesPlug;
-        private int _maxSparkesPlug;
+        private int _sparkesPlugCount;
 
         public PartsFactory(PartsConfiguration partsConfiguration)
         {
             _wheelsCount = partsConfiguration.WheelCount;
             _glassesCount = partsConfiguration.GlassesCount;
-            _minSparkesPlug = partsConfiguration.MinSparkPlug;
-            _maxSparkesPlug = partsConfiguration.MaxSparkesPlug;
+            _sparkesPlugCount = partsConfiguration.SparkPlugCount;
 
             _partsTypes = PartsDictionary.GetPartsTypesList();
         }
 
-        public List<Part> CreateSomeDetails()
+        public List<Part> CreateSomeParts()
         {
             List<Part> parts = new List<Part>();
+
+
 
             return parts;
         }
@@ -177,18 +176,25 @@
 
     class PartsConfiguration
     {
-        public PartsConfiguration(int wheelCount = 4, int glassesCount = 4, int minSparkPlug = 4, int maxSparkesPlug = 12)
+        private int[] _sparkPlugCount;
+
+        public PartsConfiguration(int wheelCount = 4, int glassesCount = 4)
         {
+            _sparkPlugCount = new int[] { 4, 6, 8, 12 };
+
             WheelCount = wheelCount;
             GlassesCount = glassesCount;
-            MinSparkPlug = minSparkPlug;
-            MaxSparkesPlug = maxSparkesPlug;
+            SparkPlugCount = GetSparkPlugCount();
         }
 
         public int WheelCount { get; }
         public int GlassesCount { get; }
-        public int MinSparkPlug { get; }
-        public int MaxSparkesPlug { get; }
+        public int SparkPlugCount { get; }
+
+        private int GetSparkPlugCount()
+        {
+            return GenerateRandomNumber(0, _sparkPlugCount.Length);
+        }
     }
 
     //Машина
