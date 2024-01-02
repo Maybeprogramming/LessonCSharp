@@ -184,10 +184,10 @@
         //Создать список деталей
         public List<Part> CreateSomeParts()
         {
-            List<Part> parts = new List<Part>();
             _somePartsTypes = CreateSomePartsTypes();
             int somePartCount = _somePartsTypes.Count;            
             int brokenPartIndex = GenerateRandomNumber(0, somePartCount);
+            List<Part> parts = new List<Part>();
             Part part;
             PartType partType;
 
@@ -236,6 +236,7 @@
         }
     }
 
+    //Конфигурационный класс для фабрики деталей
     class PartsConfiguration
     {
         private int[] _sparkPlugCount;
