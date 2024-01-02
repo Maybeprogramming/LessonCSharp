@@ -150,11 +150,22 @@
 
     class PartsFactory
     {
-        private int _wheelsCount = 4;
-        private int _glassesCount = 4;
-        private int _minSparkesPlug = 4;
-        private int _maxSparkesPlug = 12;
-        private int _stepSparkesPlug = 2;
+        List<PartType> _partsTypes;
+
+        private int _wheelsCount;
+        private int _glassesCount;
+        private int _minSparkesPlug;
+        private int _maxSparkesPlug;
+
+        public PartsFactory(PartsConfigure partsConfigure)
+        {
+            _wheelsCount = partsConfigure.WheelCount;
+            _glassesCount = partsConfigure.GlassesCount;
+            _minSparkesPlug = partsConfigure.MinSparkPlug;
+            _maxSparkesPlug = partsConfigure.MaxSparkesPlug;
+
+            _partsTypes = PartsDictionary.GetPartsTypesList();
+        }
 
         public List<Part> CreateSomeDetails()
         {
@@ -162,6 +173,22 @@
 
             return parts;
         }
+    }
+
+    class PartsConfigure
+    {
+        public PartsConfigure(int wheelCount = 4, int glassesCount = 4, int minSparkPlug = 4, int maxSparkesPlug = 12)
+        {
+            WheelCount = wheelCount;
+            GlassesCount = glassesCount;
+            MinSparkPlug = minSparkPlug;
+            MaxSparkesPlug = maxSparkesPlug;
+        }
+
+        public int WheelCount { get; }
+        public int GlassesCount { get; }
+        public int MinSparkPlug { get; }
+        public int MaxSparkesPlug { get; }
     }
 
     //Машина
@@ -178,7 +205,7 @@
         //- Не получится с текущим алгоритмом, так как деталь может быть Null -> будет ошибка во время выполнения
         public bool IsNeedRepair(out string brokenPartName)
         {
-            Part brokenPart = GetBrokenPart();
+            Part brokenPart = GetBrokenPart(); // Вот тут может быть NUll
 
             if (brokenPart != null)
             {
