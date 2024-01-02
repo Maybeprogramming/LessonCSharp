@@ -119,6 +119,18 @@
 
             #endregion
 
+            #region Фабрика Машин
+
+            Console.WriteLine($"\n---------- Фабрика создания машин --------\n");
+            CarFactory carFactory = new CarFactory(new PartsFactory(new PartsConfiguration()));
+            Car carTest1 = carFactory.Create();
+            Console.WriteLine($"{carTest1.IsNeedRepair(out string brokenPart)}");
+            Console.WriteLine($"{brokenPart}");
+            Console.WriteLine($"{carTest1.ShowInfo()}");
+            Console.WriteLine($"\n----------------------------------\n");
+
+            #endregion
+
             Console.ReadKey();
         }
     }
@@ -297,6 +309,12 @@
             }
 
             return false;
+        }
+
+        //Переделать
+        public string ShowInfo()
+        {
+            return $"Состояние машины: {IsNeedRepair(out string brokenPartName)}. Неисправная деталь: {brokenPartName}";
         }
 
         private Part GetBrokenPart()
