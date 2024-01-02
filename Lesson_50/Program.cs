@@ -174,6 +174,8 @@
             _parts = parts;
         }
 
+        //Вернуть может быть тип неисправной детали?!
+        //- Не получится с текущим алгоритмом, так как деталь может быть Null -> будет ошибка во время выполнения
         public bool IsNeedRepair(out string brokenPartName)
         {
             Part brokenPart = GetBrokenPart();
@@ -249,6 +251,7 @@
             _partsCountsAvailable = FillParts();
         }
 
+        //Возвращать надо запчасть
         public bool TryGetPart(PartType partType, out Part part)
         {
             _partsCountsAvailable.TryGetValue(partType, out int partCountAvailale);
@@ -268,6 +271,7 @@
             }
         }
 
+        //Цена должна возвращаться в числе
         public bool TryGetPrice(PartType partType, out int priceOfPart)
         {
             if (_pricesOfParts.TryGetValue(partType, out int price) == true)
@@ -312,6 +316,7 @@
             return partsCountsAvailable;
         }
 
+        //Это точно должно так быть?
         private void AcceptToChangePartValue(PartType partType)
         {
             _partsCountsAvailable.TryGetValue(partType, out int PartCount);
@@ -330,8 +335,8 @@
             IsBroken = isBroken;
         }
 
-        public PartType partType { get => PartsDictionary.TryGetPartType(GetType()); }
-        public string Name { get => PartsDictionary.TryGetPartName(partType); }
+        public PartType PartType { get => PartsDictionary.TryGetPartType(GetType()); }
+        public string Name { get => PartsDictionary.TryGetPartName(PartType); }
         public bool IsBroken { get; }
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
 
