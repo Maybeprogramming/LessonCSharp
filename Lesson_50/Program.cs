@@ -157,12 +157,12 @@
         private int _minSparkesPlug;
         private int _maxSparkesPlug;
 
-        public PartsFactory(PartsConfigure partsConfigure)
+        public PartsFactory(PartsConfiguration partsConfiguration)
         {
-            _wheelsCount = partsConfigure.WheelCount;
-            _glassesCount = partsConfigure.GlassesCount;
-            _minSparkesPlug = partsConfigure.MinSparkPlug;
-            _maxSparkesPlug = partsConfigure.MaxSparkesPlug;
+            _wheelsCount = partsConfiguration.WheelCount;
+            _glassesCount = partsConfiguration.GlassesCount;
+            _minSparkesPlug = partsConfiguration.MinSparkPlug;
+            _maxSparkesPlug = partsConfiguration.MaxSparkesPlug;
 
             _partsTypes = PartsDictionary.GetPartsTypesList();
         }
@@ -175,9 +175,9 @@
         }
     }
 
-    class PartsConfigure
+    class PartsConfiguration
     {
-        public PartsConfigure(int wheelCount = 4, int glassesCount = 4, int minSparkPlug = 4, int maxSparkesPlug = 12)
+        public PartsConfiguration(int wheelCount = 4, int glassesCount = 4, int minSparkPlug = 4, int maxSparkesPlug = 12)
         {
             WheelCount = wheelCount;
             GlassesCount = glassesCount;
