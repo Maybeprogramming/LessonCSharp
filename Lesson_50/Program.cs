@@ -151,6 +151,7 @@
     class PartsFactory
     {
         List<PartType> _partsTypes;
+        List<PartType> _somePartsTypes;
         private int _wheelsCount;
         private int _glassesCount;
         private int _sparkesPlugCount;
@@ -171,6 +172,18 @@
 
 
             return parts;
+        }
+
+        private void CreateSomePartsTypes()
+        {
+            int minPartsCount = 5;
+            int maxPartsCount = 10;
+            int somePartsCount = GenerateRandomNumber(minPartsCount, maxPartsCount + 1);
+
+            for (int i = 0; i < somePartsCount; i++)
+            {
+
+            }
         }
     }
 
