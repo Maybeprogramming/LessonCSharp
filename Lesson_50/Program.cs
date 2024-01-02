@@ -1,7 +1,5 @@
 ﻿namespace Lesson_50
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using static Display;
     using static Randomaizer;
 
@@ -107,7 +105,7 @@
             List<Part> partsForTest1 = new List<Part>();
             PartsFactory partsFactory = new PartsFactory(new PartsConfiguration());
 
-            partsForTest1 = partsFactory.CreateSomeParts(); 
+            partsForTest1 = partsFactory.CreateSomeParts();
             int index = 0;
 
             foreach (var part in partsForTest1)
@@ -197,7 +195,7 @@
         public List<Part> CreateSomeParts()
         {
             _somePartsTypes = CreateSomePartsTypes();
-            int somePartCount = _somePartsTypes.Count;            
+            int somePartCount = _somePartsTypes.Count;
             int brokenPartIndex = GenerateRandomNumber(0, somePartCount);
             List<Part> parts = new List<Part>();
             Part part;
