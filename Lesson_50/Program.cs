@@ -165,6 +165,7 @@
             _partsTypes = PartsDictionary.GetPartsTypesList();
         }
 
+        //Создать список деталей
         public List<Part> CreateSomeParts()
         {
             List<Part> parts = new List<Part>();
@@ -174,6 +175,7 @@
             return parts;
         }
 
+        //Сделать список типов деталей для генерации деталей
         private void CreateSomePartsTypes()
         {
             int minPartsCount = 5;
