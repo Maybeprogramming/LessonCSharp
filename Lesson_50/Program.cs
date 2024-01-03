@@ -1,5 +1,6 @@
 ﻿namespace Lesson_50
 {
+    using System;
     using static Display;
     using static Randomaizer;
 
@@ -154,16 +155,13 @@
             Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.IsNeedRepair(out string brokenClientPart)}. Деталь требующая ремонт: {brokenClientPart}\n");
             Part partForRepair = PartsDictionary.TryGetPart(brokenClientPart).Clone(false);
             Console.WriteLine($"{partForRepair.Name}. [{partForRepair.IsBrokenToString}]\n");
-         
+
             Console.WriteLine($"Удался ли ремонт? {carForRepair.TryAcceptRepair(partForRepair)}\n");
 
             Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.IsNeedRepair(out string brokenClientPart1)}. Деталь требующая ремонт: {brokenClientPart1}\n");
             Console.WriteLine($"\n----------------------------------\n");
 
-
             #region Проверка почему в списке нет такой детали
-
-
             Console.WriteLine($"\n---------- Проверка почему в списке нет такой детали --------\n");
 
             Engine engine1 = new Engine(true);
@@ -398,16 +396,29 @@
 
         public bool TryAcceptRepair(Part part)
         {
-            if (part != null && _parts.Contains(part) == true)
+            if (part == null)
+            {
+                Console.WriteLine($"Объекта не существует");
+                return false;
+            }
+            else
+            {
+                Console.WriteLine($"Объект существует");
+                Console.WriteLine($"{part.GetType().Name}");
+                Console.WriteLine($"{part.Name}");
+            }
+
+
+            if (_parts.Contains(part) == true)
             {
                 int index = _parts.IndexOf(part);
                 _parts[index] = part;
 
-                Console.WriteLine($"Успешный ремонт"); //Потом убрать
+                Print($"\nУспешный ремонт\n", ConsoleColor.Green); //Потом убрать
                 return true;
             }
 
-            Console.WriteLine($"Неуспешный ремонт"); //Потом убрать
+            Print($"\nНеуспешный ремонт\n", ConsoleColor.Red); //Потом убрать
             return false;
         }
 
@@ -542,7 +553,7 @@
 
     #region Классы деталей
 
-    abstract class Part : ICloneable
+    abstract class Part : ICloneable, IEquatable<Part>
     {
         public Part(bool isBroken)
         {
@@ -555,6 +566,20 @@
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
 
         public abstract Part Clone(bool isBroken);
+
+        public bool Equals(Part? otherPart)
+        {
+            if (otherPart == null)
+            {
+                return false;
+            }
+            else if (Name.Equals(otherPart.Name) == true && PartType == otherPart.PartType)
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         public string ShowInfo()
         {
