@@ -191,6 +191,7 @@
     class PartsFactory
     {
         List<PartType> _somePartsTypes;
+        //Реализовать или удалить нижеследующие переменные!
         private int _wheelsCount;
         private int _glassesCount;
         private int _sparkesPlugCount;
