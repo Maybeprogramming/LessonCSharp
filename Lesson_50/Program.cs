@@ -140,6 +140,87 @@
 
             #endregion
 
+            //Проверка работы клиента
+
+            Console.WriteLine($"\n---------- Создание клиента и его машины, ремонт машины --------\n");
+
+            PartsConfiguration partsConfiguration = new PartsConfiguration();
+            PartsFactory clientPartFactory = new PartsFactory(partsConfiguration);
+            CarFactory clietCarFactory = new CarFactory(clientPartFactory);
+            Car clientCar = clietCarFactory.Create();
+            Client client = new Client(clientCar, 10000);
+
+            Car carForRepair = (Car)client.GiveCar();
+            Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.IsNeedRepair(out string brokenClientPart)}. Деталь требующая ремонт: {brokenClientPart}\n");
+            Part partForRepair = PartsDictionary.TryGetPart(brokenClientPart).Clone(false);
+            Console.WriteLine($"{partForRepair.Name}. [{partForRepair.IsBrokenToString}]\n");
+         
+            Console.WriteLine($"Удался ли ремонт? {carForRepair.TryAcceptRepair(partForRepair)}\n");
+
+            Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.IsNeedRepair(out string brokenClientPart1)}. Деталь требующая ремонт: {brokenClientPart1}\n");
+            Console.WriteLine($"\n----------------------------------\n");
+
+
+            #region Проверка почему в списке нет такой детали
+
+
+            Console.WriteLine($"\n---------- Проверка почему в списке нет такой детали --------\n");
+
+            Engine engine1 = new Engine(true);
+            Part part11 = engine1.Clone(false);
+
+            foreach (var part in parts)
+            {
+                if (part.Equals(engine1))
+                {
+                    Console.WriteLine($"Двигатель - Equals");
+                }
+
+                if (part.Equals(part11))
+                {
+                    Console.WriteLine($"Деталь - Equals");
+                }
+
+                if (part == engine1)
+                {
+                    Console.WriteLine($"Двигатель");
+                }
+
+                if (part == part11)
+                {
+                    Console.WriteLine($"Деталь");
+                }
+
+                if (part.Name.Equals(engine1.Name))
+                {
+                    Console.WriteLine($"Двигатель. по имени");
+                }
+
+                if (part.Name.Equals(part11.Name))
+                {
+                    Console.WriteLine($"Деталь. по имени");
+                }
+
+                if (part.PartType == engine1.PartType)
+                {
+                    Console.WriteLine($"Двигатель. по типу");
+                }
+
+                if (part.PartType == part11.PartType)
+                {
+                    Console.WriteLine($"Деталь. по типу");
+                }
+
+                Console.WriteLine($"False!");
+            }
+
+            Console.WriteLine($"\n{engine1.Name}. Состояние: {engine1.IsBrokenToString}");
+            Console.WriteLine($"\n{part11.Name}. Состояние: {part11.IsBrokenToString}");
+
+            Console.WriteLine($"\n----------------------------------\n");
+
+            #endregion
+
             Console.ReadKey();
         }
     }
@@ -165,6 +246,12 @@
     {
         private int _money;
         private Car _car;
+
+        public Client(Car car, int money)
+        {
+            _car = car;
+            _money = money;
+        }
 
         public IRepairable GiveCar()
         {
@@ -316,9 +403,11 @@
                 int index = _parts.IndexOf(part);
                 _parts[index] = part;
 
+                Console.WriteLine($"Успешный ремонт"); //Потом убрать
                 return true;
             }
 
+            Console.WriteLine($"Неуспешный ремонт"); //Потом убрать
             return false;
         }
 
@@ -807,7 +896,7 @@
     interface IRepairable
     {
         bool IsNeedRepair(out string brokenPartName);
-        bool TryAcceptRepair(Part detail);
+        bool TryAcceptRepair(Part part);
     }
 
     interface ICloneable
