@@ -119,7 +119,7 @@
 
             #region Фабрика Машин
 
-            Console.WriteLine($"\n---------- Фабрика создания машин --------\n");
+            Console.WriteLine($"\n---------- Фабрика создания нескольких машин --------\n");
             CarFactory carFactory = new CarFactory(new PartsFactory(new PartsConfiguration()));
             List<Car> cars = new List<Car>();
 
