@@ -142,7 +142,7 @@
             #endregion
 
             //Проверка работы класса клиента
-
+            #region Создание клиента и его машины, ремонт машины
             Console.WriteLine($"\n---------- Создание клиента и его машины, ремонт машины --------\n");
 
             PartsConfiguration partsConfiguration = new PartsConfiguration();
@@ -160,7 +160,9 @@
 
             Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.IsNeedRepair(out string brokenClientPart1)}. Деталь требующая ремонт: {brokenClientPart1}\n");
             Console.WriteLine($"\n----------------------------------\n");
+            #endregion
 
+            //Другие проверки
             #region Проверка почему в списке нет такой детали
             Console.WriteLine($"\n---------- Проверка почему в списке нет такой детали --------\n");
 
