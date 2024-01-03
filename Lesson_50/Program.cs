@@ -121,10 +121,20 @@
 
             Console.WriteLine($"\n---------- Фабрика создания машин --------\n");
             CarFactory carFactory = new CarFactory(new PartsFactory(new PartsConfiguration()));
-            Car carTest1 = carFactory.Create();
-            Console.WriteLine($"{carTest1.IsNeedRepair(out string brokenPart)}");
-            Console.WriteLine($"{brokenPart}");
-            Console.WriteLine($"{carTest1.ShowInfo()}");
+            List<Car> cars = new List<Car>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                cars.Add(carFactory.Create());
+            }
+
+            int index1 = 0;
+
+            foreach (var carItem in cars)
+            {
+                Print($"{++index1}. {carItem.ShowInfo()}\n", ConsoleColor.Green);
+            }
+
             Console.WriteLine($"\n----------------------------------\n");
 
             #endregion
@@ -229,7 +239,7 @@
         //Сделать список типов деталей для генерации деталей
         private List<PartType> CreateSomePartsTypes(int minPartsTypesCount = 5, int maxPartsTypesCount = 10)
         {
-            List<PartType> partsTypes = PartsDictionary.GetPartsTypesList();
+            List<PartType> partsTypes = new List<PartType>(PartsDictionary.GetPartsTypesList());
             List<PartType> somePartsTypes = new List<PartType>();
             int somePartsTypesCount = GenerateRandomNumber(minPartsTypesCount, maxPartsTypesCount + 1);
             PartType partType;
