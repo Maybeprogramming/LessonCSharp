@@ -120,6 +120,7 @@
             #region Фабрика Машин
 
             Console.WriteLine($"\n---------- Фабрика создания нескольких машин --------\n");
+
             CarFactory carFactory = new CarFactory(new PartsFactory(new PartsConfiguration()));
             List<Car> cars = new List<Car>();
 
@@ -256,7 +257,8 @@
         }
     }
 
-    //Конфигурационный класс для фабрики деталей
+    //Конфигурационный класс для фабрики деталей.
+    //Подумать а нужен ли этот класс если он не используется?!
     class PartsConfiguration
     {
         private int[] _sparkPlugCount;
