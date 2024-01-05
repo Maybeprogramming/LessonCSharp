@@ -401,7 +401,7 @@
         {
             if (part == null)
             {
-                Console.WriteLine($"Объекта не существует");
+                Console.WriteLine($"Детали не существует!");
                 return false;
             }
             else
