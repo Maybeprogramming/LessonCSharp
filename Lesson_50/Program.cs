@@ -1,6 +1,7 @@
 ﻿namespace Lesson_50
 {
     using System;
+    using System.Collections;
     using static Display;
     using static Randomaizer;
 
@@ -36,7 +37,7 @@
                 new OilFilter(false),
                 new Crankshaft(false),
                 new Catalyst(true)
-            };
+            };   
 
             //Проверка класса - машина!
             #region Машина
