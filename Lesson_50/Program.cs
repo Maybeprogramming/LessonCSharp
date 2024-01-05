@@ -152,9 +152,10 @@
             Car clientCar = clietCarFactory.Create();
             Client client = new Client(clientCar, 10000);
 
-            Car carForRepair = (Car)client.GiveCar();
+            IRepairable carForRepair = client.GiveCar();
             Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.IsNeedRepair(out string brokenClientPart)}. Деталь требующая ремонт: {brokenClientPart}\n");
-            Part partForRepair = PartsDictionary.TryGetPart(brokenClientPart).Clone(false);
+            Part partForRepair = PartsDictionary.TryGetPart("Двигатель").Clone(false);
+            //Part partForRepair = PartsDictionary.TryGetPart(brokenClientPart).Clone(false);
             Console.WriteLine($"{partForRepair.Name}. [{partForRepair.IsBrokenToString}]\n");
 
             Console.WriteLine($"Удался ли ремонт? {carForRepair.TryAcceptRepair(partForRepair)}\n");
