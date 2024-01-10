@@ -105,7 +105,7 @@
 
             Console.WriteLine($"\n---------- Фабрика создания деталей --------\n");
             List<Part> partsForTest1 = new List<Part>();
-            PartsFactory partsFactory = new PartsFactory(new PartsConfiguration());
+            PartsFactory partsFactory = new PartsFactory();
 
             partsForTest1 = partsFactory.CreateSomeParts();
             int index = 0;
@@ -123,7 +123,7 @@
 
             Console.WriteLine($"\n---------- Фабрика создания нескольких машин --------\n");
 
-            CarFactory carFactory = new CarFactory(new PartsFactory(new PartsConfiguration()));
+            CarFactory carFactory = new CarFactory(new PartsFactory());
             List<Car> cars = new List<Car>();
 
             for (int i = 0; i < 10; i++)
@@ -146,8 +146,7 @@
             #region Создание клиента и его машины, ремонт машины
             Console.WriteLine($"\n---------- Создание клиента и его машины, ремонт машины --------\n");
 
-            PartsConfiguration partsConfiguration = new PartsConfiguration();
-            PartsFactory clientPartFactory = new PartsFactory(partsConfiguration);
+            PartsFactory clientPartFactory = new PartsFactory();
             CarFactory clietCarFactory = new CarFactory(clientPartFactory);
             Car clientCar = clietCarFactory.Create();
             Client client = new Client(clientCar, 10000);
@@ -281,15 +280,9 @@
     {
         List<PartType> _somePartsTypes;
         //Реализовать или удалить нижеследующие переменные!
-        private int _wheelsCount;
-        private int _glassesCount;
-        private int _sparkesPlugCount;
 
-        public PartsFactory(PartsConfiguration partsConfiguration)
+        public PartsFactory()
         {
-            _wheelsCount = partsConfiguration.WheelCount;
-            _glassesCount = partsConfiguration.GlassesCount;
-            _sparkesPlugCount = partsConfiguration.SparkPlugCount;
         }
 
         //Создать список деталей
@@ -344,31 +337,6 @@
             }
 
             return somePartsTypes;
-        }
-    }
-
-    //Конфигурационный класс для фабрики деталей.
-    //Подумать а нужен ли этот класс если он не используется?!
-    class PartsConfiguration
-    {
-        private int[] _sparkPlugCount;
-
-        public PartsConfiguration(int wheelCount = 4, int glassesCount = 4)
-        {
-            _sparkPlugCount = new int[] { 4, 6, 8, 12 };
-
-            WheelCount = wheelCount;
-            GlassesCount = glassesCount;
-            SparkPlugCount = GetSparkPlugCount();
-        }
-
-        public int WheelCount { get; }
-        public int GlassesCount { get; }
-        public int SparkPlugCount { get; }
-
-        private int GetSparkPlugCount()
-        {
-            return GenerateRandomNumber(0, _sparkPlugCount.Length);
         }
     }
 
