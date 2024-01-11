@@ -341,7 +341,7 @@
         }
 
         public string HealthStatus { get => GetBrokenPart() != null ? "Требуется ремонт" : "В рабочем состоянии"; }
-        public bool IsNeedRepair { get => GetBrokenPart() != null ? true : false; }
+        public bool IsNeedRepair { get => GetBrokenPart() != null; }
         public string TryGetBrokenPartName { get => GetBrokenPart() != null ? GetBrokenPart().Name : "Ошибка, нет такой детали"; }
 
         public bool TryAcceptRepair(Part part)
