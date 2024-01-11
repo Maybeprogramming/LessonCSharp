@@ -542,6 +542,10 @@
             return false;
         }
 
+        public override bool Equals(object? objectOther) => objectOther is Part partOther && Equals(partOther);
+
+        public override int GetHashCode() => Name.GetHashCode();
+
         public string ShowInfo()
         {
             return $"{Name}: [{IsBrokenToString}]";
