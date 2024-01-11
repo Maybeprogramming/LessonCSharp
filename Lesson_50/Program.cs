@@ -153,7 +153,7 @@
 
             IRepairable carForRepair = client.GiveCar();
             Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.IsNeedRepair(out string brokenClientPart)}. Деталь требующая ремонт: {brokenClientPart}\n");
-            Part partForRepair = PartsDictionary.TryGetPart("Двигатель").Clone(false);
+            Part partForRepair = PartsDictionary.TryGetPartByType(PartType.Engine).Clone(false);
             //Part partForRepair = PartsDictionary.TryGetPart(brokenClientPart).Clone(false);
             Console.WriteLine($"{partForRepair.Name}. [{partForRepair.IsBrokenToString}]\n");
 
@@ -277,66 +277,51 @@
         }
     }
 
-    //Готово! Проверить!
     class PartsFactory
     {
         List<PartType> _somePartsTypes;
-        //Реализовать или удалить нижеследующие переменные!
 
-        public PartsFactory()
-        {
-        }
-
-        //Создать список деталей
         public List<Part> CreateSomeParts()
         {
             _somePartsTypes = CreateSomePartsTypes();
-            int somePartCount = _somePartsTypes.Count;
-            int brokenPartIndex = GenerateRandomNumber(0, somePartCount);
             List<Part> parts = new List<Part>();
+            bool isBrokenPart = false;
             Part part;
             PartType partType;
 
-            for (int i = 0; i < somePartCount; i++)
+            for (int i = 0; i < _somePartsTypes.Count; i++)
             {
-                //Этот участок пиздец, надо поменять!
-                //Сделать 1 операцию! Вместо 2!!!
-                bool isBrokenPart;
-                partType = _somePartsTypes[i];
-                string partTypeName = PartsDictionary.TryGetPartName(partType);
-
-                if (i == brokenPartIndex)
-                {
-                    isBrokenPart = true;
-                    part = PartsDictionary.TryGetPart(partTypeName).Clone(isBrokenPart);
-                }
-                else
-                {
-                    isBrokenPart = false;
-                    part = PartsDictionary.TryGetPart(partTypeName).Clone(isBrokenPart);
-                }
-
+                part = PartsDictionary.TryGetPartByType(_somePartsTypes[i]).Clone(isBrokenPart);
                 parts.Add(part);
             }
+
+            CreateBrokenPart(parts);
 
             return parts;
         }
 
-        //Сделать список типов деталей для генерации деталей
+        private void CreateBrokenPart(List<Part> parts)
+        {
+            int brokenPartIndex = GenerateRandomNumber(0, parts.Count);
+            bool isBrokenPart = true;
+            parts[brokenPartIndex] = parts[brokenPartIndex].Clone(isBrokenPart);
+        }
+
         private List<PartType> CreateSomePartsTypes(int minPartsTypesCount = 5, int maxPartsTypesCount = 10)
         {
-            List<PartType> partsTypes = new (PartsDictionary.GetPartsTypesToList());
-            List<PartType> somePartsTypes = new ();
             int somePartsTypesCount = GenerateRandomNumber(minPartsTypesCount, maxPartsTypesCount + 1);
+            List<PartType> allPartsTypes = new(PartsDictionary.GetPartsTypesToList());
+            List<PartType> somePartsTypes = new();
             PartType tempPartType;
 
             for (int i = 0; i < somePartsTypesCount; i++)
             {
-                int indexNumber = GenerateRandomNumber(0, partsTypes.Count);
-                somePartsTypes.Add(partsTypes[indexNumber]);
+                int indexNumber = GenerateRandomNumber(0, allPartsTypes.Count - i);
+                somePartsTypes.Add(allPartsTypes[indexNumber]);
 
-                tempPartType = partsTypes[partsTypes.Count - 1];
-                partsTypes[partsTypes.Count - 1] = tempPartType;
+                tempPartType = allPartsTypes[allPartsTypes.Count - 1];
+                allPartsTypes[allPartsTypes.Count - 1] = allPartsTypes[indexNumber];
+                allPartsTypes[indexNumber] = tempPartType;
             }
 
             return somePartsTypes;
@@ -373,7 +358,7 @@
         {
             if (part == null)
             {
-                Print($"Детали не существует!", ConsoleColor.Red);
+                Print($"Детали не существует!\n", ConsoleColor.Red);
                 return false;
             }
 
@@ -446,20 +431,17 @@
         public bool TryGetPart(PartType partType, out Part part)
         {
             _partsCountsAvailable.TryGetValue(partType, out int partCountAvailale);
-            string partName = PartsDictionary.TryGetPartName(partType);
 
             if (partCountAvailale > 0)
             {
-                part = PartsDictionary.TryGetPart(partName);
+                part = PartsDictionary.TryGetPartByType(partType);
                 AcceptToChangePartValue(partType);
 
                 return true;
             }
-            else
-            {
-                part = null;
-                return false;
-            }
+
+            part = null;
+            return false;
         }
 
         //Цена должна возвращаться в числе
@@ -727,7 +709,8 @@
 
     static class PartsDictionary
     {
-        private static Dictionary<string, Part> s_Part;
+        private static Dictionary<string, Part> s_PartByName;
+        private static Dictionary<PartType, Part> s_PartByType;
         private static Dictionary<Part, string> s_PartsNames;
         private static Dictionary<PartType, string> s_PartsTypesNames;
         private static Dictionary<Type, PartType> s_PartsTypes;
@@ -736,7 +719,7 @@
         //Сделать методы для заполнения словарей -> облегчит добавление новых деталей в словари.
         static PartsDictionary()
         {
-            s_Part = new Dictionary<string, Part>()
+            s_PartByName = new Dictionary<string, Part>()
             {
                 { "Двигатель", new Engine(false)},
                 {"Трансмиссия" , new Transmission(false) },
@@ -762,6 +745,34 @@
                 {"Масляный фильтр" , new OilFilter(false) },
                 {"Коленвал" , new Crankshaft(false) },
                 {"Катализатор" , new Catalyst(false) }
+            };
+
+            s_PartByType = new Dictionary<PartType, Part>()
+            {
+                { PartType.Engine, new Engine(false)},
+                { PartType.Transmission , new Transmission(false) },
+                { PartType.Wheel , new Wheel(false) },
+                { PartType.Glass , new Glass(false) },
+                { PartType.Muffler , new Muffler(false) },
+                { PartType.Brake , new Brake(false) },
+                { PartType.Suspension , new Suspension(false) },
+                { PartType.Generator , new Generator(false) },
+                { PartType.AirConditioner , new AirConditioner(false) },
+                { PartType.Starter , new Starter(false) },
+                { PartType.TimingBelt , new TimingBelt(false) },
+                { PartType.WaterPump , new WaterPump(false) },
+                { PartType.GasTank , new GasTank(false) },
+                { PartType.SteeringWheel , new SteeringWheel(false) },
+                { PartType.SteeringRack , new SteeringRack(false) },
+                { PartType.PowerSteering , new PowerSteering(false) },
+                { PartType.Dashboard , new Dashboard(false) },
+                { PartType.Wiring , new Wiring(false) },
+                { PartType.Battery , new Battery(false) },
+                { PartType.SparkPlug , new SparkPlug(false) },
+                { PartType.FuelPump , new FuelPump(false) },
+                { PartType.OilFilter , new OilFilter(false) },
+                { PartType.Crankshaft , new Crankshaft(false) },
+                { PartType.Catalyst , new Catalyst(false) }
             };
 
             s_PartsNames = new Dictionary<Part, string>()
@@ -855,7 +866,6 @@
         public static PartType TryGetPartType(Type part)
         {
             s_PartsTypes.TryGetValue(part, out PartType detailsTypes);
-
             return detailsTypes;
         }
 
@@ -867,15 +877,21 @@
             }
             else
             {
-                return "Деталь";
+                return "Ошибка!";
             }
         }
 
         public static List<PartType> GetPartsTypesToList() => s_PartsTypesList;
 
-        public static Part TryGetPart(string partName)
+        public static Part TryGetPartByName(string partName)
         {
-            s_Part.TryGetValue(partName, out Part part);
+            s_PartByName.TryGetValue(partName, out Part part);
+            return part;
+        }
+
+        public static Part TryGetPartByType(PartType partType)
+        {
+            s_PartByType.TryGetValue(partType, out Part part);
             return part;
         }
     }
