@@ -43,7 +43,8 @@
             #region Машина
             Car car = new (parts);
             Console.WriteLine($"Применить деталь: {car.TryAcceptRepair(null)}");
-            Console.WriteLine($"Нужна ли починка? - {car.IsNeedRepair(out string brokenPartName)}");
+            Console.WriteLine($"Нужна ли починка? - {car.HealthStatus}");
+            car.IsNeedRepair(out string brokenPartName);
             Console.WriteLine($"{brokenPartName}");
             Console.WriteLine($"\n----------------------------------\n");
 
@@ -156,14 +157,17 @@
             Client client = new (clientCar, 10000);
 
             IRepairable carForRepair = client.GiveCar();
-            Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.IsNeedRepair(out string brokenClientPart)}. Деталь требующая ремонт: {brokenClientPart}\n");
+            Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.HealthStatus}\n");
             Part partForRepair = PartsDictionary.TryGetPartByType(PartType.Engine).Clone(false);
             //Part partForRepair = PartsDictionary.TryGetPart(brokenClientPart).Clone(false);
             Console.WriteLine($"{partForRepair.Name}. [{partForRepair.IsBrokenToString}]\n");
 
             Console.WriteLine($"Удался ли ремонт? {carForRepair.TryAcceptRepair(partForRepair)}\n");
 
-            Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.IsNeedRepair(out string brokenClientPart1)}. Деталь требующая ремонт: {brokenClientPart1}\n");
+            Print($"\nНужен ли ремонт машине? {carForRepair.HealthStatus}. ");
+            carForRepair.IsNeedRepair(out string brokenClientPart1);
+            Print($"Деталь требующая ремонт: {brokenClientPart1}\n");
+
             Console.WriteLine($"\n----------------------------------\n");
             #endregion
 
@@ -344,6 +348,8 @@
 
         //Вернуть может быть тип неисправной детали?!
         //- Не получится с текущим алгоритмом, так как деталь может быть Null -> будет ошибка во время выполнения
+
+        public string HealthStatus {  get => GetBrokenPart() != null ? "требуется ремонт" : "в рабочем состоянии"; }
         public bool IsNeedRepair(out string brokenPartName)
         {
             Part brokenPart = GetBrokenPart(); // Вот тут может быть NUll
@@ -380,7 +386,7 @@
         //Переделать
         public string ShowInfo()
         {
-            return $"Состояние машины: {IsNeedRepair(out string brokenPartName)}. Неисправная деталь: {brokenPartName}";
+            return $"Состояние машины: {HealthStatus}. Неисправная деталь: {GetBrokenPart()?.Name}";
         }
 
         private Part GetBrokenPart()
@@ -389,7 +395,6 @@
         }
     }
 
-    //склад
     class PartsStock
     {
         private Dictionary<PartType, int> _pricesOfParts;
@@ -724,6 +729,7 @@
 
     interface IRepairable
     {
+        string HealthStatus { get; }
         bool IsNeedRepair(out string brokenPartName);
         bool TryAcceptRepair(Part part);
     }
