@@ -524,7 +524,7 @@
             return false;
         }
 
-        public override bool Equals(object? objectOther) => objectOther is Part partOther && Equals(partOther);
+        public override bool Equals(object? objectOther) => objectOther is Part otherPart && Equals(otherPart);
 
         public override int GetHashCode() => Name.GetHashCode();
 
