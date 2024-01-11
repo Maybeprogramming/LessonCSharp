@@ -11,7 +11,7 @@
         {
             Console.Title = "Автосервис";
 
-            List<Part> parts = new List<Part>()
+            List<Part> parts = new ()
             {
                 new Engine(false),
                 new Transmission(false),
@@ -41,7 +41,7 @@
 
             //Проверка класса - машина!
             #region Машина
-            Car car = new Car(parts);
+            Car car = new (parts);
             Console.WriteLine($"Применить деталь: {car.TryAcceptRepair(null)}");
             Console.WriteLine($"Нужна ли починка? - {car.IsNeedRepair(out string brokenPartName)}");
             Console.WriteLine($"{brokenPartName}");
@@ -57,7 +57,7 @@
 
             //Проверка класса склад!
             #region Склад
-            PartsStock partsStock = new PartsStock();
+            PartsStock partsStock = new ();
 
             Console.WriteLine($"Запчастей на складе:\n");
             partsStock.ShowInfo();
@@ -68,10 +68,12 @@
 
             for (int i = 0; i < 10; i++)
             {
-                if (partsStock.TryGetPart(engine, out Part part))
+                if (partsStock.IsPartAvaible(engine) == true)
                 {
+                    Part part = partsStock.TryGetPart(engine);
                     partsStock.TryGetPrice(engine, out int price);
-                    Console.WriteLine($"{part.Name}");
+                    Print($"\n{part.Name} ");
+                    Print($"[{i + 1}]\n", ConsoleColor.Green);
                     Console.WriteLine($"Цена: {price}");
                 }
                 else
@@ -81,10 +83,12 @@
 
                 Console.WriteLine($"\n----------------------------------\n");
 
-                if (partsStock.TryGetPart(transmission, out Part partT))
+                if (partsStock.IsPartAvaible(transmission) == true)
                 {
+                    Part part = partsStock.TryGetPart(transmission);
                     partsStock.TryGetPrice(transmission, out int price);
-                    Console.WriteLine($"{partT.Name}");
+                    Print($"\n{part.Name} ");
+                    Print($"[{i + 1}]\n", ConsoleColor.Yellow);
                     Console.WriteLine($"Цена: {price}");
                 }
                 else
@@ -104,8 +108,8 @@
             #region Фабрика Деталей
 
             Console.WriteLine($"\n---------- Фабрика создания деталей --------\n");
-            List<Part> partsForTest1 = new List<Part>();
-            PartsFactory partsFactory = new PartsFactory();
+            List<Part> partsForTest1;
+            PartsFactory partsFactory = new ();
 
             partsForTest1 = partsFactory.CreateSomeParts();
             int index = 0;
@@ -123,8 +127,8 @@
 
             Console.WriteLine($"\n---------- Фабрика создания нескольких машин --------\n");
 
-            CarFactory carFactory = new CarFactory(new PartsFactory());
-            List<Car> cars = new List<Car>();
+            CarFactory carFactory = new (new PartsFactory());
+            List<Car> cars = new ();
 
             for (int i = 0; i < 10; i++)
             {
@@ -146,10 +150,10 @@
             #region Создание клиента и его машины, ремонт машины
             Console.WriteLine($"\n---------- Создание клиента и его машины, ремонт машины --------\n");
 
-            PartsFactory clientPartFactory = new PartsFactory();
-            CarFactory clietCarFactory = new CarFactory(clientPartFactory);
+            PartsFactory clientPartFactory = new ();
+            CarFactory clietCarFactory = new (clientPartFactory);
             Car clientCar = clietCarFactory.Create();
-            Client client = new Client(clientCar, 10000);
+            Client client = new (clientCar, 10000);
 
             IRepairable carForRepair = client.GiveCar();
             Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.IsNeedRepair(out string brokenClientPart)}. Деталь требующая ремонт: {brokenClientPart}\n");
@@ -167,7 +171,7 @@
             #region Проверка почему в списке нет такой детали
             Console.WriteLine($"\n---------- Проверка почему в списке нет такой детали --------\n");
 
-            Engine engine1 = new Engine(true);
+            Engine engine1 = new (true);
             Part part11 = engine1.Clone(false);
 
             foreach (var part in parts)
@@ -284,7 +288,7 @@
         public List<Part> CreateSomeParts()
         {
             _somePartsTypes = CreateSomePartsTypes();
-            List<Part> parts = new List<Part>();
+            List<Part> parts = new();
             bool isBrokenPart = false;
             Part part;
             PartType partType;
@@ -427,35 +431,45 @@
             _partsCountsAvailable = FillParts();
         }
 
-        //Возвращать надо запчасть
-        public bool TryGetPart(PartType partType, out Part part)
+        public bool IsPartAvaible (PartType partType)
         {
             _partsCountsAvailable.TryGetValue(partType, out int partCountAvailale);
 
             if (partCountAvailale > 0)
             {
-                part = PartsDictionary.TryGetPartByType(partType);
-                AcceptToChangePartValue(partType);
-
                 return true;
             }
 
-            part = null;
             return false;
         }
 
-        //Цена должна возвращаться в числе
-        public bool TryGetPrice(PartType partType, out int priceOfPart)
+        //Возвращать надо запчасть
+        public Part TryGetPart(PartType partType)
+        {
+            _partsCountsAvailable.TryGetValue(partType, out int partCountAvailale);
+
+            if (partCountAvailale > 0)
+            {
+                Part part = PartsDictionary.TryGetPartByType(partType);
+                AcceptToChangePartValue(partType);
+
+                return part;
+            }
+
+            return null;
+        }
+
+        public bool TryGetPrice(PartType partType, out int partPrice)
         {
             if (_pricesOfParts.TryGetValue(partType, out int price) == true)
             {
-                priceOfPart = price;
+                partPrice = price;
 
                 return true;
             }
             else
             {
-                priceOfPart = 0;
+                partPrice = 0;
 
                 return false;
             }
@@ -467,9 +481,8 @@
 
             foreach (var part in _partsCountsAvailable)
             {
-                int price;
                 string partName = PartsDictionary.TryGetPartName(part.Key);
-                _pricesOfParts.TryGetValue(part.Key, out price);
+                _pricesOfParts.TryGetValue(part.Key, out int price);
 
                 Console.WriteLine($"{++index}. {partName} - {part.Value} штук. Цена: {price} руб. за 1 деталь.");
             }
@@ -477,7 +490,7 @@
 
         private Dictionary<PartType, int> FillParts()
         {
-            Dictionary<PartType, int> partsCountsAvailable = new Dictionary<PartType, int>();
+            Dictionary<PartType, int> partsCountsAvailable = new ();
             int minPartsCount = 0;
             int maxPartsCount = 10;
 
@@ -705,48 +718,64 @@
 
     #endregion
 
-    #region Словарь деталей 
+    #region Interfaces
+
+    interface IRepairable
+    {
+        bool IsNeedRepair(out string brokenPartName);
+        bool TryAcceptRepair(Part part);
+    }
+
+    interface ICloneable
+    {
+        abstract Part Clone(bool isBroken);
+    }
+
+    #endregion
+
+    #region Enums
+
+    enum PartType
+    {
+        Engine,
+        Transmission,
+        Wheel,
+        Glass,
+        Muffler,
+        Brake,
+        Suspension,
+        Generator,
+        AirConditioner,
+        Starter,
+        TimingBelt,
+        WaterPump,
+        GasTank,
+        SteeringWheel,
+        SteeringRack,
+        PowerSteering,
+        Dashboard,
+        Wiring,
+        Battery,
+        SparkPlug,
+        FuelPump,
+        OilFilter,
+        Crankshaft,
+        Catalyst
+    }
+
+    #endregion
+
+    #region UserUtils
 
     static class PartsDictionary
     {
-        private static Dictionary<string, Part> s_PartByName;
         private static Dictionary<PartType, Part> s_PartByType;
-        private static Dictionary<Part, string> s_PartsNames;
         private static Dictionary<PartType, string> s_PartsTypesNames;
         private static Dictionary<Type, PartType> s_PartsTypes;
         private static List<PartType> s_PartsTypesList;
 
-        //Сделать методы для заполнения словарей -> облегчит добавление новых деталей в словари.
         static PartsDictionary()
         {
-            s_PartByName = new Dictionary<string, Part>()
-            {
-                { "Двигатель", new Engine(false)},
-                {"Трансмиссия" , new Transmission(false) },
-                {"Колесо" , new Wheel(false) },
-                {"Стекло" , new Glass(false) },
-                {"Глушитель" , new Muffler(false) },
-                {"Тормоз" , new Brake(false) },
-                {"Подвеска" , new Suspension(false) },
-                {"Генератор" , new Generator(false) },
-                {"Кондиционер" , new AirConditioner(false) },
-                {"Стартер" , new Starter(false) },
-                {"ГРМ" , new TimingBelt(false) },
-                {"Водяная помпа" , new WaterPump(false) },
-                {"Бензобак" , new GasTank(false) },
-                {"Руль" , new SteeringWheel(false) },
-                {"Рулевая рейка" , new SteeringRack(false) },
-                {"Усилитель руля" , new PowerSteering(false) },
-                {"Приборная панель" , new Dashboard(false) },
-                {"Электропроводка" , new Wiring(false) },
-                {"Аккумулятор" , new Battery(false) },
-                {"Свеча зажигания" , new SparkPlug(false) },
-                {"Топливный насос" , new FuelPump(false) },
-                {"Масляный фильтр" , new OilFilter(false) },
-                {"Коленвал" , new Crankshaft(false) },
-                {"Катализатор" , new Catalyst(false) }
-            };
-
             s_PartByType = new Dictionary<PartType, Part>()
             {
                 { PartType.Engine, new Engine(false)},
@@ -773,34 +802,6 @@
                 { PartType.OilFilter , new OilFilter(false) },
                 { PartType.Crankshaft , new Crankshaft(false) },
                 { PartType.Catalyst , new Catalyst(false) }
-            };
-
-            s_PartsNames = new Dictionary<Part, string>()
-            {
-                {new Engine(false), "Двигатель"},
-                {new Transmission(false), "Трансмиссия" },
-                {new Wheel(false), "Колесо" },
-                {new Glass(false), "Стекло" },
-                {new Muffler(false), "Глушитель" },
-                {new Brake(false), "Тормоз" },
-                {new Suspension(false), "Подвеска" },
-                {new Generator(false), "Генератор" },
-                {new AirConditioner(false), "Кондиционер" },
-                {new Starter(false), "Стартер" },
-                {new TimingBelt(false), "ГРМ" },
-                {new WaterPump(false), "Водяная помпа" },
-                {new GasTank(false), "Бензобак" },
-                {new SteeringWheel(false), "Руль" },
-                {new SteeringRack(false), "Рулевая рейка" },
-                {new PowerSteering(false), "Усилитель руля" },
-                {new Dashboard(false), "Приборная панель" },
-                {new Wiring(false), "Электропроводка" },
-                {new Battery(false), "Аккумулятор" },
-                {new SparkPlug(false), "Свеча зажигания" },
-                {new FuelPump(false), "Топливный насос" },
-                {new OilFilter(false), "Масляный фильтр" },
-                {new Crankshaft(false), "Коленвал" },
-                {new Catalyst(false), "Катализатор" }
             };
 
             s_PartsTypesNames = new Dictionary<PartType, string>()
@@ -883,69 +884,12 @@
 
         public static List<PartType> GetPartsTypesToList() => s_PartsTypesList;
 
-        public static Part TryGetPartByName(string partName)
-        {
-            s_PartByName.TryGetValue(partName, out Part part);
-            return part;
-        }
-
         public static Part TryGetPartByType(PartType partType)
         {
             s_PartByType.TryGetValue(partType, out Part part);
             return part;
         }
     }
-
-    #endregion
-
-    #region Interfaces
-
-    interface IRepairable
-    {
-        bool IsNeedRepair(out string brokenPartName);
-        bool TryAcceptRepair(Part part);
-    }
-
-    interface ICloneable
-    {
-        abstract Part Clone(bool isBroken);
-    }
-
-    #endregion
-
-    #region Enums
-
-    enum PartType
-    {
-        Engine,
-        Transmission,
-        Wheel,
-        Glass,
-        Muffler,
-        Brake,
-        Suspension,
-        Generator,
-        AirConditioner,
-        Starter,
-        TimingBelt,
-        WaterPump,
-        GasTank,
-        SteeringWheel,
-        SteeringRack,
-        PowerSteering,
-        Dashboard,
-        Wiring,
-        Battery,
-        SparkPlug,
-        FuelPump,
-        OilFilter,
-        Crankshaft,
-        Catalyst
-    }
-
-    #endregion
-
-    #region UserUtils
 
     static class Randomaizer
     {
