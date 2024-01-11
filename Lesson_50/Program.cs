@@ -44,8 +44,7 @@
             Car car = new (parts);
             Console.WriteLine($"Применить деталь: {car.TryAcceptRepair(null)}");
             Console.WriteLine($"Нужна ли починка? - {car.HealthStatus}");
-            car.IsNeedRepair(out string brokenPartName);
-            Console.WriteLine($"{brokenPartName}");
+            Console.WriteLine($"{car.TryGetBrokenPartName}");
             Console.WriteLine($"\n----------------------------------\n");
 
             for (int i = 0; i < parts.Count; i++)
@@ -164,9 +163,8 @@
 
             Console.WriteLine($"Удался ли ремонт? {carForRepair.TryAcceptRepair(partForRepair)}\n");
 
-            Print($"\nНужен ли ремонт машине? {carForRepair.HealthStatus}. ");
-            carForRepair.IsNeedRepair(out string brokenClientPart1);
-            Print($"Деталь требующая ремонт: {brokenClientPart1}\n");
+            Print($"\nНужен ли ремонт машине? {carForRepair.HealthStatus}. ");      
+            Print($"Деталь требующая ремонт: {carForRepair.TryGetBrokenPartName}\n");
 
             Console.WriteLine($"\n----------------------------------\n");
             #endregion
@@ -336,7 +334,6 @@
         }
     }
 
-    //Машина
     class Car : IRepairable
     {
         private List<Part> _parts;
@@ -346,23 +343,9 @@
             _parts = parts;
         }
 
-        //Вернуть может быть тип неисправной детали?!
-        //- Не получится с текущим алгоритмом, так как деталь может быть Null -> будет ошибка во время выполнения
-
-        public string HealthStatus {  get => GetBrokenPart() != null ? "требуется ремонт" : "в рабочем состоянии"; }
-        public bool IsNeedRepair(out string brokenPartName)
-        {
-            Part brokenPart = GetBrokenPart(); // Вот тут может быть NUll
-
-            if (brokenPart != null)
-            {
-                brokenPartName = brokenPart.Name;
-                return true;
-            }
-
-            brokenPartName = String.Empty;
-            return false;
-        }
+        public string HealthStatus {  get => GetBrokenPart() != null ? "Требуется ремонт" : "В рабочем состоянии"; }
+        public bool IsNeedRepair {  get => GetBrokenPart() != null ? true : false; }
+        public string TryGetBrokenPartName { get => GetBrokenPart() != null ? GetBrokenPart().Name : "Ошибка, нет такой детали"; }
 
         public bool TryAcceptRepair(Part part)
         {
@@ -383,7 +366,6 @@
             return false;
         }
 
-        //Переделать
         public string ShowInfo()
         {
             return $"Состояние машины: {HealthStatus}. Неисправная деталь: {GetBrokenPart()?.Name}";
@@ -730,7 +712,9 @@
     interface IRepairable
     {
         string HealthStatus { get; }
-        bool IsNeedRepair(out string brokenPartName);
+        bool IsNeedRepair { get; }
+        string TryGetBrokenPartName {  get; }
+        //string TryGetBrokenPartName();
         bool TryAcceptRepair(Part part);
     }
 
