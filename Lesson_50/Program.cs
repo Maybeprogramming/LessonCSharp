@@ -37,7 +37,7 @@
                 new OilFilter(false),
                 new Crankshaft(false),
                 new Catalyst(true)
-            };   
+            };
 
             //Проверка класса - машина!
             #region Машина
@@ -251,13 +251,15 @@
         public Client(Car car, int money)
         {
             _car = car;
-            _money = money;
+            _money = Int32.MaxValue;
         }
 
         public IRepairable GiveCar()
         {
             return _car;
         }
+
+
     }
 
     class CarFactory
@@ -323,17 +325,18 @@
         //Сделать список типов деталей для генерации деталей
         private List<PartType> CreateSomePartsTypes(int minPartsTypesCount = 5, int maxPartsTypesCount = 10)
         {
-            List<PartType> partsTypes = new List<PartType>(PartsDictionary.GetPartsTypesList());
-            List<PartType> somePartsTypes = new List<PartType>();
+            List<PartType> partsTypes = new (PartsDictionary.GetPartsTypesToList());
+            List<PartType> somePartsTypes = new ();
             int somePartsTypesCount = GenerateRandomNumber(minPartsTypesCount, maxPartsTypesCount + 1);
-            PartType partType;
+            PartType tempPartType;
 
             for (int i = 0; i < somePartsTypesCount; i++)
             {
                 int indexNumber = GenerateRandomNumber(0, partsTypes.Count);
-                partType = partsTypes[indexNumber];
-                somePartsTypes.Add(partType);
-                partsTypes.Remove(partType);
+                somePartsTypes.Add(partsTypes[indexNumber]);
+
+                tempPartType = partsTypes[partsTypes.Count - 1];
+                partsTypes[partsTypes.Count - 1] = tempPartType;
             }
 
             return somePartsTypes;
@@ -370,27 +373,18 @@
         {
             if (part == null)
             {
-                Console.WriteLine($"Детали не существует!");
+                Print($"Детали не существует!", ConsoleColor.Red);
                 return false;
             }
-            else
-            {
-                Console.WriteLine($"Объект существует");
-                Console.WriteLine($"{part.GetType().Name}");
-                Console.WriteLine($"{part.Name}");
-            }
-
 
             if (_parts.Contains(part) == true)
             {
                 int index = _parts.IndexOf(part);
                 _parts[index] = part;
 
-                Print($"\nУспешный ремонт\n", ConsoleColor.Green); //Потом убрать
                 return true;
             }
 
-            Print($"\nНеуспешный ремонт\n", ConsoleColor.Red); //Потом убрать
             return false;
         }
 
@@ -443,7 +437,7 @@
                 {PartType.Catalyst,  900},
             };
 
-            _partsTypes = PartsDictionary.GetPartsTypesList();
+            _partsTypes = PartsDictionary.GetPartsTypesToList();
 
             _partsCountsAvailable = FillParts();
         }
@@ -877,7 +871,7 @@
             }
         }
 
-        public static List<PartType> GetPartsTypesList() => s_PartsTypesList;
+        public static List<PartType> GetPartsTypesToList() => s_PartsTypesList;
 
         public static Part TryGetPart(string partName)
         {
