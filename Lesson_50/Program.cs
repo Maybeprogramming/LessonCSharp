@@ -299,12 +299,12 @@
                 parts.Add(part);
             }
 
-            CreateBrokenPart(parts);
+            CreateOneRandomBrokenPart(parts);
 
             return parts;
         }
 
-        private void CreateBrokenPart(List<Part> parts)
+        private void CreateOneRandomBrokenPart(List<Part> parts)
         {
             int brokenPartIndex = GenerateRandomNumber(0, parts.Count);
             bool isBrokenPart = true;
