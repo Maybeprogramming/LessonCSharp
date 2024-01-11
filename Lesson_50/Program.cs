@@ -1,7 +1,6 @@
 ﻿namespace Lesson_50
 {
     using System;
-    using System.Collections;
     using static Display;
     using static Randomaizer;
 
@@ -11,7 +10,7 @@
         {
             Console.Title = "Автосервис";
 
-            List<Part> parts = new ()
+            List<Part> parts = new()
             {
                 new Engine(false),
                 new Transmission(false),
@@ -41,7 +40,7 @@
 
             //Проверка класса - машина!
             #region Машина
-            Car car = new (parts);
+            Car car = new(parts);
             Console.WriteLine($"Применить деталь: {car.TryAcceptRepair(null)}");
             Console.WriteLine($"Нужна ли починка? - {car.HealthStatus}");
             Console.WriteLine($"{car.TryGetBrokenPartName}");
@@ -57,7 +56,7 @@
 
             //Проверка класса склад!
             #region Склад
-            PartsStock partsStock = new ();
+            PartsStock partsStock = new();
 
             Console.WriteLine($"Запчастей на складе:\n");
             partsStock.ShowInfo();
@@ -109,7 +108,7 @@
 
             Console.WriteLine($"\n---------- Фабрика создания деталей --------\n");
             List<Part> partsForTest1;
-            PartsFactory partsFactory = new ();
+            PartsFactory partsFactory = new();
 
             partsForTest1 = partsFactory.CreateSomeParts();
             int index = 0;
@@ -127,8 +126,8 @@
 
             Console.WriteLine($"\n---------- Фабрика создания нескольких машин --------\n");
 
-            CarFactory carFactory = new (new PartsFactory());
-            List<Car> cars = new ();
+            CarFactory carFactory = new(new PartsFactory());
+            List<Car> cars = new();
 
             for (int i = 0; i < 10; i++)
             {
@@ -150,10 +149,10 @@
             #region Создание клиента и его машины, ремонт машины
             Console.WriteLine($"\n---------- Создание клиента и его машины, ремонт машины --------\n");
 
-            PartsFactory clientPartFactory = new ();
-            CarFactory clietCarFactory = new (clientPartFactory);
+            PartsFactory clientPartFactory = new();
+            CarFactory clietCarFactory = new(clientPartFactory);
             Car clientCar = clietCarFactory.Create();
-            Client client = new (clientCar, 10000);
+            Client client = new(clientCar, 10000);
 
             IRepairable carForRepair = client.GiveCar();
             Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.HealthStatus}\n");
@@ -163,7 +162,7 @@
 
             Console.WriteLine($"Удался ли ремонт? {carForRepair.TryAcceptRepair(partForRepair)}\n");
 
-            Print($"\nНужен ли ремонт машине? {carForRepair.HealthStatus}. ");      
+            Print($"\nНужен ли ремонт машине? {carForRepair.HealthStatus}. ");
             Print($"Деталь требующая ремонт: {carForRepair.TryGetBrokenPartName}\n");
 
             Console.WriteLine($"\n----------------------------------\n");
@@ -173,7 +172,7 @@
             #region Проверка почему в списке нет такой детали
             Console.WriteLine($"\n---------- Проверка почему в списке нет такой детали --------\n");
 
-            Engine engine1 = new (true);
+            Engine engine1 = new(true);
             Part part11 = engine1.Clone(false);
 
             foreach (var part in parts)
@@ -264,8 +263,6 @@
         {
             return _car;
         }
-
-
     }
 
     class CarFactory
@@ -343,8 +340,8 @@
             _parts = parts;
         }
 
-        public string HealthStatus {  get => GetBrokenPart() != null ? "Требуется ремонт" : "В рабочем состоянии"; }
-        public bool IsNeedRepair {  get => GetBrokenPart() != null ? true : false; }
+        public string HealthStatus { get => GetBrokenPart() != null ? "Требуется ремонт" : "В рабочем состоянии"; }
+        public bool IsNeedRepair { get => GetBrokenPart() != null ? true : false; }
         public string TryGetBrokenPartName { get => GetBrokenPart() != null ? GetBrokenPart().Name : "Ошибка, нет такой детали"; }
 
         public bool TryAcceptRepair(Part part)
@@ -418,7 +415,7 @@
             _partsCountsAvailable = FillParts();
         }
 
-        public bool IsPartAvaible (PartType partType)
+        public bool IsPartAvaible(PartType partType)
         {
             _partsCountsAvailable.TryGetValue(partType, out int partCountAvailale);
 
@@ -476,7 +473,7 @@
 
         private Dictionary<PartType, int> FillParts()
         {
-            Dictionary<PartType, int> partsCountsAvailable = new ();
+            Dictionary<PartType, int> partsCountsAvailable = new();
             int minPartsCount = 0;
             int maxPartsCount = 10;
 
@@ -713,7 +710,7 @@
     {
         string HealthStatus { get; }
         bool IsNeedRepair { get; }
-        string TryGetBrokenPartName {  get; }
+        string TryGetBrokenPartName { get; }
         //string TryGetBrokenPartName();
         bool TryAcceptRepair(Part part);
     }
