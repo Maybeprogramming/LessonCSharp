@@ -443,7 +443,6 @@
             return false;
         }
 
-        //Возвращать надо запчасть
         public Part TryGetPart(PartType partType)
         {
             _partsCountsAvailable.TryGetValue(partType, out int partCountAvailale);
@@ -502,7 +501,6 @@
             return partsCountsAvailable;
         }
 
-        //Это точно должно так быть?
         private void AcceptToChangePartValue(PartType partType)
         {
             _partsCountsAvailable.TryGetValue(partType, out int PartCount);
