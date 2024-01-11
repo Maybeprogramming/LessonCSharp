@@ -70,7 +70,7 @@
                 if (partsStock.IsPartAvaible(engine) == true)
                 {
                     Part part = partsStock.TryGetPart(engine);
-                    partsStock.TryGetPrice(engine, out int price);
+                    partsStock.TryGetPriceOfPart(engine, out int price);
                     Print($"\n{part.Name} ");
                     Print($"[{i + 1}]\n", ConsoleColor.Green);
                     Console.WriteLine($"Цена: {price}");
@@ -85,7 +85,7 @@
                 if (partsStock.IsPartAvaible(transmission) == true)
                 {
                     Part part = partsStock.TryGetPart(transmission);
-                    partsStock.TryGetPrice(transmission, out int price);
+                    partsStock.TryGetPriceOfPart(transmission, out int price);
                     Print($"\n{part.Name} ");
                     Print($"[{i + 1}]\n", ConsoleColor.Yellow);
                     Console.WriteLine($"Цена: {price}");
@@ -442,7 +442,7 @@
             return null;
         }
 
-        public bool TryGetPrice(PartType partType, out int partPrice)
+        public bool TryGetPriceOfPart(PartType partType, out int partPrice)
         {
             if (_pricesOfParts.TryGetValue(partType, out int price) == true)
             {
