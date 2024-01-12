@@ -711,6 +711,7 @@
         string HealthStatus { get; }
         bool IsNeedRepair { get; }
         string TryGetBrokenPartName { get; }
+
         bool TryAcceptRepair(Part part);
     }
 
