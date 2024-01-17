@@ -236,7 +236,6 @@
         }
     }
 
-    //Автосервис
     class CarService
     {
         private PartsStock _partsStock;
