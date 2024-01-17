@@ -531,7 +531,11 @@
                 string partName = PartsDictionary.TryGetPartName(part.Key);
                 _pricesOfParts.TryGetValue(part.Key, out int price);
 
-                Console.WriteLine($"{++index}. {partName} - {part.Value} штук. Цена: {price} руб. за 1 деталь.");
+                Print($"\n{++index}. {partName} - [");
+                Print($"{part.Value}", ConsoleColor.Green);
+                Print($"] штук. Цена: [");
+                Print($"{price}", ConsoleColor.Green);
+                Print($"] руб. за 1 деталь.");
             }
         }
 
