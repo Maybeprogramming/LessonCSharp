@@ -246,6 +246,8 @@
         private int _maxClientsCount;
         private Queue<Client> _clients;
         private ClientFactory _clientFactory;
+        
+        private Dictionary<PartType, int> _pricesOfParts;
 
         public CarService()
         {
@@ -259,6 +261,34 @@
 
             _clients = _clientFactory.CreateQueue();
             _partsStock = new();
+
+            _pricesOfParts = new Dictionary<PartType, int>()
+            {
+                {PartType.Engine, 1000},
+                {PartType.Transmission, 850},
+                {PartType.Wheel, 200},
+                {PartType.Glass, 150},
+                {PartType.Muffler,  100},
+                {PartType.Brake,  100},
+                {PartType.Suspension,  100},
+                {PartType.Generator,  150},
+                {PartType.AirConditioner,  300},
+                {PartType.Starter,  200},
+                {PartType.TimingBelt,  250},
+                {PartType.WaterPump,  230},
+                {PartType.GasTank,  350},
+                {PartType.SteeringWheel,  450},
+                {PartType.SteeringRack,  650},
+                {PartType.PowerSteering,  500},
+                {PartType.Dashboard,  700},
+                {PartType.Wiring,  550},
+                {PartType.Battery,  250},
+                {PartType.SparkPlug,  100},
+                {PartType.FuelPump,  300},
+                {PartType.OilFilter,  180},
+                {PartType.Crankshaft,  400},
+                {PartType.Catalyst,  900},
+            };
         }
 
         public void Work()
@@ -274,6 +304,22 @@
         private void ShowInfo()
         {
 
+        }
+
+        public bool TryGetPriceOfPart(PartType partType, out int partPrice)
+        {
+            if (_pricesOfParts.TryGetValue(partType, out int price) == true)
+            {
+                partPrice = price;
+
+                return true;
+            }
+            else
+            {
+                partPrice = 0;
+
+                return false;
+            }
         }
     }
 
@@ -442,40 +488,11 @@
     //Вынести цену деталей в класс сервиса
     class PartsStock
     {
-        private Dictionary<PartType, int> _pricesOfParts;
         private Dictionary<PartType, int> _partsCountsAvailable;
         private List<PartType> _partsTypes;
 
         public PartsStock()
         {
-            _pricesOfParts = new Dictionary<PartType, int>()
-            {
-                {PartType.Engine, 1000},
-                {PartType.Transmission, 850},
-                {PartType.Wheel, 200},
-                {PartType.Glass, 150},
-                {PartType.Muffler,  100},
-                {PartType.Brake,  100},
-                {PartType.Suspension,  100},
-                {PartType.Generator,  150},
-                {PartType.AirConditioner,  300},
-                {PartType.Starter,  200},
-                {PartType.TimingBelt,  250},
-                {PartType.WaterPump,  230},
-                {PartType.GasTank,  350},
-                {PartType.SteeringWheel,  450},
-                {PartType.SteeringRack,  650},
-                {PartType.PowerSteering,  500},
-                {PartType.Dashboard,  700},
-                {PartType.Wiring,  550},
-                {PartType.Battery,  250},
-                {PartType.SparkPlug,  100},
-                {PartType.FuelPump,  300},
-                {PartType.OilFilter,  180},
-                {PartType.Crankshaft,  400},
-                {PartType.Catalyst,  900},
-            };
-
             _partsTypes = PartsDictionary.GetPartsTypesToList();
 
             _partsCountsAvailable = FillParts();
@@ -504,22 +521,6 @@
             }
 
             return null;
-        }
-
-        public bool TryGetPriceOfPart(PartType partType, out int partPrice)
-        {
-            if (_pricesOfParts.TryGetValue(partType, out int price) == true)
-            {
-                partPrice = price;
-
-                return true;
-            }
-            else
-            {
-                partPrice = 0;
-
-                return false;
-            }
         }
 
         public void ShowInfo()
