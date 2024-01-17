@@ -423,9 +423,14 @@
             return false;
         }
 
-        public string ShowInfo()
+        public void ShowInfo()
         {
-            return $"Состояние машины: {HealthStatus}. Неисправная деталь: {GetBrokenPart()?.Name}";
+            ConsoleColor statusColor = IsNeedRepair == true ? ConsoleColor.Red : ConsoleColor.Green;
+
+            Print($"\nСостояние машины: ");
+            Print($"{HealthStatus}.", statusColor);
+            Print($"Неисправная деталь: ");
+            Print($"{GetBrokenPart()?.Name}.");
         }
 
         private Part GetBrokenPart()
