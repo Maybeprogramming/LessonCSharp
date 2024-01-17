@@ -238,6 +238,13 @@
     {
         private PartsStock _partsStock;
         private int _moneyBalance;
+        private Queue<Client> _clients;
+        private ClientFactory _clientFactory;
+
+        public CarService()
+        {
+            _clients = _clientFactory.CreateQueue();
+        }
 
         private void TryRepair(IRepairable car)
         {
@@ -250,20 +257,33 @@
         }
     }
 
-    class Client
+    #region Factoryes Classes
+    class ClientFactory
     {
-        private int _money;
-        private Car _car;
+        private int _minClientsCount;
+        private int _maxClientsCount;
 
-        public Client(Car car, int money)
+        public ClientFactory(int minClientsCount, int maxClientsCount)
         {
-            _car = car;
-            _money = Int32.MaxValue;
+            _minClientsCount = minClientsCount;
+            _maxClientsCount = maxClientsCount;
         }
 
-        public IRepairable GiveCar()
+        public Queue<Client> CreateQueue()
         {
-            return _car;
+            int someClientsCount = GenerateRandomNumber(_minClientsCount, _maxClientsCount + 1);
+            Queue<Client> clients = new();
+            PartsFactory partsFactory = new();
+            CarFactory carFactory = new(partsFactory);
+
+            for (int i = 0; i < someClientsCount; i++)
+            {
+                Car car = carFactory.Create();
+                Client client = new(car);
+                clients.Enqueue(client);
+            }
+
+            return clients;
         }
     }
 
@@ -312,8 +332,10 @@
             parts[brokenPartIndex] = parts[brokenPartIndex].Clone(isBrokenPart);
         }
 
-        private List<PartType> CreateSomePartsTypes(int minPartsTypesCount = 5, int maxPartsTypesCount = 10)
+        private List<PartType> CreateSomePartsTypes()
         {
+            int minPartsTypesCount = 5;
+            int maxPartsTypesCount = 10;
             int somePartsTypesCount = GenerateRandomNumber(minPartsTypesCount, maxPartsTypesCount + 1);
             List<PartType> allPartsTypes = new(PartsDictionary.GetPartsTypesToList());
             List<PartType> somePartsTypes = new();
@@ -330,6 +352,22 @@
             }
 
             return somePartsTypes;
+        }
+    }
+    #endregion
+
+    class Client
+    {
+        private Car _car;
+
+        public Client(Car car)
+        {
+            _car = car;
+        }
+
+        public IRepairable GiveCar()
+        {
+            return _car;
         }
     }
 
