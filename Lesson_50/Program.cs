@@ -434,6 +434,7 @@
         }
     }
 
+    //Вынести цену деталей в класс сервиса
     class PartsStock
     {
         private Dictionary<PartType, int> _pricesOfParts;
