@@ -763,7 +763,7 @@
         private static Dictionary<PartType, Part> s_PartByType;
         private static Dictionary<PartType, string> s_PartsTypesNames;
         private static Dictionary<Type, PartType> s_PartsTypes;
-        private static List<PartType> s_PartsTypesList;
+        private static List<PartType> s_AllPartsTypes;
 
         static PartsDictionary()
         {
@@ -851,8 +851,8 @@
                 {typeof(Catalyst), PartType.Catalyst }
             };
 
-            s_PartsTypesList = new List<PartType>();
-            s_PartsTypesList.AddRange(s_PartsTypesNames.Keys);
+            s_AllPartsTypes = new List<PartType>();
+            s_AllPartsTypes.AddRange(s_PartsTypesNames.Keys);
         }
 
         public static PartType TryGetPartType(Type part)
@@ -873,7 +873,7 @@
             }
         }
 
-        public static List<PartType> GetPartsTypesToList() => s_PartsTypesList;
+        public static List<PartType> GetPartsTypesToList() => s_AllPartsTypes;
 
         public static Part TryGetPartByType(PartType partType)
         {
