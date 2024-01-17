@@ -553,12 +553,12 @@
             foreach (var part in _partsCountsAvailable)
             {
                 string partName = PartsDictionary.TryGetPartName(part.Key);
-                _pricesOfParts.TryGetValue(part.Key, out int price);
+                //_pricesOfParts.TryGetValue(part.Key, out int price);
 
                 Print($"\n{++index}. {partName} - [");
                 Print($"{part.Value}", ConsoleColor.Green);
                 Print($"] штук. Цена: [");
-                Print($"{price}", ConsoleColor.Green);
+                //Print($"{price}", ConsoleColor.Green);
                 Print($"] руб. за 1 деталь.");
             }
         }
