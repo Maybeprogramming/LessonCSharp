@@ -248,6 +248,7 @@
         private ClientFactory _clientFactory;
 
         private Dictionary<PartType, int> _pricesOfParts;
+        private Dictionary<PartType, int> _pricesForJob;
 
         public CarService()
         {
@@ -288,6 +289,34 @@
                 {PartType.OilFilter,  180},
                 {PartType.Crankshaft,  400},
                 {PartType.Catalyst,  900},
+            };
+
+            _pricesForJob = new Dictionary<PartType, int>()
+            {
+                {PartType.Engine, 200},
+                {PartType.Transmission, 85},
+                {PartType.Wheel, 20},
+                {PartType.Glass, 15},
+                {PartType.Muffler,  10},
+                {PartType.Brake,  10},
+                {PartType.Suspension,  10},
+                {PartType.Generator,  15},
+                {PartType.AirConditioner,  30},
+                {PartType.Starter,  20},
+                {PartType.TimingBelt,  25},
+                {PartType.WaterPump,  20},
+                {PartType.GasTank,  35},
+                {PartType.SteeringWheel,  45},
+                {PartType.SteeringRack,  65},
+                {PartType.PowerSteering,  50},
+                {PartType.Dashboard,  70},
+                {PartType.Wiring,  55},
+                {PartType.Battery,  25},
+                {PartType.SparkPlug,  10},
+                {PartType.FuelPump,  30},
+                {PartType.OilFilter,  15},
+                {PartType.Crankshaft,  40},
+                {PartType.Catalyst,  90},
             };
         }
 
