@@ -259,6 +259,7 @@
             _clientFactory = new(_minClientCount, _maxClientsCount);
 
             _clients = _clientFactory.CreateQueue();
+            _partsStock = new();
         }
 
         public void Work()
