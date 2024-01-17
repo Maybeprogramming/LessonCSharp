@@ -10,221 +10,223 @@
         {
             Console.Title = "Автосервис";
 
-            List<Part> parts = new()
-            {
-                new Engine(false),
-                new Transmission(false),
-                new Wheel(false),
-                new Glass(false),
-                new Muffler(false),
-                new Brake(false),
-                new Suspension(false),
-                new Generator(false),
-                new AirConditioner(false),
-                new Starter(false),
-                new TimingBelt(false),
-                new WaterPump(false),
-                new GasTank(false),
-                new SteeringWheel(false),
-                new SteeringRack(false),
-                new PowerSteering(false),
-                new Dashboard(false),
-                new Wiring(false),
-                new Battery(false),
-                new SparkPlug(false),
-                new FuelPump(false),
-                new OilFilter(false),
-                new Crankshaft(false),
-                new Catalyst(true)
-            };
+            #region Test
+            //List<Part> parts = new()
+            //{
+            //    new Engine(false),
+            //    new Transmission(false),
+            //    new Wheel(false),
+            //    new Glass(false),
+            //    new Muffler(false),
+            //    new Brake(false),
+            //    new Suspension(false),
+            //    new Generator(false),
+            //    new AirConditioner(false),
+            //    new Starter(false),
+            //    new TimingBelt(false),
+            //    new WaterPump(false),
+            //    new GasTank(false),
+            //    new SteeringWheel(false),
+            //    new SteeringRack(false),
+            //    new PowerSteering(false),
+            //    new Dashboard(false),
+            //    new Wiring(false),
+            //    new Battery(false),
+            //    new SparkPlug(false),
+            //    new FuelPump(false),
+            //    new OilFilter(false),
+            //    new Crankshaft(false),
+            //    new Catalyst(true)
+            //};
 
-            //Проверка класса - машина!
-            #region Машина
-            Car car = new(parts);
-            Console.WriteLine($"Применить деталь: {car.TryAcceptRepair(null)}");
-            Console.WriteLine($"Нужна ли починка? - {car.HealthStatus}");
-            Console.WriteLine($"{car.TryGetBrokenPartName}");
-            Console.WriteLine($"\n----------------------------------\n");
+            ////Проверка класса - машина!
+            //#region Машина
+            //Car car = new(parts);
+            //Console.WriteLine($"Применить деталь: {car.TryAcceptRepair(null)}");
+            //Console.WriteLine($"Нужна ли починка? - {car.HealthStatus}");
+            //Console.WriteLine($"{car.TryGetBrokenPartName}");
+            //Console.WriteLine($"\n----------------------------------\n");
 
-            for (int i = 0; i < parts.Count; i++)
-            {
-                Print($"{i + 1}. {parts[i].ShowInfo()}\n");
-            }
+            //for (int i = 0; i < parts.Count; i++)
+            //{
+            //    Print($"{i + 1}. {parts[i].ShowInfo()}\n");
+            //}
 
-            Console.WriteLine($"\n----------------------------------");
-            #endregion
+            //Console.WriteLine($"\n----------------------------------");
+            //#endregion
 
-            //Проверка класса склад!
-            #region Склад
-            PartsStock partsStock = new();
+            ////Проверка класса склад!
+            //#region Склад
+            //PartsStock partsStock = new();
 
-            Console.WriteLine($"Запчастей на складе:\n");
-            partsStock.ShowInfo();
-            Console.WriteLine($"\n----------------------------------\n");
+            //Console.WriteLine($"Запчастей на складе:\n");
+            //partsStock.ShowInfo();
+            //Console.WriteLine($"\n----------------------------------\n");
 
-            PartType engine = PartType.Engine;
-            PartType transmission = PartType.Transmission;
+            //PartType engine = PartType.Engine;
+            //PartType transmission = PartType.Transmission;
 
-            for (int i = 0; i < 10; i++)
-            {
-                if (partsStock.IsPartAvaible(engine) == true)
-                {
-                    Part part = partsStock.TryGetPart(engine);
-                    partsStock.TryGetPriceOfPart(engine, out int price);
-                    Print($"\n{part.Name} ");
-                    Print($"[{i + 1}]\n", ConsoleColor.Green);
-                    Console.WriteLine($"Цена: {price}");
-                }
-                else
-                {
-                    Console.WriteLine($"Нет в наличии запчасти: {PartsDictionary.TryGetPartName(engine)}");
-                }
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    if (partsStock.IsPartAvaible(engine) == true)
+            //    {
+            //        Part part = partsStock.TryGetPart(engine);
+            //        partsStock.TryGetPriceOfPart(engine, out int price);
+            //        Print($"\n{part.Name} ");
+            //        Print($"[{i + 1}]\n", ConsoleColor.Green);
+            //        Console.WriteLine($"Цена: {price}");
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine($"Нет в наличии запчасти: {PartsDictionary.TryGetPartName(engine)}");
+            //    }
 
-                Console.WriteLine($"\n----------------------------------\n");
+            //    Console.WriteLine($"\n----------------------------------\n");
 
-                if (partsStock.IsPartAvaible(transmission) == true)
-                {
-                    Part part = partsStock.TryGetPart(transmission);
-                    partsStock.TryGetPriceOfPart(transmission, out int price);
-                    Print($"\n{part.Name} ");
-                    Print($"[{i + 1}]\n", ConsoleColor.Yellow);
-                    Console.WriteLine($"Цена: {price}");
-                }
-                else
-                {
-                    Console.WriteLine($"Нет в наличии запчасти: {PartsDictionary.TryGetPartName(transmission)}");
-                }
+            //    if (partsStock.IsPartAvaible(transmission) == true)
+            //    {
+            //        Part part = partsStock.TryGetPart(transmission);
+            //        partsStock.TryGetPriceOfPart(transmission, out int price);
+            //        Print($"\n{part.Name} ");
+            //        Print($"[{i + 1}]\n", ConsoleColor.Yellow);
+            //        Console.WriteLine($"Цена: {price}");
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine($"Нет в наличии запчасти: {PartsDictionary.TryGetPartName(transmission)}");
+            //    }
 
-                Console.WriteLine($"\n----------------------------------\n");
-            }
+            //    Console.WriteLine($"\n----------------------------------\n");
+            //}
 
-            Console.WriteLine($"Запчастей на складе:\n");
-            partsStock.ShowInfo();
-            Console.WriteLine($"\n----------------------------------\n");
-            #endregion
+            //Console.WriteLine($"Запчастей на складе:\n");
+            //partsStock.ShowInfo();
+            //Console.WriteLine($"\n----------------------------------\n");
+            //#endregion
 
-            //Проверка классов фабрик
-            #region Фабрика Деталей
+            ////Проверка классов фабрик
+            //#region Фабрика Деталей
 
-            Console.WriteLine($"\n---------- Фабрика создания деталей --------\n");
-            List<Part> partsForTest1;
-            PartsFactory partsFactory = new();
+            //Console.WriteLine($"\n---------- Фабрика создания деталей --------\n");
+            //List<Part> partsForTest1;
+            //PartsFactory partsFactory = new();
 
-            partsForTest1 = partsFactory.CreateSomeParts();
-            int index = 0;
+            //partsForTest1 = partsFactory.CreateSomeParts();
+            //int index = 0;
 
-            foreach (var part in partsForTest1)
-            {
-                Console.WriteLine($"{++index}. {part.ShowInfo()}");
-            }
+            //foreach (var part in partsForTest1)
+            //{
+            //    Console.WriteLine($"{++index}. {part.ShowInfo()}");
+            //}
 
-            Console.WriteLine($"\n----------------------------------\n");
+            //Console.WriteLine($"\n----------------------------------\n");
 
-            #endregion
+            //#endregion
 
-            #region Фабрика Машин
+            //#region Фабрика Машин
 
-            Console.WriteLine($"\n---------- Фабрика создания нескольких машин --------\n");
+            //Console.WriteLine($"\n---------- Фабрика создания нескольких машин --------\n");
 
-            CarFactory carFactory = new(new PartsFactory());
-            List<Car> cars = new();
+            //CarFactory carFactory = new(new PartsFactory());
+            //List<Car> cars = new();
 
-            for (int i = 0; i < 10; i++)
-            {
-                cars.Add(carFactory.Create());
-            }
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    cars.Add(carFactory.Create());
+            //}
 
-            int index1 = 0;
+            //int index1 = 0;
 
-            foreach (var carItem in cars)
-            {
-                Print($"{++index1}. {carItem.ShowInfo()}\n", ConsoleColor.Green);
-            }
+            //foreach (var carItem in cars)
+            //{
+            //    Print($"{++index1}. {carItem.ShowInfo()}\n", ConsoleColor.Green);
+            //}
 
-            Console.WriteLine($"\n----------------------------------\n");
+            //Console.WriteLine($"\n----------------------------------\n");
 
-            #endregion
+            //#endregion
 
-            //Проверка работы класса клиента
-            #region Создание клиента и его машины, ремонт машины
-            Console.WriteLine($"\n---------- Создание клиента и его машины, ремонт машины --------\n");
+            ////Проверка работы класса клиента
+            //#region Создание клиента и его машины, ремонт машины
+            //Console.WriteLine($"\n---------- Создание клиента и его машины, ремонт машины --------\n");
 
-            PartsFactory clientPartFactory = new();
-            CarFactory clietCarFactory = new(clientPartFactory);
-            Car clientCar = clietCarFactory.Create();
-            Client client = new(clientCar, 10000);
+            //PartsFactory clientPartFactory = new();
+            //CarFactory clietCarFactory = new(clientPartFactory);
+            //Car clientCar = clietCarFactory.Create();
+            //Client client = new(clientCar, 10000);
 
-            IRepairable carForRepair = client.GiveCar();
-            Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.HealthStatus}\n");
-            Part partForRepair = PartsDictionary.TryGetPartByType(PartType.Engine).Clone(false);
-            //Part partForRepair = PartsDictionary.TryGetPart(brokenClientPart).Clone(false);
-            Console.WriteLine($"{partForRepair.Name}. [{partForRepair.IsBrokenToString}]\n");
+            //IRepairable carForRepair = client.GiveCar();
+            //Console.WriteLine($"Нужен ли ремонт машине? {carForRepair.HealthStatus}\n");
+            //Part partForRepair = PartsDictionary.TryGetPartByType(PartType.Engine).Clone(false);
+            ////Part partForRepair = PartsDictionary.TryGetPart(brokenClientPart).Clone(false);
+            //Console.WriteLine($"{partForRepair.Name}. [{partForRepair.IsBrokenToString}]\n");
 
-            Console.WriteLine($"Удался ли ремонт? {carForRepair.TryAcceptRepair(partForRepair)}\n");
+            //Console.WriteLine($"Удался ли ремонт? {carForRepair.TryAcceptRepair(partForRepair)}\n");
 
-            Print($"\nНужен ли ремонт машине? {carForRepair.HealthStatus}. ");
-            Print($"Деталь требующая ремонт: {carForRepair.TryGetBrokenPartName}\n");
+            //Print($"\nНужен ли ремонт машине? {carForRepair.HealthStatus}. ");
+            //Print($"Деталь требующая ремонт: {carForRepair.TryGetBrokenPartName}\n");
 
-            Console.WriteLine($"\n----------------------------------\n");
-            #endregion
+            //Console.WriteLine($"\n----------------------------------\n");
+            //#endregion
 
-            //Другие проверки
-            #region Проверка почему в списке нет такой детали
-            Console.WriteLine($"\n---------- Проверка почему в списке нет такой детали --------\n");
+            ////Другие проверки
+            //#region Проверка почему в списке нет такой детали
+            //Console.WriteLine($"\n---------- Проверка почему в списке нет такой детали --------\n");
 
-            Engine engine1 = new(true);
-            Part part11 = engine1.Clone(false);
+            //Engine engine1 = new(true);
+            //Part part11 = engine1.Clone(false);
 
-            foreach (var part in parts)
-            {
-                if (part.Equals(engine1))
-                {
-                    Console.WriteLine($"Двигатель - Equals");
-                }
+            //foreach (var part in parts)
+            //{
+            //    if (part.Equals(engine1))
+            //    {
+            //        Console.WriteLine($"Двигатель - Equals");
+            //    }
 
-                if (part.Equals(part11))
-                {
-                    Console.WriteLine($"Деталь - Equals");
-                }
+            //    if (part.Equals(part11))
+            //    {
+            //        Console.WriteLine($"Деталь - Equals");
+            //    }
 
-                if (part == engine1)
-                {
-                    Console.WriteLine($"Двигатель");
-                }
+            //    if (part == engine1)
+            //    {
+            //        Console.WriteLine($"Двигатель");
+            //    }
 
-                if (part == part11)
-                {
-                    Console.WriteLine($"Деталь");
-                }
+            //    if (part == part11)
+            //    {
+            //        Console.WriteLine($"Деталь");
+            //    }
 
-                if (part.Name.Equals(engine1.Name))
-                {
-                    Console.WriteLine($"Двигатель. по имени");
-                }
+            //    if (part.Name.Equals(engine1.Name))
+            //    {
+            //        Console.WriteLine($"Двигатель. по имени");
+            //    }
 
-                if (part.Name.Equals(part11.Name))
-                {
-                    Console.WriteLine($"Деталь. по имени");
-                }
+            //    if (part.Name.Equals(part11.Name))
+            //    {
+            //        Console.WriteLine($"Деталь. по имени");
+            //    }
 
-                if (part.PartType == engine1.PartType)
-                {
-                    Console.WriteLine($"Двигатель. по типу");
-                }
+            //    if (part.PartType == engine1.PartType)
+            //    {
+            //        Console.WriteLine($"Двигатель. по типу");
+            //    }
 
-                if (part.PartType == part11.PartType)
-                {
-                    Console.WriteLine($"Деталь. по типу");
-                }
+            //    if (part.PartType == part11.PartType)
+            //    {
+            //        Console.WriteLine($"Деталь. по типу");
+            //    }
 
-                Console.WriteLine($"False!");
-            }
+            //    Console.WriteLine($"False!");
+            //}
 
-            Console.WriteLine($"\n{engine1.Name}. Состояние: {engine1.IsBrokenToString}");
-            Console.WriteLine($"\n{part11.Name}. Состояние: {part11.IsBrokenToString}");
+            //Console.WriteLine($"\n{engine1.Name}. Состояние: {engine1.IsBrokenToString}");
+            //Console.WriteLine($"\n{part11.Name}. Состояние: {part11.IsBrokenToString}");
 
-            Console.WriteLine($"\n----------------------------------\n");
+            //Console.WriteLine($"\n----------------------------------\n");
 
+            //#endregion
             #endregion
 
             Console.ReadKey();
