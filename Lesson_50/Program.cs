@@ -555,7 +555,7 @@
         }
     }
 
-    #region Классы деталей
+    #region Part Classes
 
     abstract class Part : ICloneable, IEquatable<Part>
     {
