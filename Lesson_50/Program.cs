@@ -490,9 +490,7 @@
 
         public Part TryGetPart(PartType partType)
         {
-            _partsCountsAvailable.TryGetValue(partType, out int partCountAvailale);
-
-            if (partCountAvailale > 0)
+            if (IsPartAvaible(partType) == true)
             {
                 Part part = PartsDictionary.TryGetPartByType(partType);
                 AcceptToChangePartValue(partType);
