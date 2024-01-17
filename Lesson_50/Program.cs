@@ -10,6 +10,9 @@
         {
             Console.Title = "Автосервис";
 
+            CarService carService = new CarService();
+            carService.Work();
+
             #region Test
             //List<Part> parts = new()
             //{
@@ -246,12 +249,17 @@
             _clients = _clientFactory.CreateQueue();
         }
 
+        public void Work()
+        {
+
+        }
+
         private void TryRepair(IRepairable car)
         {
 
         }
 
-        public void Work()
+        private void ShowInfo()
         {
 
         }
