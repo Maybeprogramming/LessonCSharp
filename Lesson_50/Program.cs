@@ -278,7 +278,7 @@
         }
     }
 
-    #region Factoryes Classes
+    #region Factories Classes
     class ClientFactory
     {
         private int _minClientsCount;
