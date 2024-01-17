@@ -508,7 +508,7 @@
         }
     }
 
-    //Вынести цену деталей в класс сервиса
+    //Вынести цену деталей в класс сервиса и исправить инфо склада
     class PartsStock
     {
         private Dictionary<PartType, int> _partsCountsAvailable;
