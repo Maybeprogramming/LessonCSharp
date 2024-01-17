@@ -241,11 +241,16 @@
     {
         private PartsStock _partsStock;
         private int _moneyBalance;
+        private int _minClientCount;
+        private int _maxClientsCount;
         private Queue<Client> _clients;
         private ClientFactory _clientFactory;
 
         public CarService()
         {
+            _minClientCount = 5;
+            _maxClientsCount = 10;
+            _clientFactory = new(_minClientCount, _maxClientsCount);
             _clients = _clientFactory.CreateQueue();
         }
 
