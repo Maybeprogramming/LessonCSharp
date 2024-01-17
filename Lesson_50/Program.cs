@@ -240,6 +240,8 @@
     class CarService
     {
         private PartsStock _partsStock;
+        private int _minMoneyBalance;
+        private int _maxMoneyBalance;
         private int _moneyBalance;
         private int _minClientCount;
         private int _maxClientsCount;
@@ -248,9 +250,14 @@
 
         public CarService()
         {
+            _minMoneyBalance = 1000;
+            _maxMoneyBalance = 3000;
+            _moneyBalance = GenerateRandomNumber(_minMoneyBalance, _maxMoneyBalance);
+
             _minClientCount = 5;
             _maxClientsCount = 10;
             _clientFactory = new(_minClientCount, _maxClientsCount);
+
             _clients = _clientFactory.CreateQueue();
         }
 
