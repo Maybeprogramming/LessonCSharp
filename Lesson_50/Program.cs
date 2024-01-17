@@ -246,7 +246,7 @@
         private int _maxClientsCount;
         private Queue<Client> _clients;
         private ClientFactory _clientFactory;
-        
+
         private Dictionary<PartType, int> _pricesOfParts;
 
         public CarService()
@@ -306,20 +306,14 @@
 
         }
 
-        public bool TryGetPriceOfPart(PartType partType, out int partPrice)
+        public int TryGetPriceOfPart(PartType partType)
         {
             if (_pricesOfParts.TryGetValue(partType, out int price) == true)
             {
-                partPrice = price;
-
-                return true;
+                return price;
             }
-            else
-            {
-                partPrice = 0;
 
-                return false;
-            }
+            return 0;
         }
     }
 
