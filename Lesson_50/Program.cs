@@ -340,7 +340,7 @@
                 Print($"Добро пожаловать в наш автосервис: \"Мастер на все руки\"!\n", ConsoleColor.Cyan);
 
                 ShowBalance(_moneyBalance);
-                ShowCarsNumbersInQueue();
+                ShowClientsNumbersInQueue();
 
                 Print($"\nДоступные функции:", ConsoleColor.Green);
                 Print($"\n{DenyCommand}", numberMenuColor);
@@ -386,7 +386,7 @@
             }
         }
 
-        private void ShowCarsNumbersInQueue()
+        private void ShowClientsNumbersInQueue()
         {
             Print($"Клиентов в очереди на ремонт: ");
             Print($"{_clients.Count}\n", ConsoleColor.Green);
@@ -583,7 +583,6 @@
         }
     }
 
-    //Вынести цену деталей в класс сервиса и исправить инфо склада
     class PartsStock
     {
         private Dictionary<PartType, int> _partsCountsAvailable;
