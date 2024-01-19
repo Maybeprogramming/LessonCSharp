@@ -330,42 +330,27 @@
 
             bool isRun = true;
             string userInput;
-            string menuTitleText = "Доступные функции:";
-            string DenyCommandText = $"Отказать в ремонте автомобиля";
-            string AutoRepairCommandText = $"Отремонтировать автомобиль в авто режиме";
-            string ManualRepairCommandText = $"Отремонтировать автомобиль в ручном режиме";
-            string ExitCommandText = $"Выйти из программы";
-            string requestMessage = "Введите номер команды: ";
-            string errorCommandText = "Такой команды нет, попробуйте снова!";
-            string exitMessage = "Работа автосервиса завершена, программа выключается!";
-            string welcomeMessage = "Добро пожаловать в наш автосервис: \"Мастер на все руки\"!";
 
-            ConsoleColor titleColor = ConsoleColor.Green;
             ConsoleColor numberMenuColor = ConsoleColor.DarkYellow;
-            ConsoleColor exitTextColor = ConsoleColor.Red;
-            ConsoleColor requestMessageColor = ConsoleColor.Green;
-            ConsoleColor errorCommandColor = ConsoleColor.DarkRed;
-            ConsoleColor exitMessageColor = ConsoleColor.Green;
-            ConsoleColor welcomeMessageColor = ConsoleColor.Cyan;
 
             while (isRun == true)
             {
                 Console.Clear();
-                Print($"{welcomeMessage}\n", welcomeMessageColor);
+                Print($"Добро пожаловать в наш автосервис: \"Мастер на все руки\"!\n", ConsoleColor.Cyan);
 
                 ShowBalance(_moneyBalance);
+                ShowCarsNumbersInQueue();
 
-                Print($"\n{menuTitleText}", titleColor);
+                Print($"\nДоступные функции:", ConsoleColor.Green);
                 Print($"\n{DenyCommand}", numberMenuColor);
-                Print($" - {DenyCommandText}");
+                Print($" - Отказать в ремонте автомобиля");
                 Print($"\n{AutoRepairCommand}", numberMenuColor);
-                Print($" - {AutoRepairCommandText}");
+                Print($" - Отремонтировать автомобиль в авто режиме");
                 Print($"\n{ManualRepairCommand}", numberMenuColor);
-                Print($" - {ManualRepairCommandText}");
+                Print($" - Отремонтировать автомобиль в ручном режиме");
                 Print($"\n{ExitCommand}", numberMenuColor);
-                Print($" - {ExitCommandText}", exitTextColor);
-                Print($"\n{requestMessage}: ", requestMessageColor);
-
+                Print($" - Выйти из программы", ConsoleColor.Red);
+                Print($"\nВведите номер команды: ", ConsoleColor.Green);
 
                 userInput = Console.ReadLine();
 
@@ -381,12 +366,12 @@
                         break;
 
                     case ExitCommand:
-                        Print($"\n{exitMessage}", exitMessageColor);
+                        Print($"\nРабота автосервиса завершена, программа выключается!", ConsoleColor.Green);
                         isRun = false;
                         break;
 
                     default:
-                        Print($"\n{errorCommandText}", errorCommandColor);
+                        Print($"\nТакой команды нет, попробуйте снова!", ConsoleColor.DarkRed);
                         break;
                 }
 
@@ -394,17 +379,18 @@
             }
         }
 
+        private void ShowCarsNumbersInQueue()
+        {
+            Print($"Всего машин в очереди на ремонт: ");
+            Print($"{_clients.Count}\n", ConsoleColor.Green);
+            PrintLine();
+        }
+
         private void ShowBalance(int moneyBalance)
         {
-            string balanceMessage = "Баланс на счёте: ";
-            string moneyType = " рублей";
-
-            ConsoleColor moneyValueColor = ConsoleColor.Green;
-            ConsoleColor textColor = ConsoleColor.White;
-
-            Print($"\n{balanceMessage}", textColor);
-            Print($"{moneyBalance}", moneyValueColor);
-            Print($"{moneyType}\n", textColor);
+            Print($"\nБаланс на счёте: ");
+            Print($"{moneyBalance}", ConsoleColor.Green);
+            Print($" рублей\n");
             PrintLine();
         }
 
