@@ -401,7 +401,6 @@
             List<Part> parts = new();
             bool isBrokenPart = false;
             Part part;
-            PartType partType;
 
             for (int i = 0; i < _somePartsTypes.Count; i++)
             {
