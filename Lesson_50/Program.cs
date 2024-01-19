@@ -326,7 +326,8 @@
             const string DenyCommand = "1";
             const string AutoRepairCommand = "2";
             const string ManualRepairCommand = "3";
-            const string ExitCommand = "4";
+            const string ShowPartStockCommand = "4";
+            const string ExitCommand = "5";
 
             bool isRun = true;
             string userInput;
@@ -348,6 +349,8 @@
                 Print($" - Отремонтировать автомобиль в авто режиме");
                 Print($"\n{ManualRepairCommand}", numberMenuColor);
                 Print($" - Отремонтировать автомобиль в ручном режиме");
+                Print($"\n{ShowPartStockCommand}", numberMenuColor);                
+                Print($" - Посмотреть остатки деталей на складе");
                 Print($"\n{ExitCommand}", numberMenuColor);
                 Print($" - Выйти из программы", ConsoleColor.Red);
                 Print($"\nВведите номер команды: ", ConsoleColor.Green);
@@ -363,6 +366,10 @@
                         break;
 
                     case ManualRepairCommand:
+                        break;
+
+                    case ShowPartStockCommand:
+                        _partsStock.ShowInfo();
                         break;
 
                     case ExitCommand:
@@ -381,7 +388,7 @@
 
         private void ShowCarsNumbersInQueue()
         {
-            Print($"Всего машин в очереди на ремонт: ");
+            Print($"Клиентов в очереди на ремонт: ");
             Print($"{_clients.Count}\n", ConsoleColor.Green);
             PrintLine();
         }
@@ -618,17 +625,19 @@
         {
             int index = 0;
 
+            Print($"\nОстатки запчастей на складе:", ConsoleColor.Green);
+
             foreach (var part in _partsCountsAvailable)
             {
                 string partName = PartsDictionary.TryGetPartName(part.Key);
-                //_pricesOfParts.TryGetValue(part.Key, out int price);
 
                 Print($"\n{++index}. {partName} - [");
                 Print($"{part.Value}", ConsoleColor.Green);
-                Print($"] штук. Цена: [");
-                //Print($"{price}", ConsoleColor.Green);
-                Print($"] руб. за 1 деталь.");
+                Print($"] штук.");
             }
+
+            Print("\n");
+            PrintLine();
         }
 
         private Dictionary<PartType, int> FillParts()
