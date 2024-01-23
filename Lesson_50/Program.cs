@@ -323,7 +323,7 @@
 
         public void Work()
         {
-            const string DenyCommand = "1";
+            const string RefuseCommand = "1";
             const string AutoRepairCommand = "2";
             const string ManualRepairCommand = "3";
             const string ShowPartStockCommand = "4";
@@ -343,7 +343,7 @@
                 ShowClientsNumbersInQueue();
 
                 Print($"\nДоступные функции:", ConsoleColor.Green);
-                Print($"\n{DenyCommand}", numberMenuColor);
+                Print($"\n{RefuseCommand}", numberMenuColor);
                 Print($" - Отказать в ремонте автомобиля");
                 Print($"\n{AutoRepairCommand}", numberMenuColor);
                 Print($" - Отдать машину для ремонт слесарю");
@@ -359,7 +359,8 @@
 
                 switch (userInput)
                 {
-                    case DenyCommand:
+                    case RefuseCommand:
+                        RefuseToRepairCar();
                         break;
 
                     case AutoRepairCommand:
@@ -384,6 +385,11 @@
 
                 WaitToPressKey();
             }
+        }
+
+        private void RefuseToRepairCar()
+        {
+            Print($"Отказ на ремонт автомобиля");
         }
 
         private void ShowClientsNumbersInQueue()
