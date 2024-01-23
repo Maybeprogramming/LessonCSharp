@@ -335,7 +335,7 @@
 
             ConsoleColor numberMenuColor = ConsoleColor.DarkYellow;
 
-            while (_clients.Count > 1 || isRun == true)
+            while (_clients.Count > 0 && isRun == true)
             {
                 Console.Clear();
                 Print($"Добро пожаловать в наш автосервис: \"Мастер на все руки\"!\n", ConsoleColor.Cyan);
