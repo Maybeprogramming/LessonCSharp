@@ -258,16 +258,6 @@
             PrintLine();
         }
 
-        private void TryRepair(IRepairable car)
-        {
-
-        }
-
-        private void ShowInfo()
-        {
-
-        }
-
         private int TryGetPriceOfPart(PartType partType)
         {
             if (_pricesOfParts.TryGetValue(partType, out int price) == true)
