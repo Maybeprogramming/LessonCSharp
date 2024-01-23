@@ -397,7 +397,9 @@
 
         private void ShowBrokenPartInCar(IRepairable currentCar)
         {
-            string partType = currentCar.BrokenPartName;
+            PartType partType = PartsDictionary.TryGetTypePartByName(currentCar.BrokenPartClassName);
+            Part part = PartsDictionary.TryGetPartByType(partType);
+            currentCar.TryAcceptRepair(part);
 
             Print($"Статус текущей машины: ");
             Print($"{currentCar.HealthStatus}", currentCar.IsNeedRepair == true ? ConsoleColor.Red : ConsoleColor.Green);
@@ -579,11 +581,17 @@
             _parts = parts;
         }
 
-        public string HealthStatus { get => GetBrokenPart() != null ? "Требуется ремонт" : "В рабочем состоянии"; }
-        public bool IsNeedRepair { get => GetBrokenPart() != null; }
-        public string BrokenPartName { get => GetBrokenPart() != null ? GetBrokenPart().Name : "Неисправных деталей нет"; }
+        public string HealthStatus  => 
+            GetBrokenPart() != null ? "Требуется ремонт" : "В рабочем состоянии";
 
-        //public PartType partType { get =>; }
+        public bool IsNeedRepair => 
+            GetBrokenPart() != null;
+
+        public string BrokenPartName  => 
+            GetBrokenPart() != null ? GetBrokenPart().Name : "Неисправных деталей нет";
+
+        public string BrokenPartClassName => 
+            GetBrokenPart() != null ? GetBrokenPart().GetType().Name : "Empty";
 
         public bool TryAcceptRepair(Part part)
         {
@@ -665,7 +673,7 @@
 
             foreach (var part in _partsCountsAvailable)
             {
-                string partName = PartsDictionary.TryGetPartName(part.Key);
+                string partName = PartsDictionary.TryGetPartNameByType(part.Key);
 
                 Print($"\n{++index}. {partName} - [");
                 Print($"{part.Value}", ConsoleColor.Green);
@@ -708,8 +716,8 @@
             IsBroken = isBroken;
         }
 
-        public PartType PartType { get => PartsDictionary.TryGetPartType(GetType()); }
-        public string Name { get => PartsDictionary.TryGetPartName(PartType); }
+        public PartType PartType { get => PartsDictionary.TryGetTypePartByName(GetType().Name); }
+        public string Name { get => PartsDictionary.TryGetPartNameByType(PartType); }
         public bool IsBroken { get; }
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
 
@@ -916,7 +924,7 @@
         string HealthStatus { get; }
         bool IsNeedRepair { get; }
         string BrokenPartName { get; }
-        PartType partType { get; }
+        string BrokenPartClassName { get; }
 
         bool TryAcceptRepair(Part part);
     }
@@ -966,8 +974,8 @@
     {
         private static Dictionary<PartType, Part> s_PartByType;
         private static Dictionary<PartType, string> s_PartsTypesNames;
-        private static Dictionary<Type, PartType> s_PartsTypes;
-        private static List<PartType> s_AllPartsTypes;
+        private static Dictionary<string, PartType> s_PartsTypes;
+        private static List<PartType> s_AllTypesParts;
 
         static PartsDictionary()
         {
@@ -1027,45 +1035,45 @@
                 {PartType.Catalyst, "Катализатор" }
             };
 
-            s_PartsTypes = new Dictionary<Type, PartType>()
+            s_PartsTypes = new Dictionary<string, PartType>()
             {
-                {typeof(Engine), PartType.Engine},
-                {typeof(Transmission), PartType.Transmission },
-                {typeof(Wheel), PartType.Wheel },
-                {typeof(Glass), PartType.Glass },
-                {typeof(Muffler), PartType.Muffler },
-                {typeof(Brake), PartType.Brake },
-                {typeof(Suspension), PartType.Suspension },
-                {typeof(Generator), PartType.Generator },
-                {typeof(AirConditioner), PartType.AirConditioner },
-                {typeof(Starter), PartType.Starter },
-                {typeof(TimingBelt), PartType.TimingBelt },
-                {typeof(WaterPump), PartType.WaterPump },
-                {typeof(GasTank), PartType.GasTank },
-                {typeof(SteeringWheel), PartType.SteeringWheel },
-                {typeof(SteeringRack), PartType.SteeringRack},
-                {typeof(PowerSteering), PartType.PowerSteering },
-                {typeof(Dashboard), PartType.Dashboard },
-                {typeof(Wiring), PartType.Wiring },
-                {typeof(Battery), PartType.Battery },
-                {typeof(SparkPlug), PartType.SparkPlug },
-                {typeof(FuelPump), PartType.FuelPump },
-                {typeof(OilFilter), PartType.OilFilter },
-                {typeof(Crankshaft), PartType.Crankshaft },
-                {typeof(Catalyst), PartType.Catalyst }
+                {nameof(Engine), PartType.Engine},
+                {nameof(Transmission), PartType.Transmission },
+                {nameof(Wheel), PartType.Wheel },
+                {nameof(Glass), PartType.Glass },
+                {nameof(Muffler), PartType.Muffler },
+                {nameof(Brake), PartType.Brake },
+                {nameof(Suspension), PartType.Suspension },
+                {nameof(Generator), PartType.Generator },
+                {nameof(AirConditioner), PartType.AirConditioner },
+                {nameof(Starter), PartType.Starter },
+                {nameof(TimingBelt), PartType.TimingBelt },
+                {nameof(WaterPump), PartType.WaterPump },
+                {nameof(GasTank), PartType.GasTank },
+                {nameof(SteeringWheel), PartType.SteeringWheel },
+                {nameof(SteeringRack), PartType.SteeringRack},
+                {nameof(PowerSteering), PartType.PowerSteering },
+                {nameof(Dashboard), PartType.Dashboard },
+                {nameof(Wiring), PartType.Wiring },
+                {nameof(Battery), PartType.Battery },
+                {nameof(SparkPlug), PartType.SparkPlug },
+                {nameof(FuelPump), PartType.FuelPump },
+                {nameof(OilFilter), PartType.OilFilter },
+                {nameof(Crankshaft), PartType.Crankshaft },
+                {nameof(Catalyst), PartType.Catalyst }
             };
 
-            s_AllPartsTypes = new List<PartType>();
-            s_AllPartsTypes.AddRange(s_PartsTypesNames.Keys);
+            s_AllTypesParts = new List<PartType>();
+            s_AllTypesParts.AddRange(s_PartsTypesNames.Keys);
         }
 
-        public static PartType TryGetPartType(Type part)
+        public static PartType TryGetTypePartByName(string nameOfPart)
         {
-            s_PartsTypes.TryGetValue(part, out PartType partType);
+            s_PartsTypes.TryGetValue(nameOfPart, out PartType partType);
             return partType;
         }
 
-        public static string TryGetPartName(PartType partType)
+        public static string TryGetPartNameByType(PartType partType)
         {
             if (s_PartsTypesNames.TryGetValue(partType, out string name) == true)
             {
@@ -1077,7 +1085,7 @@
             }
         }
 
-        public static List<PartType> GetPartsTypesToList() => s_AllPartsTypes;
+        public static List<PartType> GetPartsTypesToList() => s_AllTypesParts;
 
         public static Part TryGetPartByType(PartType partType)
         {
