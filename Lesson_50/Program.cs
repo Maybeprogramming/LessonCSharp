@@ -233,7 +233,7 @@
             //#endregion
             #endregion
 
-            Console.ReadKey();
+            WaitToPressKey();
         }
     }
 
