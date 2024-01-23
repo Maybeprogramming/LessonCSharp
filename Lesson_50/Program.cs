@@ -172,7 +172,7 @@
                         Print($"\nТакой команды нет, попробуйте снова!", ConsoleColor.DarkRed);
                         break;
                 }
-                                
+
                 WaitToPressKey();
             }
 
@@ -240,7 +240,7 @@
             Print($"\nВы отказались ремонтировать автомобиль");
             Print($"\nВам пришлось оплатить штраф за отказ: ");
             Print($"{_fineForRefusal}", ConsoleColor.Red);
-            Print($" рублей");            
+            Print($" рублей");
         }
 
         private void ShowClientsNumbersInQueue()
@@ -391,16 +391,16 @@
             _parts = parts;
         }
 
-        public string HealthStatus  => 
+        public string HealthStatus =>
             GetBrokenPart() != null ? "Требуется ремонт" : "В рабочем состоянии";
 
-        public bool IsNeedRepair => 
+        public bool IsNeedRepair =>
             GetBrokenPart() != null;
 
-        public string BrokenPartName  => 
+        public string BrokenPartName =>
             GetBrokenPart() != null ? GetBrokenPart().Name : "Неисправных деталей нет";
 
-        public string BrokenPartClassName => 
+        public string BrokenPartClassName =>
             GetBrokenPart() != null ? GetBrokenPart().GetType().Name : "Empty";
 
         public bool TryAcceptRepair(Part part)
@@ -515,6 +515,26 @@
             _partsCountsAvailable.Remove(partType);
             _partsCountsAvailable.Add(partType, PartCount);
         }
+    }
+
+    class PartCell
+    {
+        private readonly Part _part;
+        private int _amount;
+
+        public PartCell(Part part, int amount)
+        {
+            _part = part;
+            _amount = amount;
+        }
+
+        public int Amount
+        {
+            get => _amount;
+            set => _amount = value > 0 ? value : 0;
+        }
+
+        public bool isAvaible => Amount > 0;
     }
 
     #region Part Classes
