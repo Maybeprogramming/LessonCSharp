@@ -346,9 +346,9 @@
                 Print($"\n{DenyCommand}", numberMenuColor);
                 Print($" - Отказать в ремонте автомобиля");
                 Print($"\n{AutoRepairCommand}", numberMenuColor);
-                Print($" - Отремонтировать автомобиль в авто режиме");
+                Print($" - Отдать машину для ремонт слесарю");
                 Print($"\n{ManualRepairCommand}", numberMenuColor);
-                Print($" - Отремонтировать автомобиль в ручном режиме");
+                Print($" - Выбрать деталь и отремонтировать самостоятельно");
                 Print($"\n{ShowPartStockCommand}", numberMenuColor);                
                 Print($" - Посмотреть остатки деталей на складе");
                 Print($"\n{ExitCommand}", numberMenuColor);
