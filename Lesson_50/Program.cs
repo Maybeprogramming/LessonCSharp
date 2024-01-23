@@ -355,18 +355,23 @@
                 Print($" - Выйти из программы", ConsoleColor.Red);
                 Print($"\nВведите номер команды: ", ConsoleColor.Green);
 
+                Client currentClient = _clients.Dequeue();
+                IRepairable currentCar = currentClient.GiveCar();
+
                 userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
                     case RefuseCommand:
-                        RefuseToRepairCar();
+                        RefuseToRepairCar(currentCar);
                         break;
 
                     case AutoRepairCommand:
+                        RepairCarAuto(currentCar);
                         break;
 
                     case ManualRepairCommand:
+                        RepairCarManual(currentCar);
                         break;
 
                     case ShowPartStockCommand:
@@ -387,7 +392,17 @@
             }
         }
 
-        private void RefuseToRepairCar()
+        private void RepairCarManual(IRepairable currentCar)
+        {
+            Console.WriteLine($"Отремонтировать машину в ручную");
+        }
+
+        private void RepairCarAuto(IRepairable currentCar)
+        {
+            Console.WriteLine($"Отремонтировать машину в авто режиме");
+        }
+
+        private void RefuseToRepairCar(IRepairable currentCar)
         {
             Print($"Отказ на ремонт автомобиля");
         }
