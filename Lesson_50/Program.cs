@@ -14,7 +14,6 @@
             CarService carService = new CarService();
             carService.Work();
 
-            PrintLine();
             WaitToPressKey();
         }
     }
@@ -29,12 +28,14 @@
         private int _maxClientsCount;
         private Queue<Client> _clients;
         private ClientFactory _clientFactory;
+        private int _fineForRefusal;
 
         private Dictionary<PartType, int> _pricesOfParts;
         private Dictionary<PartType, int> _pricesForJob;
 
         public CarService()
         {
+            _fineForRefusal = 500;
             _minMoneyBalance = 1000;
             _maxMoneyBalance = 3000;
             _moneyBalance = GenerateRandomNumber(_minMoneyBalance, _maxMoneyBalance);
@@ -171,11 +172,12 @@
                         Print($"\nТакой команды нет, попробуйте снова!", ConsoleColor.DarkRed);
                         break;
                 }
-
-                PrintLine();
-                ShowClientsNumbersInQueue();
+                                
                 WaitToPressKey();
             }
+
+            PrintLine();
+            ShowClientsNumbersInQueue();
         }
 
         private void ShowBrokenPartInCar(IRepairable currentCar)
@@ -189,17 +191,36 @@
 
         private void RepairCarManual(IRepairable currentCar)
         {
-            Print($"Отремонтировать машину в ручную");
+            Print($"Отремонтировать машину в ручную\n");
         }
 
         private void RepairCarAuto(IRepairable currentCar)
         {
-            Print($"Отремонтировать машину в авто режиме");
+            int minChanceWrongJob = 0;
+            int maxChanceWrongJob = 30;
+            int maxScaleChanceToDoJob = 100;
+            int currentChanceToDoJob = GenerateRandomNumber(minChanceWrongJob, maxChanceWrongJob);
+
+            if (currentChanceToDoJob > maxChanceWrongJob)
+            {
+
+            }
+            else
+            {
+
+            }
+
+            Print($"Слесарь сервиса принялся за ремонт машины\n");
         }
 
         private void RefuseToRepairCar(IRepairable currentCar)
         {
-            Print($"Отказ на ремонт автомобиля");
+            _moneyBalance -= _fineForRefusal;
+
+            Print($"\nВы отказались ремонтировать автомобиль");
+            Print($"\nВам пришлось оплатить штраф за отказ: ");
+            Print($"{_fineForRefusal}", ConsoleColor.Red);
+            Print($" рублей");            
         }
 
         private void ShowClientsNumbersInQueue()
