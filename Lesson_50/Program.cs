@@ -233,6 +233,7 @@
             //#endregion
             #endregion
 
+            PrintLine();
             WaitToPressKey();
         }
     }
@@ -334,7 +335,7 @@
 
             ConsoleColor numberMenuColor = ConsoleColor.DarkYellow;
 
-            while (isRun == true)
+            while (_clients.Count > 1 || isRun == true)
             {
                 Console.Clear();
                 Print($"Добро пожаловать в наш автосервис: \"Мастер на все руки\"!\n", ConsoleColor.Cyan);
@@ -349,13 +350,13 @@
                 Print($" - Отдать машину для ремонт слесарю");
                 Print($"\n{ManualRepairCommand}", numberMenuColor);
                 Print($" - Выбрать деталь и отремонтировать самостоятельно");
-                Print($"\n{ShowPartStockCommand}", numberMenuColor);                
+                Print($"\n{ShowPartStockCommand}", numberMenuColor);
                 Print($" - Посмотреть остатки деталей на складе");
                 Print($"\n{ExitCommand}", numberMenuColor);
                 Print($" - Выйти из программы", ConsoleColor.Red);
                 Print($"\nВведите номер команды: ", ConsoleColor.Green);
 
-                Client currentClient = _clients.Dequeue();
+                Client currentClient = _clients?.Dequeue();
                 IRepairable currentCar = currentClient.GiveCar();
 
                 userInput = Console.ReadLine();
