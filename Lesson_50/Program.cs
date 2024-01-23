@@ -397,8 +397,10 @@
 
         private void ShowBrokenPartInCar(IRepairable currentCar)
         {
+            string partType = currentCar.TryGetBrokenPartName;
+
             Print($"Статус текущей машины: ");
-            Print($"{currentCar.HealthStatus}", ConsoleColor.Red);
+            Print($"{currentCar.HealthStatus}", currentCar.IsNeedRepair == true ? ConsoleColor.Red : ConsoleColor.Green);
             Print($"\nНеисправная деталь: - ");
             Print($"{currentCar.TryGetBrokenPartName}\n", ConsoleColor.Green);
             PrintLine();
@@ -1056,8 +1058,8 @@
 
         public static PartType TryGetPartType(Type part)
         {
-            s_PartsTypes.TryGetValue(part, out PartType detailsTypes);
-            return detailsTypes;
+            s_PartsTypes.TryGetValue(part, out PartType partType);
+            return partType;
         }
 
         public static string TryGetPartName(PartType partType)
