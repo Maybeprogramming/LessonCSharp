@@ -397,12 +397,12 @@
 
         private void ShowBrokenPartInCar(IRepairable currentCar)
         {
-            string partType = currentCar.TryGetBrokenPartName;
+            string partType = currentCar.BrokenPartName;
 
             Print($"Статус текущей машины: ");
             Print($"{currentCar.HealthStatus}", currentCar.IsNeedRepair == true ? ConsoleColor.Red : ConsoleColor.Green);
             Print($"\nНеисправная деталь: - ");
-            Print($"{currentCar.TryGetBrokenPartName}\n", ConsoleColor.Green);
+            Print($"{currentCar.BrokenPartName}\n", ConsoleColor.Green);
             PrintLine();
         }
 
@@ -581,7 +581,9 @@
 
         public string HealthStatus { get => GetBrokenPart() != null ? "Требуется ремонт" : "В рабочем состоянии"; }
         public bool IsNeedRepair { get => GetBrokenPart() != null; }
-        public string TryGetBrokenPartName { get => GetBrokenPart() != null ? GetBrokenPart().Name : "Ошибка, нет такой детали"; }
+        public string BrokenPartName { get => GetBrokenPart() != null ? GetBrokenPart().Name : "Неисправных деталей нет"; }
+
+        //public PartType partType { get =>; }
 
         public bool TryAcceptRepair(Part part)
         {
@@ -913,7 +915,8 @@
     {
         string HealthStatus { get; }
         bool IsNeedRepair { get; }
-        string TryGetBrokenPartName { get; }
+        string BrokenPartName { get; }
+        PartType partType { get; }
 
         bool TryAcceptRepair(Part part);
     }
