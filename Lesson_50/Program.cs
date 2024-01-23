@@ -199,18 +199,27 @@
             int minChanceWrongJob = 0;
             int maxChanceWrongJob = 30;
             int maxScaleChanceToDoJob = 100;
-            int currentChanceToDoJob = GenerateRandomNumber(minChanceWrongJob, maxChanceWrongJob);
+            int currentChanceToDoJob = GenerateRandomNumber(minChanceWrongJob, maxScaleChanceToDoJob);
+
+            Part goodPart;
+            Part wrongPart;
+
+            string brokenPartClassName = currentCar.BrokenPartClassName;
+            PartType brokenPartType = PartsDictionary.TryGetTypePartByName(brokenPartClassName);
+            goodPart = PartsDictionary.TryGetPartByType(brokenPartType);
+
+            Print($"\nСлесарь сервиса принялся за ремонт машины");
 
             if (currentChanceToDoJob > maxChanceWrongJob)
             {
-
+                currentCar.TryAcceptRepair(goodPart);
+                Print($"\nБыла заменена неисправная деталь: {goodPart.Name}");
+                Print($"\n{currentCar.HealthStatus}");
             }
             else
             {
-
+                Print("\nХе-хой, ой, лaять...");
             }
-
-            Print($"Слесарь сервиса принялся за ремонт машины\n");
         }
 
         private void RefuseToRepairCar(IRepairable currentCar)
