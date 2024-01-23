@@ -211,13 +211,25 @@
                 goodPart = PartsDictionary.TryGetPartByType(brokenPartType);
 
                 currentCar.TryAcceptRepair(goodPart);
+
                 Print($"\nБыла заменена неисправная деталь: {goodPart.Name}");
-                Print($"\n{currentCar.HealthStatus}");
+                Print($"\nСтатус машины: {currentCar.HealthStatus}");
+                Print($"\nНеисправность: {currentCar.BrokenPartName}");
             }
             else
             {
-                Part wrongPart;
-                Print("\nХе-хой, ой, лaять...");
+                List<PartType> partsTypes = PartsDictionary.GetPartsTypesToList();
+                int indexNumber = GenerateRandomNumber(0, partsTypes.Count);
+                PartType somePartType = partsTypes[indexNumber];
+                Part wrongPart = PartsDictionary.TryGetPartByType(somePartType);
+
+                currentCar.TryAcceptRepair(wrongPart);
+
+                Print($"\nБыла заменена деталь: {wrongPart.Name}");
+                Print($"\nСтатус машины: {currentCar.HealthStatus}");
+                Print($"\nНеисправность: {currentCar.BrokenPartName}");
+
+                Print("\nХе-хой, ой, лaять на баян...");
             }
         }
 
