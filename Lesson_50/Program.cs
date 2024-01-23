@@ -11,7 +11,7 @@
         {
             Console.Title = "Автосервис";
 
-            CarService carService = new CarService();
+            CarService carService = new ();
             carService.Work();
 
             WaitToPressKey();
