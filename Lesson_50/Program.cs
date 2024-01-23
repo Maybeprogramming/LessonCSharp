@@ -148,7 +148,7 @@
                 switch (userInput)
                 {
                     case RefuseCommand:
-                        RefuseToRepairCar(currentCar);
+                        RefuseToRepairCar();
                         break;
 
                     case AutoRepairCommand:
@@ -201,28 +201,27 @@
             int maxScaleChanceToDoJob = 100;
             int currentChanceToDoJob = GenerateRandomNumber(minChanceWrongJob, maxScaleChanceToDoJob);
 
-            Part goodPart;
-            Part wrongPart;
-
-            string brokenPartClassName = currentCar.BrokenPartClassName;
-            PartType brokenPartType = PartsDictionary.TryGetTypePartByName(brokenPartClassName);
-            goodPart = PartsDictionary.TryGetPartByType(brokenPartType);
-
             Print($"\nСлесарь сервиса принялся за ремонт машины");
 
             if (currentChanceToDoJob > maxChanceWrongJob)
             {
+                Part goodPart;
+                string brokenPartClassName = currentCar.BrokenPartClassName;
+                PartType brokenPartType = PartsDictionary.TryGetTypePartByName(brokenPartClassName);
+                goodPart = PartsDictionary.TryGetPartByType(brokenPartType);
+
                 currentCar.TryAcceptRepair(goodPart);
                 Print($"\nБыла заменена неисправная деталь: {goodPart.Name}");
                 Print($"\n{currentCar.HealthStatus}");
             }
             else
             {
+                Part wrongPart;
                 Print("\nХе-хой, ой, лaять...");
             }
         }
 
-        private void RefuseToRepairCar(IRepairable currentCar)
+        private void RefuseToRepairCar()
         {
             _moneyBalance -= _fineForRefusal;
 
