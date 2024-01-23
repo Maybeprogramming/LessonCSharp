@@ -343,6 +343,11 @@
                 ShowBalance(_moneyBalance);
                 ShowClientsNumbersInQueue();
 
+                Client currentClient = _clients?.Dequeue();
+                IRepairable currentCar = currentClient.GiveCar();
+
+                ShowBrokenPartInCar(currentCar);
+
                 Print($"\nДоступные функции:", ConsoleColor.Green);
                 Print($"\n{RefuseCommand}", numberMenuColor);
                 Print($" - Отказать в ремонте автомобиля");
@@ -355,9 +360,6 @@
                 Print($"\n{ExitCommand}", numberMenuColor);
                 Print($" - Выйти из программы", ConsoleColor.Red);
                 Print($"\nВведите номер команды: ", ConsoleColor.Green);
-
-                Client currentClient = _clients?.Dequeue();
-                IRepairable currentCar = currentClient.GiveCar();
 
                 userInput = Console.ReadLine();
 
@@ -393,14 +395,23 @@
             }
         }
 
+        private void ShowBrokenPartInCar(IRepairable currentCar)
+        {
+            Print($"Статус текущей машины: ");
+            Print($"{currentCar.HealthStatus}", ConsoleColor.Red);
+            Print($"\nНеисправная деталь: - ");
+            Print($"{currentCar.TryGetBrokenPartName}\n", ConsoleColor.Green);
+            PrintLine();
+        }
+
         private void RepairCarManual(IRepairable currentCar)
         {
-            Console.WriteLine($"Отремонтировать машину в ручную");
+            Print($"Отремонтировать машину в ручную");
         }
 
         private void RepairCarAuto(IRepairable currentCar)
         {
-            Console.WriteLine($"Отремонтировать машину в авто режиме");
+            Print($"Отремонтировать машину в авто режиме");
         }
 
         private void RefuseToRepairCar(IRepairable currentCar)
@@ -417,7 +428,7 @@
 
         private void ShowBalance(int moneyBalance)
         {
-            Print($"\nБаланс на счёте: ");
+            Print($"\nБаланс на счёте автосервиса: ");
             Print($"{moneyBalance}", ConsoleColor.Green);
             Print($" рублей\n");
             PrintLine();
