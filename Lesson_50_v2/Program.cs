@@ -3,12 +3,66 @@
     using static UserInput;
     using static Randomaizer;
     using static Display;
+    using System.Runtime.CompilerServices;
 
     class Program
     {
         static void Main()
         {
         }
+    }
+
+    class Cell
+    {
+        private readonly Part _part;
+        private int _count;
+
+        public Cell(Part part, int count)
+        {
+            _part = part;
+            _count = count;
+        }
+
+        public int Count => _count;
+
+        public void SetValue(int value) => _count = value > 0 ? value : 0;
+    }
+
+    class Part: ICloneable
+    {
+        public Part(string name, bool isBroken)
+        {
+            Name = name;
+            IsBroken = isBroken;
+        }
+
+        public string Name { get; }
+        public bool IsBroken { get; }
+        public string HealhtyStatus => IsBroken == true ? "исправно" : "не исправно";
+
+        public Part Clone(bool isBroken)
+        {
+            return new Part(Name, isBroken);
+        }
+    }
+
+    class Stock
+    {
+
+    }
+    
+    class Car: IRepairable
+    {
+
+    }
+
+    interface IRepairable
+    {
+    }
+
+    interface ICloneable
+    {
+        Part Clone(bool isBroken);
     }
 
     static class PartsDictionary
