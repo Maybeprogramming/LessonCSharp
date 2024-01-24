@@ -8,19 +8,13 @@
     {
         static void Main()
         {
-            List<Cell> partsStock = new List<Cell>()
-            {
-                new Cell(new Part("Двигатель", false), 5),
-                new Cell(new Part("Трансмиссия", false), 5),
-                new Cell(new Part("Тормозные колодки", false), 0)
-            };
+            PartFactory partFactory = new PartFactory();
 
-            int index = 0;
+            List<Part> partList = partFactory.CreateSeveral();
 
-            foreach (var part in partsStock)
+            foreach (var item in partList)
             {
-                part.ShowInfo($"{++index}");
-                Print($"\n");
+                Print($"\n{item.Name} - {item.HealhtyStatus}");
             }
 
             Console.ReadKey();
@@ -70,6 +64,8 @@
 
         public List<Part> CreateSeveral(int minCount = 5, int maxCount = 10)
         {
+            maxCount = maxCount > _partsNames.Count ? _partsNames.Count : maxCount;
+
             List<Part> parts = new List<Part>();
             int countParts = GenerateRandomNumber(minCount, maxCount + 1);
 
@@ -77,6 +73,9 @@
             {
                 int indexNumber = GenerateRandomNumber(0, _partsNames.Count - i);
                 string somePartName = _partsNames[indexNumber];
+                bool isBroken = false;
+
+                parts.Add(new Part(somePartName, isBroken));
 
                 MovePartNameToEnd(somePartName, indexNumber);
             }
@@ -87,8 +86,10 @@
         private void MovePartNameToEnd(string somePartName, int currentIndex)
         {
             int lastIndex = _partsNames.Count - 1;
-
             string tempName = _partsNames[lastIndex];
+
+            _partsNames[lastIndex] = somePartName;
+            _partsNames[currentIndex] = tempName;
         }
     }
 
@@ -102,7 +103,7 @@
 
         public string Name { get; }
         public bool IsBroken { get; }
-        public string HealhtyStatus => IsBroken == true ? "исправно" : "не исправно";
+        public string HealhtyStatus => IsBroken == true ? "не исправно" : "исправно";
 
         public Part Clone(bool isBroken)
         {
