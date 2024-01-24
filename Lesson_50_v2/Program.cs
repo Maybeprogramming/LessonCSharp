@@ -1,8 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection.Emit;
-using System;
-
-namespace Lesson_50_v2
+﻿namespace Lesson_50_v2
 {
     using static UserInput;
     using static Randomaizer;
