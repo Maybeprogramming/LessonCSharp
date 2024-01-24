@@ -89,8 +89,6 @@
             int lastIndex = _partsNames.Count - 1;
 
             string tempName = _partsNames[lastIndex];
-
-
         }
     }
 
