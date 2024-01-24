@@ -54,6 +54,19 @@
         }
     }
 
+    class PartFactory
+    {
+        public Part CreateSingle()
+        {
+            return new Part("", true);
+        }
+
+        public List<Part> CreateSeveral()
+        {
+            return new List<Part>();
+        }
+    }
+
     class Part : ICloneable
     {
         public Part(string name, bool isBroken)
@@ -106,6 +119,7 @@
 
     interface IRepairable
     {
+
     }
 
     interface ICloneable
