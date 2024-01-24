@@ -3,12 +3,28 @@
     using static UserInput;
     using static Randomaizer;
     using static Display;
-    using System.Runtime.CompilerServices;
+    using System.Net.Http.Headers;
 
     class Program
     {
         static void Main()
         {
+            List<Cell> partsStock = new List<Cell>()
+            {
+                new Cell(new Part("Двигатель", false), 5),
+                new Cell(new Part("Трансмиссия", false), 5),
+                new Cell(new Part("Тормозные колодки", false), 0)
+            };
+
+            int index = 0;
+
+            foreach (var part in partsStock)
+            {
+                part.ShowInfo($"{++index}");
+                Print($"\n");
+            }
+
+            Console.ReadKey();
         }
     }
 
@@ -24,11 +40,22 @@
         }
 
         public int Count => _count;
+        public string Name => _part.Name;
 
         public void SetValue(int value) => _count = value > 0 ? value : 0;
+
+        public void ShowInfo(string index = "")
+        {
+            Print($"{index}");
+            Print($". Деталь: <");
+            Print($"{Name}", ConsoleColor.Green);
+            Print($">. Количество: <");
+            Print($"{Count}", _count > 0 ? ConsoleColor.Green : ConsoleColor.Red);          
+            Print($">.");
+        }
     }
 
-    class Part: ICloneable
+    class Part : ICloneable
     {
         public Part(string name, bool isBroken)
         {
@@ -50,8 +77,8 @@
     {
 
     }
-    
-    class Car: IRepairable
+
+    class Car : IRepairable
     {
 
     }
