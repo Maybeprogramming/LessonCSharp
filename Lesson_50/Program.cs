@@ -11,8 +11,29 @@
         {
             Console.Title = "Автосервис";
 
-            CarService carService = new ();
+            CarService carService = new();
             carService.Work();
+
+            List<Cell> cells = new List<Cell>()
+            {
+                new Cell(new Engine(false).Name, 5, 200),
+                new Cell(new Transmission(false).Name, 6, 150),
+                new Cell(new Glass(false).Name, 20, 50),
+                new Cell(new OilFilter(false).Name, 50, 15),
+                new Cell(new Catalyst(false).Name, 0, 120)
+            };
+
+            Part part = new GasTank(true);
+            cells[0] = new Cell(part.Name, 10, 20000);
+
+            int index = 0;
+
+            foreach (var cell in cells)
+            {
+                Print($"\n{++index}. ");
+                cell.ShowInfo();
+            }
+
 
             WaitToPressKey();
         }
@@ -30,8 +51,8 @@
         private ClientFactory _clientFactory;
         private int _fineForRefusal;
 
-        private Dictionary<PartType, int> _pricesOfParts;
-        private Dictionary<PartType, int> _pricesForJob;
+        private Dictionary<string, int> _pricesOfParts;
+        private Dictionary<string, int> _pricesForJob;
 
         public CarService()
         {
@@ -47,61 +68,61 @@
             _clients = _clientFactory.CreateQueue();
             _partsStock = new();
 
-            _pricesOfParts = new Dictionary<PartType, int>()
-            {
-                {PartType.Engine, 1000},
-                {PartType.Transmission, 850},
-                {PartType.Wheel, 200},
-                {PartType.Glass, 150},
-                {PartType.Muffler,  100},
-                {PartType.Brake,  100},
-                {PartType.Suspension,  100},
-                {PartType.Generator,  150},
-                {PartType.AirConditioner,  300},
-                {PartType.Starter,  200},
-                {PartType.TimingBelt,  250},
-                {PartType.WaterPump,  230},
-                {PartType.GasTank,  350},
-                {PartType.SteeringWheel,  450},
-                {PartType.SteeringRack,  650},
-                {PartType.PowerSteering,  500},
-                {PartType.Dashboard,  700},
-                {PartType.Wiring,  550},
-                {PartType.Battery,  250},
-                {PartType.SparkPlug,  100},
-                {PartType.FuelPump,  300},
-                {PartType.OilFilter,  180},
-                {PartType.Crankshaft,  400},
-                {PartType.Catalyst,  900},
-            };
+            //_pricesOfParts = new Dictionary<PartType, int>()
+            //{
+            //    {PartType.Engine, 1000},
+            //    {PartType.Transmission, 850},
+            //    {PartType.Wheel, 200},
+            //    {PartType.Glass, 150},
+            //    {PartType.Muffler,  100},
+            //    {PartType.Brake,  100},
+            //    {PartType.Suspension,  100},
+            //    {PartType.Generator,  150},
+            //    {PartType.AirConditioner,  300},
+            //    {PartType.Starter,  200},
+            //    {PartType.TimingBelt,  250},
+            //    {PartType.WaterPump,  230},
+            //    {PartType.GasTank,  350},
+            //    {PartType.SteeringWheel,  450},
+            //    {PartType.SteeringRack,  650},
+            //    {PartType.PowerSteering,  500},
+            //    {PartType.Dashboard,  700},
+            //    {PartType.Wiring,  550},
+            //    {PartType.Battery,  250},
+            //    {PartType.SparkPlug,  100},
+            //    {PartType.FuelPump,  300},
+            //    {PartType.OilFilter,  180},
+            //    {PartType.Crankshaft,  400},
+            //    {PartType.Catalyst,  900},
+            //};
 
-            _pricesForJob = new Dictionary<PartType, int>()
-            {
-                {PartType.Engine, 200},
-                {PartType.Transmission, 85},
-                {PartType.Wheel, 20},
-                {PartType.Glass, 15},
-                {PartType.Muffler,  10},
-                {PartType.Brake,  10},
-                {PartType.Suspension,  10},
-                {PartType.Generator,  15},
-                {PartType.AirConditioner,  30},
-                {PartType.Starter,  20},
-                {PartType.TimingBelt,  25},
-                {PartType.WaterPump,  20},
-                {PartType.GasTank,  35},
-                {PartType.SteeringWheel,  45},
-                {PartType.SteeringRack,  65},
-                {PartType.PowerSteering,  50},
-                {PartType.Dashboard,  70},
-                {PartType.Wiring,  55},
-                {PartType.Battery,  25},
-                {PartType.SparkPlug,  10},
-                {PartType.FuelPump,  30},
-                {PartType.OilFilter,  15},
-                {PartType.Crankshaft,  40},
-                {PartType.Catalyst,  90},
-            };
+            //_pricesForJob = new Dictionary<PartType, int>()
+            //{
+            //    {PartType.Engine, 200},
+            //    {PartType.Transmission, 85},
+            //    {PartType.Wheel, 20},
+            //    {PartType.Glass, 15},
+            //    {PartType.Muffler,  10},
+            //    {PartType.Brake,  10},
+            //    {PartType.Suspension,  10},
+            //    {PartType.Generator,  15},
+            //    {PartType.AirConditioner,  30},
+            //    {PartType.Starter,  20},
+            //    {PartType.TimingBelt,  25},
+            //    {PartType.WaterPump,  20},
+            //    {PartType.GasTank,  35},
+            //    {PartType.SteeringWheel,  45},
+            //    {PartType.SteeringRack,  65},
+            //    {PartType.PowerSteering,  50},
+            //    {PartType.Dashboard,  70},
+            //    {PartType.Wiring,  55},
+            //    {PartType.Battery,  25},
+            //    {PartType.SparkPlug,  10},
+            //    {PartType.FuelPump,  30},
+            //    {PartType.OilFilter,  15},
+            //    {PartType.Crankshaft,  40},
+            //    {PartType.Catalyst,  90},
+            //};
         }
 
         public void Work()
@@ -206,9 +227,8 @@
             if (currentChanceToDoJob > maxChanceWrongJob)
             {
                 Part goodPart;
-                string brokenPartClassName = currentCar.BrokenPartClassName;
-                PartType brokenPartType = PartsDictionary.TryGetTypePartByName(brokenPartClassName);
-                goodPart = PartsDictionary.TryGetPartByType(brokenPartType);
+                string brokenPartName = currentCar.BrokenPartName;
+                goodPart = PartsDictionary.TryGetPart(brokenPartName);
 
                 currentCar.TryAcceptRepair(goodPart);
 
@@ -218,10 +238,10 @@
             }
             else
             {
-                List<PartType> partsTypes = PartsDictionary.GetPartsTypesToList();
-                int indexNumber = GenerateRandomNumber(0, partsTypes.Count);
-                PartType somePartType = partsTypes[indexNumber];
-                Part wrongPart = PartsDictionary.TryGetPartByType(somePartType);
+                List<string> partsNames = PartsDictionary.GetPartsNames();
+                int indexNumber = GenerateRandomNumber(0, partsNames.Count);
+                string somePartName = partsNames[indexNumber];
+                Part wrongPart = PartsDictionary.TryGetPart(somePartName);
 
                 currentCar.TryAcceptRepair(wrongPart);
 
@@ -258,9 +278,9 @@
             PrintLine();
         }
 
-        private int TryGetPriceOfPart(PartType partType)
+        private int TryGetPriceOfPart(string partName)
         {
-            if (_pricesOfParts.TryGetValue(partType, out int price) == true)
+            if (_pricesOfParts.TryGetValue(partName, out int price) == true)
             {
                 return price;
             }
@@ -316,18 +336,18 @@
 
     class PartsFactory
     {
-        List<PartType> _somePartsTypes;
+        List<string> _somePartsNames;
 
         public List<Part> CreateSomeParts()
         {
-            _somePartsTypes = CreateSomePartsTypes();
+            _somePartsNames = CreateSomePartsTypes();
             List<Part> parts = new();
             bool isBrokenPart = false;
             Part part;
 
-            for (int i = 0; i < _somePartsTypes.Count; i++)
+            for (int i = 0; i < _somePartsNames.Count; i++)
             {
-                part = PartsDictionary.TryGetPartByType(_somePartsTypes[i]).Clone(isBrokenPart);
+                part = PartsDictionary.TryGetPart(_somePartsNames[i]).Clone(isBrokenPart);
                 parts.Add(part);
             }
 
@@ -343,26 +363,26 @@
             parts[brokenPartIndex] = parts[brokenPartIndex].Clone(isBrokenPart);
         }
 
-        private List<PartType> CreateSomePartsTypes()
+        private List<string> CreateSomePartsTypes()
         {
             int minPartsTypesCount = 5;
             int maxPartsTypesCount = 10;
             int somePartsTypesCount = GenerateRandomNumber(minPartsTypesCount, maxPartsTypesCount + 1);
-            List<PartType> allPartsTypes = new(PartsDictionary.GetPartsTypesToList());
-            List<PartType> somePartsTypes = new();
-            PartType tempPartType;
+            List<string> partsNames = new(PartsDictionary.GetPartsNames());
+            List<string> somePartsNames = new();
+            string tempPartName;
 
             for (int i = 0; i < somePartsTypesCount; i++)
             {
-                int indexNumber = GenerateRandomNumber(0, allPartsTypes.Count - i);
-                somePartsTypes.Add(allPartsTypes[indexNumber]);
+                int indexNumber = GenerateRandomNumber(0, partsNames.Count - i);
+                somePartsNames.Add(partsNames[indexNumber]);
 
-                tempPartType = allPartsTypes[allPartsTypes.Count - 1];
-                allPartsTypes[allPartsTypes.Count - 1] = allPartsTypes[indexNumber];
-                allPartsTypes[indexNumber] = tempPartType;
+                tempPartName = partsNames[partsNames.Count - 1];
+                partsNames[partsNames.Count - 1] = partsNames[indexNumber];
+                partsNames[indexNumber] = tempPartName;
             }
 
-            return somePartsTypes;
+            return somePartsNames;
         }
     }
     #endregion
@@ -440,19 +460,20 @@
 
     class PartsStock
     {
-        private Dictionary<PartType, int> _partsCountsAvailable;
-        private List<PartType> _partsTypes;
+        //del and make a new
+        private Dictionary<string, int> _partsCountsAvailable;
+        private List<string> _partsNames;
 
         public PartsStock()
         {
-            _partsTypes = PartsDictionary.GetPartsTypesToList();
+            _partsNames = PartsDictionary.GetPartsNames();
 
             _partsCountsAvailable = FillParts();
         }
 
-        public bool IsPartAvaible(PartType partType)
+        public bool IsPartAvaible(string partName)
         {
-            _partsCountsAvailable.TryGetValue(partType, out int partCountAvailale);
+            _partsCountsAvailable.TryGetValue(partName, out int partCountAvailale);
 
             if (partCountAvailale > 0)
             {
@@ -462,12 +483,12 @@
             return false;
         }
 
-        public Part TryGetPart(PartType partType)
+        public Part TryGetPart(string partName)
         {
-            if (IsPartAvaible(partType) == true)
+            if (IsPartAvaible(partName) == true)
             {
-                Part part = PartsDictionary.TryGetPartByType(partType);
-                AcceptToChangePartValue(partType);
+                Part part = PartsDictionary.TryGetPart(partName);
+                AcceptToChangePartValue(partName);
 
                 return part;
             }
@@ -483,9 +504,7 @@
 
             foreach (var part in _partsCountsAvailable)
             {
-                string partName = PartsDictionary.TryGetPartNameByType(part.Key);
-
-                Print($"\n{++index}. {partName} - [");
+                Print($"\n{++index}. {part.Key} - [");
                 Print($"{part.Value}", ConsoleColor.Green);
                 Print($"] штук.");
             }
@@ -494,82 +513,100 @@
             PrintLine();
         }
 
-        private Dictionary<PartType, int> FillParts()
+        private Dictionary<string, int> FillParts()
         {
-            Dictionary<PartType, int> partsCountsAvailable = new();
+            Dictionary<string, int> partsCountsAvailable = new();
             int minPartsCount = 0;
             int maxPartsCount = 10;
 
-            for (int i = 0; i < _partsTypes.Count; i++)
+            for (int i = 0; i < _partsNames.Count; i++)
             {
-                partsCountsAvailable.Add(_partsTypes[i], GenerateRandomNumber(minPartsCount, maxPartsCount + 1));
+                partsCountsAvailable.Add(_partsNames[i], GenerateRandomNumber(minPartsCount, maxPartsCount + 1));
             }
 
             return partsCountsAvailable;
         }
 
-        private void AcceptToChangePartValue(PartType partType)
+        private void AcceptToChangePartValue(string partName)
         {
-            _partsCountsAvailable.TryGetValue(partType, out int PartCount);
+            _partsCountsAvailable.TryGetValue(partName, out int PartCount);
             PartCount--;
-            _partsCountsAvailable.Remove(partType);
-            _partsCountsAvailable.Add(partType, PartCount);
+            _partsCountsAvailable.Remove(partName);
+            _partsCountsAvailable.Add(partName, PartCount);
         }
     }
 
-    class PartCell
+    class Cell
     {
-        private readonly Part _part;
+        private readonly string _partName;
+        private readonly int _price;
         private int _amount;
 
-        public PartCell(Part part, int amount)
+        public Cell(string partName, int amount, int price)
         {
-            _part = part;
+            _partName = partName;
             _amount = amount;
+            _price = price;
         }
 
-        public int Amount
+        public int Amount => _amount;
+
+        public int Price => _price;
+
+        public string GetPartName() => _partName;
+
+        public void SetPartCount(int value) =>
+            _amount = value > 0 ? value : 0;
+
+        public void ShowInfo()
         {
-            get => _amount;
-            set => _amount = value > 0 ? value : 0;
-        }
+            Print($"Деталь: ");
+            Print($"{_partName}", ConsoleColor.Green);
+            Print($". Количество: ");
+            Print($"{Amount}", Amount > 0 ? ConsoleColor.Green : ConsoleColor.Red);
+            Print($".");
 
-        public bool isAvaible => Amount > 0;
+            if (Amount > 0)
+            {
+                Print($" Цена: ");
+                Print($"{Price}", ConsoleColor.Green);
+                Print($" рублей.");
+            }
+        }
     }
 
     #region Part Classes
 
-    abstract class Part : ICloneable, IEquatable<Part>
+    abstract class Part : ICloneable/*, IEquatable<Part>*/
     {
         public Part(bool isBroken)
         {
             IsBroken = isBroken;
         }
 
-        public PartType PartType { get => PartsDictionary.TryGetTypePartByName(GetType().Name); }
-        public string Name { get => PartsDictionary.TryGetPartNameByType(PartType); }
+        public string Name { get => PartsDictionary.TryGetName(this); }
         public bool IsBroken { get; }
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
 
         public abstract Part Clone(bool isBroken);
 
-        public bool Equals(Part? otherPart)
-        {
-            if (otherPart == null)
-            {
-                return false;
-            }
-            else if (Name.Equals(otherPart.Name) == true && PartType == otherPart.PartType)
-            {
-                return true;
-            }
+        //public bool Equals(Part? otherPart)
+        //{
+        //    if (otherPart == null)
+        //    {
+        //        return false;
+        //    }
+        //    else if (Name.Equals(otherPart.Name) == true)
+        //    {
+        //        return true;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
-        public override bool Equals(object? objectOther) => objectOther is Part otherPart && Equals(otherPart);
+        ////public override bool Equals(object? objectOther) => objectOther is Part otherPart && Equals(otherPart);
 
-        public override int GetHashCode() => Name.GetHashCode();
+        ////public override int GetHashCode() => Name.GetHashCode();
 
         public string ShowInfo()
         {
@@ -579,6 +616,7 @@
 
     class Engine : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public Engine(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Engine(isBroken);
@@ -586,6 +624,7 @@
 
     class Transmission : Part
     {
+       // public override string Name => PartsDictionary.TryGetName(this);
         public Transmission(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Transmission(isBroken);
@@ -593,6 +632,7 @@
 
     class Wheel : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public Wheel(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Wheel(isBroken);
@@ -600,6 +640,7 @@
 
     class Glass : Part
     {
+       // public override string Name => PartsDictionary.TryGetName(this);
         public Glass(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Glass(isBroken);
@@ -607,6 +648,7 @@
 
     class Muffler : Part
     {
+       // public override string Name => PartsDictionary.TryGetName(this);
         public Muffler(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Muffler(isBroken);
@@ -614,6 +656,7 @@
 
     class Brake : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public Brake(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Brake(isBroken);
@@ -621,6 +664,7 @@
 
     class Suspension : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public Suspension(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Suspension(isBroken);
@@ -628,6 +672,7 @@
 
     class Generator : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public Generator(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Generator(isBroken);
@@ -635,6 +680,7 @@
 
     class AirConditioner : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public AirConditioner(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new AirConditioner(isBroken);
@@ -642,6 +688,7 @@
 
     class Starter : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public Starter(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Starter(isBroken);
@@ -649,6 +696,7 @@
 
     class TimingBelt : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public TimingBelt(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new TimingBelt(isBroken);
@@ -656,6 +704,7 @@
 
     class WaterPump : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public WaterPump(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new WaterPump(isBroken);
@@ -663,6 +712,7 @@
 
     class GasTank : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public GasTank(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new GasTank(isBroken);
@@ -670,6 +720,7 @@
 
     class SteeringWheel : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public SteeringWheel(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new SteeringWheel(isBroken);
@@ -677,6 +728,7 @@
 
     class SteeringRack : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public SteeringRack(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new SteeringRack(isBroken);
@@ -684,6 +736,7 @@
 
     class PowerSteering : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public PowerSteering(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new PowerSteering(isBroken);
@@ -691,6 +744,7 @@
 
     class Dashboard : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public Dashboard(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Dashboard(isBroken);
@@ -698,6 +752,7 @@
 
     class Wiring : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public Wiring(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Wiring(isBroken);
@@ -705,6 +760,7 @@
 
     class Battery : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public Battery(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Battery(isBroken);
@@ -712,6 +768,7 @@
 
     class SparkPlug : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public SparkPlug(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new SparkPlug(isBroken);
@@ -719,6 +776,7 @@
 
     class FuelPump : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public FuelPump(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new FuelPump(isBroken);
@@ -726,6 +784,7 @@
 
     class OilFilter : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public OilFilter(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new OilFilter(isBroken);
@@ -733,6 +792,7 @@
 
     class Crankshaft : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public Crankshaft(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Crankshaft(isBroken);
@@ -740,6 +800,7 @@
 
     class Catalyst : Part
     {
+        //public override string Name => PartsDictionary.TryGetName(this);
         public Catalyst(bool isBroken) : base(isBroken) { }
 
         public override Part Clone(bool isBroken) => new Catalyst(isBroken);
@@ -802,125 +863,68 @@
 
     static class PartsDictionary
     {
-        private static Dictionary<PartType, Part> s_PartByType;
-        private static Dictionary<PartType, string> s_PartsTypesNames;
-        private static Dictionary<string, PartType> s_PartsTypes;
-        private static List<PartType> s_AllTypesParts;
+        private static Dictionary<string, Part> s_Parts;
+        private static Dictionary<Part, string> s_Names;
+        private static List<string> s_PartsNames;
 
         static PartsDictionary()
         {
-            s_PartByType = new Dictionary<PartType, Part>()
+            s_Parts = new Dictionary<string, Part>()
             {
-                { PartType.Engine, new Engine(false)},
-                { PartType.Transmission , new Transmission(false) },
-                { PartType.Wheel , new Wheel(false) },
-                { PartType.Glass , new Glass(false) },
-                { PartType.Muffler , new Muffler(false) },
-                { PartType.Brake , new Brake(false) },
-                { PartType.Suspension , new Suspension(false) },
-                { PartType.Generator , new Generator(false) },
-                { PartType.AirConditioner , new AirConditioner(false) },
-                { PartType.Starter , new Starter(false) },
-                { PartType.TimingBelt , new TimingBelt(false) },
-                { PartType.WaterPump , new WaterPump(false) },
-                { PartType.GasTank , new GasTank(false) },
-                { PartType.SteeringWheel , new SteeringWheel(false) },
-                { PartType.SteeringRack , new SteeringRack(false) },
-                { PartType.PowerSteering , new PowerSteering(false) },
-                { PartType.Dashboard , new Dashboard(false) },
-                { PartType.Wiring , new Wiring(false) },
-                { PartType.Battery , new Battery(false) },
-                { PartType.SparkPlug , new SparkPlug(false) },
-                { PartType.FuelPump , new FuelPump(false) },
-                { PartType.OilFilter , new OilFilter(false) },
-                { PartType.Crankshaft , new Crankshaft(false) },
-                { PartType.Catalyst , new Catalyst(false) }
+                {"Двигатель",  new Engine(false)},
+                {"Трансмиссия" , new Transmission(false)},
+                { "Колесо", new Wheel(false) },
+                {"Стекло" , new Glass(false)},
+                {"Глушитель" , new Muffler(false)},
+                {"Тормоз" , new Brake(false) },
+                {"Подвеска" , new Suspension(false)},
+                {"Генератор" , new Generator(false)},
+                {"Кондиционер" , new AirConditioner(false)},
+                {"Стартер" , new Starter(false)},
+                {"ГРМ" , new TimingBelt(false)},
+                {"Водяная помпа" , new WaterPump(false)},
+                {"Бензобак" , new GasTank(false)},
+                {"Руль" , new SteeringWheel(false)},
+                {"Рулевая рейка" , new SteeringRack(false)},
+                {"Усилитель руля" , new PowerSteering(false)},
+                {"Приборная панель" , new Dashboard(false)},
+                {"Электропроводка" , new Wiring(false)},
+                {"Аккумулятор" , new Battery(false)},
+                {"Свеча зажигания" , new SparkPlug(false)},
+                {"Топливный насос" , new FuelPump(false)},
+                {"Масляный фильтр" , new OilFilter(false)},
+                {"Коленвал" , new Crankshaft(false)},
+                {"Катализатор" , new Catalyst(false)}
             };
 
-            s_PartsTypesNames = new Dictionary<PartType, string>()
-            {
-                {PartType.Engine, "Двигатель"},
-                {PartType.Transmission, "Трансмиссия" },
-                {PartType.Wheel, "Колесо" },
-                {PartType.Glass, "Стекло" },
-                {PartType.Muffler, "Глушитель" },
-                {PartType.Brake, "Тормоз" },
-                {PartType.Suspension, "Подвеска" },
-                {PartType.Generator, "Генератор" },
-                {PartType.AirConditioner, "Кондиционер" },
-                {PartType.Starter, "Стартер" },
-                {PartType.TimingBelt, "ГРМ" },
-                {PartType.WaterPump, "Водяная помпа" },
-                {PartType.GasTank, "Бензобак" },
-                {PartType.SteeringWheel, "Руль" },
-                {PartType.SteeringRack, "Рулевая рейка" },
-                {PartType.PowerSteering, "Усилитель руля" },
-                {PartType.Dashboard, "Приборная панель" },
-                {PartType.Wiring, "Электропроводка" },
-                {PartType.Battery, "Аккумулятор" },
-                {PartType.SparkPlug, "Свеча зажигания" },
-                {PartType.FuelPump, "Топливный насос" },
-                {PartType.OilFilter, "Масляный фильтр" },
-                {PartType.Crankshaft, "Коленвал" },
-                {PartType.Catalyst, "Катализатор" }
-            };
-
-            s_PartsTypes = new Dictionary<string, PartType>()
-            {
-                {nameof(Engine), PartType.Engine},
-                {nameof(Transmission), PartType.Transmission },
-                {nameof(Wheel), PartType.Wheel },
-                {nameof(Glass), PartType.Glass },
-                {nameof(Muffler), PartType.Muffler },
-                {nameof(Brake), PartType.Brake },
-                {nameof(Suspension), PartType.Suspension },
-                {nameof(Generator), PartType.Generator },
-                {nameof(AirConditioner), PartType.AirConditioner },
-                {nameof(Starter), PartType.Starter },
-                {nameof(TimingBelt), PartType.TimingBelt },
-                {nameof(WaterPump), PartType.WaterPump },
-                {nameof(GasTank), PartType.GasTank },
-                {nameof(SteeringWheel), PartType.SteeringWheel },
-                {nameof(SteeringRack), PartType.SteeringRack},
-                {nameof(PowerSteering), PartType.PowerSteering },
-                {nameof(Dashboard), PartType.Dashboard },
-                {nameof(Wiring), PartType.Wiring },
-                {nameof(Battery), PartType.Battery },
-                {nameof(SparkPlug), PartType.SparkPlug },
-                {nameof(FuelPump), PartType.FuelPump },
-                {nameof(OilFilter), PartType.OilFilter },
-                {nameof(Crankshaft), PartType.Crankshaft },
-                {nameof(Catalyst), PartType.Catalyst }
-            };
-
-            s_AllTypesParts = new List<PartType>();
-            s_AllTypesParts.AddRange(s_PartsTypesNames.Keys);
+            s_Names = FillNames(s_Parts);
+            s_PartsNames = new List<string>(s_Parts.Keys);
         }
 
-        public static PartType TryGetTypePartByName(string nameOfPart)
+        public static List<string> GetPartsNames() => s_PartsNames;        
+     
+        public static Part TryGetPart(string partName)
         {
-            s_PartsTypes.TryGetValue(nameOfPart, out PartType partType);
-            return partType;
-        }
-
-        public static string TryGetPartNameByType(PartType partType)
-        {
-            if (s_PartsTypesNames.TryGetValue(partType, out string name) == true)
-            {
-                return name;
-            }
-            else
-            {
-                return "Ошибка!";
-            }
-        }
-
-        public static List<PartType> GetPartsTypesToList() => s_AllTypesParts;
-
-        public static Part TryGetPartByType(PartType partType)
-        {
-            s_PartByType.TryGetValue(partType, out Part part);
+            s_Parts.TryGetValue(partName, out Part part);
             return part;
+        }
+
+        public static string TryGetName(Part part)
+        {
+            s_Names.TryGetValue(part, out string name);
+            return name;
+        }
+
+        private static Dictionary<Part, string> FillNames(Dictionary<string, Part> parts)
+        {
+            Dictionary<Part, string> names = new Dictionary<Part, string>();
+
+            foreach (var part in parts)
+            {
+                names.Add(part.Value, part.Key);
+            }
+
+            return names;
         }
     }
 
