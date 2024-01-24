@@ -12,7 +12,7 @@
             Console.Title = "Автосервис";
 
             CarService carService = new();
-            carService.Work();
+            //carService.Work();
 
             List<Cell> cells = new List<Cell>()
             {
@@ -577,7 +577,7 @@
 
     #region Part Classes
 
-    abstract class Part : ICloneable/*, IEquatable<Part>*/
+    abstract class Part : ICloneable
     {
         public Part(bool isBroken)
         {
@@ -589,24 +589,6 @@
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
 
         public abstract Part Clone(bool isBroken);
-
-        //public bool Equals(Part? otherPart)
-        //{
-        //    if (otherPart == null)
-        //    {
-        //        return false;
-        //    }
-        //    else if (Name.Equals(otherPart.Name) == true)
-        //    {
-        //        return true;
-        //    }
-
-        //    return false;
-        //}
-
-        ////public override bool Equals(object? objectOther) => objectOther is Part otherPart && Equals(otherPart);
-
-        ////public override int GetHashCode() => Name.GetHashCode();
 
         public string ShowInfo()
         {
