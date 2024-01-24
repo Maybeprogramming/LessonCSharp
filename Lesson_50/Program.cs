@@ -23,7 +23,10 @@
                 new Cell(new Catalyst(false).Name, 0, 120)
             };
 
-            Part part = new GasTank(true);
+            Engine part = new Engine(true);
+            string partName = PartsDictionary.TryGetName(part);
+
+            Print($"{part.Name} | {part.GetType().Name} | {partName}");
             cells[0] = new Cell(part.Name, 10, 20000);
 
             int index = 0;
@@ -584,7 +587,7 @@
             IsBroken = isBroken;
         }
 
-        public string Name { get => PartsDictionary.TryGetName(this); }
+        public virtual string Name { get => PartsDictionary.TryGetName(this); }
         public bool IsBroken { get; }
         public virtual string IsBrokenToString { get => IsBroken == true ? "не исправен" : "исправен"; }
 
@@ -598,8 +601,9 @@
 
     class Engine : Part
     {
-        //public override string Name => PartsDictionary.TryGetName(this);
         public Engine(bool isBroken) : base(isBroken) { }
+
+        public override string Name => PartsDictionary.TryGetName(this);
 
         public override Part Clone(bool isBroken) => new Engine(isBroken);
     }
@@ -805,38 +809,6 @@
     interface ICloneable
     {
         abstract Part Clone(bool isBroken);
-    }
-
-    #endregion
-
-    #region Enums
-
-    enum PartType
-    {
-        Engine,
-        Transmission,
-        Wheel,
-        Glass,
-        Muffler,
-        Brake,
-        Suspension,
-        Generator,
-        AirConditioner,
-        Starter,
-        TimingBelt,
-        WaterPump,
-        GasTank,
-        SteeringWheel,
-        SteeringRack,
-        PowerSteering,
-        Dashboard,
-        Wiring,
-        Battery,
-        SparkPlug,
-        FuelPump,
-        OilFilter,
-        Crankshaft,
-        Catalyst
     }
 
     #endregion
