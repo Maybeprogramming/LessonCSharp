@@ -49,7 +49,7 @@
             Print($". Деталь: <");
             Print($"{Name}", ConsoleColor.Green);
             Print($">. Количество: <");
-            Print($"{Count}", _count > 0 ? ConsoleColor.Green : ConsoleColor.Red);          
+            Print($"{Count}", _count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
             Print($">.");
         }
     }
@@ -68,11 +68,29 @@
             return new Part("", true);
         }
 
-        public List<Part> CreateSeveral(int minCount, int maxCount)
+        public List<Part> CreateSeveral(int minCount = 5, int maxCount = 10)
         {
             List<Part> parts = new List<Part>();
+            int countParts = GenerateRandomNumber(minCount, maxCount + 1);
+
+            for (int i = 0; i < countParts; i++)
+            {
+                int indexNumber = GenerateRandomNumber(0, _partsNames.Count - i);
+                string somePartName = _partsNames[indexNumber];
+
+                MovePartNameToEnd(somePartName, indexNumber);
+            }
 
             return parts;
+        }
+
+        private void MovePartNameToEnd(string somePartName, int currentIndex)
+        {
+            int lastIndex = _partsNames.Count - 1;
+
+            string tempName = _partsNames[lastIndex];
+
+
         }
     }
 
