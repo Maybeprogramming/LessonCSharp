@@ -44,7 +44,7 @@
                 "Коленвал",
                 "Катализатор"
             };
-        }       
+        }
     }
 
     static class Randomaizer
