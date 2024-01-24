@@ -72,9 +72,46 @@
         }
     }
 
+    class Price
+    {
+        private readonly int _value;
+        private readonly int _minValue;
+        private readonly int _maxValue;
+
+        public Price(int value)
+        {
+            _minValue = 0;
+            _maxValue = 5000;
+            _value = SetValue(value);
+        }
+
+        public int Value => _value;
+
+        private int SetValue(int value)
+        {
+            if (value > _minValue && value < _maxValue)
+            {
+                return value;
+            }
+            else if (value < _minValue)
+            {
+                return _minValue;
+            }
+            else
+            {
+                return _maxValue;
+            }
+        }
+    }
+
     class Stock
     {
+        private Cell _parts;
 
+        public void ShowInfo()
+        {
+
+        }
     }
 
     class Car : IRepairable
