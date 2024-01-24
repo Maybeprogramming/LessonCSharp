@@ -56,14 +56,23 @@
 
     class PartFactory
     {
+        private List<string> _partsNames;
+
+        public PartFactory()
+        {
+            _partsNames = PartsDictionary.GetPartsNames();
+        }
+
         public Part CreateSingle()
         {
             return new Part("", true);
         }
 
-        public List<Part> CreateSeveral()
+        public List<Part> CreateSeveral(int minCount, int maxCount)
         {
-            return new List<Part>();
+            List<Part> parts = new List<Part>();
+
+            return parts;
         }
     }
 
@@ -160,6 +169,11 @@
                 "Коленвал",
                 "Катализатор"
             };
+        }
+
+        internal static List<string>? GetPartsNames()
+        {
+            return s_PartsNames;
         }
     }
 
