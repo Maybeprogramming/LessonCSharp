@@ -15,8 +15,6 @@
             bool isGetPart = stock.TryGetPart("Двигатель", out Part part);
             Print($"\n\n{isGetPart}\n\n");
 
-            stock.ShowInfo();
-
             Console.ReadKey();
         }
     }
