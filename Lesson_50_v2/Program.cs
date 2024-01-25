@@ -148,7 +148,7 @@
                         break;
 
                     case AutoRepairCommand:
-                        RepairCarAuto(_cars?.Dequeue());
+                        RepairCar(_cars?.Dequeue());
                         break;
 
                     case ShowPartStockCommand:
@@ -177,7 +177,7 @@
             Print($"Отремонтировать машину в ручную\n");
         }
 
-        private void RepairCarAuto(Car currentCar)
+        private void RepairCar(Car currentCar)
         {
             int minChanceWrongJob = 0;
             int maxChanceWrongJob = 30;
