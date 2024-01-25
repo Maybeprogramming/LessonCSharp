@@ -156,11 +156,41 @@
 
     class Stock
     {
-        private Cell _parts;
+        private List<Cell> _cellsParts;
+        private List<string> _partsNames;
+        private PartFactory _partFactory;
+
+        public Stock()
+        {
+            _partsNames = PartsDictionary.GetPartsNames();
+            _partFactory = new PartFactory();
+        }
 
         public void ShowInfo()
         {
 
+        }
+
+        private List<Cell> FillStock()
+        {
+            int minPartsCount = 3;
+            int maxPartCount = 10;
+            int partsCount;
+            int positionPartsCount = _partsNames.Count;
+
+            Cell cellPart;
+            string partName;
+
+            for (int i = 0; i < positionPartsCount; i++)
+            {
+                partsCount = GenerateRandomNumber(minPartsCount, maxPartCount + 1);
+                partName = _partsNames[i];
+
+
+            }
+
+
+            return new List<Cell>();
         }
     }
 
