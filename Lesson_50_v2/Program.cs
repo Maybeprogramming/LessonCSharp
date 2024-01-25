@@ -8,12 +8,9 @@
     {
         static void Main()
         {
-            Stock stock = new Stock();
+            CarService carService = new CarService();
 
-            stock.ShowInfo();
-
-            bool isGetPart = stock.TryGetPart("Двигатель", out Part part);
-            Print($"\n\n{isGetPart}\n\n");
+            carService.Work();
 
             Console.ReadKey();
         }
@@ -23,6 +20,7 @@
     {
         private Stock _stock;
         private Queue<Car> _cars;
+        private CarFactory _carFactory;
         private Dictionary<string, Price> priceOfPart;
         private Dictionary<string, Price> priceOfJob;
 
@@ -37,6 +35,9 @@
         public CarService()
         {
             _stock = new Stock();
+            _carFactory = new CarFactory(new PartFactory());
+            _cars = _carFactory.CreateSeveralCars();
+
             _fineForRefusal = 500;
             _minMoneyBalance = 1000;
             _maxMoneyBalance = 3000;
@@ -422,15 +423,15 @@
             };
         }
 
-        public List<Car> CreateSeveralCars(int minCarCount = 5, int maxCarCount = 10)
+        public Queue<Car> CreateSeveralCars(int minCarCount = 5, int maxCarCount = 10)
         {
-            List<Car> cars = new List<Car>();
+            Queue<Car> cars = new ();
             int someCarsCount = GenerateRandomNumber(minCarCount, maxCarCount + 1);
 
             for (int i = 0; i < someCarsCount; i++)
             {
                 Car car = CreateSingleCar();
-                cars.Add(car);
+                cars.Enqueue(car);
             }
 
             return cars;
