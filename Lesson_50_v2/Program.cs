@@ -3,25 +3,14 @@
     using static UserInput;
     using static Randomaizer;
     using static Display;
-    using System.Collections.Generic;
 
     class Program
     {
         static void Main()
         {
-            PartFactory partFactory = new PartFactory();
-            CarFactory carFactory = new CarFactory(partFactory);
+            Stock stock = new Stock();
 
-            Car car = carFactory.CreateSingleCar();
-
-            car.ShowInfo();
-
-            string partName = car.BrokenPartName;
-            Part partNew = partFactory.CreateSingle(partName);
-
-            car.ApplyRepair(partNew);
-
-            car.ShowInfo();
+            stock.ShowInfo();
 
             Console.ReadKey();
         }
@@ -31,13 +20,14 @@
     {
         private Queue<Part> _parts;
 
-        public Cell(Queue<Part> parts)
+        public Cell(Queue<Part> parts, string name)
         {
             _parts = parts;
+            Name = name;
         }
 
         public int Count => _parts.Count;
-        public string Name => _parts.First().Name;
+        public string Name { get; }
 
         public Part TakePart() => Count > 0 ? _parts.Dequeue() : null;
 
@@ -165,32 +155,45 @@
 
         public void ShowInfo()
         {
+            int index = 0;
+            Print($"Доступные детали на складе:\n", ConsoleColor.Green);
+            PrintLine();
 
+            foreach (var cell in _cellsParts)
+            {
+                Print($"\n{++index}. ");
+
+                cell.ShowInfo();
+            }
+
+            Print($"\n");
+            PrintLine();
         }
 
         private List<Cell> FillCellsParts()
         {
             List<Cell> cellsParts = new List<Cell>();
             PartFactory partFactory = new PartFactory();
-            int minPartsCount = 3;
+            int minPartsCount = 0;
             int maxPartCount = 10;
             int partsCount;
             int positionsPartsCount = _partsNames.Count;
             Cell cellPart;
-            Queue<Part> parts = new Queue<Part>();
+            Queue<Part> parts;
             string partName;
 
             for (int i = 0; i < positionsPartsCount; i++)
             {
                 partsCount = GenerateRandomNumber(minPartsCount, maxPartCount + 1);
                 partName = _partsNames[i];
+                parts = new Queue<Part>();
 
                 for (int j = 0; j < partsCount; j++)
                 {
                     parts.Enqueue(partFactory.CreateSingle(partName));
                 }
 
-                cellPart = new Cell(parts);
+                cellPart = new Cell(parts, partName);
                 cellsParts.Add(cellPart);
             }
 
@@ -415,7 +418,7 @@
         public static void PrintLine(ConsoleColor color = ConsoleColor.White)
         {
             int symbolCount = Console.WindowWidth - 1;
-            Print($"{new string('-', symbolCount)}\n", color);
+            Print($"{new string('-', symbolCount)}", color);
         }
     }
 }
