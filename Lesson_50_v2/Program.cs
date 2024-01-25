@@ -54,7 +54,7 @@
 
         public PartFactory()
         {
-            _partsNames = PartsDictionary.GetPartsNames();
+            _partsNames = new(PartsDictionary.GetPartsNames());
         }
 
         public Part CreateSingle()
@@ -79,6 +79,17 @@
 
                 MovePartNameToEnd(somePartName, indexNumber);
             }
+
+            parts = CreateOneBrokenPart(parts);
+
+            return parts;
+        }
+
+        private List<Part> CreateOneBrokenPart(List<Part> parts)
+        {
+            int indexBrokenPart = GenerateRandomNumber(0, parts.Count);
+            Part brokenPart = parts[indexBrokenPart].Clone(true);
+            parts[indexBrokenPart] = brokenPart;
 
             return parts;
         }
