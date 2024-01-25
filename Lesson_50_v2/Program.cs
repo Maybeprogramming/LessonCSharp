@@ -190,6 +190,7 @@
             int maxChanceWrongJob = 30;
             int maxScaleChanceToDoJob = 100;
             int currentChanceToDoJob = GenerateRandomNumber(minChanceWrongJob, maxScaleChanceToDoJob);
+            int fullPrice;
 
             Print($"\nСлесарь сервиса принялся за ремонт машины");
 
@@ -202,11 +203,12 @@
                 {
                     currentCar.ApplyRepair(goodPart);
 
-                    //Посчитать цену детали и работы
-                    
-
                     Print($"\nБыла заменена неисправная деталь: {goodPart.Name}");
                     currentCar.ShowInfo();
+
+                    fullPrice = CalculatePayingInfo(brokenPartName);
+
+                    _moneyBalance += fullPrice;
                 }
                 else
                 {
@@ -226,6 +228,32 @@
 
                 Print("\nХе-хой, ой, лaять на баян...");
             }
+        }
+
+        private int CalculatePayingInfo(string brokenPartName)
+        {
+            _pricesOfParts.TryGetValue(brokenPartName, out int priceofPart);
+            _pricesOfJob.TryGetValue(brokenPartName, out int priceOfJob);
+
+            int fullPrice = priceofPart + priceOfJob;
+
+            Print($"\n\nСформирован чек:");
+            Print($"\n{new string('-', 40)}");
+            Print($"\n1. Цена детали <");
+            Print($"{brokenPartName}", ConsoleColor.Green);
+            Print($">: ");
+            Print($"{priceofPart}", ConsoleColor.DarkYellow);
+            Print($" рублей");
+            Print($"\n2. Стоимость выполненных работ: ");
+            Print($"{priceOfJob}", ConsoleColor.DarkYellow);
+            Print($" рублей");
+            Print($"\n{new string('-', 40)}");
+            Print($"\nИтого к оплате: ");
+            Print($"{fullPrice}", ConsoleColor.Green);
+            Print($" рублей\n");
+            PrintLine();
+
+            return fullPrice;
         }
 
         private void RefuseToRepairCar()
