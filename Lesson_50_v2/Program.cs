@@ -23,16 +23,16 @@
         private Stock _stock;
         private Queue<Car> _cars;
         private CarFactory _carFactory;
-        private Dictionary<string, Price> priceOfPart;
-        private Dictionary<string, Price> priceOfJob;
+        private Dictionary<string, int> pricesOfParts;
+        private Dictionary<string, int> pricesOfJobs;
 
         private int _minMoneyBalance;
         private int _maxMoneyBalance;
         private int _moneyBalance;
         private int _fineForRefusal;
 
-        private Dictionary<string, Price> _pricesOfParts;
-        private Dictionary<string, Price> _pricesForJob;
+        private Dictionary<string, int> _pricesOfParts;
+        private Dictionary<string, int> _pricesOfJob;
 
         public CarService()
         {
@@ -44,6 +44,62 @@
             _minMoneyBalance = 1000;
             _maxMoneyBalance = 3000;
             _moneyBalance = GenerateRandomNumber(_minMoneyBalance, _maxMoneyBalance);
+
+            _pricesOfParts = new Dictionary<string, int>()
+            {
+                { "Двигатель", 1000 },
+                { "Трансмиссия", 850 },
+                { "Колесо", 200 },
+                { "Стекло", 500 },
+                { "Глушитель", 450 },
+                { "Тормоз", 100 },
+                { "Подвеска", 150 },
+                { "Генератор", 300 },
+                { "Кондиционер", 350 },
+                { "Стартер", 270 },
+                { "ГРМ", 360 },
+                { "Водяная помпа", 300 },
+                { "Бензобак", 220 },
+                { "Руль", 150 },
+                { "Рулевая рейка", 260 },
+                { "Усилитель руля", 340 },
+                { "Приборная панель", 290 },
+                { "Электропроводка", 300 },
+                { "Аккумулятор", 250 },
+                { "Свеча зажигания", 50 },
+                { "Топливный насос", 180 },
+                { "Масляный фильтр", 50 },
+                { "Коленвал", 420 },
+                { "Катализатор", 650 }
+            };
+
+            _pricesOfJob = new Dictionary<string, int>()
+            {
+                { "Двигатель", 200 },
+                { "Трансмиссия", 150 },
+                { "Колесо", 20 },
+                { "Стекло", 50 },
+                { "Глушитель", 50 },
+                { "Тормоз", 25 },
+                { "Подвеска", 25 },
+                { "Генератор", 50 },
+                { "Кондиционер", 50 },
+                { "Стартер", 50 },
+                { "ГРМ", 50 },
+                { "Водяная помпа", 45 },
+                { "Бензобак", 75 },
+                { "Руль", 35 },
+                { "Рулевая рейка", 45 },
+                { "Усилитель руля", 60 },
+                { "Приборная панель", 25 },
+                { "Электропроводка", 30 },
+                { "Аккумулятор", 15 },
+                { "Свеча зажигания", 15 },
+                { "Топливный насос", 20 },
+                { "Масляный фильтр", 20 },
+                { "Коленвал", 100 },
+                { "Катализатор", 75 }
+            };
         }
 
         public void Work()
@@ -123,10 +179,6 @@
             ShowClientsNumbersInQueue();
         }
 
-        private void ShowBrokenPartInCar()
-        {
-        }
-
         private void RepairCarManual(IRepairable currentCar)
         {
             Print($"Отремонтировать машину в ручную\n");
@@ -151,6 +203,7 @@
                     currentCar.ApplyRepair(goodPart);
 
                     //Посчитать цену детали и работы
+                    
 
                     Print($"\nБыла заменена неисправная деталь: {goodPart.Name}");
                     currentCar.ShowInfo();
@@ -202,8 +255,13 @@
             PrintLine();
         }
 
-        private int TryGetPriceOfPart(string partName)
+        private int TryGetPrice(Dictionary<string, int> priceList, string positionName)
         {
+            if (priceList.TryGetValue(positionName, out int price) == true)
+            {
+                return price;
+            }
+
             return 0;
         }
     }
@@ -314,23 +372,6 @@
             }
 
             return Name == other.Name;
-        }
-    }
-
-    struct Price
-    {
-        private readonly int _value;
-
-        public Price(int value)
-        {
-            _value = value;
-        }
-
-        public int Value => _value;
-
-        public override string ToString()
-        {
-            return $"{_value}";
         }
     }
 
