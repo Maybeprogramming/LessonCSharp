@@ -19,6 +19,175 @@
         }
     }
 
+    class CarService
+    {
+        private Stock _stock;
+        private int _minMoneyBalance;
+        private int _maxMoneyBalance;
+        private int _moneyBalance;
+        private Queue<Car> _cars;
+        private int _fineForRefusal;
+
+        private Dictionary<string, Price> _pricesOfParts;
+        private Dictionary<string, Price> _pricesForJob;
+
+        public CarService()
+        {
+            _stock = new Stock();
+            _fineForRefusal = 500;
+            _minMoneyBalance = 1000;
+            _maxMoneyBalance = 3000;
+            _moneyBalance = GenerateRandomNumber(_minMoneyBalance, _maxMoneyBalance);
+        }
+
+        public void Work()
+        {
+            const string RefuseCommand = "1";
+            const string AutoRepairCommand = "2";
+            const string ManualRepairCommand = "3";
+            const string ShowPartStockCommand = "4";
+            const string ExitCommand = "5";
+
+            bool isRun = true;
+            string userInput;
+
+            ConsoleColor numberMenuColor = ConsoleColor.DarkYellow;
+
+            while (_cars.Count > 0 && isRun == true)
+            {
+                Console.Clear();
+                Print($"Добро пожаловать в наш автосервис: \"Мастер на все руки\"!\n", ConsoleColor.Cyan);
+
+                ShowBalance(_moneyBalance);
+                ShowClientsNumbersInQueue();
+
+                Car currentCar = _cars?.Dequeue();
+
+                currentCar.ShowInfo();
+
+                Print($"\nДоступные функции:", ConsoleColor.Green);
+                Print($"\n{RefuseCommand}", numberMenuColor);
+                Print($" - Отказать в ремонте автомобиля");
+                Print($"\n{AutoRepairCommand}", numberMenuColor);
+                Print($" - Отдать машину для ремонт слесарю");
+                Print($"\n{ManualRepairCommand}", numberMenuColor);
+                Print($" - Выбрать деталь и отремонтировать самостоятельно");
+                Print($"\n{ShowPartStockCommand}", numberMenuColor);
+                Print($" - Посмотреть остатки деталей на складе");
+                Print($"\n{ExitCommand}", numberMenuColor);
+                Print($" - Выйти из программы", ConsoleColor.Red);
+                Print($"\nВведите номер команды: ", ConsoleColor.Green);
+
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case RefuseCommand:
+                        RefuseToRepairCar();
+                        break;
+
+                    case AutoRepairCommand:
+                        RepairCarAuto(currentCar);
+                        break;
+
+                    case ManualRepairCommand:
+                        RepairCarManual(currentCar);
+                        break;
+
+                    case ShowPartStockCommand:
+                        _stock.ShowInfo();
+                        break;
+
+                    case ExitCommand:
+                        Print($"\nРабота автосервиса завершена, программа выключается!", ConsoleColor.Green);
+                        isRun = false;
+                        break;
+
+                    default:
+                        Print($"\nТакой команды нет, попробуйте снова!", ConsoleColor.DarkRed);
+                        break;
+                }
+
+                WaitToPressKey();
+            }
+
+            PrintLine();
+            ShowClientsNumbersInQueue();
+        }
+
+        private void ShowBrokenPartInCar()
+        {
+        }
+
+        private void RepairCarManual(IRepairable currentCar)
+        {
+            Print($"Отремонтировать машину в ручную\n");
+        }
+
+        private void RepairCarAuto(Car currentCar)
+        {
+            int minChanceWrongJob = 0;
+            int maxChanceWrongJob = 30;
+            int maxScaleChanceToDoJob = 100;
+            int currentChanceToDoJob = GenerateRandomNumber(minChanceWrongJob, maxScaleChanceToDoJob);
+
+            Print($"\nСлесарь сервиса принялся за ремонт машины");
+
+            if (currentChanceToDoJob > maxChanceWrongJob)
+            {
+                Part goodPart;
+                string brokenPartName = currentCar.BrokenPartName;
+
+
+                Print($"\nБыла заменена неисправная деталь: {null}");
+                Print($"\nСтатус машины: {currentCar.HealthStatus}");
+                Print($"\nНеисправность: {currentCar.BrokenPartName}");
+            }
+            else
+            {
+                List<string> partsNames = PartsDictionary.GetPartsNames();
+                int indexNumber = GenerateRandomNumber(0, partsNames.Count);
+                string somePartName = partsNames[indexNumber];
+
+                Print($"\nБыла заменена деталь: {null}");
+                Print($"\nСтатус машины: {currentCar.HealthStatus}");
+                Print($"\nНеисправность: {currentCar.BrokenPartName}");
+
+                Print("\nХе-хой, ой, лaять на баян...");
+            }
+        }
+
+        private void RefuseToRepairCar()
+        {
+            _moneyBalance -= _fineForRefusal;
+
+            Print($"\nВы отказались ремонтировать автомобиль");
+            Print($"\nВам пришлось оплатить штраф за отказ: ");
+            Print($"{_fineForRefusal}", ConsoleColor.Red);
+            Print($" рублей");
+        }
+
+        private void ShowClientsNumbersInQueue()
+        {
+            Print($"Клиентов в очереди на ремонт: ");
+            Print($"{_cars.Count}\n", ConsoleColor.Green);
+            PrintLine();
+        }
+
+        private void ShowBalance(int moneyBalance)
+        {
+            Print($"\nБаланс на счёте автосервиса: ");
+            Print($"{moneyBalance}", ConsoleColor.Green);
+            Print($" рублей\n");
+            PrintLine();
+        }
+
+        private int TryGetPriceOfPart(string partName)
+        {
+            return 0;
+        }
+    }
+
     class Cell
     {
         private Queue<Part> _parts;
