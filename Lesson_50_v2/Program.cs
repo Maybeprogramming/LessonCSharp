@@ -3,6 +3,7 @@
     using static UserInput;
     using static Randomaizer;
     using static Display;
+    using System.Collections.Generic;
 
     class Program
     {
@@ -28,27 +29,24 @@
 
     class Cell
     {
-        private readonly Part _part;
-        private int _count;
+        private Queue<Part> _parts;
 
-        public Cell(Part part, int count)
+        public Cell(Queue<Part> parts)
         {
-            _part = part;
-            _count = count;
+            _parts = parts;
         }
 
-        public int Count => _count;
-        public string Name => _part.Name;
+        public int Count => _parts.Count;
+        public string Name => _parts.First().Name;
 
-        public void SetValue(int value) => _count = value > 0 ? value : 0;
+        public Part TakePart() => Count > 0 ? _parts.Dequeue() : null;
 
-        public void ShowInfo(string index = "")
+        public void ShowInfo()
         {
-            Print($"{index}");
-            Print($". Деталь: <");
+            Print($"Деталь: <");
             Print($"{Name}", ConsoleColor.Green);
             Print($">. Количество: <");
-            Print($"{Count}", _count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
+            Print($"{Count}", Count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
             Print($">.");
         }
     }
@@ -158,12 +156,11 @@
     {
         private List<Cell> _cellsParts;
         private List<string> _partsNames;
-        private PartFactory _partFactory;
 
         public Stock()
         {
             _partsNames = PartsDictionary.GetPartsNames();
-            _partFactory = new PartFactory();
+            _cellsParts = FillCellsParts();
         }
 
         public void ShowInfo()
@@ -171,26 +168,33 @@
 
         }
 
-        private List<Cell> FillStock()
+        private List<Cell> FillCellsParts()
         {
+            List<Cell> cellsParts = new List<Cell>();
+            PartFactory partFactory = new PartFactory();
             int minPartsCount = 3;
             int maxPartCount = 10;
             int partsCount;
-            int positionPartsCount = _partsNames.Count;
-
+            int positionsPartsCount = _partsNames.Count;
             Cell cellPart;
+            Queue<Part> parts = new Queue<Part>();
             string partName;
 
-            for (int i = 0; i < positionPartsCount; i++)
+            for (int i = 0; i < positionsPartsCount; i++)
             {
                 partsCount = GenerateRandomNumber(minPartsCount, maxPartCount + 1);
                 partName = _partsNames[i];
 
+                for (int j = 0; j < partsCount; j++)
+                {
+                    parts.Enqueue(partFactory.CreateSingle(partName));
+                }
 
+                cellPart = new Cell(parts);
+                cellsParts.Add(cellPart);
             }
 
-
-            return new List<Cell>();
+            return cellsParts;
         }
     }
 
