@@ -57,9 +57,9 @@
             _partsNames = new(PartsDictionary.GetPartsNames());
         }
 
-        public Part CreateSingle()
+        public Part CreateSingle(string partName)
         {
-            return new Part("", true);
+            return new Part(partName, false);
         }
 
         public List<Part> CreateSeveral(int minCount = 5, int maxCount = 10)
@@ -80,12 +80,12 @@
                 MovePartNameToEnd(somePartName, indexNumber);
             }
 
-            parts = CreateOneBrokenPart(parts);
+            parts = CreateBrokenPart(parts);
 
             return parts;
         }
 
-        private List<Part> CreateOneBrokenPart(List<Part> parts)
+        private List<Part> CreateBrokenPart(List<Part> parts)
         {
             int indexBrokenPart = GenerateRandomNumber(0, parts.Count);
             Part brokenPart = parts[indexBrokenPart].Clone(true);
@@ -151,7 +151,41 @@
 
     class Car : IRepairable
     {
+        private List<Part> _parts;
 
+        public Car(List<Part> parts, string name)
+        {
+            _parts = parts;
+            Name = name;
+        }
+
+        public string Name { get; }
+        public string BrokenPartName => GetBrokenPart() != null ? GetBrokenPart().Name : "неисправных деталей нет";
+        public bool IsNeedRepair => GetBrokenPart() != null ? true : false;
+        public string HealthyStatus => IsNeedRepair == true ? "автомобиль неисправен" : "автомобиль в порядке";
+
+        public bool ApplyRepair(Part part)
+        {
+            if (_parts.Contains(part))
+            {
+                ReplacePart(part);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private void ReplacePart(Part part)
+        {
+            int indexPartToReplace = _parts.IndexOf(part);
+            _parts[indexPartToReplace] = part;
+        }
+
+        private Part? GetBrokenPart()
+        {
+            return _parts.FirstOrDefault(part => part.IsBroken == true);
+        }
     }
 
     interface IRepairable

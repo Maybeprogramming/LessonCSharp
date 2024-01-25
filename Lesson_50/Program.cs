@@ -423,9 +423,6 @@
         public string BrokenPartName =>
             GetBrokenPart() != null ? GetBrokenPart().Name : "Неисправных деталей нет";
 
-        public string BrokenPartClassName =>
-            GetBrokenPart() != null ? GetBrokenPart().GetType().Name : "Empty";
-
         public bool TryAcceptRepair(Part part)
         {
             if (part == null)
@@ -801,7 +798,6 @@
         string HealthStatus { get; }
         bool IsNeedRepair { get; }
         string BrokenPartName { get; }
-        string BrokenPartClassName { get; }
 
         bool TryAcceptRepair(Part part);
     }
