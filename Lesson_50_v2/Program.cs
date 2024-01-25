@@ -220,13 +220,17 @@
                     Print($"\nБыла заменена деталь: {somePartName}");
                     Print($"\nСтатус машины: {currentCar.HealthStatus}");
                     Print($"\nНеисправность: {currentCar.BrokenPartName}");
+
+                    fullPrice = CalculatePayingInfo(somePartName);
+                    _moneyBalance += fullPrice;
+
+                    currentCar.ShowInfo();
                     Print("\nХе-хой, ой, а вдруг прокатит...");
                 }
                 else 
                 { 
                     //Поработать над логикой
-                }
-                
+                }                
             }
         }
 
