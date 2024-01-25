@@ -152,10 +152,54 @@
     class CarFactory
     {
         private readonly PartFactory _partFactory;
+        private readonly List<string> _names;
 
-        public CarFactory (PartFactory partFactory)
+        public CarFactory(PartFactory partFactory)
         {
             _partFactory = partFactory;
+
+            _names = new List<string>()
+            {
+                "Audi A4",
+                "Лада Калина",
+                "BMW X5",
+                "Chevrolet Cruze",
+                "Ford Focus",
+                "Hyndai Solaris",
+                "Lexus LX",
+                "Honda Accord",
+                "Mazda CX-5",
+                "Nissan X-Trail",
+                "Porshe 911",
+                "Renault Logan",
+                "Skoda Octavia",
+                "Subaru Impreza",
+                "Suzuki Vitara",
+                "Toyota Corolla",
+                "Volkswagen Golf",
+                "Уаз Патриот",
+                "Газ Волга",
+                "Kia Ceed",
+            };
+        }
+
+        public List<Car> CreateSeveralCars(int minCarCount = 5, int maxCarCount = 10)
+        {
+            List<Car> cars = new List<Car>();
+            int someCarsCount = GenerateRandomNumber(minCarCount, maxCarCount + 1);
+
+            for (int i = 0; i < someCarsCount; i++)
+            {
+                Car car = CreateSingleCar();
+                cars.Add(car);
+            }
+
+            return cars;
+        }
+
+        public Car CreateSingleCar()
+        {
+            return new Car(_partFactory.CreateSeveral(), GenerateRandomName(_names));
         }
     }
 
@@ -258,9 +302,9 @@
             s_random = new();
         }
 
-        public static string GenerateRandomName(string[] names)
+        public static string GenerateRandomName(List<string> names)
         {
-            return names[s_random.Next(0, names.Length)];
+            return names[s_random.Next(0, names.Count)];
         }
 
         public static int GenerateRandomNumber(int minValue, int maxValue)
