@@ -29,7 +29,7 @@
         public int Count => _parts.Count;
         public string Name { get; }
 
-        public Part TakePart() => Count > 0 ? _parts.Dequeue() : null;
+        public Part TryGetPart() => Count > 0 ? _parts.Dequeue() : null;
 
         public void ShowInfo()
         {
@@ -153,12 +153,14 @@
             _cellsParts = FillCellsParts();
         }
 
-        public bool IsAvaiblePart(string partName)
+        public bool TryGetPart(string partName, out Part part)
         {
+            part = _cellsParts.First(cell => cell.Name == partName).TryGetPart();
 
-
-
-
+            if (part != null)
+            {
+                return true;
+            }
 
             return false;
         }
