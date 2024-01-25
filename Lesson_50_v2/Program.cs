@@ -153,6 +153,16 @@
             _cellsParts = FillCellsParts();
         }
 
+        public bool IsAvaiblePart(string partName)
+        {
+
+
+
+
+
+            return false;
+        }
+
         public void ShowInfo()
         {
             int index = 0;
