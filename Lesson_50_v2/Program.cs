@@ -9,13 +9,18 @@
         static void Main()
         {
             PartFactory partFactory = new PartFactory();
+            CarFactory carFactory = new CarFactory(partFactory);
 
-            List<Part> partList = partFactory.CreateSeveral();
+            Car car = carFactory.CreateSingleCar();
 
-            foreach (var item in partList)
-            {
-                Print($"\n{item.Name} - {item.HealhtyStatus}");
-            }
+            car.ShowInfo();
+
+            string partName = car.BrokenPartName;
+            Part partNew = partFactory.CreateSingle(partName);
+
+            car.ApplyRepair(partNew);
+
+            car.ShowInfo();
 
             Console.ReadKey();
         }
@@ -104,7 +109,7 @@
         }
     }
 
-    class Part : ICloneable
+    class Part : ICloneable, IEquatable<Part>
     {
         public Part(string name, bool isBroken)
         {
@@ -119,6 +124,16 @@
         public Part Clone(bool isBroken)
         {
             return new Part(Name, isBroken);
+        }
+
+        public bool Equals(Part? other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return Name == other.Name;
         }
     }
 
@@ -216,7 +231,7 @@
         public string Name { get; }
         public string BrokenPartName => GetBrokenPart() != null ? GetBrokenPart().Name : "неисправных деталей нет";
         public bool IsNeedRepair => GetBrokenPart() != null ? true : false;
-        public string HealthyStatus => IsNeedRepair == true ? "автомобиль неисправен" : "автомобиль в порядке";
+        public string HealthStatus => IsNeedRepair == true ? "автомобиль неисправен" : "автомобиль в порядке";
 
         public bool ApplyRepair(Part part)
         {
@@ -228,6 +243,22 @@
             }
 
             return false;
+        }
+
+        public void ShowInfo()
+        {
+            Print($"\n{Name}");
+            Print($". Cостояние: ");
+            Print($"{HealthStatus}", IsNeedRepair == true ? ConsoleColor.Red : ConsoleColor.Green);
+
+            if (IsNeedRepair == true)
+            {
+                Print($". ");
+                Print($"Неисправная деталь: ");
+                Print($"{BrokenPartName}", ConsoleColor.Green);
+            }
+
+            Print($".");
         }
 
         private void ReplacePart(Part part)
