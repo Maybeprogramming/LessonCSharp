@@ -106,9 +106,8 @@
         {
             const string RefuseCommand = "1";
             const string AutoRepairCommand = "2";
-            const string ManualRepairCommand = "3";
-            const string ShowPartStockCommand = "4";
-            const string ExitCommand = "5";
+            const string ShowPartStockCommand = "3";
+            const string ExitCommand = "4";
 
             bool isRun = true;
             string userInput;
@@ -134,8 +133,6 @@
                 Print($" - Отказать в ремонте автомобиля");
                 Print($"\n{AutoRepairCommand}", numberMenuColor);
                 Print($" - Отдать машину для ремонт слесарю");
-                Print($"\n{ManualRepairCommand}", numberMenuColor);
-                Print($" - Выбрать деталь и отремонтировать самостоятельно");
                 Print($"\n{ShowPartStockCommand}", numberMenuColor);
                 Print($" - Посмотреть остатки деталей на складе");
                 Print($"\n{ExitCommand}", numberMenuColor);
@@ -152,10 +149,6 @@
 
                     case AutoRepairCommand:
                         RepairCarAuto(_cars?.Dequeue());
-                        break;
-
-                    case ManualRepairCommand:
-                        RepairCarManual(_cars?.Dequeue());
                         break;
 
                     case ShowPartStockCommand:
@@ -277,6 +270,9 @@
 
         private void ShowBalance(int moneyBalance)
         {
+            string name = "Автосервис";
+            Console.Title = $"{name}. Баланс: {moneyBalance} рублей.";
+
             Print($"\nБаланс на счёте автосервиса: ");
             Print($"{moneyBalance}", ConsoleColor.Green);
             Print($" рублей\n");
