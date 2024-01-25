@@ -215,11 +215,18 @@
                 int indexNumber = GenerateRandomNumber(0, partsNames.Count);
                 string somePartName = partsNames[indexNumber];
 
-                Print($"\nБыла заменена деталь: {null}");
-                Print($"\nСтатус машины: {currentCar.HealthStatus}");
-                Print($"\nНеисправность: {currentCar.BrokenPartName}");
+                if(_stock.TryGetPart(somePartName, out Part part))
+                {
+                    Print($"\nБыла заменена деталь: {somePartName}");
+                    Print($"\nСтатус машины: {currentCar.HealthStatus}");
+                    Print($"\nНеисправность: {currentCar.BrokenPartName}");
+                    Print("\nХе-хой, ой, а вдруг прокатит...");
+                }
+                else 
+                { 
 
-                Print("\nХе-хой, ой, лaять на баян...");
+                }
+                
             }
         }
 
