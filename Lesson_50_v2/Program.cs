@@ -149,6 +149,16 @@
         }
     }
 
+    class CarFactory
+    {
+        private readonly PartFactory _partFactory;
+
+        public CarFactory (PartFactory partFactory)
+        {
+            _partFactory = partFactory;
+        }
+    }
+
     class Car : IRepairable
     {
         private List<Part> _parts;
