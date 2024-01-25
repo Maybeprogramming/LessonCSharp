@@ -8,6 +8,8 @@
     {
         static void Main()
         {
+            Console.Title = "Автосервис";
+
             CarService carService = new CarService();
 
             carService.Work();
@@ -65,9 +67,11 @@
                 ShowBalance(_moneyBalance);
                 ShowClientsNumbersInQueue();
 
-                Car currentCar = _cars?.Dequeue();
+                Print($"\nТекущий автомобиль на ремонт: ", ConsoleColor.DarkYellow);
+                _cars?.First().ShowInfo();
 
-                currentCar.ShowInfo();
+                Print($"\n");
+                PrintLine();
 
                 Print($"\nДоступные функции:", ConsoleColor.Green);
                 Print($"\n{RefuseCommand}", numberMenuColor);
@@ -91,11 +95,11 @@
                         break;
 
                     case AutoRepairCommand:
-                        RepairCarAuto(currentCar);
+                        RepairCarAuto(_cars?.Dequeue());
                         break;
 
                     case ManualRepairCommand:
-                        RepairCarManual(currentCar);
+                        RepairCarManual(_cars?.Dequeue());
                         break;
 
                     case ShowPartStockCommand:
@@ -163,9 +167,11 @@
 
         private void RefuseToRepairCar()
         {
+            Car car = _cars?.Dequeue();
             _moneyBalance -= _fineForRefusal;
 
-            Print($"\nВы отказались ремонтировать автомобиль");
+            Print($"\nВы отказались ремонтировать автомобиль: ");
+            Print($"{car.Name}", ConsoleColor.Green);
             Print($"\nВам пришлось оплатить штраф за отказ: ");
             Print($"{_fineForRefusal}", ConsoleColor.Red);
             Print($" рублей");
@@ -173,7 +179,7 @@
 
         private void ShowClientsNumbersInQueue()
         {
-            Print($"Клиентов в очереди на ремонт: ");
+            Print($"\nКлиентов в очереди на ремонт: ");
             Print($"{_cars.Count}\n", ConsoleColor.Green);
             PrintLine();
         }
