@@ -22,10 +22,13 @@
     class CarService
     {
         private Stock _stock;
+        private Queue<Car> _cars;
+        private Dictionary<string, Price> priceOfPart;
+        private Dictionary<string, Price> priceOfJob;
+
         private int _minMoneyBalance;
         private int _maxMoneyBalance;
         private int _moneyBalance;
-        private Queue<Car> _cars;
         private int _fineForRefusal;
 
         private Dictionary<string, Price> _pricesOfParts;
