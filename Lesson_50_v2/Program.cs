@@ -146,10 +146,20 @@
                 Part goodPart;
                 string brokenPartName = currentCar.BrokenPartName;
 
+                if (_stock.TryGetPart(brokenPartName, out goodPart))
+                {
+                    currentCar.ApplyRepair(goodPart);
 
-                Print($"\nБыла заменена неисправная деталь: {null}");
-                Print($"\nСтатус машины: {currentCar.HealthStatus}");
-                Print($"\nНеисправность: {currentCar.BrokenPartName}");
+                    //Посчитать цену детали и работы
+
+                    Print($"\nБыла заменена неисправная деталь: {goodPart.Name}");
+                    currentCar.ShowInfo();
+                }
+                else
+                {
+                    Print($"\nНа складе нет такой детали: {brokenPartName}");
+                    currentCar.ShowInfo();
+                }
             }
             else
             {
@@ -431,7 +441,7 @@
 
         public Queue<Car> CreateSeveralCars(int minCarCount = 5, int maxCarCount = 10)
         {
-            Queue<Car> cars = new ();
+            Queue<Car> cars = new();
             int someCarsCount = GenerateRandomNumber(minCarCount, maxCarCount + 1);
 
             for (int i = 0; i < someCarsCount; i++)
