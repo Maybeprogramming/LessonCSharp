@@ -196,7 +196,8 @@
                 {
                     currentCar.ApplyRepair(goodPart);
 
-                    Print($"\nБыла заменена неисправная деталь: {goodPart.Name}");
+                    Print($"\nБыла заменена неисправная деталь: ");
+                    Print($"{goodPart.Name}", ConsoleColor.Green);
                     currentCar.ShowInfo();
 
                     fullCost = CalculatePayingInfo(brokenPartName);
@@ -204,8 +205,7 @@
                 }
                 else
                 {
-                    Print($"\nНа складе нет такой детали: {brokenPartName}");
-                    RefuseToRepairCar(currentCar);
+                    RefuseToRepairCar(currentCar, $"\nНа складе нет такой детали: {brokenPartName}");
                 }
             }
             else
@@ -214,7 +214,7 @@
                 int indexNumber = GenerateRandomNumber(0, partsNames.Count);
                 string somePartName = partsNames[indexNumber];
 
-                if(_stock.TryGetPart(somePartName, out Part part))
+                if (_stock.TryGetPart(somePartName, out Part part))
                 {
                     currentCar.ApplyRepair(part);
                     Print($"\nБыла заменена деталь: {somePartName}");
@@ -222,14 +222,23 @@
 
                     fullCost = CalculatePayingInfo(somePartName);
                     _moneyBalance += fullCost;
-                    
-                    Print("\nХе-хой, ой, а вдруг прокатит...");
+
+                    Print($"\nИзвините за неоказанные услуги ремонта, ");
+                    Print($"\nМы возвращаем вам уплаченные вами деньги в размере: <");
+                    Print($"{fullCost}", ConsoleColor.Green);
+                    Print($"> рублей");
+                    Print($"\nТак же в качестве компенсации мы выплатим вам: <");
+                    Print($"{_fineForRefusal}", ConsoleColor.Green);
+                    Print($"> рублей\n");
+                    PrintLine();
+
+                    _moneyBalance -= fullCost;
+                    _moneyBalance -= _fineForRefusal;
                 }
-                else 
+                else
                 {
-                    Print($"\nНа складе нет такой детали: {somePartName}");
-                    RefuseToRepairCar(currentCar);
-                }                
+                    RefuseToRepairCar(currentCar, $"\nНа складе нет такой детали: {somePartName}");
+                }
             }
         }
 
@@ -255,14 +264,16 @@
             Print($"{fullPrice}", ConsoleColor.Green);
             Print($" рублей\n");
             PrintLine();
+            Print("\n");
 
             return fullPrice;
         }
 
-        private void RefuseToRepairCar(Car car)
-        {            
+        private void RefuseToRepairCar(Car car, string refuseReason = "")
+        {
             _moneyBalance -= _fineForRefusal;
 
+            Print($"{refuseReason}");
             Print($"\nВы отказались ремонтировать автомобиль: ");
             Print($"{car.Name}", ConsoleColor.Green);
             Print($"\nВам пришлось оплатить штраф за отказ: ");
