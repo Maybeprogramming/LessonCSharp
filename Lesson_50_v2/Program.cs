@@ -144,7 +144,7 @@
                 switch (userInput)
                 {
                     case RefuseCommand:
-                        RefuseToRepairCar();
+                        RefuseToRepairCar(_cars?.Dequeue());
                         break;
 
                     case AutoRepairCommand:
@@ -206,7 +206,7 @@
                 else
                 {
                     Print($"\nНа складе нет такой детали: {brokenPartName}");
-                    currentCar.ShowInfo();
+                    RefuseToRepairCar(currentCar);
                 }
             }
             else
@@ -228,8 +228,8 @@
                     Print("\nХе-хой, ой, а вдруг прокатит...");
                 }
                 else 
-                { 
-                    //Поработать над логикой
+                {
+                    RefuseToRepairCar(currentCar);
                 }                
             }
         }
@@ -260,9 +260,8 @@
             return fullPrice;
         }
 
-        private void RefuseToRepairCar()
-        {
-            Car car = _cars?.Dequeue();
+        private void RefuseToRepairCar(Car car)
+        {            
             _moneyBalance -= _fineForRefusal;
 
             Print($"\nВы отказались ремонтировать автомобиль: ");
