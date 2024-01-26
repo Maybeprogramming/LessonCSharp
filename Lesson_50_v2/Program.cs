@@ -183,7 +183,7 @@
             int maxChanceWrongJob = 30;
             int maxScaleChanceToDoJob = 100;
             int currentChanceToDoJob = GenerateRandomNumber(minChanceWrongJob, maxScaleChanceToDoJob);
-            int fullPrice;
+            int fullCost;
 
             Print($"\nСлесарь сервиса принялся за ремонт машины");
 
@@ -199,9 +199,8 @@
                     Print($"\nБыла заменена неисправная деталь: {goodPart.Name}");
                     currentCar.ShowInfo();
 
-                    fullPrice = CalculatePayingInfo(brokenPartName);
-
-                    _moneyBalance += fullPrice;
+                    fullCost = CalculatePayingInfo(brokenPartName);
+                    _moneyBalance += fullCost;
                 }
                 else
                 {
@@ -217,18 +216,18 @@
 
                 if(_stock.TryGetPart(somePartName, out Part part))
                 {
+                    currentCar.ApplyRepair(part);
                     Print($"\nБыла заменена деталь: {somePartName}");
-                    Print($"\nСтатус машины: {currentCar.HealthStatus}");
-                    Print($"\nНеисправность: {currentCar.BrokenPartName}");
-
-                    fullPrice = CalculatePayingInfo(somePartName);
-                    _moneyBalance += fullPrice;
-
                     currentCar.ShowInfo();
+
+                    fullCost = CalculatePayingInfo(somePartName);
+                    _moneyBalance += fullCost;
+                    
                     Print("\nХе-хой, ой, а вдруг прокатит...");
                 }
                 else 
                 {
+                    Print($"\nНа складе нет такой детали: {somePartName}");
                     RefuseToRepairCar(currentCar);
                 }                
             }
