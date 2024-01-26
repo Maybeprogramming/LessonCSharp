@@ -172,11 +172,6 @@
             ShowClientsNumbersInQueue();
         }
 
-        private void RepairCarManual(IRepairable currentCar)
-        {
-            Print($"Отремонтировать машину в ручную\n");
-        }
-
         private void RepairCar(Car currentCar)
         {
             int minChanceWrongJob = 0;
@@ -298,16 +293,6 @@
             Print($" рублей\n");
             PrintLine();
         }
-
-        private int TryGetPrice(Dictionary<string, int> priceList, string positionName)
-        {
-            if (priceList.TryGetValue(positionName, out int price) == true)
-            {
-                return price;
-            }
-
-            return 0;
-        }
     }
 
     class Cell
@@ -391,7 +376,7 @@
         }
     }
 
-    class Part : ICloneable, IEquatable<Part>
+    class Part : ICloneable
     {
         public Part(string name, bool isBroken)
         {
@@ -401,21 +386,10 @@
 
         public string Name { get; }
         public bool IsBroken { get; }
-        public string HealhtyStatus => IsBroken == true ? "не исправно" : "исправно";
 
         public Part Clone(bool isBroken)
         {
             return new Part(Name, isBroken);
-        }
-
-        public bool Equals(Part? other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-
-            return Name == other.Name;
         }
     }
 
