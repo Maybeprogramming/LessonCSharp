@@ -9,11 +9,8 @@
         static void Main()
         {
             Console.Title = "Автосервис";
-
             CarService carService = new CarService();
-
             carService.Work();
-
             Console.ReadKey();
         }
     }
@@ -25,12 +22,10 @@
         private CarFactory _carFactory;
         private Dictionary<string, int> pricesOfParts;
         private Dictionary<string, int> pricesOfJobs;
-
         private int _minMoneyBalance;
         private int _maxMoneyBalance;
         private int _moneyBalance;
         private int _fineForRefusal;
-
         private Dictionary<string, int> _pricesOfParts;
         private Dictionary<string, int> _pricesOfJob;
 
@@ -39,7 +34,6 @@
             _stock = new Stock();
             _carFactory = new CarFactory(new PartFactory());
             _cars = _carFactory.CreateSeveralCars();
-
             _fineForRefusal = 500;
             _minMoneyBalance = 1000;
             _maxMoneyBalance = 3000;
@@ -111,7 +105,6 @@
 
             bool isRun = true;
             string userInput;
-
             ConsoleColor numberMenuColor = ConsoleColor.DarkYellow;
 
             while (_cars.Count > 0 && isRun == true)
@@ -127,7 +120,6 @@
 
                 Print($"\n");
                 PrintLine();
-
                 Print($"\nДоступные функции:", ConsoleColor.Green);
                 Print($"\n{RefuseCommand}", numberMenuColor);
                 Print($" - Отказать в ремонте автомобиля");
@@ -205,9 +197,7 @@
             }
             else
             {
-                List<string> partsNames = PartsDictionary.GetPartsNames();
-                int indexNumber = GenerateRandomNumber(0, partsNames.Count);
-                string somePartName = partsNames[indexNumber];
+                string somePartName = GenerateRandomName(PartsDictionary.GetPartsNames());
 
                 if (_stock.TryGetPart(somePartName, out Part part))
                 {
