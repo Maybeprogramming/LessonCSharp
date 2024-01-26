@@ -518,7 +518,7 @@
         }
     }
 
-    class Car : IRepairable
+    class Car
     {
         private List<Part> _parts;
 
@@ -573,11 +573,6 @@
         }
     }
 
-    interface IRepairable
-    {
-
-    }
-
     interface ICloneable
     {
         Part Clone(bool isBroken);
@@ -618,7 +613,7 @@
             };
         }
 
-        internal static List<string>? GetPartsNames()
+        public static List<string>? GetPartsNames()
         {
             return s_PartsNames;
         }
@@ -646,20 +641,6 @@
 
     static class UserInput
     {
-        public static int ReadIntRange(string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
-        {
-            int result;
-
-            Console.Write(message);
-
-            while (int.TryParse(Console.ReadLine(), out result) == false || result < minValue || result >= maxValue)
-            {
-                Console.Error.WriteLine("Ошибка!. Попробуйте снова!");
-            }
-
-            return result;
-        }
-
         public static void WaitToPressKey(string message = "")
         {
             Print(message);
