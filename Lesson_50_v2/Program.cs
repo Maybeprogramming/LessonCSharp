@@ -23,6 +23,7 @@
         private Dictionary<string, int> pricesOfParts;
         private Dictionary<string, int> pricesOfJobs;
         private int _fineForRefusal;
+        private int _moneyBalance;
         private Dictionary<string, int> _pricesOfParts;
         private Dictionary<string, int> _pricesOfJob;
 
@@ -97,7 +98,6 @@
             const string ShowPartStockCommand = "3";
             const string ExitCommand = "4";
 
-            int _moneyBalance;
             int minMoneyBalance = 1000;
             int maxMoneyBalance = 3000;
             bool isRun = true;
