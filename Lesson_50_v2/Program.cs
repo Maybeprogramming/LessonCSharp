@@ -22,9 +22,6 @@
         private CarFactory _carFactory;
         private Dictionary<string, int> pricesOfParts;
         private Dictionary<string, int> pricesOfJobs;
-        private int _minMoneyBalance;
-        private int _maxMoneyBalance;
-        private int _moneyBalance;
         private int _fineForRefusal;
         private Dictionary<string, int> _pricesOfParts;
         private Dictionary<string, int> _pricesOfJob;
@@ -35,9 +32,6 @@
             _carFactory = new CarFactory(new PartFactory());
             _cars = _carFactory.CreateSeveralCars();
             _fineForRefusal = 500;
-            _minMoneyBalance = 1000;
-            _maxMoneyBalance = 3000;
-            _moneyBalance = GenerateRandomNumber(_minMoneyBalance, _maxMoneyBalance);
 
             _pricesOfParts = new Dictionary<string, int>()
             {
@@ -103,9 +97,14 @@
             const string ShowPartStockCommand = "3";
             const string ExitCommand = "4";
 
+            int _moneyBalance;
+            int minMoneyBalance = 1000;
+            int maxMoneyBalance = 3000;
             bool isRun = true;
             string userInput;
             ConsoleColor numberMenuColor = ConsoleColor.DarkYellow;
+
+            _moneyBalance = GenerateRandomNumber(minMoneyBalance, maxMoneyBalance + 1);
 
             while (_cars.Count > 0 && isRun == true)
             {
