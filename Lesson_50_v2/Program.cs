@@ -28,11 +28,6 @@
 
         public CarService()
         {
-            _stock = new Stock(_partsNames);
-            _carFactory = new CarFactory(new PartFactory(_partsNames));
-            _cars = _carFactory.CreateSeveralCars();
-            _fineForRefusal = 500;
-
             _pricesOfParts = new Dictionary<string, int>()
             {
                 { "Двигатель", 1000 },
@@ -116,6 +111,11 @@
                 "Коленвал",
                 "Катализатор"
             };
+
+            _stock = new Stock(_partsNames);
+            _carFactory = new CarFactory(new PartFactory(_partsNames));
+            _cars = _carFactory.CreateSeveralCars();
+            _fineForRefusal = 500;
         }
 
         public void Work()
@@ -667,21 +667,21 @@
 //Влад Сахно от 27.01.2024
 //Доработать.
 
-//+++1. - Перенес в метод Work()
+//1. - Перенес в метод Work()
 //private int _minMoneyBalance;
 //private int _maxMoneyBalance;
 //private int _moneyBalance;
 //-минимум и максимум не должны быть в поле класса.
 //Переменные в конструкторе или нужном методе
 
-//+++2. - доработал
+//2. - доработал
 //private Dictionary<string, int> pricesOfParts; -
 //поле названо не по нотации. Есть правило.
 //Переменные именуются с маленькой буквы,
 //приватные поля с символа _ и маленькой буквы (исключение, константы),
 //а всё остальное с большой буквы.
 
-//+++3. - удалил дубляж
+//3. - удалил дубляж
 //private Dictionary<string, int> pricesOfParts; и
 //private Dictionary<string, int> _pricesOfParts;
 //-зачем два одинаковых поля, и одно не используется
@@ -705,11 +705,11 @@
 //Если ошибся, взять из склада любую деталь,
 //что там есть (но отличную от нужной, которая в машине)
 
-//++++7. List<Part> CreateBrokenPart(List<Part> parts)
+//7. List<Part> CreateBrokenPart(List<Part> parts)
 //- можно ничего не возвращать, вы же меняете значение в списке,
 //а список не изменяется
 
-//++++8. interface ICloneable -отдельно интерфейс вам не нужен,
+//8. interface ICloneable -отдельно интерфейс вам не нужен,
 //вы его не используете, просто дополнительный метод в детали появился
 
 //9. private List<string> _partsNames;
