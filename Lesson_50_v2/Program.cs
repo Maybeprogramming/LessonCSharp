@@ -551,11 +551,9 @@
 
         public bool ApplyRepair(Part newPart)
         {
-            Part brokenPart = _parts.FirstOrDefault(part => part.Name == newPart.Name);
-
-            if (brokenPart != null)
+            if (_parts.FirstOrDefault(part => part.Name == newPart.Name).Name == newPart.Name)
             {
-                ReplacePart(brokenPart, newPart);
+                ReplacePart(part);
 
                 return true;
             }
@@ -579,10 +577,10 @@
             Print($".");
         }
 
-        private void ReplacePart(Part brokenPart, Part newPart)
+        private void ReplacePart(Part part)
         {
-            int indexPartToReplace = _parts.IndexOf(brokenPart);
-            _parts[indexPartToReplace] = newPart;
+            int indexPartToReplace = _parts.IndexOf(part);
+            _parts[indexPartToReplace] = part;
         }
 
         private Part? GetBrokenPart()
