@@ -20,8 +20,6 @@
         private Stock _stock;
         private Queue<Car> _cars;
         private CarFactory _carFactory;
-        private Dictionary<string, int> pricesOfParts;
-        private Dictionary<string, int> pricesOfJobs;
         private int _fineForRefusal;
         private int _moneyBalance;
         private Dictionary<string, int> _pricesOfParts;
