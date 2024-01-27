@@ -24,11 +24,12 @@
         private int _moneyBalance;
         private Dictionary<string, int> _pricesOfParts;
         private Dictionary<string, int> _pricesOfJob;
+        private List<string> _partsNames;
 
         public CarService()
         {
-            _stock = new Stock();
-            _carFactory = new CarFactory(new PartFactory());
+            _stock = new Stock(_partsNames);
+            _carFactory = new CarFactory(new PartFactory(_partsNames));
             _cars = _carFactory.CreateSeveralCars();
             _fineForRefusal = 500;
 
@@ -86,6 +87,34 @@
                 { "Масляный фильтр", 20 },
                 { "Коленвал", 100 },
                 { "Катализатор", 75 }
+            };
+
+            _partsNames = new List<string>()
+            {
+                "Двигатель",
+                "Трансмиссия",
+                "Колесо",
+                "Стекло",
+                "Глушитель",
+                "Тормоз",
+                "Подвеска",
+                "Генератор",
+                "Кондиционер",
+                "Стартер",
+                "ГРМ",
+                "Водяная помпа",
+                "Бензобак",
+                "Руль",
+                "Рулевая рейка",
+                "Усилитель руля",
+                "Приборная панель",
+                "Электропроводка",
+                "Аккумулятор",
+                "Свеча зажигания",
+                "Топливный насос",
+                "Масляный фильтр",
+                "Коленвал",
+                "Катализатор"
             };
         }
 
@@ -194,7 +223,7 @@
             }
             else
             {
-                string somePartName = GenerateRandomName(PartsDictionary.GetPartsNames());
+                string somePartName = GenerateRandomName(_partsNames);
 
                 if (_stock.TryGetPart(somePartName, out Part part))
                 {
@@ -311,9 +340,9 @@
     {
         private List<string> _partsNames;
 
-        public PartFactory()
+        public PartFactory(List<string> partsNames)
         {
-            _partsNames = new(PartsDictionary.GetPartsNames());
+            _partsNames = partsNames;
         }
 
         public Part CreateSingle(string partName)
@@ -339,18 +368,16 @@
                 MovePartNameToEnd(somePartName, indexNumber);
             }
 
-            parts = CreateBrokenPart(parts);
+            CreateBrokenPart(parts);
 
             return parts;
         }
 
-        private List<Part> CreateBrokenPart(List<Part> parts)
+        private void CreateBrokenPart(List<Part> parts)
         {
             int indexBrokenPart = GenerateRandomNumber(0, parts.Count);
             Part brokenPart = parts[indexBrokenPart].Clone(true);
             parts[indexBrokenPart] = brokenPart;
-
-            return parts;
         }
 
         private void MovePartNameToEnd(string somePartName, int currentIndex)
@@ -363,7 +390,7 @@
         }
     }
 
-    class Part : ICloneable
+    class Part
     {
         public Part(string name, bool isBroken)
         {
@@ -385,9 +412,9 @@
         private List<Cell> _cellsParts;
         private List<string> _partsNames;
 
-        public Stock()
+        public Stock(List<string> partsNames)
         {
-            _partsNames = PartsDictionary.GetPartsNames();
+            _partsNames = partsNames;
             _cellsParts = FillCellsParts();
         }
 
@@ -423,7 +450,7 @@
         private List<Cell> FillCellsParts()
         {
             List<Cell> cellsParts = new List<Cell>();
-            PartFactory partFactory = new PartFactory();
+            PartFactory partFactory = new PartFactory(_partsNames);
             int minPartsCount = 0;
             int maxPartCount = 10;
             int partsCount;
@@ -560,52 +587,6 @@
         }
     }
 
-    interface ICloneable
-    {
-        Part Clone(bool isBroken);
-    }
-
-    static class PartsDictionary
-    {
-        private static readonly List<string> s_PartsNames;
-
-        static PartsDictionary()
-        {
-            s_PartsNames = new List<string>()
-            {
-                "Двигатель",
-                "Трансмиссия",
-                "Колесо",
-                "Стекло",
-                "Глушитель",
-                "Тормоз",
-                "Подвеска",
-                "Генератор",
-                "Кондиционер",
-                "Стартер",
-                "ГРМ",
-                "Водяная помпа",
-                "Бензобак",
-                "Руль",
-                "Рулевая рейка",
-                "Усилитель руля",
-                "Приборная панель",
-                "Электропроводка",
-                "Аккумулятор",
-                "Свеча зажигания",
-                "Топливный насос",
-                "Масляный фильтр",
-                "Коленвал",
-                "Катализатор"
-            };
-        }
-
-        public static List<string>? GetPartsNames()
-        {
-            return s_PartsNames;
-        }
-    }
-
     static class Randomaizer
     {
         private static readonly Random s_random;
@@ -679,21 +660,21 @@
 //Влад Сахно от 27.01.2024
 //Доработать.
 
-//1.
+//+++1. - Перенес в метод Work()
 //private int _minMoneyBalance;
 //private int _maxMoneyBalance;
 //private int _moneyBalance;
 //-минимум и максимум не должны быть в поле класса.
 //Переменные в конструкторе или нужном методе
 
-//2.
+//+++2. - доработал
 //private Dictionary<string, int> pricesOfParts; -
 //поле названо не по нотации. Есть правило.
 //Переменные именуются с маленькой буквы,
 //приватные поля с символа _ и маленькой буквы (исключение, константы),
 //а всё остальное с большой буквы.
 
-//3.
+//+++3. - удалил дубляж
 //private Dictionary<string, int> pricesOfParts; и
 //private Dictionary<string, int> _pricesOfParts;
 //-зачем два одинаковых поля, и одно не используется
@@ -717,11 +698,11 @@
 //Если ошибся, взять из склада любую деталь,
 //что там есть (но отличную от нужной, которая в машине)
 
-//7. List<Part> CreateBrokenPart(List<Part> parts)
+//++++7. List<Part> CreateBrokenPart(List<Part> parts)
 //- можно ничего не возвращать, вы же меняете значение в списке,
 //а список не изменяется
 
-//8. interface ICloneable -отдельно интерфейс вам не нужен,
+//++++8. interface ICloneable -отдельно интерфейс вам не нужен,
 //вы его не используете, просто дополнительный метод в детали появился
 
 //9. private List<string> _partsNames;
