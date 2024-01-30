@@ -546,7 +546,7 @@
 
         public string Name { get; }
         public string BrokenPartName => GetBrokenPart() != null ? GetBrokenPart().Name : "неисправных деталей нет";
-        public bool IsNeedRepair => GetBrokenPart() != null ? true : false;
+        public bool IsNeedRepair => GetBrokenPart() != null;
         public string HealthStatus => IsNeedRepair == true ? "автомобиль неисправен" : "автомобиль в порядке";
 
         public bool ApplyRepair(Part newPart)
