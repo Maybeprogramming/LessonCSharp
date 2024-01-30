@@ -204,10 +204,9 @@
 
             if (currentChanceToDoJob > maxChanceWrongJob)
             {
-                Part goodPart;
                 string brokenPartName = currentCar.BrokenPartName;
 
-                if (_stock.TryGetPart(brokenPartName, out goodPart))
+                if (_stock.TryGetPart(brokenPartName, out Part goodPart))
                 {
                     currentCar.ApplyRepair(goodPart);
 
