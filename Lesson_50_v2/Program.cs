@@ -548,11 +548,13 @@
         public bool IsNeedRepair => GetBrokenPart() != null ? true : false;
         public string HealthStatus => IsNeedRepair == true ? "автомобиль неисправен" : "автомобиль в порядке";
 
-        public bool ApplyRepair(Part part)
+        public bool ApplyRepair(Part newPart)
         {
-            if (_parts.Contains(part))
+            Part brokenPart = _parts.First(part => part.Name == newPart.Name);
+
+            if (brokenPart != null)
             {
-                ReplacePart(part);
+                ReplacePart(brokenPart, newPart);
 
                 return true;
             }
@@ -576,10 +578,10 @@
             Print($".");
         }
 
-        private void ReplacePart(Part part)
-        {
-            int indexPartToReplace = _parts.IndexOf(part);
-            _parts[indexPartToReplace] = part;
+        private void ReplacePart(Part brokenPart, Part newPart)
+        {            
+            int indexPartToReplace = _parts.IndexOf(brokenPart);
+            _parts[indexPartToReplace] = newPart;
         }
 
         private Part? GetBrokenPart()
