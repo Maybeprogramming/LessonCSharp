@@ -20,6 +20,7 @@
         private Stock _stock;
         private Queue<Car> _cars;
         private CarFactory _carFactory;
+        private PartFactory _partFactory;
         private int _fineForRefusal;
         private int _moneyBalance;
         private Dictionary<string, int> _pricesOfParts;
@@ -113,7 +114,8 @@
             };
 
             _stock = new Stock(new List<string>(_partsNames));
-            _carFactory = new CarFactory(new PartFactory(new List<string>(_partsNames)));
+            _partFactory = new PartFactory(new List<string>(_partsNames));
+            _carFactory = new CarFactory(_partFactory);
             _cars = _carFactory.CreateSeveralCars();
             _fineForRefusal = 500;
         }
