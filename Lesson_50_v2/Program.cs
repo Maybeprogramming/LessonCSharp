@@ -230,7 +230,9 @@
                 if (_stock.TryGetPart(somePartName, out Part part))
                 {
                     currentCar.ApplyRepair(part);
-                    Print($"\nБыла заменена деталь: {somePartName}");
+                    Print($"\nБыла заменена деталь: <");
+                    Print($"{somePartName}", ConsoleColor.Green);
+                    Print($">");
 
                     fullCost = CalculatePayingInfo(somePartName);
                     _moneyBalance += fullCost;
@@ -249,7 +251,7 @@
                 }
                 else
                 {
-                    RefuseToRepairCar(currentCar, $"\nНа складе нет такой детали: {somePartName}");
+                    RefuseToRepairCar(currentCar, $"\nСлесарь устал и отказался выполнять работу по замене: <{currentCar.BrokenPartName}>");
                 }
             }
         }
@@ -550,7 +552,7 @@
 
         public bool ApplyRepair(Part newPart)
         {
-            Part brokenPart = _parts.First(part => part.Name == newPart.Name);
+            Part brokenPart = _parts.FirstOrDefault(part => part.Name == newPart.Name);
 
             if (brokenPart != null)
             {
@@ -579,7 +581,7 @@
         }
 
         private void ReplacePart(Part brokenPart, Part newPart)
-        {            
+        {
             int indexPartToReplace = _parts.IndexOf(brokenPart);
             _parts[indexPartToReplace] = newPart;
         }
