@@ -112,8 +112,8 @@
                 "Катализатор"
             };
 
-            _stock = new Stock(_partsNames);
-            _carFactory = new CarFactory(new PartFactory(_partsNames));
+            _stock = new Stock(new List<string>(_partsNames));
+            _carFactory = new CarFactory(new PartFactory(new List<string>(_partsNames)));
             _cars = _carFactory.CreateSeveralCars();
             _fineForRefusal = 500;
         }
@@ -229,12 +229,11 @@
                 {
                     currentCar.ApplyRepair(part);
                     Print($"\nБыла заменена деталь: {somePartName}");
-                    currentCar.ShowInfo();
 
                     fullCost = CalculatePayingInfo(somePartName);
                     _moneyBalance += fullCost;
 
-                    Print($"\nИзвините за неоказанные услуги ремонта, ");
+                    Print($"\nИзвините за ошибку при ремонте, ");
                     Print($"\nМы возвращаем вам уплаченные вами деньги в размере: <");
                     Print($"{fullCost}", ConsoleColor.Green);
                     Print($"> рублей");
@@ -692,7 +691,8 @@
 //который будет содержать название детали,
 //цену детали и стоимость работы за эту деталь
 
-//5. static class PartsDictionary -статика, это плохо,
+//5. - статику убрал, логику перенёс в класс автосервиса
+//static class PartsDictionary -статика, это плохо,
 //её не должно быть в таком виде.
 //Можно сделать класс без статики и
 //из него получить детали с ценами и детали для машин
@@ -705,14 +705,17 @@
 //Если ошибся, взять из склада любую деталь,
 //что там есть (но отличную от нужной, которая в машине)
 
-//7. List<Part> CreateBrokenPart(List<Part> parts)
+//7. - доработал
+//List<Part> CreateBrokenPart(List<Part> parts)
 //- можно ничего не возвращать, вы же меняете значение в списке,
 //а список не изменяется
 
-//8. interface ICloneable -отдельно интерфейс вам не нужен,
+//8. - удалил не нужный интерфейс
+//interface ICloneable -отдельно интерфейс вам не нужен,
 //вы его не используете, просто дополнительный метод в детали появился
 
-//9. private List<string> _partsNames;
+//9. - доработал
+//private List<string> _partsNames;
 //-вам эти данные не надо хранить в поле, они раз используются
 
 //10. - это плохо.
