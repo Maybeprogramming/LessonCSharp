@@ -288,7 +288,7 @@
             _moneyBalance -= _fineForRefusal;
 
             Print($"{refuseReason}");
-            Print($"\nВы отказались ремонтировать автомобиль: ");
+            Print($"\nВы отказали клиенту в ремонте автомобиля: ");
             Print($"{car.Name}", ConsoleColor.Green);
             Print($"\nВам пришлось оплатить штраф за отказ: ");
             Print($"{_fineForRefusal}", ConsoleColor.Red);
