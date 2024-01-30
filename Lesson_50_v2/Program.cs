@@ -219,7 +219,7 @@
                 }
                 else
                 {
-                    RefuseToRepairCar(currentCar, $"\nНа складе нет такой детали: {brokenPartName}");
+                    RefuseToRepairCar(currentCar);
                 }
             }
             else
