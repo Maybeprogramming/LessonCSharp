@@ -408,13 +408,6 @@
         }
     }
 
-    class PartsInfo()
-    {
-        private string _name;
-        private int _pricePart;
-        private int _priceToJob;
-    }
-
     class Stock
     {
         private List<Cell> _cellsParts;
