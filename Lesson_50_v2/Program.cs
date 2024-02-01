@@ -3,8 +3,6 @@
     using static UserInput;
     using static Randomaizer;
     using static Display;
-    using System.Text;
-    using System.Globalization;
 
     class Program
     {
