@@ -6,18 +6,18 @@
 
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             Console.Title = "Автосервис";
-            CarService carService = new CarService();
+            CarService carService = new ();
             carService.Work();
             Console.ReadKey();
         }
     }
 
-    class CarService
+    internal class CarService
     {
-        private Stock _stock;
+        private readonly Stock _stock;
         private Queue<Car> _cars;
         private CarFactory _carFactory;
         private PartFactory _partFactory;
@@ -54,7 +54,7 @@
                 { "Топливный насос", 180 },
                 { "Масляный фильтр", 50 },
                 { "Коленвал", 420 },
-                { "Катализатор", 650 }
+                { "Катализатор", 650 },
             };
 
             _pricesOfJob = new Dictionary<string, int>()
@@ -324,6 +324,7 @@
         }
 
         public int Count => _parts.Count;
+
         public string Name { get; }
 
         public Part TryGetPart() => Count > 0 ? _parts.Dequeue() : null;

@@ -117,7 +117,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lesson_56", "Lesson_56\Less
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lesson_57", "Lesson_57\Lesson_57.csproj", "{4C2E8E4D-A682-4048-A6D4-B65157311717}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lesson_50_v2", "Lesson_50_v2\Lesson_50_v2.csproj", "{385494C1-C300-403B-8651-47EF12FC44B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lesson_50_v2", "Lesson_50_v2\Lesson_50_v2.csproj", "{385494C1-C300-403B-8651-47EF12FC44B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8C187B05-0F2C-4C0C-8F31-65A074766AB2}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
