@@ -20,12 +20,12 @@
         private readonly Stock _stock;
         private readonly Queue<Car> _cars;
         private readonly CarFactory _carFactory;
-        private PartFactory _partFactory;
-        private int _fineForRefusal;
+        private readonly PartFactory _partFactory;
+        private readonly int _fineForRefusal;
+        private readonly Dictionary<string, int> _pricesOfParts;
+        private readonly Dictionary<string, int> _pricesOfJob;
+        private readonly List<string> _partsNames;
         private int _moneyBalance;
-        private Dictionary<string, int> _pricesOfParts;
-        private Dictionary<string, int> _pricesOfJob;
-        private List<string> _partsNames;
 
         public CarService()
         {
@@ -315,7 +315,7 @@
 
     internal class Cell
     {
-        private Queue<Part> _parts;
+        private readonly Queue<Part> _parts;
 
         public Cell(Queue<Part> parts, string name)
         {
@@ -341,7 +341,7 @@
 
     internal class PartFactory
     {
-        private List<string> _partsNames;
+        private readonly List<string> _partsNames;
 
         public PartFactory(List<string> partsNames)
         {
@@ -357,7 +357,7 @@
         {
             maxCount = maxCount > _partsNames.Count ? _partsNames.Count : maxCount;
 
-            List<Part> parts = new List<Part>();
+            List<Part> parts = new ();
             int countParts = GenerateRandomNumber(minCount, maxCount + 1);
 
             for (int i = 0; i < countParts; i++)
@@ -411,10 +411,10 @@
         }
     }
 
-    class Stock
+    internal class Stock
     {
-        private List<Cell> _cellsParts;
-        private List<string> _partsNames;
+        private readonly List<Cell> _cellsParts;
+        private readonly List<string> _partsNames;
 
         public Stock(List<string> partsNames)
         {
@@ -453,8 +453,8 @@
 
         private List<Cell> FillCellsParts()
         {
-            List<Cell> cellsParts = new List<Cell>();
-            PartFactory partFactory = new PartFactory(_partsNames);
+            List<Cell> cellsParts = new ();
+            PartFactory partFactory = new (_partsNames);
             int minPartsCount = 0;
             int maxPartCount = 10;
             int partsCount;
@@ -482,7 +482,7 @@
         }
     }
 
-    class CarFactory
+    internal class CarFactory
     {
         private readonly PartFactory _partFactory;
         private readonly List<string> _names;
@@ -518,7 +518,7 @@
 
         public Queue<Car> CreateSeveralCars(int minCarCount = 5, int maxCarCount = 10)
         {
-            Queue<Car> cars = new();
+            Queue<Car> cars = new ();
             int someCarsCount = GenerateRandomNumber(minCarCount, maxCarCount + 1);
 
             for (int i = 0; i < someCarsCount; i++)
@@ -538,7 +538,7 @@
 
     internal class Car
     {
-        private List<Part> _parts;
+        private readonly List<Part> _parts;
 
         public Car(List<Part> parts, string name)
         {
@@ -602,7 +602,7 @@
 
         static Randomaizer()
         {
-            s_Random = new();
+            s_Random = new ();
         }
 
         public static string GenerateRandomName(List<string> names)
@@ -616,7 +616,7 @@
         }
     }
 
-    static class UserInput
+    internal static class UserInput
     {
         public static void WaitToPressKey(string message = "")
         {
@@ -626,7 +626,7 @@
         }
     }
 
-    static class Display
+    internal static class Display
     {
         public static void Print(string message, ConsoleColor consoleColor = ConsoleColor.White)
         {
@@ -644,85 +644,84 @@
     }
 }
 
-//Автосервис
-//У вас есть автосервис,
-//в который приезжают люди, чтобы починить свои автомобили.
-//У вашего автосервиса есть баланс денег и склад деталей.
-//Когда приезжает автомобиль,
-//у него сразу ясна его поломка,
-//и эта поломка отображается у вас в консоли вместе с ценой за починку
-//(цена за починку складывается из цены детали + цена за работу).
-//Поломка всегда чинится заменой детали,
-//но количество деталей ограничено тем,
-//что находится на вашем складе деталей.
-//Если у вас нет нужной детали на складе,
-//то вы можете отказать клиенту,
-//и в этом случае вам придется выплатить штраф.
-//Если вы замените не ту деталь,
-//то вам придется возместить ущерб клиенту.
-//За каждую удачную починку вы получаете выплату за ремонт,
-//которая указана в чек-листе починки.
-//Класс Деталь не может содержать значение “количество”.
-//Деталь всего одна, за количество отвечает тот, кто хранит детали.
-//При необходимости можно создать дополнительный класс для конкретной детали и работе с количеством.
+// Автосервис
+// У вас есть автосервис,
+// в который приезжают люди, чтобы починить свои автомобили.
+// У вашего автосервиса есть баланс денег и склад деталей.
+// Когда приезжает автомобиль,
+// у него сразу ясна его поломка,
+// и эта поломка отображается у вас в консоли вместе с ценой за починку
+// (цена за починку складывается из цены детали + цена за работу).
+// Поломка всегда чинится заменой детали,
+// но количество деталей ограничено тем,
+// что находится на вашем складе деталей.
+// Если у вас нет нужной детали на складе,
+// то вы можете отказать клиенту,
+// и в этом случае вам придется выплатить штраф.
+// Если вы замените не ту деталь,
+// то вам придется возместить ущерб клиенту.
+// За каждую удачную починку вы получаете выплату за ремонт,
+// которая указана в чек-листе починки.
+// Класс Деталь не может содержать значение “количество”.
+// Деталь всего одна, за количество отвечает тот, кто хранит детали.
+// При необходимости можно создать дополнительный класс для конкретной детали и работе с количеством.
 
-//Влад Сахно от 27.01.2024
-//Доработать.
+// Влад Сахно от 27.01.2024
+// Доработать.
 
-//1. - Перенес в метод Work()
-//private int _minMoneyBalance;
-//private int _maxMoneyBalance;
-//private int _moneyBalance;
-//-минимум и максимум не должны быть в поле класса.
-//Переменные в конструкторе или нужном методе
+// 1. - Перенес в метод Work()
+// private int _minMoneyBalance;
+// private int _maxMoneyBalance;
+// private int _moneyBalance;
+// -минимум и максимум не должны быть в поле класса.
+// Переменные в конструкторе или нужном методе
 
-//2. - доработал
-//private Dictionary<string, int> pricesOfParts; -
-//поле названо не по нотации. Есть правило.
-//Переменные именуются с маленькой буквы,
-//приватные поля с символа _ и маленькой буквы (исключение, константы),
-//а всё остальное с большой буквы.
+// 2. - доработал
+// private Dictionary<string, int> pricesOfParts; -
+// поле названо не по нотации. Есть правило.
+// Переменные именуются с маленькой буквы,
+// приватные поля с символа _ и маленькой буквы (исключение, константы),
+// а всё остальное с большой буквы.
 
-//3. - удалил дубляж
-//private Dictionary<string, int> pricesOfParts; и
-//private Dictionary<string, int> _pricesOfParts;
-//-зачем два одинаковых поля, и одно не используется
+// 3. - удалил дубляж
+// private Dictionary<string, int> pricesOfParts; и
+// private Dictionary<string, int> _pricesOfParts;
+// -зачем два одинаковых поля, и одно не используется
 
-//4.
-//_pricesOfParts и
-//_pricesOfJob - вы можете создать сразу класс,
-//который будет содержать название детали,
-//цену детали и стоимость работы за эту деталь
+// 4.
+// _pricesOfParts и
+// _pricesOfJob - вы можете создать сразу класс,
+// который будет содержать название детали,
+// цену детали и стоимость работы за эту деталь
 
-//5. - статику убрал, логику перенёс в класс автосервиса
-//static class PartsDictionary -статика, это плохо,
-//её не должно быть в таком виде.
-//Можно сделать класс без статики и
-//из него получить детали с ценами и детали для машин
-//(а можно оставить логику в автосервисе)
+// 5. - статику убрал, логику перенёс в класс автосервиса
+// static class PartsDictionary -статика, это плохо,
+// её не должно быть в таком виде.
+// Можно сделать класс без статики и
+// из него получить детали с ценами и детали для машин
+// (а можно оставить логику в автосервисе)
 
-//6. GenerateRandomName(PartsDictionary.GetPartsNames());
-//-при замене не той детали странно получить уведомление,
-//что такой детали нет.
-//Есть шанс ошибиться.
-//Если ошибся, взять из склада любую деталь,
-//что там есть (но отличную от нужной, которая в машине)
+// 6. GenerateRandomName(PartsDictionary.GetPartsNames());
+// -при замене не той детали странно получить уведомление,
+// что такой детали нет.
+// Есть шанс ошибиться.
+// Если ошибся, взять из склада любую деталь,
+// что там есть (но отличную от нужной, которая в машине)
 
-//7. - доработал
-//List<Part> CreateBrokenPart(List<Part> parts)
-//- можно ничего не возвращать, вы же меняете значение в списке,
-//а список не изменяется
+// 7. - доработал
+// List<Part> CreateBrokenPart(List<Part> parts)
+// - можно ничего не возвращать, вы же меняете значение в списке,
+// а список не изменяется
 
-//8. - удалил не нужный интерфейс
-//interface ICloneable -отдельно интерфейс вам не нужен,
-//вы его не используете, просто дополнительный метод в детали появился
+// 8. - удалил не нужный интерфейс
+// interface ICloneable -отдельно интерфейс вам не нужен,
+// вы его не используете, просто дополнительный метод в детали появился
 
-//9. - доработал
-//private List<string> _partsNames;
-//-вам эти данные не надо хранить в поле, они раз используются
+// 9. - доработал
+// private List<string> _partsNames;
+// -вам эти данные не надо хранить в поле, они раз используются
 
-//10. - это плохо.
-//Пересмотрите "Проблема возвращения ссылки на массивы".
-//Работа с коллекцией должна происходит внутри класса.
-//А сама коллекция должна быть приватным полем.
-
+// 10. - это плохо.
+// Пересмотрите "Проблема возвращения ссылки на массивы".
+// Работа с коллекцией должна происходит внутри класса.
+// А сама коллекция должна быть приватным полем.
