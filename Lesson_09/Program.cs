@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             const string CommandGoToCafe = "1";
             const string CommandGoToCinema = "2";

@@ -2,8 +2,9 @@
 {
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
+#pragma warning disable CS0168 // Переменная объявлена, но не используется
             string name;
             string surname;
             string message;
@@ -48,6 +49,7 @@
             bool isRun;
             bool isOpen;
             bool isClose;
+#pragma warning restore CS0168 // Переменная объявлена, но не используется
         }
     }
 }

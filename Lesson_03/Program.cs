@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             string name;
             int age;

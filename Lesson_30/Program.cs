@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             Console.Title = "Программа для конвертации введенной строки в число";
 
@@ -10,7 +10,7 @@
             PrintText($"\nРаботы программы завершена", ConsoleColor.Green);
         }
 
-        static void StartToParse()
+        private static void StartToParse()
         {
             bool isTryParse = false;
             string requestNumber = "Введите число: ";
@@ -40,13 +40,13 @@
             }
         }
 
-        static int ParseStringToInt(string userInput, out bool isParseToInt)
+        private static int ParseStringToInt(string userInput, out bool isParseToInt)
         {
             isParseToInt = int.TryParse(userInput, out int result);
             return result;
         }
 
-        static void PrintText(string text, ConsoleColor color = ConsoleColor.White)
+        private static void PrintText(string text, ConsoleColor color = ConsoleColor.White)
         {
             ConsoleColor defaultColor = Console.ForegroundColor;
             Console.ForegroundColor = color;

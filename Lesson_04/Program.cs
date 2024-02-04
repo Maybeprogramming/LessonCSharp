@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             const int picturesInRow = 3;
             const int userPictures = 52;
