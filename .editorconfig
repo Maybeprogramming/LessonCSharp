@@ -190,6 +190,8 @@ csharp_style_expression_bodied_local_functions = false:silent
 # SA1217: Using static directives should be ordered alphabetically
 dotnet_diagnostic.SA1217.severity = none
 dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1309.severity = none
 
 [*.vb]
 #### Стили именования ####

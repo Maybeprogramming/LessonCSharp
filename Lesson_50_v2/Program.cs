@@ -18,8 +18,8 @@
     internal class CarService
     {
         private readonly Stock _stock;
-        private Queue<Car> _cars;
-        private CarFactory _carFactory;
+        private readonly Queue<Car> _cars;
+        private readonly CarFactory _carFactory;
         private PartFactory _partFactory;
         private int _fineForRefusal;
         private int _moneyBalance;
