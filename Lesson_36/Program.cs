@@ -27,7 +27,7 @@ namespace Lesson_36
             const string DeleteCardMenu = "3";
             const string ExitMenu = "4";
 
-            Dictionary<string, string> cardsEmployees = new ()
+            Dictionary<string, string> cardsEmployees = new()
             {
                 { "Василий Петрович Пупкин", "Главный инженер" },
                 { "Геннадий Сергеевич Иванов", "Специалист по кадрам" },
@@ -86,7 +86,7 @@ namespace Lesson_36
             Print(exitMessage, ConsoleColor.Green);
         }
 
-        static void TryCreateCard(Dictionary<string, string> cardsEmployees, string continueMessage)
+        private static void TryCreateCard(Dictionary<string, string> cardsEmployees, string continueMessage)
         {
             string inputNameKey;
             string inputRankValue;
@@ -110,7 +110,7 @@ namespace Lesson_36
             Print($"\nДосье успешно добавлено: {inputNameKey} - {inputRankValue}\n", ConsoleColor.Green);
         }
 
-        static void ShowCards(Dictionary<string, string> cardsEmployeess)
+        private static void ShowCards(Dictionary<string, string> cardsEmployeess)
         {
             Console.Clear();
             int indexPosition = 0;
@@ -133,7 +133,7 @@ namespace Lesson_36
             }
         }
 
-        static void TryDeleteCard(Dictionary<string, string> cardsEmployeess)
+        private static void TryDeleteCard(Dictionary<string, string> cardsEmployeess)
         {
             string userInput;
             Console.Clear();
