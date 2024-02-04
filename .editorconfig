@@ -202,6 +202,8 @@ dotnet_diagnostic.SA0001.severity = none
 
 # CS8604: Возможно, аргумент-ссылка, допускающий значение NULL.
 dotnet_diagnostic.CS8604.severity = none
+dotnet_diagnostic.SA1308.severity = none
+dotnet_diagnostic.SA1311.severity = none
 
 [*.vb]
 #### Стили именования ####

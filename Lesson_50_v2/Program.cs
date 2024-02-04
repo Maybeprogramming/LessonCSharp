@@ -82,7 +82,7 @@
                 { "Топливный насос", 20 },
                 { "Масляный фильтр", 20 },
                 { "Коленвал", 100 },
-                { "Катализатор", 75 }
+                { "Катализатор", 75 },
             };
 
             _partsNames = new List<string>()
@@ -110,7 +110,7 @@
                 "Топливный насос",
                 "Масляный фильтр",
                 "Коленвал",
-                "Катализатор"
+                "Катализатор",
             };
 
             _stock = new Stock(new List<string>(_partsNames));
@@ -313,7 +313,7 @@
         }
     }
 
-    class Cell
+    internal class Cell
     {
         private Queue<Part> _parts;
 
@@ -339,7 +339,7 @@
         }
     }
 
-    class PartFactory
+    internal class PartFactory
     {
         private List<string> _partsNames;
 
@@ -393,7 +393,7 @@
         }
     }
 
-    class Part
+    internal class Part
     {
         public Part(string name, bool isBroken)
         {
@@ -402,6 +402,7 @@
         }
 
         public string Name { get; }
+
         public bool IsBroken { get; }
 
         public Part Clone(bool isBroken)
@@ -535,7 +536,7 @@
         }
     }
 
-    class Car
+    internal class Car
     {
         private List<Part> _parts;
 
@@ -546,8 +547,11 @@
         }
 
         public string Name { get; }
+
         public string BrokenPartName => GetBrokenPart() != null ? GetBrokenPart().Name : "неисправных деталей нет";
+
         public bool IsNeedRepair => GetBrokenPart() != null;
+
         public string HealthStatus => IsNeedRepair == true ? "автомобиль неисправен" : "автомобиль в порядке";
 
         public bool ApplyRepair(Part newPart)
@@ -592,23 +596,23 @@
         }
     }
 
-    static class Randomaizer
+    internal static class Randomaizer
     {
-        private static readonly Random s_random;
+        private static readonly Random s_Random;
 
         static Randomaizer()
         {
-            s_random = new();
+            s_Random = new();
         }
 
         public static string GenerateRandomName(List<string> names)
         {
-            return names[s_random.Next(0, names.Count)];
+            return names[s_Random.Next(0, names.Count)];
         }
 
         public static int GenerateRandomNumber(int minValue, int maxValue)
         {
-            return s_random.Next(minValue, maxValue);
+            return s_Random.Next(minValue, maxValue);
         }
     }
 
