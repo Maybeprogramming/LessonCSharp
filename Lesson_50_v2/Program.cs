@@ -4,7 +4,7 @@
     using static Randomaizer;
     using static Display;
 
-    class Program
+    internal class Program
     {
         static void Main()
         {
